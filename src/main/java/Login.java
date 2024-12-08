@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-import security.JwtExtract;
+import security.TokenUtility;
 
 import java.io.IOException;
 import java.net.URI;
@@ -70,7 +70,7 @@ int status=get_token.statusCode();
 
 
 Stage stage=(Stage)((Node) event.getSource()).getScene().getWindow();
-RolesStage.change_stage(JwtExtract.extractRole(token),stage);
+RolesStage.change_stage(TokenUtility.extractRole(token),stage);
 
         }else if(status==401){
             System.out.println("Login failed");

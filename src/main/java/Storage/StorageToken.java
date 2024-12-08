@@ -6,7 +6,9 @@ import java.util.Properties;
 public class StorageToken {
 
     private  static final String file="config.properties";
+private  StorageToken() {
 
+}
 
 
     public  static    void  store_token(String token){
