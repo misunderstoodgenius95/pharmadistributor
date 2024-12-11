@@ -1,4 +1,6 @@
-import Storage.StorageToken;
+package pharma;
+
+import pharma.Storage.StorageToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -6,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-import security.TokenUtility;
+import pharma.security.TokenUtility;
 
 import java.io.IOException;
 import java.net.URI;
@@ -63,17 +65,17 @@ public class Login {
 int status=get_token.statusCode();
         System.out.println(status);
         if(status==200){
-            System.out.println("Login successful");
+            System.out.println("pharma.Login successful");
             JSONObject jsonObject=new JSONObject(get_token.body());
            String token=jsonObject.get("access_token").toString();
-         StorageToken.store_token(token);
+//         StorageToken.store_token(token);
 
 
 Stage stage=(Stage)((Node) event.getSource()).getScene().getWindow();
 RolesStage.change_stage(TokenUtility.extractRole(token),stage);
 
         }else if(status==401){
-            System.out.println("Login failed");
+            System.out.println("pharma.Login failed");
         }
 
 

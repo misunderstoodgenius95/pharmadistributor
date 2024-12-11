@@ -1,0 +1,108 @@
+package pharma.config;
+
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
+
+public class CustomDialog {
+    private Dialog<T> dialog;
+    private Spinner<Integer> spinner;
+    private VBox vbox;
+    private ButtonType okButtonType;
+    public CustomDialog(String header, Dialog<T> dialog) {
+        dialog = new Dialog<>();
+        dialog.setTitle(header);
+        vbox = new VBox();
+        vbox.setSpacing(10);
+        dialog.getDialogPane().setContent(vbox);
+        setbutton();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+    }
+/*
+    public <T,
+        SearchableComboBox> SearchableComboBox add_list_searchable(ObservableList<T> obs) {
+
+        vbox.getChildren().add((Node) searchableComboBox);
+        Label label_change = new Label();
+
+        label_change.setFont(new Font("Arial", 20));
+        vbox.getChildren().add(label_change);
+        searchableComboBox.getSelectionModel().selectedIndexProperty().
+                addListener((observable, oldValue, newValue) -> {
+                    if(searchableComboBox.getValue()!=null) {
+                        label_change.setText("Quantità rimanente: " + searchableComboBox.getValue().getAvailable());
+
+                    }
+                });
+
+        return searchableComboBox;
+    }
+
+ */
+
+    public Spinner<Integer> add_spinner() {
+        spinner = new Spinner<>();
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
+        spinner.setEditable(true);
+        vbox.getChildren().add(spinner);
+        return spinner;
+
+    }
+
+    public void add_label(String label) {
+        vbox.getChildren().add(new Label(label));
+
+
+    }
+
+    private void setbutton() {
+
+        okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+    }
+    public  ButtonType getButton(){
+        return this.okButtonType;
+    }
+    public Dialog<Rentvalue> getDialog(){
+
+        return  dialog;
+    }
+
+    public  void get_event(SearchableComboBox<Inventory> s, Spinner<Integer>spinner){
+
+
+        dialog.setResultConverter(dialog-> {
+            if (dialog ==okButtonType) {
+                if (s.getValue() == null || s.getValue().toString().trim().isEmpty()) {
+                    showErrorAlert("Dati incompleti!");
+                    return null; /* Prevent the dialog closing*/
+                } else if (spinner.getValue() > s.getValue().getAvailable()) {
+                    showErrorAlert("Quantità non disponibile");
+
+                    return null;
+                }
+                else {
+                    return  new Rentvalue(spinner.getValue(),
+                            s.getValue().getProduct_id(), s.getValue().getAvailable());
+                }}
+            return null;
+        });
+
+
+
+    }
+
+    private void showErrorAlert(String message) {
+        // Create an error alert
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+        // Ensure the alert doesn't block or affect the main dialog
+        alert.initModality(Modality.NONE); // This ensures the alert doesn't close the dialog
+
+    }

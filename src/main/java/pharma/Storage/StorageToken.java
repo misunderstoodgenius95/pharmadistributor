@@ -1,4 +1,4 @@
-package Storage;
+package pharma.Storage;
 
 import java.io.*;
 import java.util.Properties;

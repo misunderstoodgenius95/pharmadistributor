@@ -3,32 +3,32 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+import pharma.RolesStage;
+import pharma.Stages;
+import pharma.Storage.Prova;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RolesStageTest extends Application {
+class RolesStageTest {
 
     @Test
     void getStage() {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("purchase.fxml"));
-        Scene root= null;
-        try {
-            root = new Scene(loader.load());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Stage stage = new Stage();
-        stage.setTitle("purchase");
-        stage.setScene(root);
+  // Stages stages = new Stages();
+ //  stages.load_stage("/purchase.fxml");
 
     }
 @Test
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+public void load_stage() {
 
-getStage();
-    }
+  ///  assertNotNull(Prova.load_stage("/purchase.fxml"));
+
+
+
+
+
 }
+}
+

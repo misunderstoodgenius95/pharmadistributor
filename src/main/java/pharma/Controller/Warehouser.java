@@ -1,4 +1,4 @@
-package Controller;
+package pharma.Controller;
 
 public class Warehouser {
 }

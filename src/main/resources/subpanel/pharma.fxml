@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane  fx:id="anchor_id" prefHeight="497.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.subpanel.Pharma">
+   <children>
+      <Button onAction="#add_pharma_action" layoutX="14.0" layoutY="57.0" mnemonicParsing="false" text="Aggiungi Casa  Farmaceutica" />
+      <Text layoutX="190.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Casa Farmaceutiche" wrappingWidth="243.0185546875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <TableView fx:id="table_id" layoutX="10.0" layoutY="101.0" prefHeight="316.0" prefWidth="684.0" />
+   </children>
+</AnchorPane>
