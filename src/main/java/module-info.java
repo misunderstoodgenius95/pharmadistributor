@@ -6,10 +6,13 @@ module pharma {
     requires javafx.fxml;
     requires javafx.graphics;
     requires org.json;
+    requires  org.testfx;
+
     opens pharma to javafx.fxml;
 exports pharma.Controller to javafx.controls, javafx.fxml;
     exports pharma to javafx.fxml,javafx.graphics;
 opens pharma.Controller to javafx.fxml;
 opens pharma.Controller.subpanel to javafx.fxml;
+exports  pharma.config;
 exports pharma.Controller.subpanel to javafx.fxml;
 }

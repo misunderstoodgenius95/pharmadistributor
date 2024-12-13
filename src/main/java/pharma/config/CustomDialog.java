@@ -1,7 +1,11 @@
 package pharma.config;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderImage;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 
 public class CustomDialog<T> extends Dialog<T> {
@@ -12,8 +16,14 @@ public class CustomDialog<T> extends Dialog<T> {
         super();
         setTitle(content);
         vbox = new VBox();
+       vbox.setSpacing(20);
+     this.getDialogPane().setPrefHeight(400);
+     this.getDialogPane().setPrefWidth(400);
+
         this.getDialogPane().setContent(vbox);
-        getDialogPane().getButtonTypes().addAll(okButtonType);
+
+        okButtonType = new ButtonType("OK",ButtonBar.ButtonData.OK_DONE); // inizializzo il bottone ok
+       this.getDialogPane().getButtonTypes().addAll(okButtonType,ButtonType.CANCEL); // Lo aggiungo al Dialog
         initModality(Modality.APPLICATION_MODAL);
     }
 
@@ -31,13 +41,13 @@ public class CustomDialog<T> extends Dialog<T> {
         TextField field = new TextField();
         field.setPromptText(placeholder);
         vbox.getChildren().add(field);
+        field.setPadding(new Insets(10, 10, 10, 10));
+        field.setFont(new Font("Arial", 20));
         return field;
     }
 
 
-    public  Dialog<T>  get_dialog() {
-return this;
-    }
+
 
 
 
