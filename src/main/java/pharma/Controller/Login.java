@@ -1,6 +1,6 @@
-package pharma;
+package pharma.Controller;
 
-import pharma.Storage.StorageToken;
+import pharma.RolesStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -65,7 +65,7 @@ public class Login {
 int status=get_token.statusCode();
         System.out.println(status);
         if(status==200){
-            System.out.println("pharma.Login successful");
+            System.out.println("pharma.Controller.Login successful");
             JSONObject jsonObject=new JSONObject(get_token.body());
            String token=jsonObject.get("access_token").toString();
 //         StorageToken.store_token(token);
@@ -75,7 +75,7 @@ Stage stage=(Stage)((Node) event.getSource()).getScene().getWindow();
 RolesStage.change_stage(TokenUtility.extractRole(token),stage);
 
         }else if(status==401){
-            System.out.println("pharma.Login failed");
+            System.out.println("pharma.Controller.Login failed");
         }
 
 

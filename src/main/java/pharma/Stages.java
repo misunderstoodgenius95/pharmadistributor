@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ Stage primaryStage = new Stage();
     primaryStage.setScene(scene);
     primaryStage.setTitle("Pharma distributor");
     primaryStage.show();
+
 }
 
     public  void change_stage(String fxml, Stage stage)  {

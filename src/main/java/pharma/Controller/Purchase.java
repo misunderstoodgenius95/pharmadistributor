@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pharma.RolesStage;
 import pharma.Stages;
@@ -52,22 +53,18 @@ public class Purchase{
     @FXML
     void pharma_action(ActionEvent event) throws IOException {
 vbox_id.setVisible(false);
-
-
  Stages stage = new Stages();
         Parent parent=stage.load_fxml("/subpanel/pharma.fxml");
         System.out.println(parent.getLayoutX());
      AnchorPane.setTopAnchor(parent, 0.0);
-anchor_id.getChildren().add(parent);
-
-
+        anchor_id.getChildren().add(parent);
     }
 
     @FXML
     void raccomandazioni_action(ActionEvent event) {
 
     }
-    /*@FXML
+    @FXML
     void add_casa_farmaceutica_btn(ActionEvent event) {
 String token=StorageToken.get_token();
         boolean token_u=TokenUtility.check_permission(token,"write","pharma");
@@ -87,6 +84,6 @@ if(token_u){
 
     }
 
-     */
+
 }
 

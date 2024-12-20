@@ -12,7 +12,7 @@ class DatabaseTest {
     private static Database db;
 @BeforeAll
 static void setupDatabase() {
-    db = new Database();
+    db=Database.getInstance();
 
 }
 
@@ -42,5 +42,7 @@ while(rs.next()){
 }
             //assertTrue(rs.next());
         }
+
+
 
 }

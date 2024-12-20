@@ -1,5 +1,7 @@
 package pharma.config;
 
+import javafx.scene.chart.PieChart;
+
 import javax.xml.transform.Result;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,9 +11,11 @@ import java.util.Properties;
 
 public class Database {
 
-private Connection conn;
+    private Connection conn;
+    private static Database instance;
 
-public Database() {
+
+    private Database() {
     try{
 
      Properties properties=getPopertiesDatabase();
@@ -22,16 +26,22 @@ public Database() {
 
         e.printStackTrace();
     }
-}
+    }
 
+     public static Database getInstance() {
+         if (instance == null) {
+             instance = new Database();
+         }
+         return instance;
+     }
 
-public void execute(String sql)  {
+    public void execute(String sql)  {
     try {
         conn.createStatement().execute(sql);
     } catch (SQLException e) {
         throw new RuntimeException(e);
     }
-}
+    }
 
     public ResultSet execute_query(String sql)  {
         try {
@@ -40,9 +50,16 @@ public void execute(String sql)  {
             throw new RuntimeException(e);
         }
     }
+    public PreparedStatement execute_prepared_query(String sql)  {
 
+    try {
+        return conn.prepareStatement(sql);
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+    }
 
-private Properties getPopertiesDatabase() {
+    private Properties getPopertiesDatabase() {
     FileReader reader = null;
     try {
         reader = new FileReader("database.properties");
@@ -53,8 +70,9 @@ private Properties getPopertiesDatabase() {
     } catch (IOException e) {
         throw new RuntimeException(e);
     }
-}
-public void close(){
+    }
+
+    public void close(){
     try {
         conn.close();
     } catch (SQLException e) {
@@ -62,7 +80,7 @@ public void close(){
     }
 
 
-}
+    }
 
 
 
