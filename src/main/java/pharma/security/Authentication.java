@@ -7,14 +7,15 @@ import java.net.http.HttpClient;
 
 public class Authentication {
     private FileConfig fileConfig;
-    private  String username;
-    private  String password;
+    private String username;
+    private String password;
     private HttpClient httpclient;
+
     public Authentication(String username, String password) {
-      this.username = username;
-      this.password = password;
-      httpclient = HttpClient.newHttpClient();
-    fileConfig=new FileConfig("auth.properties");
+        this.username = username;
+        this.password = password;
+        httpclient = HttpClient.newHttpClient();
+  /*  fileConfig=new FileConfig("auth.properties");
 
     }
     public boolean authenticate(String username, String password) {
@@ -28,9 +29,8 @@ public class Authentication {
 
     }
 
+   */
 
 
-
-
-
+    }
 }

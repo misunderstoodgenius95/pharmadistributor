@@ -18,13 +18,21 @@ public class FileConfig {
         this.properties = new Properties();
 
     }
+    private void loadProperties(){
+        try {
+            properties.load(fileReader);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
     public String getProperty(String key) {
-
+        loadProperties();
             return properties.getProperty(key);
 
     }
     public  HashMap<String,String> getProperties(List<String> keys) {
+        loadProperties();
         HashMap<String, String> map = new HashMap<>();
 
         for (String key : keys) {

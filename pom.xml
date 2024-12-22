@@ -73,6 +73,31 @@
             <version>4.0.18</version>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>4.11.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>2.0.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>2.0.9</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.14.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit5</artifactId>
             <version>4.0.18</version>
@@ -94,6 +119,10 @@
                 <configuration>
                     <argLine>
                         --add-opens=javafx.graphics/com.sun.javafx.application=org.testfx
+
+                            --add-opens java.base/java.lang=ALL-UNNAMED
+                            --add-opens java.base/java.util=ALL-UNNAMED
+
                     </argLine>
                 </configuration>
             </plugin>
