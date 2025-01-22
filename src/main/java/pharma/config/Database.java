@@ -35,15 +35,19 @@ public class Database {
          return instance;
      }
 
-    public void execute(String sql)  {
-    try {
-        conn.createStatement().execute(sql);
+    public Boolean execute(String sql)  {
+    Boolean result = false;
+        try {
+        result=conn.createStatement().execute(sql);
+        return result;
     } catch (SQLException e) {
         throw new RuntimeException(e);
     }
     }
 
     public ResultSet execute_query(String sql)  {
+
+
         try {
           return   conn.createStatement().executeQuery(sql);
         } catch (SQLException e) {
@@ -71,14 +75,33 @@ public class Database {
         throw new RuntimeException(e);
     }
     }
+    public DatabaseMetaData get_MetaData() throws SQLException {
 
-    public void close(){
-    try {
-        conn.close();
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
+        try {
+           return conn.getMetaData();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+    public boolean check_exist_table(String table_name) {
+        try {
+            ResultSet resultSet=conn.getMetaData().getTables(null,null,table_name,null);
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
+
+    }
+    public void close(){
+    if (conn != null) {
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     }
 

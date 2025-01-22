@@ -1,24 +1,57 @@
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationTest;
 import pharma.Model.FieldData;
-import pharma.config.CustomDialog;
+import pharma.oldest.CustomDialog;
+
+
+import java.util.List;
+import java.util.Objects;
 
 public class GuiTest extends ApplicationTest {
-
+    private  ChoiceBox<String> choice;
+    private Button button;
+    private String test;
     @Override
     public void start(Stage stage) throws Exception {
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("purchase.fxml")));
-        stage.setScene(scene);
-        stage.setTitle("Java Test");
-        stage.show();
-    }
+        VBox vBox=new VBox();
+        Scene scene=new Scene(vBox);
+        choice=new ChoiceBox<>();
+       button=new Button("Ciao");
+   button.setOnAction(s->{
 
+   test="Clicked";
+   });
+        choice.getItems().addAll("One","Two");
+        choice.getStyleClass().add("choice_box");
+        vBox.getChildren().addAll(choice,button);
+        stage.setScene(scene);
+        stage.show();
+
+
+    }
+    @Test
+    public void control_choicebox() throws InterruptedException {
+
+       Platform.runLater(()->{
+            clickOn(button);
+            System.out.println(test);
+        });
+
+    }
     @Test
     public void test() {
         Platform.runLater(() -> {
@@ -30,4 +63,14 @@ public class GuiTest extends ApplicationTest {
             Assertions.assertTrue((customDialog.getDialogPane().getButtonTypes().size()) == 1);
         });
     }
+    @Test
+    public void test_button(){
+        clickOn("#user_field").write("pinco");
+        clickOn("#password_field").write("pallino");
+        clickOn("#button_click");
+
+    }
+
+
+
 }

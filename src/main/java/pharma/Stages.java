@@ -32,7 +32,7 @@ Stage primaryStage = new Stage();
 
     public  void change_stage(String fxml, Stage stage)  {
         try {
-Stages stages = new Stages();
+
                 Scene scene=new Scene(this.load_fxml(fxml));
                 stage.setScene(scene);
 

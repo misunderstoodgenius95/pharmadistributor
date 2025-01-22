@@ -2,13 +2,9 @@ package pharma.Model;
 
 import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Text;
-import pharma.config.CustomDialog;
-
-import static org.junit.jupiter.api.Assertions.*;
+import pharma.oldest.CustomDialog;
 
 class FieldDataTest  {
    CustomDialog<FieldData> customDialog;

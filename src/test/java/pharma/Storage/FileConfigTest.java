@@ -3,12 +3,10 @@ package pharma.Storage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pharma.oldest.FileConfig;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class FileConfigTest {
     static FileConfig fileConfig;

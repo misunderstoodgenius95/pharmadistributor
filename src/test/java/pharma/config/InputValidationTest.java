@@ -1,47 +1,68 @@
 package pharma.config;
 
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-class InputValidationTest extends ApplicationTest {
-    @Override
-    public void start(Stage stage) throws Exception {
-        super.start(stage);
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/purchase.fxml")));
-        stage.setScene(scene);
-        stage.setTitle("Java Test");
-        stage.show();
+class InputValidationTest  {
+
+
+    @Test
+    void validate_email() {
+        //Valid Test email
+        Assertions.assertTrue(InputValidation.validate_email("user@example.com")); //format email
+        Assertions.assertTrue(InputValidation.validate_email("user.sub@amazon.example.com")); //subdomain and dot local part
+        Assertions.assertTrue(InputValidation.validate_email("user@amazon.example.com")); // subdomain
+        Assertions.assertTrue(InputValidation.validate_email("user.sub@example.com")); // dot domain
+        //Invalid Test email
+
+
+
     }
-@Test
-    public  void InputValidationTest() {
-    Platform.runLater(() -> {
-        TextField field = new TextField();
-        field.setText("IT123456778001");
-        Assertions.assertTrue(InputValidation.validate_p_iva(field));
+    @Test
+    void invalid_email() {
+        Assertions.assertFalse(InputValidation.validate_email("ettore.bassexample.com"));
+        Assertions.assertFalse(InputValidation.validate_email("@example.com"));
 
-    });
+        //Invalid email format
+        Assertions.assertFalse(InputValidation.validate_email(""));// Input empty
+
+        Assertions.assertThrows(IllegalArgumentException.class,()->{
+            InputValidation.validate_email(null);
+        });
+
+
     }
 
+    @Test
+    void validate_password() {
+        //Valid password
 
+        Assertions.assertTrue(InputValidation.validate_password("@5&17Vhm5QGp"));
 
+        //Invalid password
+        Assertions.assertFalse(InputValidation.validate_password("")); // empty
+        Assertions.assertThrows(IllegalArgumentException.class,()->{ //null
+            InputValidation.validate_password(null);
+        });
+        Assertions.assertFalse(InputValidation.validate_password("abcde")); //Less than 12
+        Assertions.assertFalse(InputValidation.validate_password("abcedghilm11@")); //No Upper Case
+        Assertions.assertFalse(InputValidation.validate_password("aMbcedghilm11")); //No special Character
+        Assertions.assertFalse(InputValidation.validate_password("aMbcedghilmiii%"));//No digit
+    }
 
-
-
-
-
-
-
-
-
+    @Test
+    void valid_audience() {
+        Assertions.assertTrue(InputValidation.validate_audience("https://example.com"));// only domain
+        Assertions.assertTrue(InputValidation.validate_audience("https://example.com/pharma")); //domain plus patch
+    }
+    @Test
+    void invalid_audience() {
+        Assertions.assertFalse(InputValidation.validate_audience("http://example.com"));// invalid http domain
+        Assertions.assertFalse(InputValidation.validate_audience("https://")); //missing domain
+        Assertions.assertFalse(InputValidation.validate_audience("https://example.")); // missing TLD
+    }
 
 
 

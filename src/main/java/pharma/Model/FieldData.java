@@ -1,9 +1,12 @@
 package pharma.Model;
 
+import javafx.collections.ObservableArray;
+
 import java.io.FileDescriptor;
 import java.util.Date;
 
 public class FieldData {
+    private  int id;
     private String anagrafia_cliente;
     private String sigla;
     private String partita_iva;
@@ -24,6 +27,7 @@ public class FieldData {
         this.description = builder.description;
         this.principio_attivo = builder.principio_attivo;
         this.date = builder.date;
+        this.id=builder.id;
     }
 
     public String getAnagrafia_cliente() {
@@ -100,15 +104,23 @@ public class FieldData {
         private String description;
         private String principio_attivo;
         private Date date;
+        private  int id;
 private FieldDataBuilder() {
 
 }
 
 
-        public static FieldDataBuilder getbuilder() {
+
+        //*
+        public static   FieldDataBuilder getbuilder() {
             return new FieldDataBuilder();
 
 
+        }
+
+        public FieldDataBuilder setId(int id) {
+            this.id = id;
+            return this;
         }
         public FieldDataBuilder setAnagrafia_cliente(String anagrafia_cliente) {
             this.anagrafia_cliente = anagrafia_cliente;

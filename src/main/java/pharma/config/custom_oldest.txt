@@ -106,3 +106,29 @@ public class CustomDialog {
         alert.initModality(Modality.NONE); // This ensures the alert doesn't close the dialog
 
     }
+    when(jsonClient.post(eq("http://example.com"),eq(jsonObject))).thenAnswer(invocation -> {
+
+            JSONObject inputJson = invocation.getArgument(1);
+            System.out.println(inputJson.toString());
+            // Get the input JSONObject
+            if (inputJson.has("username") && inputJson.has("password")) {
+                // If both "username" and "password" are present, simulate a 200 OK response
+                when(mock_response.statusCode()).thenReturn(200);
+            } else {
+                // If any key is missing, simulate a 400 Bad Request response
+                when(mock_response.statusCode()).thenReturn(400);
+            }
+            return mock_response; // Return the mock response
+        });
+        int status=userService.authenticate("pinco","pallino");
+
+        assertEquals(200, status);
+
+        Mockito.verify(jsonClient).post(Mockito.anyString(), any(JSONObject.class));
+    <!--      <argLine>
+                        --add-opens=javafx.graphics/com.sun.javafx.application=org.testfx
+
+                            --add-opens java.base/java.lang=ALL-UNNAMED
+                            --add-opens java.base/java.util=ALL-UNNAMED
+
+                    </argLine> -->

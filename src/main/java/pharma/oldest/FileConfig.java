@@ -1,4 +1,4 @@
-package pharma.Storage;
+package pharma.oldest;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -40,14 +40,16 @@ public class FileConfig {
         }
         return map;
     }
+    /*
     public void setProperty(String key, String value, FileWriter fileWriter) {
         properties.setProperty(key, value);
         saveProperties(fileWriter);
 
     }
-    private void saveProperties(FileWriter writer) {
+
+    private static void saveProperties(FileWriter writer) {
         try {
-            properties.store(writer, "");
+            FileConfig.properties.store(writer, "");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -59,5 +61,7 @@ public class FileConfig {
     }
 
 
+
+     */
 
 }

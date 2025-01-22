@@ -1,5 +1,6 @@
 package pharma.config;
 
+import com.sun.jdi.connect.Connector;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
@@ -8,39 +9,49 @@ import java.util.regex.Pattern;
 public class InputValidation {
 
     private  static  final String p_iva_regex ="^IT[0-9]{11}$";
-    private static  final  String input_regex="^[A-Z a-z0-9-_]+$";
-
-
+    private static final String audience_regex="^https:\\/\\/[a-z]+.[a-z]+[\\/]*[a-z]*$";
+    private static final String password_regex="(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*\\W).{12,}";
+   // private static  final  String email_regex="^[\\w\\.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+     private  final static   String email_regex="^[\\w]+[\\.]*[-]*[\\w]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         private  InputValidation(){
 
 
         }
 
-        private static  boolean generic_validation(String regex, TextField textField){
+        private static  boolean generic_validation(String regex, String input_regex){
         Pattern pattern = Pattern.compile(regex);
-        if (textField.getText().isEmpty() ||
-                textField.getText().equalsIgnoreCase("")
-                ||! pattern.matcher(textField.getText()).find()
-        ) {
-
-            return  false;
-        }
-        return  true;
+            return pattern.matcher(input_regex).find();
 
         }
 
-        public  static boolean validate_p_iva(TextField textField){
-          return   generic_validation(p_iva_regex,textField);
-/*if(!generic_validation(p_iva_regex,textField)){
-
-    Utility.create_alert(Alert.AlertType.ERROR,"Partita Iva!","Campo Partita Iva non valido!");
-}
-
- */
-
-
+        public  static boolean validate_p_iva(String input){
+          return   generic_validation(p_iva_regex,input);
 
         }
+        public static  boolean validate_email(String input){
+            System.out.println("Execute");
+            if(input ==null){
+                throw  new IllegalArgumentException("Input is null");
+            }
+            return generic_validation(email_regex,input);
+        }
+        public static  boolean validate_password(String input){
+            System.out.println("Execute");
+            if(input ==null){
+                throw  new IllegalArgumentException("Input is null");
+            }
+        return generic_validation(password_regex,input);
+    }
+
+    public static boolean validate_audience(String input){
+            if(input ==null){
+                throw  new IllegalArgumentException("Input is null");
+            }
+            return generic_validation(audience_regex,input);
+
+
+    }
+
 
 
 

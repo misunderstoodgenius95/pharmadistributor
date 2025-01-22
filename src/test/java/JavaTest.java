@@ -7,9 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import pharma.Model.FieldData;
-import pharma.config.CustomDialog;
-
-import java.util.Objects;
+import pharma.oldest.CustomDialog;
 
 public class JavaTest extends ApplicationTest {
     CustomDialog<FieldData> customDialog;
