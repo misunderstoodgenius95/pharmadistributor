@@ -22,11 +22,10 @@ public class FileStorage {
         Properties properties=new Properties();
         try {
             properties.load(fr);
+
         } catch (IOException e) {
           e.printStackTrace();
         }
-
-
         for (String key : keys) {
                 hashMap.put(key, properties.getProperty(key));
 
@@ -34,6 +33,23 @@ public class FileStorage {
         return hashMap;
 
     }
+    public static Properties getProperties_real(List<String> keys,FileReader fr) throws IOException {
+        if (keys == null || fr == null) {
+            throw new IllegalArgumentException("Argument cannot be null!");
+        }
+        HashMap<String, String> hashMap = new HashMap<>();
+        Properties properties = new Properties();
+
+            properties.load(fr);
+            return properties;
+
+
+    }
+
+
+
+
+
     public static  String getProperty(String key, FileReader fr)  {
         if(key==null || fr ==null){
             throw new IllegalArgumentException("Value key or FileReader null  not excepted");

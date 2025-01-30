@@ -25,18 +25,18 @@ public class InputValidation {
         }
 
         public  static boolean validate_p_iva(String input){
-          return   generic_validation(p_iva_regex,input);
-
+            System.out.println("execute vat");
+            return generic_validation(p_iva_regex,input);
         }
         public static  boolean validate_email(String input){
-            System.out.println("Execute");
+
             if(input ==null){
                 throw  new IllegalArgumentException("Input is null");
             }
             return generic_validation(email_regex,input);
         }
         public static  boolean validate_password(String input){
-            System.out.println("Execute");
+
             if(input ==null){
                 throw  new IllegalArgumentException("Input is null");
             }
@@ -51,6 +51,17 @@ public class InputValidation {
 
 
     }
+    public static  boolean get_validation(String id,String text){
+        System.out.println(id);
+        return switch (id) {
+            case "Email" -> validate_email(text);
+            case "Password" -> validate_password(text);
+            case "Vat" -> validate_p_iva(text);
+            default -> false;
+
+        };
+    }
+
 
 
 

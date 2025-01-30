@@ -71,7 +71,7 @@ class FileStorageTest {
 
 
     @Test
-    void testGetProperties_All() throws IOException {
+    void ValidtestGetProperties_All() throws IOException {
         File tempFile = File.createTempFile("test", ".properties");
         tempFile.deleteOnExit();
 
@@ -216,6 +216,34 @@ class FileStorageTest {
 
     }
 
+    @Test void  get_real_properties() throws IOException {
+        File tempFile = File.createTempFile("test", ".properties");
+        tempFile.deleteOnExit();
+
+
+        try (FileWriter writer = new FileWriter(tempFile)) {
+            writer.write("A=a\nB=b\nC=c");
+
+        }
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C"));
+    Properties properties=new Properties();
+    properties.setProperty("A","a");
+    properties.setProperty("B","b");
+    properties.setProperty("C","c");
+
+
+
+        try (FileReader fileReader = new FileReader(tempFile)) {
+            Properties properties_actual= FileStorage.getProperties_real(list, fileReader);
+           assertEquals(properties,properties_actual);
+        }
+
+
+
+
+
+
+    }
 
 
 

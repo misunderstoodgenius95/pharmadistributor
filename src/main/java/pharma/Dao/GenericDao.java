@@ -1,8 +1,11 @@
 package pharma.dao;
 
+import java.util.List;
+
 public interface GenericDao<T,ID> {
-public void insert(T t);
-public void update(T t);
+public boolean insert(T entity);
+public boolean update(T entity);
 public T findById(ID id);
-public void delete(T t);
+public boolean delete(T entity);
+public List<T> findAll();
 }

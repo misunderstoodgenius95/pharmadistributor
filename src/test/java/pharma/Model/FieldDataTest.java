@@ -4,7 +4,7 @@ import javafx.scene.control.TextField;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pharma.oldest.CustomDialog;
+import pharma.config.CustomDialog;
 
 class FieldDataTest  {
    CustomDialog<FieldData> customDialog;
@@ -22,7 +22,7 @@ class FieldDataTest  {
 @Test
 
     public void testFieldData() {
-   FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setAnagrafia_cliente("Agrafia Cliente").setSigla("AF").
+   FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setAnagrafica_cliente("Agrafia Cliente").setSigla("AF").
             setPartita_iva("IT122222222").build();
 
 

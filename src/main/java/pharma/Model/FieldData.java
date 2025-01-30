@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class FieldData {
     private  int id;
-    private String anagrafia_cliente;
+    private String anagrafica_cliente;
     private String sigla;
     private String partita_iva;
     private String nome;
@@ -18,7 +18,7 @@ public class FieldData {
     private Date date;
 
     private FieldData(FieldDataBuilder builder) {
-        this.anagrafia_cliente = builder.anagrafia_cliente;
+        this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
         this.sigla = builder.sigla;
         this.nome = builder.nome;
@@ -30,72 +30,76 @@ public class FieldData {
         this.id=builder.id;
     }
 
-    public String getAnagrafia_cliente() {
-       if ( anagrafia_cliente == null ) {
-           throw new NullPointerException("Anagrafia cliente nula");
+    public String getAnagrafica_cliente() {
+       if ( anagrafica_cliente == null ) {
+           throw new NullPointerException("Anagrafia cliente nulla!");
        }
-        return anagrafia_cliente;
+        return anagrafica_cliente;
+    }
+
+    public int getId() {
+
+        return id;
     }
 
     public String getSigla() {
         if ( sigla == null ) {
-            throw new NullPointerException("Sigla nula");
+            throw new NullPointerException("Sigla nulla!");
         }
         return sigla;
     }
 
     public String getPartita_iva() {
         if ( partita_iva == null ) {
-            throw new NullPointerException("Partita iva nula");
+            throw new NullPointerException("Partita iva nulla!");
         }
         return partita_iva;
     }
 
     public String getNome() {
         if ( nome == null ) {
-            throw new NullPointerException("Nome nula");
+            throw new NullPointerException("Nome nulla!");
         }
         return nome;
     }
 
     public String getUnit_miusure() {
         if ( unit_miusure == null ) {
-            throw new NullPointerException("Unit miusure nula");
+            throw new NullPointerException("Unit miusure nulla!");
         }
         return unit_miusure;
     }
 
     public String getQuantity() {
         if ( quantity == null ) {
-            throw new NullPointerException("Quantity nula");
+            throw new NullPointerException("Quantity nulla!");
         }
         return quantity;
     }
 
     public String getPrincipio_attivo() {
         if ( principio_attivo == null ) {
-            throw new NullPointerException("Principio attivo nula");
+            throw new NullPointerException("Principio attivo nulla!");
         }
         return principio_attivo;
     }
 
     public String getDescription() {
         if ( description == null ) {
-            throw new NullPointerException("Description nula");
+            throw new NullPointerException("Description nulla!");
         }
         return description;
     }
 
     public Date getDate() {
         if ( date == null ) {
-            throw new NullPointerException("Date nula");
+            throw new NullPointerException("Date nulla!");
         }
         return date;
     }
 
     public  static class FieldDataBuilder {
-
-        private String anagrafia_cliente;
+        private String anagrafica_cliente;
         private String sigla;
         private String partita_iva;
         private String nome;
@@ -105,7 +109,7 @@ public class FieldData {
         private String principio_attivo;
         private Date date;
         private  int id;
-private FieldDataBuilder() {
+public FieldDataBuilder() {
 
 }
 
@@ -122,8 +126,8 @@ private FieldDataBuilder() {
             this.id = id;
             return this;
         }
-        public FieldDataBuilder setAnagrafia_cliente(String anagrafia_cliente) {
-            this.anagrafia_cliente = anagrafia_cliente;
+        public FieldDataBuilder setAnagrafica_cliente(String anagrafica_cliente) {
+            this.anagrafica_cliente = anagrafica_cliente;
             return this;
         }
 

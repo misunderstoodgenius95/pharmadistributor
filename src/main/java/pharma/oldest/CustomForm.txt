@@ -1,0 +1,229 @@
+package pharma.oldest;
+
+
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import pharma.Model.FieldData;
+import pharma.config.InputValidation;
+import pharma.config.Utility;
+
+import java.util.HashMap;
+import java.util.UUID;
+
+public class CustomForm<T> extends Dialog<T> {
+
+    public enum Validation{Email,Password,Vat}
+    private final VBox vbox;
+    private ButtonType okButtonType;
+    HashMap<Control,String> map_control;
+    private Button button_ok;
+    public CustomForm(CustomFormBuilder customDomainBuilder) {
+
+        super();
+        this.vbox=customDomainBuilder.vbox;
+        this.map_control=customDomainBuilder.map_controls;
+        this.getDialogPane().setPrefHeight(400);
+        this.getDialogPane().setPrefWidth(400);
+        this.getDialogPane().setContent(vbox);
+        okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE); // inizializzo il bottone ok
+        this.getDialogPane().getButtonTypes().addAll(okButtonType,ButtonType.CANCEL); // Lo aggiungo al Dialog
+        initModality(Modality.APPLICATION_MODAL);
+        button_ok = (Button) getDialogPane().lookupButton(okButtonType);
+        show();
+        generate_event();
+    }
+
+    private  void generate_event() {
+
+        button_ok.addEventFilter(ActionEvent.ACTION, event -> {
+          if(map_control.isEmpty()){
+              return;
+          }
+            boolean validate;
+            validate=map_control.keySet().stream().anyMatch(couple -> {
+                  if (couple instanceof TextField textField) {
+                      if (textField.getText().isEmpty()) {
+                          return true;
+                      }
+                      else if(textField.getId()!=null){
+                          return !InputValidation.get_validation(textField.getId().split("-")[0], textField.getText());
+
+                      }
+
+                      return  false;
+                  } else if (couple instanceof ChoiceBox<?>) {
+                      ChoiceBox<T> choiceBox = (ChoiceBox<T>) couple;
+                      if (choiceBox.getValue() == null) {
+
+                          return true;
+                      }
+                  }
+                  return false;
+              });
+
+            if (validate) {
+                Utility.create_alert(Alert.AlertType.WARNING, "Attenzione!", " Riempire tutti campi!");
+                event.consume();
+
+            }else{
+
+               map_control.keySet().stream().forEach(control -> {
+
+                   if(control instanceof  TextField){
+                       ((TextField) control).getText();
+                       FieldData.FieldDataBuilder.getbuilder().setF
+                   }
+               });
+
+            }
+
+
+
+          });
+
+
+
+
+          /*
+            if (textFieldList.isEmpty()) {
+
+                result = choiceBoxes.stream().anyMatch(choice -> choice.getValue() == null);
+            }
+            else if(choiceBoxes.isEmpty()){
+
+                result = textFieldList.stream().
+                        anyMatch(textField -> {
+                            if(textField.getText().isEmpty()){
+                                return  true;
+                            }else if(textField.getId()!=null) {
+                                return !InputValidation.get_validation(textField.getId().split("-")[0], textField.getText());
+                            }
+                            return  false;
+
+                        });
+
+
+            }else {
+
+                result = Stream.concat(choiceBoxes.stream().map(choice-> choice.getValue()==null),
+                        textFieldList.stream().map(textField -> textField.getText().isEmpty())).anyMatch(results->results);
+
+            }
+            if (result) {
+                Utility.create_alert(Alert.AlertType.WARNING, "Attenzione!", " Riempire tutti campi!");
+                event.consume();
+
+            }
+
+
+
+
+        });
+
+           */
+    }
+
+
+
+
+
+    public static   class CustomFormBuilder<T> {
+        private final  String content;
+        private  VBox vbox;
+        private  HashMap<Control,String> map_controls;
+        private CustomFormBuilder(String content) {
+            vbox=new VBox();
+            vbox.setSpacing(20);
+            this.content=content;
+            this.map_controls=new HashMap<>();
+
+        }
+        public static CustomFormBuilder getBuilder(String content){
+
+            return  new CustomFormBuilder(content);
+
+        }
+        public CustomFormBuilder add_spinner(int min, int max,String fieldName) {
+            Spinner<Integer> spinner = new Spinner<>();
+            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max));
+            spinner.setEditable(true);
+            map_controls.put(spinner,fieldName);
+            vbox.getChildren().add(spinner);
+            return this;
+
+        }
+
+
+        public CustomFormBuilder add_text_field(String value,String filedName) {
+
+            TextField field = new TextField();
+            field.setPromptText(value);
+
+            map_controls.put(field,filedName);
+            vbox.getChildren().add(field);
+            field.setPadding(new Insets(10, 10, 10, 10));
+            field.setFont(new Font("Arial", 20));
+            return this;
+        }
+        public CustomFormBuilder add_text_field_with_validation(String value, Validation validation,String fieldName) {
+
+            TextField field = new TextField();
+            field.setPromptText(value);
+            switch (validation){
+                case Email:{
+                    field.setId("Email"+"-"+UUID.randomUUID());
+                    break;
+                }
+                case Password:{
+                    field.setId("Password"+"-"+UUID.randomUUID());
+                    break;
+                }
+                case Vat:{
+                    field.setId("Vat"+"-"+UUID.randomUUID());
+                    break;
+                }
+
+            }
+            map_controls.put(field, fieldName);
+            vbox.getChildren().add(field);
+            field.setPadding(new Insets(10, 10, 10, 10));
+            field.setFont(new Font("Arial", 20));
+            return this;
+        }
+        public CustomFormBuilder add_choice_box(ObservableList<T> obs,String fieldName){
+            ChoiceBox<T> fieldDataChoiceBox=new ChoiceBox<>(obs);
+            vbox.getChildren().add(fieldDataChoiceBox);
+
+            map_controls.put(fieldDataChoiceBox,fieldName);
+            return this;
+        }
+
+
+
+
+
+
+
+
+
+        public CustomForm<T> build(){
+            return new CustomForm<T>(this);
+
+        }
+
+
+
+
+
+
+
+
+    }
+
+
+}

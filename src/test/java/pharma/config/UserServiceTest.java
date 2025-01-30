@@ -5,7 +5,7 @@ import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.TokenHolder;
 import com.auth0.net.Response;
 import com.auth0.net.TokenRequest;
-import com.github.tomakehurst.wiremock.WireMockServer;
+
 import com.sun.source.tree.ModuleTree;
 import kotlin.jvm.internal.unsafe.MonitorKt;
 import org.junit.jupiter.api.Assertions;

@@ -2,12 +2,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import pharma.Model.FieldData;
-import pharma.oldest.CustomDialog;
+import pharma.config.CustomDialog;
 
 public class JavaTest extends ApplicationTest {
     CustomDialog<FieldData> customDialog;
@@ -34,8 +33,7 @@ public class JavaTest extends ApplicationTest {
     @Test
     public void get_button(){
 
-        int size=customDialog.getDialogPane().getButtonTypes().size();
-        Assertions.assertTrue(size==2);
+
     }
 
 

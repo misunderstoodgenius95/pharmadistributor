@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchor_id" prefHeight="570.0" prefWidth="1293.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.Purchase">
+<AnchorPane fx:id="anchor_id" prefHeight="557.0" prefWidth="1497.0"  xmlns:fx="http://javafx.com/fxml" fx:controller="pharma.Controller.Purchase">
    <children>
       <Text layoutX="-273.0" layoutY="-13.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="297.21630859375" />
       <Text layoutX="515.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase " wrappingWidth="258.21630859375">
@@ -14,7 +14,7 @@
             <Font size="36.0" />
          </font>
       </Text>
-      <VBox layoutX="7.0"  fx:id="vbox_id" layoutY="16.0" prefHeight="543.0" prefWidth="252.0" spacing="20.0">
+      <VBox fx:id="vbox_id" layoutX="7.0" layoutY="16.0" prefHeight="543.0" prefWidth="252.0" spacing="20.0">
          <children>
             <Button mnemonicParsing="false" onAction="#pharma_action" prefHeight="50.0" prefWidth="258.0" text=" Casa Farmaceutica">
                <font>

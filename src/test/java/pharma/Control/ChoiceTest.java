@@ -2,6 +2,8 @@ package pharma.Control;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +19,11 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.config.SimulateEvents;
 
-import java.lang.management.PlatformManagedObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @ExtendWith(ApplicationExtension.class)
 public class ChoiceTest{
     private  ChoiceBox<String> choice;
@@ -54,6 +60,44 @@ public class ChoiceTest{
             });
 
     }
+
+
+    @Test
+    void test(){
+        ObservableList<String> obs= FXCollections.observableArrayList("hello","ciao","hello");
+        List<ChoiceBox<String>> choiceBoxes=new ArrayList<>();
+        ChoiceBox<String> choiceBox_1=new ChoiceBox<>(obs);
+        SimulateEvents.simulate_selected_items(choiceBox_1,"ciao");
+        choiceBoxes.add(choiceBox_1);
+        ChoiceBox<String> choiceBox_2=new ChoiceBox<>(FXCollections.observableArrayList("One","Two","Three"));
+      //  choiceBoxes.add(choiceBox_2);
+       // SimulateEvents.simulate_selected_items(choiceBox_2,"Three");
+        System.out.println();
+        boolean value=choiceBoxes.stream().anyMatch(choice -> choice.getValue() == null);
+        System.out.println(value);
+    }
+    @Test
+    void test_stream(){
+        ObservableList<String> obs= FXCollections.observableArrayList("hello","ciao","hello");
+        List<ChoiceBox<String>> choiceBoxes=new ArrayList<>();
+        ChoiceBox<String> choiceBox=new ChoiceBox<>(obs);
+        SimulateEvents.simulate_selected_items(choiceBox,"ciao");
+        choiceBoxes.add(choiceBox);
+        ChoiceBox<String> choice_me=new ChoiceBox<>(FXCollections.observableArrayList("One","Two","Three"));
+        choiceBoxes.add(choice_me);
+        SimulateEvents.simulate_selected_items(choiceBox,"Three");
+        boolean value=choiceBoxes.stream().noneMatch(choice -> choice.getValue() == null);
+        System.out.println(value);
+    }
+    @Test
+    public void test_me(){
+
+
+        String password="Password"+"-"+ UUID.randomUUID();
+
+        System.out.println(password.split("-")[0]);
+    }
+
 
 
 

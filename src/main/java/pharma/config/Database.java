@@ -1,11 +1,8 @@
 package pharma.config;
 
-import javafx.scene.chart.PieChart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.Result;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
@@ -14,23 +11,26 @@ public class Database {
     private Connection conn;
     private static Database instance;
 
-
-    private Database() {
+    private static final Logger logger = LoggerFactory.getLogger(Database.class);
+    private Database(Properties properties) {
     try{
 
-     Properties properties=getPopertiesDatabase();
+
      conn = DriverManager.getConnection(properties.getProperty("host"),
              properties.getProperty("username"), properties.getProperty("password"));
-
+        logger.info("Database connection established successfully.");
     }catch (SQLException e) {
-
-        e.printStackTrace();
+        logger.error("Failed to establish database connection: ", e);
+        throw  new RuntimeException(e);
     }
     }
 
-     public static Database getInstance() {
+     public static synchronized  Database getInstance(Properties properties) {
+        if(properties==null){
+            throw new IllegalArgumentException("Error! Propriety cannot be null!");
+        }
          if (instance == null) {
-             instance = new Database();
+             instance = new Database(properties);
          }
          return instance;
      }
@@ -44,26 +44,43 @@ public class Database {
         throw new RuntimeException(e);
     }
     }
-
-    public ResultSet execute_query(String sql)  {
-
+    public Connection get_connection(){
+        return conn;
+    }
+    public ResultSet executeQuery(String sql) {
+        Statement stmt = null;
+        ResultSet rs = null;
 
         try {
-          return   conn.createStatement().executeQuery(sql);
+            // Use PreparedStatement for safer query execution (parameterized queries are better)
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            return rs;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            // Log the exception using a proper logging framework
+            System.err.println("SQL execution failed: " + e.getMessage());
+            throw new RuntimeException("Error executing SQL query", e);
         }
     }
-    public PreparedStatement execute_prepared_query(String sql)  {
+    public void me(){
+        System.out.println("me");
 
-    try {
+    }
+    public PreparedStatement execute_prepared_query(String sql)throws SQLException  {
+        logger.info("execute");
+        if(conn==null){
+            System.out.println("conn is "+conn);
+        throw  new IllegalArgumentException("Connection is null!");
+         }else{
+            logger.info("Conection are ok!");
+        }
         return conn.prepareStatement(sql);
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
-    }
+
+
+
     }
 
-    private Properties getPopertiesDatabase() {
+    /*private Properties getPopertiesDatabase() {
     FileReader reader = null;
     try {
         reader = new FileReader("database.properties");
@@ -75,6 +92,9 @@ public class Database {
         throw new RuntimeException(e);
     }
     }
+
+     */
+
     public DatabaseMetaData get_MetaData() throws SQLException {
 
         try {

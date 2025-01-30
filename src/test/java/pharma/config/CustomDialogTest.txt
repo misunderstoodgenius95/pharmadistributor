@@ -1,0 +1,85 @@
+package pharma.config;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import org.assertj.core.error.AssertionErrorMessagesAggregrator;
+import org.checkerframework.checker.units.qual.C;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit5.ApplicationTest;
+import pharma.Model.FieldData;
+
+import java.util.List;
+
+class CustomDialogTest  extends ApplicationTest {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        VBox vBox = new VBox();
+        Scene scene = new Scene(vBox);
+
+     /*   ObservableList<String> obs = FXCollections.observableArrayList("One","Two","Three");
+       customDialog=CustomDialog.CustomDomainBuilder.getBuilder("Prova").add_choice_box(obs,"choice_id").
+               add_text_field("Username").add_text_field("password").build();
+
+
+      */
+
+
+
+    }
+
+    @Test
+    public void test() {
+
+        Platform.runLater( ()-> {
+
+            ButtonType button_type_ok = customDialog.getDialogPane().getButtonTypes().get(0);
+
+            ChoiceBox<String> choiceBox=lookup("#choice_id").queryAs(ChoiceBox.class);
+
+           SimulateEvents.simulate_selected_items(choiceBox,"One");
+
+            Button button_ok = (Button) customDialog.getDialogPane().lookupButton(button_type_ok);
+
+             SimulateEvents.clickOn(button_ok);
+
+            // DialogPane dialogPane=lookup("#alert").queryAs(DialogPane.class)
+         Assertions.assertThrows(RuntimeException.class,()->lookup("#alert").queryAs(DialogPane.class));
+
+
+        });
+    }
+    @Test
+    public void test_onlytextfiled() {
+        Platform.runLater(() -> {
+
+
+/*
+            ButtonType button_type_ok = customDialog.getDialogPane().getButtonTypes().get(0);
+            Button button_ok = (Button) customDialog.getDialogPane().lookupButton(button_type_ok);
+
+
+            SimulateEvents.writeOn(textFields.get(0),"Novartis");
+           // SimulateEvents.writeOn(textFields.get(1),"11");
+           SimulateEvents.writeOn(textFields.get(1),"IT12345555555");
+            Assertions.assertEquals(textFields.get(1).getId().split("-")[0],"Vat");
+            SimulateEvents.writeOn(textFields.get(2),"NV");
+            SimulateEvents.clickOn(button_ok);
+
+            Assertions.assertThrows(RuntimeException.class,()->lookup("#alert").queryAs(DialogPane.class));
+
+
+ */
+        });
+    }
+
+
+}

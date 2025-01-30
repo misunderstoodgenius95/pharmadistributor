@@ -14,7 +14,7 @@ public class UserService {
 
     }
 
-    public Response<TokenHolder> authenticate(String username, String password, String audience) {
+    public Response<TokenHolder> authenticate(String username, String password, String audience) throws Auth0Exception {
 
         if(username ==null|| !InputValidation.validate_email(username)){
             throw new IllegalArgumentException("Username cannot be null or empty");
@@ -29,7 +29,7 @@ public class UserService {
 
            return authAPI.login(username, password.toCharArray()).setAudience(audience).execute();
         } catch (Auth0Exception e) {
-            throw new RuntimeException(e);
+            throw new Auth0Exception(e.getMessage());
         }
 
 

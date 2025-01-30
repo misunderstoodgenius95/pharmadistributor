@@ -1,6 +1,7 @@
 package pharma.config;
 
 
+import net.jodah.failsafe.internal.util.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -65,5 +66,12 @@ class InputValidationTest  {
     }
 
 
-
+    @Test
+    void validate_p_iva() {
+        Assertions.assertTrue(InputValidation.validate_p_iva("IT12345555555"));
+    }
+    @Test
+    void invalidate_p_iva() {
+        Assertions.assertTrue(InputValidation.validate_p_iva("11111"));
+    }
 }

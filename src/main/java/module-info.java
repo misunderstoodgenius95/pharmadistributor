@@ -7,10 +7,14 @@ module pharma {
     requires javafx.graphics;
     requires org.json;
     requires  org.testfx;
-    requires jdk.compiler;
-    requires jdk.jdi;
     requires auth0;
-
+    requires java.desktop;
+    requires jdk.jshell;
+    requires org.hamcrest;
+    requires org.postgresql.jdbc;
+    requires jdk.unsupported;
+    requires org.slf4j;
+    requires rgxgen;
     opens pharma to javafx.fxml;
     exports pharma to javafx.fxml,javafx.graphics;
 opens pharma.Controller to javafx.fxml;
@@ -20,4 +24,6 @@ exports pharma.Controller.subpanel to javafx.fxml;
     exports pharma.Controller to javafx.controls, javafx.fxml, javafx.graphics;
     opens pharma.oldest to javafx.fxml;
     exports pharma.oldest;
+    opens pharma.config to javafx.fxml;
+    opens pharma.Model to javafx.base;
 }

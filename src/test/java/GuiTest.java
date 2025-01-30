@@ -1,25 +1,15 @@
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventType;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationTest;
 import pharma.Model.FieldData;
-import pharma.oldest.CustomDialog;
-
-
-import java.util.List;
-import java.util.Objects;
+import pharma.config.CustomDialog;
 
 public class GuiTest extends ApplicationTest {
     private  ChoiceBox<String> choice;

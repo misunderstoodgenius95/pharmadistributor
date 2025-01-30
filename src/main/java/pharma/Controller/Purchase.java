@@ -1,7 +1,9 @@
 package pharma.Controller;
 
 
+import com.github.curiousoddman.rgxgen.iterators.IncrementalLengthIterator;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
@@ -16,7 +18,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import pharma.security.TokenUtility;
 
+
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class Purchase{
 
@@ -52,11 +57,10 @@ public class Purchase{
 
     @FXML
     void pharma_action(ActionEvent event) throws IOException {
-vbox_id.setVisible(false);
- Stages stage = new Stages();
-        Parent parent=stage.load_fxml("/subpanel/pharma.fxml");
-        System.out.println(parent.getLayoutX());
-     AnchorPane.setTopAnchor(parent, 0.0);
+
+        Stages stage = new Stages();
+        Parent parent = stage.load_fxml("/subpanel/pharma.fxml");
+        AnchorPane.setRightAnchor(parent, -20.00);
         anchor_id.getChildren().add(parent);
     }
 
@@ -64,22 +68,21 @@ vbox_id.setVisible(false);
     void raccomandazioni_action(ActionEvent event) {
 
     }
+
     @FXML
     void add_casa_farmaceutica_btn(ActionEvent event) {
-String token=StorageToken.get_token();
-        boolean token_u=TokenUtility.check_permission(token,"write","pharma");
+        String token = StorageToken.get_token();
+        boolean token_u = TokenUtility.check_permission(token, "write", "pharma");
 
-if(token_u){
-    System.out.println("Accedi alla proceura");;
-}else{
+        if (token_u) {
+            System.out.println("Accedi alla proceura");
+            ;
+        } else {
 
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Permission Denied");
-    alert.show();
-}
-
-
-
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Permission Denied");
+            alert.show();
+        }
 
 
     }
