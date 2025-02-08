@@ -3,27 +3,25 @@ package pharma.Controller.subpanel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-import jdk.jshell.execution.Util;
-import org.w3c.dom.CDATASection;
+
+import pharma.Handler.DialogHandler;
 import pharma.Handler.PharmaDialogHandler;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.*;
 import pharma.dao.PharmaDao;
 
-import javax.print.attribute.standard.PageRanges;
-import java.io.FileNotFoundException;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
+import java.rmi.AccessException;
 import java.util.*;
 
 public class Pharma implements Initializable {
@@ -34,20 +32,36 @@ public class Pharma implements Initializable {
     private SimpleObjectProperty<FieldData> fieldData_property;
     public AnchorPane anchor_id;
     public TableView<FieldData> table_id;
-    public Button button_click;
-
     @FXML
-    public void add_pharma_action(ActionEvent actionEvent) throws IOException {
-        PharmaDialogHandler pharmaDialogHandler=new PharmaDialogHandler("Aggiungi Farmaco",table_id);
-       pharmaDialogHandler.showAndWait().ifPresent(result-> {
+    public Button button_add_click;
+
+    private  ObservableList<FieldData> obs_fieldData;
+    private final PharmaDao pharmaDao;
+    public Pharma()  {
+
+        try {
+            Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            pharmaDao = new PharmaDao(Database.getInstance(properties));
+        } catch (IOException e ) {
+            throw new RuntimeException(e);
+        }
+       obs_fieldData= FXCollections.observableArrayList();
+
+    }
+    @FXML
+    public void add_pharma_action() throws AccessException {
+        PharmaDialogHandler pharmaDialogHandler=new PharmaDialogHandler("Aggiungi Casa farmaceutica",pharmaDao,obs_fieldData);
+        pharmaDialogHandler.setOperation(DialogHandler.Mode.Insert, null);
+        pharmaDialogHandler.execute();
+
+      /* pharmaDialogHandler.showAndWait().ifPresent(result-> {
                    try {
-                       Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
-                       PharmaDao pharmaDao = new PharmaDao(Database.getInstance(properties));
+
                        boolean cond = pharmaDao.insert(result);
                        if (cond) {
 
                            Utility.create_alert(Alert.AlertType.CONFIRMATION, "", "Aggiunto con sucesso!");
-                           table_id.getItems().add(result);
+                           obs_fieldData.add(result);
                        } else {
                            Utility.create_alert(Alert.AlertType.ERROR, "", "Errore inserimento!");
                        }
@@ -95,52 +109,34 @@ public class Pharma implements Initializable {
 
     }
     @FXML
-    void edit_pharma_event(ActionEvent event) {
+    void edit_pharma_event() throws AccessException {
 
-        PharmaDialogHandler pharmaDialogHandler=new PharmaDialogHandler("Personalizza",table_id);
-        pharmaDialogHandler.setTextAnagrafica(fieldData_property.get().getAnagrafica_cliente());
-        pharmaDialogHandler.setTextSigla(fieldData_property.get().getSigla());
-        pharmaDialogHandler.setTextVat(fieldData_property.get().getPartita_iva());
-        pharmaDialogHandler.setDisableSigla();
-        pharmaDialogHandler.setDisableVat();
+        PharmaDialogHandler pharmaDialogHandler=new PharmaDialogHandler("Aggiungi Casa farmaceutica",pharmaDao,obs_fieldData);
+        pharmaDialogHandler.setOperation(DialogHandler.Mode.Update, fieldData_property.get());
+        pharmaDialogHandler.execute();
 
-
-        pharmaDialogHandler.showAndWait().ifPresent(result-> {
-            try {
-                Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
-                PharmaDao pharmaDao = new PharmaDao(Database.getInstance(properties));
-                boolean cond = pharmaDao.update(result);
-                if (cond) {
-                    Utility.create_alert(Alert.AlertType.CONFIRMATION, "", "Modificato con sucesso!");
-                    table_id.getItems().add(result);
-                } else {
-                    Utility.create_alert(Alert.AlertType.ERROR, "", "Errore inserimento!");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        Utility.create_btn(button_add_click, "add.png");
         fieldData_property=new SimpleObjectProperty<>();
         RadioButtonTableColumn<FieldData> actionColumn = new RadioButtonTableColumn<>() {
             @Override
             protected void onButtonClick(FieldData rowData) {
-                System.out.println(rowData.getId());
                 edit_pharma.setVisible(true);
                 fieldData_property.set(rowData);
                 // Custom behavior for the button click
-             //   System.out.println("Custom action for: " + rowData.get;
+                //   System.out.println("Custom action for: " + rowData.get;
             }
         };
 
-        table_id.getColumns().addAll(  TableUtility.generate_column_string("Anagrafica Utente","anagrafica_cliente"),
+        table_id.getColumns().addAll( TableUtility.generate_column_string("Anagrafica Utente","nome"),
         TableUtility.generate_column_string("Sigla","sigla"),
         TableUtility.generate_column_string("Partita Iva","partita_iva"),actionColumn);
+
+
         table_id.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
 
@@ -151,13 +147,12 @@ public class Pharma implements Initializable {
         try {
             Properties properties= FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host","username","password")),new FileReader("database.properties"));
             PharmaDao pharmaDao=new PharmaDao(Database.getInstance(properties));
-            ObservableList<FieldData> fieldData= FXCollections.observableArrayList(pharmaDao.findAll());
-            table_id.setItems(fieldData);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
+            obs_fieldData.setAll(pharmaDao.findAll());
+            table_id.setItems(obs_fieldData);
+        } catch (IOException e ) {
             throw new RuntimeException(e);
         }
         Utility.search_item(table_id,search_id);
+
     }
 }

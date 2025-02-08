@@ -117,9 +117,20 @@ public class PharmaDaoTest {
         Mockito.when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
         Mockito.when(preparedStatement.executeUpdate()).thenReturn(1);
     Assertions.assertTrue(pharmaDao.update(fieldData));
+        Mockito.verify(preparedStatement).setString(1,"Melarini");
+        Mockito.verify(preparedStatement).setInt(2,1);
 
     }
+    @Test
+    public void InvalidUpate() throws SQLException {
+        PreparedStatement preparedStatement= Mockito.mock(PreparedStatement.class);
+        FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setId(1).setAnagrafica_cliente("Melarini").build();
+        Mockito.when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
+        Mockito.when(preparedStatement.executeUpdate()).thenReturn(0);
+        Assertions.assertFalse(pharmaDao.update(fieldData));
 
+
+    }
 
 
 
@@ -141,7 +152,7 @@ public class PharmaDaoTest {
        Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host","username","password")),new FileReader("database.properties"));
      PharmaDao pharmaDao=new PharmaDao(Database.getInstance(properties));
      List<FieldData> list=pharmaDao.findAll();
-     Assertions.assertEquals(0,list.size());
+     Assertions.assertEquals(3,list.size());
 
  }
     @Test
@@ -154,8 +165,6 @@ public class PharmaDaoTest {
           pharmaDao=new PharmaDao(Database.getInstance(properties));
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
 
         FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setPartita_iva("11111").setSigla("AA").setAnagrafica_cliente("Ciaooo").build();
@@ -178,7 +187,25 @@ public class PharmaDaoTest {
          */
 
     }
+    @Test
+    public void integrationTestUpdate() throws SQLException {
+        Properties properties= null;
+        PharmaDao pharmaDao=null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host","username","password")),new FileReader("database.properties"));
 
+            pharmaDao=new PharmaDao(Database.getInstance(properties));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setId(1).setAnagrafica_cliente("Bayer").build();
+
+
+        Assertions.assertTrue(pharmaDao.update(fieldData));
+
+    }
 
 
 

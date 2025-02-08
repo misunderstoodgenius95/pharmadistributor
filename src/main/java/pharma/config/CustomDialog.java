@@ -1,5 +1,6 @@
 package pharma.config;
 
+import com.github.curiousoddman.rgxgen.nodes.Choice;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -8,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
+import pharma.Model.FieldData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +19,11 @@ public class CustomDialog<T> extends Dialog<T> {
     private final VBox vbox;
     private  Button button_ok;
     private ButtonType okButtonType;
-    public enum Validation{Email,Password,Vat}
-    private List<Control> controlList;
+    public enum Validation{Email,Password,Vat,Double_Digit}
+    private ObservableList<Control> controlList;
     public CustomDialog(String content) {
         super();
-        controlList=new ArrayList<>();
+        controlList=FXCollections.observableArrayList();
         getDialogPane().getStyleClass().add("custom_dialog");
         setTitle(content);
         getDialogPane().setHeaderText("CustomDialog");
@@ -31,7 +33,7 @@ public class CustomDialog<T> extends Dialog<T> {
      this.getDialogPane().setPrefWidth(400);
 
         this.getDialogPane().setContent(vbox);
-        ObservableList<Control> controlObservableList= FXCollections.observableList(controlList);
+
 
 
         okButtonType = new ButtonType("OK",ButtonBar.ButtonData.OK_DONE); // inizializzo il bottone ok
@@ -45,6 +47,15 @@ public class CustomDialog<T> extends Dialog<T> {
         return okButtonType;
 
     }
+
+    public Button getButton() {
+        return button_ok;
+    }
+
+    public VBox getVbox() {
+        return vbox;
+    }
+
     private void get_event(){
         button_ok.addEventFilter(ActionEvent.ACTION, event -> {
             if (controlList.isEmpty()) {
@@ -63,7 +74,10 @@ public class CustomDialog<T> extends Dialog<T> {
                     return false;
                 } else if (couple instanceof ChoiceBox<?>) {
                     ChoiceBox<T> choiceBox = (ChoiceBox<T>) couple;
-                    return choiceBox.getValue() == null;
+                    return choiceBox.getSelectionModel().isEmpty();
+                }else if(couple instanceof DatePicker){
+                    DatePicker datePicker=(DatePicker)couple;
+                    return datePicker.getValue() == null;
                 }
                 return false;
             });
@@ -72,12 +86,14 @@ public class CustomDialog<T> extends Dialog<T> {
                 Utility.create_alert(Alert.AlertType.WARNING, "Attenzione!", " Riempire tutti campi!");
                 event.consume();
             }
+
         });
 
 
 
 
     }
+
     public Spinner<Integer> add_spinner() {
         Spinner<Integer> spinner = new Spinner<>();
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
@@ -87,6 +103,15 @@ public class CustomDialog<T> extends Dialog<T> {
 
         return spinner;
 
+    }
+    public ChoiceBox<T> add_choiceBox(T value){
+        ChoiceBox<T> choiceBox=new ChoiceBox<>();
+        vbox.getChildren().add(choiceBox);
+        choiceBox.setValue(value);
+        choiceBox.setPrefWidth(500);
+        choiceBox.setStyle("-fx-font-size: 16px");
+        controlList.add(choiceBox);
+        return  choiceBox;
     }
 
     public TextField add_text_field(String placeholder) {
@@ -99,6 +124,13 @@ public class CustomDialog<T> extends Dialog<T> {
         controlList.add(field);
 
         return field;
+    }
+    public DatePicker add_calendar(){
+        DatePicker datePicker=new DatePicker();
+        controlList.add(datePicker);
+        vbox.getChildren().add(datePicker);
+        datePicker.getStyleClass().add("datepicker");
+        return datePicker;
     }
     public TextField add_text_field_with_validation(String value,Validation validation) {
 
@@ -119,28 +151,17 @@ public class CustomDialog<T> extends Dialog<T> {
                 field.setId("Vat"+"-"+UUID.randomUUID());
                 break;
             }
+            case Double_Digit:{
+                field.setId("Double_Digit"+"-"+UUID.randomUUID());
+            }
 
         }
 
         vbox.getChildren().add(field);
         field.setPadding(new Insets(10, 10, 10, 10));
-        field.setFont(new Font("Arial", 20));
+        field.setFont(new Font("Arial", 16));
        return  field;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

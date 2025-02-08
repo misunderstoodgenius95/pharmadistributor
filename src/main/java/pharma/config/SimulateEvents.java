@@ -34,7 +34,9 @@ public class SimulateEvents {
 
 
     }
-
+    public static  void openDatePicker(DatePicker datePicker){
+        datePicker.show();
+    }
     public static  void writeOn(String query,String text, Scene scene){
         TextField field= (TextField) scene.lookup(query);
         field.setText(text);

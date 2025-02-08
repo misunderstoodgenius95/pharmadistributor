@@ -6,28 +6,46 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchor_id" prefHeight="557.0" prefWidth="1497.0"  xmlns:fx="http://javafx.com/fxml" fx:controller="pharma.Controller.Purchase">
+<AnchorPane fx:id="anchor_id" prefHeight="557.0" prefWidth="1497.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="pharma.Controller.Purchase">
    <children>
       <Text layoutX="-273.0" layoutY="-13.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="297.21630859375" />
-      <Text layoutX="515.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Purchase " wrappingWidth="258.21630859375">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Text>
       <VBox fx:id="vbox_id" layoutX="7.0" layoutY="16.0" prefHeight="543.0" prefWidth="252.0" spacing="20.0">
          <children>
             <Button mnemonicParsing="false" onAction="#pharma_action" prefHeight="50.0" prefWidth="258.0" text=" Casa Farmaceutica">
                <font>
-                  <Font name="System Italic" size="14.0" />
+                  <Font name="System Italic" size="16.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#dettagli_action" prefHeight="49.0" prefWidth="248.0" text="Dettagli Prodotto" />
-            <Button mnemonicParsing="false" onAction="#farmaci_action" prefHeight="43.0" prefWidth="254.0" text="Farmaci" />
-            <Button mnemonicParsing="false" onAction="#lotti_action" prefHeight="54.0" prefWidth="245.0" text="Lotti" />
-            <Button mnemonicParsing="false" onAction="#fattura_acquisto_action" prefHeight="46.0" prefWidth="247.0" text="Fattura Acquisto" />
-            <Button mnemonicParsing="false" onAction="#raccomandazioni_action" prefHeight="50.0" prefWidth="248.0" text="Raccomandazioni Acquisto Prodotti" />
-            <Button mnemonicParsing="false" onAction="#ordini_action" prefHeight="43.0" prefWidth="249.0" text="Ordini" />
+            <Button mnemonicParsing="false" onAction="#dettagli_action" prefHeight="49.0" prefWidth="248.0" text="Dettagli Prodotto">
+               <font>
+                  <Font size="17.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#farmaci_action" prefHeight="43.0" prefWidth="254.0" text="Farmaci">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#lotti_action" prefHeight="48.0" prefWidth="251.0" text="Lotti">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#fattura_acquisto_action" prefHeight="46.0" prefWidth="247.0" text="Fattura Acquisto">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#raccomandazioni_action" prefHeight="50.0" prefWidth="248.0" text="Raccomandazioni ">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#ordini_action" prefHeight="43.0" prefWidth="249.0" text="Ordini">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
          </children>
       </VBox>
+      <Text layoutX="632.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Area Acquisti" wrappingWidth="233.21630859375">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

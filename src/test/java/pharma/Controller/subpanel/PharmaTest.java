@@ -47,7 +47,7 @@ class PharmaTest {
         // Button button =fxRobot.lookup("#add_pharma_action").queryButton();
         Platform.runLater(() -> {
             System.out.println( Stage.getWindows());
-            SimulateEvents.clickOnButton("#button_click", scene);
+           SimulateEvents.clickOnButton("#button_click", scene);
 
 
 

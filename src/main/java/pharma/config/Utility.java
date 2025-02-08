@@ -7,34 +7,41 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import pharma.Model.FieldData;
 
-import java.util.List;
+import java.util.Objects;
+
 
 public class Utility {
-
-    public static void create_alert(Alert.AlertType alert_type, String title_header,String body){
+public  static  final String Principio_attivo="Principio_Attivo";
+public static  final  String Tipologia="Tipologia";
+public static final  String Categoria="Categoria";
+public static final String Misura="Misura";
+    public static void create_alert(Alert.AlertType alert_type, String title_header, String body) {
 
         Alert alert = new Alert(alert_type);
         alert.setTitle(title_header);
         alert.setHeaderText(body);
         alert.getDialogPane().setId("alert");
         alert.initModality(Modality.APPLICATION_MODAL);
-        alert.show();
+        alert.showAndWait();
 
     }
-    public static  void create_btn(Button button, String path){
-        Image image=new Image(path);
-        ImageView imageView=new ImageView(image);
+
+    public static void create_btn(Button button, String path) {
+
+        Image image = new Image(path);
+        ImageView imageView = new ImageView(image);
         imageView.setFitHeight(20);
         imageView.setFitWidth(20);
         button.setGraphic(imageView);
 
         button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
     }
-    public static void search_item(TableView<FieldData> table_id,TextField search_id){
+
+    public static void search_item(TableView<FieldData> table_id, TextField search_id) {
 
         FilteredList<FieldData> filteredData = new FilteredList<>(table_id.getItems(), p -> true);
         table_id.setItems(filteredData);
-        search_id.textProperty().addListener((observable,oldValue,newValue )-> {
+        search_id.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(fieldData -> {
                 System.out.println("Filtering...");
 /*
@@ -56,6 +63,23 @@ The reason for returning true when the filter text is null or empty is that the 
             });
         });
     }
+
+    public static void set_fieldText(String mode, TextField detailField1, TextField detailField2) {
+
+    if(mode.equalsIgnoreCase(Utility.Misura)){
+        detailField1.setPromptText("Quantità");
+        detailField2.setVisible(true);
+        detailField2.setPromptText("Misura");
+    }else{
+
+        detailField1.setPromptText("Nome");
+        detailField2.setVisible(false);
+    }
+
+    }
+
+
+
 
 
 }

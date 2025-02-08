@@ -1,27 +1,27 @@
 package pharma.dao;
 
+import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 import pharma.Model.FieldData;
 import pharma.config.Database;
 
 import javax.lang.model.element.NestingKind;
-import javax.swing.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
    private static final String table="pharma";
-    public PharmaDao(Database database) throws SQLException {
+    public PharmaDao(Database database)  {
         super(table, database);
 
 
     }
 
     @Override
-    protected FieldData mapRow(ResultSet resultSet) throws SQLException {
-        System.out.println(resultSet);
+    protected FieldData mapRow(ResultSet resultSet) throws  SQLException  {
+
         FieldData fieldData= FieldData.FieldDataBuilder.getbuilder().
-                setAnagrafica_cliente(resultSet.getString(2)).
+              setNome(resultSet.getString(2)).
                 setPartita_iva(resultSet.getString(4)).
                 setSigla(resultSet.getString(3)).setId(resultSet.getInt(1)).build();
         return fieldData;
@@ -41,6 +41,7 @@ public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
         }
     }
 
+
     @Override
     protected String getInsertQuery() {
         return "INSERT INTO "+ table+" (anagrafica_cliente,sigla,partita_iva) VALUES (?,?,?)  ";
@@ -48,7 +49,7 @@ public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
 
     @Override
     protected String getUpdatequery() {
-        return " UPDATE "+ table +"SET anagrafica_cliente= ? WHERE id= ? ";
+        return " UPDATE "+ table +" SET anagrafica_cliente= ? WHERE id= ? ";
     }
 
     @Override
@@ -71,6 +72,7 @@ public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
     protected void setUpdateParameter(PreparedStatement statement, FieldData entity) {
         try {
             statement.setString(1,entity.getAnagrafica_cliente());
+            statement.setInt(2,entity.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

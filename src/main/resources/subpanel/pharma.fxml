@@ -8,7 +8,7 @@
 
 <AnchorPane fx:id="anchor_id" prefHeight="539.0" prefWidth="791.0"  xmlns:fx="http://javafx.com/fxml" fx:controller="pharma.Controller.subpanel.Pharma">
    <children>
-      <Button fx:id="button_click" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" onAction="#add_pharma_action" prefHeight="26.0" prefWidth="84.0" text="Aggiungi Casa  Farmaceutica" />
+      <Button fx:id="button_add_click" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" onAction="#add_pharma_action" prefHeight="26.0" prefWidth="84.0" text="Aggiungi Casa  Farmaceutica" />
       <TableView fx:id="table_id" layoutX="21.0" layoutY="131.0" prefHeight="344.0" prefWidth="578.0" />
       <TextField fx:id="search_id" layoutX="195.0" layoutY="63.0" prefHeight="37.0" prefWidth="204.0" promptText="Cerca Casa Farmaceutica">
          <font>

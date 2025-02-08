@@ -1,5 +1,7 @@
 package pharma.dao;
 
+import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
+import pharma.Model.FieldData;
 import pharma.config.Database;
 
 import java.sql.PreparedStatement;
@@ -8,18 +10,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GenericJDBCDao<T,ID>  implements GenericDao<T,ID> {
+public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
     private Database database;
 
 
     private  final String table_name;
 
-    public GenericJDBCDao(String table_name, Database database) throws SQLException {
+    public GenericJDBCDao(String table_name, Database database)  {
         this.table_name = table_name;
         this.database = database;
 
     }
-    protected abstract  T mapRow(ResultSet resultSet) throws SQLException;
+    protected abstract  T mapRow(ResultSet resultSet) throws Exception;
 
     @Override
     public T findById(ID id) {
@@ -32,7 +34,7 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDao<T,ID> {
 
                 return mapRow(resultSet);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null;
@@ -47,7 +49,7 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDao<T,ID> {
             while(resultSet.next()){
                resultList.add(mapRow(resultSet));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return  resultList;
@@ -67,8 +69,8 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDao<T,ID> {
             setInsertParameter(preparedStatement,entity);
             return  preparedStatement.executeUpdate()>0;
 
-        } catch (SQLException e) {
-           e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return  false;
 
@@ -82,8 +84,10 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDao<T,ID> {
             setUpdateParameter(preparedStatement,entity);
             return preparedStatement.executeUpdate()>0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+
+          throw  new RuntimeException(e.getMessage());
         }
+
     }
 
 
@@ -95,6 +99,7 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDao<T,ID> {
             setDeleteParameter(preparedStatement,entity);
             return preparedStatement.executeUpdate()>0;
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -102,10 +107,10 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDao<T,ID> {
 
     protected abstract  String  getFindQueryAll();
     protected  abstract void setFindByIdParameters(PreparedStatement preparedStatement, ID id);
-    protected abstract String  getInsertQuery();
+    protected abstract String  getInsertQuery() throws Exception;
     protected abstract  String getUpdatequery();
     protected  abstract  String getDeletequery();
-    protected abstract void setInsertParameter(PreparedStatement statement,T entity);
+    protected abstract void setInsertParameter(PreparedStatement statement,T entity) throws  Exception;
     protected  abstract void setUpdateParameter(PreparedStatement statement,T entity);
     protected  abstract void setDeleteParameter(PreparedStatement statement,T entity);
 }

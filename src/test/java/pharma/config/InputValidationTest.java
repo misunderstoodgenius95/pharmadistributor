@@ -74,4 +74,13 @@ class InputValidationTest  {
     void invalidate_p_iva() {
         Assertions.assertTrue(InputValidation.validate_p_iva("11111"));
     }
+
+    @Test
+    void Validvalidate_double_digit() {
+        Assertions.assertTrue(InputValidation.validate_double_digit("10,50"));
+    }
+    @Test
+    void InValidvalidate_double_digit() {
+        Assertions.assertFalse(InputValidation.validate_double_digit("1050"));
+    }
 }

@@ -51,8 +51,10 @@ db.execute(add_pharma);
 
         String query = " SELECT table_name " +
                  " FROM information_schema.tables" +
-                " WHERE table_schema = 'public'" +
-                "and table_name = 'pharma' ";
+               " WHERE table_schema = 'public'"+
+       " AND table_type = 'BASE TABLE'";
+
+              //  "and table_name = 'pharma' ";
          ResultSet rs=db.executeQuery(query);
 while(rs.next()){
     System.out.println(rs.getString(1));
@@ -65,15 +67,13 @@ while(rs.next()){
     String query="SELECT * FROM pharma";
     ResultSet rs=db.executeQuery(query);
 
-if(rs.next()){
-        System.out.println(rs.getString(1));
-        System.out.println(rs.getString(2));
-        System.out.println(rs.getString(3));
+while(rs.next()) {
+    System.out.println(rs.getString(1));
+    System.out.println(rs.getString(2));
+    System.out.println(rs.getString(3));
 
 
-    }else{
-    System.out.println("No add pharma");
-    }
+}
         }
         @Test
     public void delete() throws SQLException {
@@ -108,6 +108,7 @@ Assertions.assertFalse(db.check_exist_table("pharma"));
 
 
         }
+
 
 
 

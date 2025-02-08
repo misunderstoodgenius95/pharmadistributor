@@ -1,0 +1,106 @@
+package pharma.Handler;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
+import pharma.Model.FieldData;
+import pharma.config.CustomDialog;
+import pharma.config.PopulateChoice;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public abstract class DialogHandler  extends CustomDialog<FieldData> {
+    private  ButtonType buttonType;
+    public enum Mode{Insert,Update}
+    private  Mode mode;
+    public DialogHandler(String content) {
+        super(content);
+        initialize();
+        setResult();
+        buttonType=getDialogPane().getButtonTypes().get(1);
+    }
+    public DialogHandler(String content,PopulateChoice populateChoice) {
+
+        super(content);
+
+        initialize(populateChoice);
+        setResult();
+
+    }
+    protected void setMode(Mode mode){
+        this.mode=mode;
+
+    }
+    protected abstract void initialize();
+    protected abstract void initialize(PopulateChoice populateChoice);
+
+    protected Mode getMode() {
+        if(mode==null){
+            throw new IllegalArgumentException("Mode is null");
+        }
+        return mode;
+    }
+
+    private  void setResult(){
+        setResultConverter(dialog -> {
+            if (dialog == getButton_click()) {
+                 return  get_return_data();
+            }
+            return null;
+        });
+
+    }
+
+
+    protected abstract FieldData get_return_data();
+
+    public   void execute(){
+
+
+        AtomicBoolean success = new AtomicBoolean(false);
+        while(!success.get()) {
+            showAndWait().ifPresentOrElse(result -> {
+                try {
+                    System.out.println(result.getNome());
+                    boolean cond = condition_event(result);
+                    showAlert(cond, "Errore Inserimento!");
+
+
+                    if (cond) {
+                        success.set(true);// Exit the ifPresent block without marking success
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            },()->{
+                System.out.println("Closing");
+                success.set(true);
+                    }
+            );
+        }
+    }
+    protected abstract boolean condition_event(FieldData fieldData) throws  Exception;
+
+    public   void  showAlert(boolean success,String error_message) {
+        Alert.AlertType alertType = success ? Alert.AlertType.CONFIRMATION : Alert.AlertType.ERROR;
+        String message = success ? "Inserimento effettuato" : error_message;
+        create_alert(alertType, "", message);
+
+    }
+
+    public void  create_alert(Alert.AlertType alert_type, String title_header, String body) {
+        System.out.println("execute");
+        Alert alert = new Alert(alert_type);
+        alert.setTitle(title_header);
+        alert.setHeaderText(body);
+        alert.getDialogPane().setId("alert");
+       alert.initModality(Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+
+
+    }
+
+}

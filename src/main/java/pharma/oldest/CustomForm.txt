@@ -22,7 +22,7 @@ public class CustomForm<T> extends Dialog<T> {
     private ButtonType okButtonType;
     HashMap<Control,String> map_control;
     private Button button_ok;
-    public CustomForm(CustomFormBuilder customDomainBuilder) {
+    private  CustomForm(CustomFormBuilder customDomainBuilder) {
 
         super();
         this.vbox=customDomainBuilder.vbox;
@@ -34,11 +34,11 @@ public class CustomForm<T> extends Dialog<T> {
         this.getDialogPane().getButtonTypes().addAll(okButtonType,ButtonType.CANCEL); // Lo aggiungo al Dialog
         initModality(Modality.APPLICATION_MODAL);
         button_ok = (Button) getDialogPane().lookupButton(okButtonType);
-        show();
-        generate_event();
+
+        validation_event();
     }
 
-    private  void generate_event() {
+    private  void validation_event() {
 
         button_ok.addEventFilter(ActionEvent.ACTION, event -> {
           if(map_control.isEmpty()){
@@ -72,13 +72,10 @@ public class CustomForm<T> extends Dialog<T> {
 
             }else{
 
-               map_control.keySet().stream().forEach(control -> {
-
-                   if(control instanceof  TextField){
-                       ((TextField) control).getText();
-                       FieldData.FieldDataBuilder.getbuilder().setF
-                   }
-               });
+                map_control.keySet().stream().map(value->{
+                    String fieldData=map_control.get(value);
+                    FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().
+                        });
 
             }
 
@@ -86,47 +83,9 @@ public class CustomForm<T> extends Dialog<T> {
 
           });
 
+}
 
 
-
-          /*
-            if (textFieldList.isEmpty()) {
-
-                result = choiceBoxes.stream().anyMatch(choice -> choice.getValue() == null);
-            }
-            else if(choiceBoxes.isEmpty()){
-
-                result = textFieldList.stream().
-                        anyMatch(textField -> {
-                            if(textField.getText().isEmpty()){
-                                return  true;
-                            }else if(textField.getId()!=null) {
-                                return !InputValidation.get_validation(textField.getId().split("-")[0], textField.getText());
-                            }
-                            return  false;
-
-                        });
-
-
-            }else {
-
-                result = Stream.concat(choiceBoxes.stream().map(choice-> choice.getValue()==null),
-                        textFieldList.stream().map(textField -> textField.getText().isEmpty())).anyMatch(results->results);
-
-            }
-            if (result) {
-                Utility.create_alert(Alert.AlertType.WARNING, "Attenzione!", " Riempire tutti campi!");
-                event.consume();
-
-            }
-
-
-
-
-        });
-
-           */
-    }
 
 
 
@@ -148,7 +107,7 @@ public class CustomForm<T> extends Dialog<T> {
             return  new CustomFormBuilder(content);
 
         }
-        public CustomFormBuilder add_spinner(int min, int max,String fieldName) {
+        public  CustomFormBuilder add_spinner(int min, int max,String fieldName) {
             Spinner<Integer> spinner = new Spinner<>();
             spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max));
             spinner.setEditable(true);
