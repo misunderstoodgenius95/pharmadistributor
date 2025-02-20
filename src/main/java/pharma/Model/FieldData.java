@@ -1,6 +1,8 @@
 package pharma.Model;
 
 
+import com.auth0.json.mgmt.selfserviceprofiles.SelfServiceProfile;
+
 import java.sql.Date;
 
 
@@ -25,6 +27,8 @@ public class FieldData {
     private Date production_date;
     private  Date elapsed_date;
     private double price;
+    private String lotto_id;
+    private int vat_percent;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -46,8 +50,18 @@ public class FieldData {
         this.elapsed_date=builder.elapsed_date;
         this.production_date=builder.production_date;
         this.price= builder.price;
+        this.lotto_id=builder.lotto_id;
+        this.vat_percent=builder.vat_percent;
+
     }
 
+    public String getLotto_id() {
+        return lotto_id;
+    }
+
+    public int getVat_percent() {
+        return vat_percent;
+    }
 
     public double getPrice() {
         return price;
@@ -140,10 +154,19 @@ public class FieldData {
 
     @Override
     public String toString() {
-        if( unit_misure!=null){
-            return getQuantity()+" "+getUnit_misure();
+       if((nome!=null) && (description!=null) &&(nome_categoria!=null) &&( nome_tipologia!=null)
+                &&(unit_misure!=null) && (nome_principio_attivo!=null) && (nome_casa_farmaceutica!=null )){
+            return nome +' ' +
+                    nome_tipologia + ' ' +
+                    nome_casa_farmaceutica + ' ' + unit_misure + ' ' ;
 
-        }else{
+
+
+        }  else if( unit_misure!=null){
+            return getQuantity()+" "+getUnit_misure();
+        }
+
+        else{
             return getNome();
         }
     }
@@ -182,7 +205,8 @@ public class FieldData {
         private String nome_principio_attivo;
         private  String nome_casa_farmaceutica;
         private double price;
-
+        private String lotto_id;
+        private int vat_percent;
         public FieldDataBuilder() {
 
         }
@@ -198,6 +222,16 @@ public class FieldData {
 
         public FieldDataBuilder setPrice(double price) {
             this.price = price;
+            return this;
+        }
+
+        public FieldDataBuilder setVat_percent(int vat_percent) {
+            this.vat_percent = vat_percent;
+            return this;
+        }
+
+        public FieldDataBuilder setLotto_id(String lotto_id) {
+            this.lotto_id = lotto_id;
             return this;
         }
 

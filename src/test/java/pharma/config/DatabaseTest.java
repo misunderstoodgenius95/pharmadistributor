@@ -85,7 +85,7 @@ Assertions.assertFalse(db.check_exist_table("pharma"));
         @Test
     public void show_table_structure() throws SQLException {
 
-            try (ResultSet columns = db.get_MetaData().getColumns(null, null, "pharma", null)) {
+            try (ResultSet columns = db.get_MetaData().getColumns(null, null, "lotto", null)) {
                 System.out.println("Structure of table:");
                 System.out.println("----------------------------------------");
                 System.out.printf("%-20s %-20s %-10s %n", "COLUMN_NAME", "DATA_TYPE", "IS_NULLABLE");

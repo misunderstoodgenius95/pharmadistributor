@@ -77,10 +77,31 @@ class InputValidationTest  {
 
     @Test
     void Validvalidate_double_digit() {
-        Assertions.assertTrue(InputValidation.validate_double_digit("10,50"));
+        Assertions.assertTrue(InputValidation.validate_double_digit("10.50"));
     }
     @Test
     void InValidvalidate_double_digit() {
         Assertions.assertFalse(InputValidation.validate_double_digit("1050"));
     }
+
+    @Test
+    void Validvalidate_lotto_code() {
+        Assertions.assertTrue(InputValidation.validate_lotto_code("b8188j"));
+        Assertions.assertTrue(InputValidation.validate_lotto_code("M20773"));
+    }
+    @Test
+    void InValidvalidate_lotto_code() {
+        Assertions.assertFalse(InputValidation.validate_lotto_code("b818*8j"));
+    }
+
+
+    @Test
+    void get_validation() {
+     //  Assertions.assertTrue( InputValidation.get_validation("Lotto_code","M20773"));
+        Assertions.assertTrue( InputValidation.get_validation("Double_Digit","10.50"));
+
+    }
+
+
 }
+

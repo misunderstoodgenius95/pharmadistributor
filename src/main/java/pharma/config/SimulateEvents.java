@@ -6,7 +6,16 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import jdk.jshell.spi.SPIResolutionException;
+import org.controlsfx.control.SearchableComboBox;
+
+import java.net.Inet4Address;
+import java.security.PublicKey;
 
 
 public class SimulateEvents {
@@ -18,6 +27,17 @@ public class SimulateEvents {
 
     public  static  void clickOn(Control control) {
         control.fireEvent(new ActionEvent());
+
+    }
+public static  void fireMouseClick(DatePicker datePicker) {
+
+        MouseEvent clickEvent = new MouseEvent(
+                MouseEvent.MOUSE_CLICKED,
+                0, 0, 0, 0,
+                MouseButton.PRIMARY, 1,
+                true, true, true, true, true, true, true, true, true, true, null
+        );
+        Event.fireEvent(datePicker, clickEvent);
 
     }
 
@@ -32,6 +52,11 @@ public class SimulateEvents {
            System.out.println("nok");
        }
 
+
+    }
+    public static <T> void showControl(ComboBoxBase<T> comboBoxBase){
+
+        comboBoxBase.show();
 
     }
     public static  void openDatePicker(DatePicker datePicker){
@@ -62,6 +87,18 @@ public class SimulateEvents {
         }
         textField.setText(text);
 
+    }
+    public static  void keyPress( Control control,KeyCode keyCode){
+        KeyEvent keyEvent=new KeyEvent(KeyEvent.KEY_PRESSED,
+                "","",
+                keyCode,
+                false,false,false,false);
+        control.fireEvent(keyEvent);
+        System.out.println("fire key ");
+
+    }
+    public static  void setSpinner(Spinner<Integer> spinner,int value){
+        spinner.getValueFactory().setValue(value);
     }
 
 

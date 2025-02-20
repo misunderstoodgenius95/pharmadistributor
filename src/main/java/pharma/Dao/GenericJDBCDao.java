@@ -21,6 +21,13 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
         this.database = database;
 
     }
+
+    /**
+     * It can be associate to result that retrieve to find method.
+     * @param   resultSet is the instance that contains the respective  attribute of query find
+     * @return
+     * @throws Exception
+     */
     protected abstract  T mapRow(ResultSet resultSet) throws Exception;
 
     @Override
@@ -110,6 +117,14 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
     protected abstract String  getInsertQuery() throws Exception;
     protected abstract  String getUpdatequery();
     protected  abstract  String getDeletequery();
+
+    /**
+     *
+     * The Date are obtein by controls and insert into database;
+     * @param statement
+     * @param entity
+     * @throws Exception
+     */
     protected abstract void setInsertParameter(PreparedStatement statement,T entity) throws  Exception;
     protected  abstract void setUpdateParameter(PreparedStatement statement,T entity);
     protected  abstract void setDeleteParameter(PreparedStatement statement,T entity);

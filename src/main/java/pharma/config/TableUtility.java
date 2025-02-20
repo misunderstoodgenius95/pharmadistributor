@@ -20,6 +20,21 @@ public class TableUtility {
         p_id.setCellValueFactory(new PropertyValueFactory<S,Integer>(model_data));
         return  p_id;
     }
+    public static <S> TableColumn<S,Double> generate_column_double(String header_column, String model_data){
+        TableColumn<S, Double> p_id =
+                new TableColumn<>(header_column);
+
+        p_id.setCellValueFactory(new PropertyValueFactory<S,Double>(model_data));
+        return  p_id;
+
+    }
+    public static <S> TableColumn<S,Double> generate_column_date(String header_column, String model_data) {
+        TableColumn<S, Double> p_id =
+                new TableColumn<>(header_column);
+
+        p_id.setCellValueFactory(new PropertyValueFactory<S, Double>(model_data));
+        return p_id;
+    }
 
 
 

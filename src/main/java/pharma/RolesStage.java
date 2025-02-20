@@ -14,10 +14,10 @@ public class RolesStage  {
   static {
 
         roles_stage.putAll(Map.of(
-                "purchase", "/purchase.fxml",
-                "seller", "/seller.fxml",
-                "warehouse", "/warehouse.fxml",
-                "admin", "/admin.fxml"));
+                "purchase", "/purchase",
+                "seller", "/seller",
+                "warehouse", "/warehouse",
+                "admin", "/admin"));
     }
 
 

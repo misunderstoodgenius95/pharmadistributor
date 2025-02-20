@@ -80,6 +80,6 @@ public class Farmaco implements Initializable {
 
         table_id.getItems().addAll(obs_fieldData);
         table_id.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 16px; -fx-text-fill: #636165;");
-       anchor.setStyle("-fx-border-color: black; -fx-border-width: 2px; -fx-border-radius: 5px;");
+
     }
 }

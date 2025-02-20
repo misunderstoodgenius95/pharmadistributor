@@ -51,7 +51,10 @@ public abstract class DialogHandler  extends CustomDialog<FieldData> {
 
     }
 
-
+    /**
+     * This method can be setting with FieldData Model that contains the Corrispective date that using for Insert Dao
+     * @return
+     */
     protected abstract FieldData get_return_data();
 
     public   void execute(){
@@ -61,7 +64,6 @@ public abstract class DialogHandler  extends CustomDialog<FieldData> {
         while(!success.get()) {
             showAndWait().ifPresentOrElse(result -> {
                 try {
-                    System.out.println(result.getNome());
                     boolean cond = condition_event(result);
                     showAlert(cond, "Errore Inserimento!");
 

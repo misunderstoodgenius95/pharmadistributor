@@ -5,6 +5,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 import pharma.Model.FieldData;
 
 import java.util.Objects;
@@ -66,17 +69,24 @@ The reason for returning true when the filter text is null or empty is that the 
 
     public static void set_fieldText(String mode, TextField detailField1, TextField detailField2) {
 
-    if(mode.equalsIgnoreCase(Utility.Misura)){
-        detailField1.setPromptText("Quantità");
-        detailField2.setVisible(true);
-        detailField2.setPromptText("Misura");
-    }else{
+        if (mode.equalsIgnoreCase(Utility.Misura)) {
+            detailField1.setPromptText("Quantità");
+            detailField2.setVisible(true);
+            detailField2.setPromptText("Misura");
+        } else {
 
-        detailField1.setPromptText("Nome");
-        detailField2.setVisible(false);
+            detailField1.setPromptText("Nome");
+            detailField2.setVisible(false);
+        }
     }
 
+    public static void add_iconButton(Button button, Ikon font){
+        FontIcon icon = new FontIcon(FontAwesomeSolid.MINUS);
+        button.setGraphic(icon);
+        button.setText("");
+
     }
+
 
 
 

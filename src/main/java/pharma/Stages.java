@@ -20,6 +20,13 @@ FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource(fxmlPath));
 
 return fxmlLoader.load();
     }
+    public  FXMLLoader  load(String fxmlPath) throws IOException {
+
+       return new FXMLLoader(this.getClass().getResource(fxmlPath));
+
+
+    }
+
 public void init() throws IOException {
 
 Stage primaryStage = new Stage();
@@ -34,7 +41,8 @@ Stage primaryStage = new Stage();
     public  void change_stage(String fxml, Stage stage)  {
         try {
 
-                Scene scene=new Scene(this.load_fxml(fxml));
+                Scene scene=new Scene(this.load_fxml(fxml+".fxml"));
+                scene.getStylesheets().add(fxml+".css");
                 stage.setScene(scene);
 
             }catch (NullPointerException e){

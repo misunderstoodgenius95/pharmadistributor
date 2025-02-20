@@ -16,12 +16,24 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected FieldData mapRow(ResultSet resultSet) throws Exception {
-        return null;
+       return FieldData.FieldDataBuilder.getbuilder().
+               setLotto_id(resultSet.getString("id")).
+               setProduction_date(resultSet.getDate("production_date")).
+               setElapsed_date(resultSet.getDate("elapsed_date")).
+               setQuantity(resultSet.getInt("quantity")).
+               setNome(resultSet.getString("nome")).
+               setNome_tipologia(resultSet.getString("tipologia")).
+               setUnit_misure(resultSet.getString("misura")).
+               setPrice(resultSet.getDouble("price")).
+               setVat_percent(resultSet.getInt("vat_percent")).
+               setNome_casa_farmaceutica(resultSet.getString("casa_farmaceutica"))
+        .build();
     }
 
     @Override
     protected String getFindQueryAll() {
-        return "";
+        return " select * from lotto\n " +
+                " inner join farmaco_all on farmaco_all.id=Lotto.farmaco; ";
     }
 
     @Override
@@ -31,8 +43,10 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected String getInsertQuery() throws Exception {
-        return "INSERT INTO "+table+" (farmaco,production_date,elapsed_date,price,quantity) VALUES(?,?,?,?,?)  ";
+        return "INSERT INTO "+table+" (id,farmaco,production_date,elapsed_date,price,vat_percent,quantity) VALUES(?,?,?,?,?,?,?)  ";
     }
+
+
 
     @Override
     protected String getUpdatequery() {
@@ -46,11 +60,13 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected void setInsertParameter(PreparedStatement statement, FieldData entity) throws Exception {
-    statement.setInt(1,entity.getTipologia());
-    statement.setDate(2,entity.getProduction_date());
-    statement.setDate(3,entity.getElapsed_date());
-    statement.setDouble(4,entity.getPrice());
-    statement.setInt(5,entity.getQuantity());
+    statement.setString(1,entity.getLotto_id());
+    statement.setInt(2,entity.getTipologia());
+    statement.setDate(3,entity.getProduction_date());
+    statement.setDate(4,entity.getElapsed_date());
+    statement.setDouble(5,entity.getPrice());
+    statement.setInt(6,entity.getVat_percent());
+    statement.setInt(7,entity.getQuantity());
     }
 
     @Override

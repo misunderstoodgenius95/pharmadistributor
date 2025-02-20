@@ -1,9 +1,7 @@
 module pharma {
     requires com.auth0.jwt;
     requires java.net.http;
-    requires javafx.controls;
     requires javafx.fxml;
-    requires javafx.graphics;
     requires org.json;
     requires  org.testfx;
     requires auth0;
@@ -16,9 +14,16 @@ module pharma {
     requires java.rmi;
     requires com.fasterxml.jackson.databind;
     requires java.sql;
+    requires  org.controlsfx.controls;
+    requires java.desktop;
+    requires java.management;
+    requires org.kordamp.ikonli.fontawesome5;
+    requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.core;
     opens pharma to javafx.fxml;
     exports pharma to javafx.fxml,javafx.graphics;
 opens pharma.Controller to javafx.fxml;
+
 opens pharma.Controller.subpanel to javafx.fxml;
 exports  pharma.config;
 exports pharma.Controller.subpanel to javafx.fxml;
