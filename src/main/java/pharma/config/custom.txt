@@ -189,3 +189,84 @@ public class CustomDialog<T,K> extends Dialog<T> {
 
 
 }
+
+/* private <T extends Number> void addSpinnerIntoCell(TableColumn<FieldData, T> tableColumn, Class<T> type, String method) {
+
+        tableColumn.setCellFactory(col -> new TableCell<>() {
+            private final Spinner<T> spinner = new Spinner<>();
+            {
+
+                spinner.setPrefWidth(90.0);
+                spinner.setEditable(true);
+                spinner.getEditor().setFont(new Font(15));
+
+
+
+
+
+                spinner.valueProperty().addListener(new ChangeListener<T>() {
+                    @Override
+                    public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {
+                        if(newValue!=null) {
+
+                            Platform.runLater(() -> {
+
+
+                                 FieldData fd=getTableRow().getItem();
+
+                                    if (fd != null) {
+                                        switch (method) {
+                                            case "setPrice": {
+                                                fd.setPrice((Double) newValue);
+
+                                                break;
+                                            }
+                                            case "setQuantity": {
+
+                                                fd.setQuantity((Integer) newValue);
+                                                break;
+
+                                            }
+                                            case "setPercent": {
+
+                                                fd.setVat_percent((Integer) newValue);
+                                                break;
+                                            }
+                                        }
+                                        obs_details.remove(fd);
+                                        obs_details.add(fd);
+                                        System.out.println();
+                                    }
+
+                            });
+
+                        }}
+
+                });
+
+            }
+
+            @Override
+            protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+
+
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    if (type == Integer.class) {
+                        int maxValue = item.intValue(); // Ensure safe Integer conversion
+                        spinner.setValueFactory((SpinnerValueFactory<T>) new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maxValue, maxValue, 1));
+                    } else if (type == Double.class) {
+                        double maxValue = item.doubleValue(); // Ensure safe Double conversion
+                        spinner.setValueFactory((SpinnerValueFactory<T>) new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, maxValue, maxValue, 0.1));
+                    }
+                    setGraphic(spinner);
+                }
+            }
+
+
+        });
+    }
+
+    */

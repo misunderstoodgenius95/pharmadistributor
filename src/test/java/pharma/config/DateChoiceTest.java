@@ -16,14 +16,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
+import pharma.Model.FieldData;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @ExtendWith(ApplicationExtension.class)
 public class DateChoiceTest{
 
-private CustomDialog<String> customDialog;
+private CustomDialog<FieldData> customDialog;
     private DatePicker datePicker;
     private SearchableComboBox<String>searchableComboBox;
     @Start
@@ -49,7 +52,7 @@ private CustomDialog<String> customDialog;
            datePicker.setValue(LocalDate.now());
             System.out.println(datePicker.getValue());
             Date.valueOf(datePicker.getValue());
-            SimulateEvents.clickOn(customDialog.getButton());
+            SimulateEvents.clickOn(customDialog.getButtonOK());
         });
         robot.sleep(40000);
     }
@@ -60,7 +63,7 @@ private CustomDialog<String> customDialog;
 
             SimulateEvents.openDatePicker(datePicker);
 
-            SimulateEvents.clickOn(customDialog.getButton());
+            SimulateEvents.clickOn(customDialog.getButtonOK());
         });
         robot.sleep(4000);
     }
@@ -75,7 +78,7 @@ private CustomDialog<String> customDialog;
             SearchableComboBox<String> s_cbox = customDialog.add_SearchComboBox("Scegli il valore");
             ObservableList<String> obs= FXCollections.observableArrayList("One","Two","Three");
             s_cbox.getItems().addAll(obs);
-           SimulateEvents.clickOn(customDialog.getButton());
+           SimulateEvents.clickOn(customDialog.getButtonOK());
         });
         robot.sleep(40000);
 
@@ -131,9 +134,19 @@ private CustomDialog<String> customDialog;
 
 
 
-            SimulateEvents.clickOn(customDialog.getButton());
+            SimulateEvents.clickOn(customDialog.getButtonOK());
         });
        robot.sleep(4000);
+
+    }
+
+    @Test
+    public void test_radiosme(FxRobot robot){
+        Platform.runLater(()->{
+            customDialog.add_radios(new ArrayList<>(Arrays.asList("Yes","NO")), CustomDialog.Mode.Horizontal);
+
+        });
+        robot.sleep(40000);
 
     }
 

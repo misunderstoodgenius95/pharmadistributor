@@ -1,23 +1,13 @@
 package pharma.Handler;
 
-import com.sun.source.tree.ModuleTree;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.robot.Robot;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.controlsfx.control.SearchableComboBox;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,27 +15,18 @@ import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import org.w3c.dom.Text;
 import pharma.Model.FieldData;
 import pharma.config.Database;
-import pharma.config.PopulateChoice;
 import pharma.config.SimulateEvents;
 import pharma.dao.FarmacoDao;
 import pharma.dao.LottiDao;
 
 
-import java.io.File;
-import java.nio.file.LinkOption;
-import java.sql.ClientInfoStatus;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class LottiDialogHandlerTest {
     private FarmacoDao farmacoDao;
@@ -91,7 +72,7 @@ class LottiDialogHandlerTest {
             ObservableList<FieldData> obs = FXCollections.observableArrayList();
             LottiDialogHandler dialogHandler = new LottiDialogHandler("Aggiungi Lotti", lottiDao, farmacoDao, obs);
             dialogHandler.execute();
-            SimulateEvents.clickOn(dialogHandler.getButton());
+            SimulateEvents.clickOn(dialogHandler.getButtonOK());
         });
         robot.sleep(5000);
     }
@@ -153,7 +134,7 @@ class LottiDialogHandlerTest {
 
 
             dialogHandler.execute();
-            SimulateEvents.clickOn(dialogHandler.getButton());
+            SimulateEvents.clickOn(dialogHandler.getButtonOK());
 
 
         });

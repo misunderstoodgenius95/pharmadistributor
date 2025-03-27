@@ -5,12 +5,15 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
+import org.controlsfx.control.SearchableComboBox;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import pharma.Model.FieldData;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class Utility {
@@ -18,6 +21,8 @@ public  static  final String Principio_attivo="Principio_Attivo";
 public static  final  String Tipologia="Tipologia";
 public static final  String Categoria="Categoria";
 public static final String Misura="Misura";
+
+
     public static void create_alert(Alert.AlertType alert_type, String title_header, String body) {
 
         Alert alert = new Alert(alert_type);
@@ -70,9 +75,9 @@ The reason for returning true when the filter text is null or empty is that the 
     public static void set_fieldText(String mode, TextField detailField1, TextField detailField2) {
 
         if (mode.equalsIgnoreCase(Utility.Misura)) {
-            detailField1.setPromptText("Quantità");
+            detailField1.setPromptText("Misura");
             detailField2.setVisible(true);
-            detailField2.setPromptText("Misura");
+            detailField2.setPromptText("Quantità");
         } else {
 
             detailField1.setPromptText("Nome");
@@ -81,10 +86,23 @@ The reason for returning true when the filter text is null or empty is that the 
     }
 
     public static void add_iconButton(Button button, Ikon font){
-        FontIcon icon = new FontIcon(FontAwesomeSolid.MINUS);
+        FontIcon icon = new FontIcon(font);
+        icon.setIconSize(20);
         button.setGraphic(icon);
         button.setText("");
 
+
+    }
+    public static   <T,K>  List<T>  extract_value_from_list(List<K> list,  Class<T> class_type){
+
+         return list.stream().filter(class_type::isInstance).map(class_type::cast).toList();
+
+
+    }
+   public  static  void resetLabelText(Label... labels) {
+        for (Label label : labels) {
+            label.setText(label.getText().split(":")[0]);
+        }
     }
 
 

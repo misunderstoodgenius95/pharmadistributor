@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 public class PharmaDaoTest {
     private  PharmaDao pharmaDao;
@@ -55,6 +57,21 @@ public class PharmaDaoTest {
         Mockito.verify(preparedStatement).setString(1,"Melarini");
         Mockito.verify(preparedStatement).setString(2,"MM");
         Mockito.verify(preparedStatement).setString(3,"11111");
+    }
+
+    @Test
+    public void findALlName() throws SQLException {
+        ResultSet result_pharma=Mockito.mock(ResultSet.class);
+        when(result_pharma.next()).thenReturn(true,true,true,false);
+        when(result_pharma.getInt(1)).thenReturn(1,2,3);
+        when(result_pharma.getString(2)).thenReturn("Angelini","Melarini","Bayer");
+        when(database.executeQuery(anyString())).thenReturn(result_pharma);
+
+        List<FieldData> list=pharmaDao.findAllName();
+        Assertions.assertEquals(1,list.getFirst().getId());
+        Assertions.assertEquals("Angelini",list.getFirst().getNome_casa_farmaceutica());
+
+
     }
     @Test
     public void InvalidInsertNull() throws SQLException {
@@ -204,6 +221,15 @@ public class PharmaDaoTest {
 
 
         Assertions.assertTrue(pharmaDao.update(fieldData));
+
+    }
+    @Test
+    public void findbyId() throws IOException, SQLException {
+        // Properties properties= FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host","username","password")),new FileReader("database.properties"));
+        Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host","username","password")),new FileReader("database.properties"));
+        PharmaDao pharmaDao=new PharmaDao(Database.getInstance(properties));
+        FieldData fieldData=pharmaDao.findById(1);
+        System.out.println(fieldData.getNome());
 
     }
 

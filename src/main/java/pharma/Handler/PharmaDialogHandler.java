@@ -10,10 +10,12 @@ import pharma.Controller.subpanel.Pharma;
 import pharma.Model.FieldData;
 import pharma.config.CustomDialog;
 import pharma.config.PopulateChoice;
+import pharma.dao.GenericJDBCDao;
 import pharma.dao.PharmaDao;
 
 import javax.xml.transform.Result;
 import java.rmi.AccessException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -43,7 +45,7 @@ private ObservableList<FieldData> obs;
     }
 
     @Override
-    protected void initialize(PopulateChoice populateChoice) {
+    protected <K> void initialize(Optional<PopulateChoice<K>> PopulateChoice, Optional<List<GenericJDBCDao>> optionalgenericJDBCDao, Optional<FieldData> optionalfieldData) {
 
     }
 

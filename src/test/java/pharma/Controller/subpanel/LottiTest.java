@@ -1,33 +1,25 @@
 package pharma.Controller.subpanel;
 
-import com.fasterxml.jackson.databind.type.PlaceholderForType;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.controlsfx.control.SearchableComboBox;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import org.yaml.snakeyaml.scanner.ScannerImpl;
 import pharma.Handler.DialogHandler;
 import pharma.Model.FieldData;
 import pharma.Stages;
 import pharma.config.SimulateEvents;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class LottiTest {
 
@@ -70,7 +62,7 @@ class LottiTest {
             SimulateEvents.writeOn((TextField) textField.getFirst(),"b8188j");
             SimulateEvents.writeOn((TextField) textField.get(1),"10.50");
             dialogHandler.execute();
-            SimulateEvents.clickOn(dialogHandler.getButton());
+            SimulateEvents.clickOn(dialogHandler.getButtonOK());
 
 
 

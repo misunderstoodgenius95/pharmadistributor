@@ -1,34 +1,21 @@
 package pharma.config;
 
-import com.github.curiousoddman.rgxgen.nodes.Choice;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import org.controlsfx.control.SearchableComboBox;
-import pharma.Model.FieldData;
 
-import javax.swing.text.StyledEditorKit;
+import java.awt.image.Kernel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.stream.Collectors.partitioningBy;
-import static java.util.stream.Collectors.toList;
 
 public class CustomDialog<T> extends Dialog<T> {
     private final VBox vbox;
@@ -51,8 +38,6 @@ public class CustomDialog<T> extends Dialog<T> {
        vbox.setSpacing(20);
      this.getDialogPane().setPrefHeight(400);
      this.getDialogPane().setPrefWidth(400);
-     //   this.getDialogPane().setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE); // Enforce minimum size
-       // this.getDialogPane().setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         this.getDialogPane().setContent(vbox);
 
 
@@ -70,7 +55,7 @@ public class CustomDialog<T> extends Dialog<T> {
 
     }
 
-    public Button getButton() {
+    public Button getButtonOK() {
         return button_ok;
     }
 
@@ -81,6 +66,11 @@ public class CustomDialog<T> extends Dialog<T> {
 
     private void get_event(){
         button_ok.addEventFilter(ActionEvent.ACTION, event -> {
+
+            if (!button_ok.isFocused()) {
+                event.consume(); // Prevent the action from firing when losing focus
+            }
+
             if (controlList.isEmpty()) {
                 return;
             }
@@ -110,8 +100,16 @@ public class CustomDialog<T> extends Dialog<T> {
 
                     SearchableComboBox<T> searchableComboBox=(SearchableComboBox<T>) couple;
                     return searchableComboBox.getSelectionModel().isEmpty();
+                }else if( couple instanceof  TextFieldComboBox){
+                        TextFieldComboBox<T> textFieldComboBox=(TextFieldComboBox<T>) couple;
+                        return  textFieldComboBox.getChoiceBox().getSelectionModel().isEmpty();
+
                 }
-                System.out.println("ok");
+               else if(couple instanceof TableView<?>){
+                   TableView<?> tableView=(TableView<?>) couple;
+                   return  tableView.getItems().isEmpty();
+
+                }
                 return false;
             });
 
@@ -127,6 +125,22 @@ public class CustomDialog<T> extends Dialog<T> {
 
     }
 
+    public ToggleGroup add_radios(List<String> list,Mode mode){
+
+        ToggleGroup group=new ToggleGroup();
+
+        Pane pane=mode.equals(Mode.Vertical)?new VBox(15): new HBox(15);
+
+        list.forEach(value-> {
+            RadioButton radioButton = new RadioButton(value);
+            pane.getChildren().add(radioButton);
+            radioButton.setToggleGroup(group);
+        });
+
+        vbox.getChildren().add(pane);
+
+        return group;
+    }
     public Spinner<Integer> add_spinner() {
         Spinner<Integer> spinner = new Spinner<>();
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
@@ -135,6 +149,16 @@ public class CustomDialog<T> extends Dialog<T> {
         controlList.add(spinner);
 
         return spinner;
+
+    }
+    public TableView<T> add_table(){
+        TableView<T> tableView=new TableView<>();
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
+        vbox.getChildren().add(tableView);
+
+        controlList.add(tableView);
+        return  tableView;
 
     }
     public ChoiceBox<T> add_choiceBox(T value){
@@ -152,6 +176,19 @@ public class CustomDialog<T> extends Dialog<T> {
         vbox.getChildren().add(label);
         return label;
     }
+    public Label add_label(String text,HBox hBox){
+        Label label=new Label(text);
+        label.setFont(new Font(16));
+        hBox.getChildren().add(label);
+        return label;
+    }
+    public TextField createLabeledTextField(String labelText, String result, HBox container_label,HBox container_text) {
+        add_label(labelText, container_label);
+        TextField textField = add_text_field(container_text);
+        textField.setText(result);
+        textField.setDisable(true);
+        return textField;
+    }
 
     public TextField add_text_field(String placeholder) {
 
@@ -159,11 +196,29 @@ public class CustomDialog<T> extends Dialog<T> {
         field.setPromptText(placeholder);
         vbox.getChildren().add(field);
         field.setPadding(new Insets(10, 10, 10, 10));
-        field.setFont(new Font("Arial", 20));
+        field.setFont(new Font("Arial", 15));
         controlList.add(field);
 
         return field;
     }
+    public TextField add_text_field(HBox hBox) {
+
+        TextField field = new TextField();
+
+        hBox.getChildren().add(field);
+        field.setPadding(new Insets(10, 10, 10, 10));
+        field.setFont(new Font("Arial", 15));
+        controlList.add(field);
+
+        return field;
+    }
+    public HBox add_hbox(double spacing){
+
+        HBox hBox=new HBox(spacing);
+        vbox.getChildren().add(hBox);
+        return  hBox;
+    }
+
     public DatePicker add_calendar(){
         DatePicker datePicker=new DatePicker();
         controlList.add(datePicker);
@@ -179,8 +234,16 @@ public class CustomDialog<T> extends Dialog<T> {
         return searchableComboBox;
 
     }
-    public TextFieldComboBox<T> add_combox_search_with_textfield(ObservableList<T> value_control){
-       TextFieldComboBox<T> textFieldComboBox=new TextFieldComboBox<>(value_control);
+    public SearchableComboBox add_SearchComboBox (String value){
+        SearchableComboBox<String> searchableComboBox=new SearchableComboBox<>();
+        vbox.getChildren().add(searchableComboBox);
+        searchableComboBox.setValue(value);
+        controlList.add(searchableComboBox);
+        return searchableComboBox;
+
+    }
+    public <K> TextFieldComboBox add_combox_search_with_textfield(ObservableList<K> value_control){
+       TextFieldComboBox<K> textFieldComboBox=new TextFieldComboBox<>(value_control);
        vbox.getChildren().add(textFieldComboBox);
        controlList.add(textFieldComboBox);
        return  textFieldComboBox;
@@ -188,6 +251,7 @@ public class CustomDialog<T> extends Dialog<T> {
 
         
     }
+
     public Button  addButton(String value){
         Button button=new Button(value);
             vbox.getChildren().add(button);

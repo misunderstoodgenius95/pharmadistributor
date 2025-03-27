@@ -1,18 +1,20 @@
 package pharma.dao;
 
-import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 import pharma.Model.FieldData;
 import pharma.config.Database;
 
-import javax.lang.model.element.NestingKind;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
    private static final String table="pharma";
+   private  Database database;
     public PharmaDao(Database database)  {
         super(table, database);
+        this.database=database;
 
 
     }
@@ -21,7 +23,7 @@ public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
     protected FieldData mapRow(ResultSet resultSet) throws  SQLException  {
 
         FieldData fieldData= FieldData.FieldDataBuilder.getbuilder().
-              setNome(resultSet.getString(2)).
+            setNome_casa_farmaceutica(resultSet.getString(2)).
                 setPartita_iva(resultSet.getString(4)).
                 setSigla(resultSet.getString(3)).setId(resultSet.getInt(1)).build();
         return fieldData;
@@ -84,6 +86,37 @@ public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
     protected void setDeleteParameter(PreparedStatement statement, FieldData entity) {
 
     }
+
+
+
+    public List<FieldData> findAllName(){
+
+        List<FieldData> list=new ArrayList<>();
+        String query=" SELECT id, anagrafica_cliente FROM "+table;
+
+        try {
+           ResultSet resultSet= database.executeQuery(query);
+           while(resultSet.next()){
+
+               list.add(FieldData.FieldDataBuilder.getbuilder().
+                       setId(resultSet.getInt(1)).
+                       setNome_casa_farmaceutica(resultSet.getString(2)).build());
+
+
+           }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return list;
+
+    }
+
+
+
+
+
+
 
 
 }

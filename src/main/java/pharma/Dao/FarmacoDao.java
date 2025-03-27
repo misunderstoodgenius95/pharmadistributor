@@ -5,12 +5,16 @@ import pharma.config.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
     private final  String table;
+    private  Database database;
     public FarmacoDao(String table_name, Database database) {
         super(table_name, database);
         this.table=table_name;
+        this.database=database;
     }
 
     @Override
@@ -34,6 +38,11 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected void setFindByIdParameters(PreparedStatement preparedStatement, Integer integer) {
+        try {
+            preparedStatement.setInt(1,integer);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -64,6 +73,8 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
         statement.setInt(7,entity.getCasa_farmaceutica());
     }
 
+
+
     @Override
     protected void setUpdateParameter(PreparedStatement statement, FieldData entity) {
 
@@ -73,4 +84,6 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
     protected void setDeleteParameter(PreparedStatement statement, FieldData entity) {
 
     }
+
+
 }

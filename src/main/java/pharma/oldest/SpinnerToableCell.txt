@@ -1,0 +1,214 @@
+package pharma.config;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TableCell;
+import javafx.scene.text.Font;
+import pharma.Model.FieldData;
+
+import javax.swing.table.TableColumn;
+import java.awt.geom.Arc2D;
+
+/**
+ *
+ *
+ * @param <T> object into cell
+ * @param <K> object custom like FielData
+ */
+/*public class SpinnerTableCell<T extends  Number,K> extends TableCell<K,T> {
+    private final Spinner<T> spinner;
+
+
+    public SpinnerTableCell(Class<T> type) {
+       spinner=new Spinner<>();
+       if(type instanceof Double){
+
+
+
+       }
+
+        spinner.setEditable(true);
+        spinner.setPrefWidth(90.0);
+        spinner.setEditable(true);
+        spinner.getEditor().setFont(new Font(15));
+
+
+    }
+
+
+
+    public Spinner<T> getSpinner() {
+        return spinner;
+    }
+
+    @Override
+    protected void updateItem(T item, boolean empty) {
+        super.updateItem(item, empty);
+
+        if (empty || item == null) {
+            setGraphic(null);
+        } else {
+            if (spinner.getValueFactory() == null) {
+                setSpinnerFactory(item);
+            }
+            spinner.getValueFactory().setValue(item);
+            setGraphic(spinner);
+        }
+    }
+
+    private void setSpinnerFactory(T item) {
+        if (item instanceof Integer) {
+            spinner.setValueFactory((SpinnerValueFactory<T>)
+                    new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, (Integer) item, 1));
+        } else if (item instanceof Double) {
+            spinner.setValueFactory((SpinnerValueFactory<T>)
+                    new SpinnerValueFactory.DoubleSpinnerValueFactory(1.1, 2000.79, (Double) item, 0.1));
+        }
+    }
+
+    public void add_listener_change(ChangeListener<T> listener){
+
+        spinner.valueProperty().addListener(listener);
+    }
+
+
+
+}
+
+
+
+
+
+ MockitoAnnotations.openMocks(this);
+            s_boolean=new SimpleBooleanProperty(false);
+            lottiDao=new LottiDao(database,"lotto");
+            pharmaDao=new PharmaDao(database);
+
+            ArgumentCaptor<String> paramCaptor = ArgumentCaptor.forClass(String.class);
+
+
+        when(result_pharma.next()).thenReturn(true,true,true,false);
+        when(result_pharma.getString(1)).thenReturn("Angelini","Melarini","Bayer");
+
+          PreparedStatement preparedStatement_lotto = mock(PreparedStatement.class);
+
+
+
+            when(database.execute_prepared_query(anyString())).thenReturn(p_statement);
+           /* doNothing().when(p_statement).setString(eq(1), paramCaptor.capture());
+
+            when(p_statement.executeQuery()).thenAnswer(invocation -> {
+
+                String argument = paramCaptor.getValue();
+                ResultSet resultSet = Mockito.mock(ResultSet.class);
+                if ("Angelini".equals(argument)) {
+                    when(resultSet.next()).thenReturn(true, true, true, true, false);
+                    when(resultSet.getString("id")).thenReturn("agk1", "agk2", "agk3", "agk4");
+                    when(resultSet.getDate("production_date")).thenReturn(
+                            Date.valueOf(LocalDate.of(2026, 10, 01)),
+                            Date.valueOf(LocalDate.of(2024, 10, 01)),
+                            Date.valueOf(LocalDate.of(2025, 10, 01)),
+                            Date.valueOf(LocalDate.of(2023, 10, 01))
+                    );
+                    when(resultSet.getDate("elapsed_date")).thenReturn(
+                            Date.valueOf(LocalDate.of(2027, 10, 01)),
+                            Date.valueOf(LocalDate.of(2028, 10, 01)),
+                            Date.valueOf(LocalDate.of(2029, 10, 01)),
+                            Date.valueOf(LocalDate.of(2030, 10, 01)));
+                    when(resultSet.getString("nome")).thenReturn("Amuchina", "Moment", "Moment_Act", "Tachipirina");
+                    when(resultSet.getString("tipologia")).thenReturn("Supposte", "Compresse", "Compresse", "Compresse");
+                    when(resultSet.getString("misura")).thenReturn("100mg", "10gr", "30gr", "40gr");
+                    when(resultSet.getString("casa_farmaceutica")).thenReturn("Angelini");
+                    when(resultSet.getInt("farmaco")).thenReturn(1, 2, 3, 4);
+
+
+                }
+                return resultSet;
+            });
+*/
+
+/*
+            when(resultSet.next()).thenReturn(true, true, true, true, true, true,false);
+            when(resultSet_name.getString(1)).thenReturn("Bayer");
+            when(resultSet.getString("id")).thenReturn("agk1", "agk2", "agk3", "agk4", "agk5", "agk7");
+            when(resultSet.getDate("production_date")).thenReturn(
+                    Date.valueOf(LocalDate.of(2026, 10, 01)),
+                    Date.valueOf(LocalDate.of(2024, 10, 01)),
+                    Date.valueOf(LocalDate.of(2025, 10, 01)),
+                    Date.valueOf(LocalDate.of(2023, 10, 01)),
+                    Date.valueOf(LocalDate.of(2023, 10, 01)),
+                    Date.valueOf(LocalDate.of(2023, 10, 01))
+            );
+
+            when(resultSet.getDate("elapsed_date")).thenReturn(
+                    Date.valueOf(LocalDate.of(2027, 10, 01)),
+                    Date.valueOf(LocalDate.of(2028, 10, 01)),
+                    Date.valueOf(LocalDate.of(2029, 10, 01)),
+                    Date.valueOf(LocalDate.of(2030, 10, 01)),
+                    Date.valueOf(LocalDate.of(2030, 10, 01)),
+                    Date.valueOf(LocalDate.of(2030, 10, 01))
+            );*//*
+
+            when(resultSet.getString("nome")).thenReturn("Tachipirina", "DebridAt", "Pantopan", "Tachipirina", "Lucen", "medagran");
+            when(resultSet.getString("tipologia")).thenReturn("Supposte", "Compresse", "Compresse", "Compresse", "Compresse", "Supposte");
+            when(resultSet.getString("misura")).thenReturn("100mg", "10gr", "30gr", "40gr", "10gfr", "10gr");
+            when(resultSet.getString("casa_farmaceutica")).thenReturn("Angelini", "Afpt", "Novartis", "Bayer", "Melarini", "Shedir");
+            when(resultSet.getInt("farmaco")).thenReturn(1, 2, 3, 4, 5, 6);*/
+          //  when(database.executeQuery(anyString())).thenReturn(result_pharma,resultSet_name);
+            obs_fieldData = FXCollections.observableArrayList();
+
+
+
+            when(resultSet_name.next()).thenReturn(true,true, true,true,true,false);
+           // when(resultSet_name.getString(1)).thenReturn("Tachipirina", "DebridAt", "Pantopan", "Lucen", "medagran");
+
+
+
+/*
+// Capture parameter passed to setString
+            doNothing().when(preparedStatement_lotto).setString(eq(1), paramCaptor.capture());
+
+// Return mocked PreparedStatement when executing a query
+            when(database.execute_prepared_query(anyString())).thenReturn(preparedStatement_lotto);
+
+// Handle executeQuery dynamically based on captured value
+            when(preparedStatement_lotto.executeQuery()).thenAnswer(invocation -> {
+                String argument = paramCaptor.getValue();
+                ResultSet resultSet_lotto = mock(ResultSet.class);
+
+
+
+                if ("Tachipirina".equals(argument)) {
+                    // Mock two rows: "agk1" and "agk4"
+                    when(resultSet_lotto.next()).thenReturn(true, true, false); // Important: add 'false' to stop iteration!
+                    when(resultSet_lotto.getString(1)).thenReturn("agk1", "agk4");
+                } else if (argument.equals("DebridAt")) {
+                    // Mock one row: "agk2"
+                    when(resultSet_lotto.next()).thenReturn(true, false); // Single row, then stop
+                    when(resultSet_lotto.getString(1)).thenReturn("agk2");
+                } else {
+                    // No results case
+                    when(resultSet_lotto.next()).thenReturn(false);
+                }
+
+                return resultSet_lotto;
+            });*/
+
+            //    when(preparedStatement_farmaco.executeQuery()).thenReturn(resultSet_farmaco);
+     //  verify(database.executeQuery(anyString()),times(2));
+
+
+
+//Insert
+           /* when(p_statement.executeQuery()).thenReturn(res_insert);
+
+            Mockito.when(res_insert.next()).thenReturn(true);
+            Mockito.when(res_insert.getInt(1)).thenReturn(100);
+            when(d_b_p_o.execute_prepared_query(anyString())).thenReturn(p_statement);
+
+            purchaseOrderDao=new PurchaseOrderDao(d_b_p_o);
+            when(p_detail.executeUpdate()).thenReturn(1);
+            when(d_b_p_d.execute_prepared_query(anyString())).thenReturn(p_detail);*/
+

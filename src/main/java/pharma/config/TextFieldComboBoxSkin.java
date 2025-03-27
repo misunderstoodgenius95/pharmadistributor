@@ -1,6 +1,7 @@
 package pharma.config;
 
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Skin;
 import javafx.scene.control.SkinBase;
 
@@ -14,6 +15,7 @@ public class TextFieldComboBoxSkin extends SkinBase<TextFieldComboBox> {
      */
     protected TextFieldComboBoxSkin(TextFieldComboBox control) {
         super(control);
+
         getChildren().add(control.getvBox());
     }
 }

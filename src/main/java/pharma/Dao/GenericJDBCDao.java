@@ -1,6 +1,5 @@
 package pharma.dao;
 
-import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 import pharma.Model.FieldData;
 import pharma.config.Database;
 
@@ -34,7 +33,9 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
     public T findById(ID id) {
 
         try {
-            PreparedStatement preparedStatement=database.execute_prepared_query("SELECT * FROM " + table_name + " WHERE id = " + id);
+            PreparedStatement preparedStatement=database.execute_prepared_query(" SELECT * FROM " + table_name + " WHERE id =? ");
+
+
             setFindByIdParameters(preparedStatement,id);
             ResultSet resultSet=preparedStatement.executeQuery();
             if(resultSet.next()){
@@ -48,7 +49,6 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
     }
     @Override
     public List<T> findAll() {
-
        String query=getFindQueryAll();
       ResultSet resultSet=database.executeQuery(query);
       List<T> resultList=new ArrayList<>();
@@ -112,6 +112,8 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
 
     }
 
+
+
     protected abstract  String  getFindQueryAll();
     protected  abstract void setFindByIdParameters(PreparedStatement preparedStatement, ID id);
     protected abstract String  getInsertQuery() throws Exception;
@@ -128,4 +130,67 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
     protected abstract void setInsertParameter(PreparedStatement statement,T entity) throws  Exception;
     protected  abstract void setUpdateParameter(PreparedStatement statement,T entity);
     protected  abstract void setDeleteParameter(PreparedStatement statement,T entity);
+
+
+    public void commit(){
+        database.commit();
+        setTransaction(false);
+
+    }
+    public void rollback(){
+
+        database.rollback();
+        setTransaction(false);
+    }
+    public  void setTransaction(boolean value){
+
+        database.setTransaction(value);
+    }
+
+    public List<T> findByParameter(String query,int id){
+        List<T> resultList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query(query );
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                resultList.add(mapRow(resultSet));
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    return resultList;
+    }
+
+
+
+    public  int insertAndReturnID(T entity){
+
+
+        if(entity==null){
+            throw new IllegalArgumentException("Entity cannot be null!");
+        }
+        try {
+
+            PreparedStatement preparedStatement=database.execute_prepared_query(getInsertQuery());
+            setInsertParameter(preparedStatement,entity);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return  resultSet.getInt(1);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  -1;
+    }
+
+
+
 }

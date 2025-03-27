@@ -1,21 +1,19 @@
 package pharma.Handler;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import pharma.Model.FieldData;
-import pharma.config.CustomDialog;
 import pharma.config.PopulateChoice;
 import pharma.config.Utility;
 import pharma.dao.DetailDao;
 import pharma.dao.FarmacoDao;
+import pharma.dao.GenericJDBCDao;
 import pharma.dao.PharmaDao;
 
 import java.rmi.AccessException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
 
 public class FarmacoDialogHandler  extends DialogHandler {
     private TextField nome;
@@ -37,28 +35,39 @@ public class FarmacoDialogHandler  extends DialogHandler {
 
     }
 
+
     @Override
     protected void initialize() {
 
     }
 
     @Override
-    protected void initialize(PopulateChoice populateChoice){
+    protected  <K>void  initialize(Optional<PopulateChoice<K>> optionalpopulateChoice, Optional<List<GenericJDBCDao>> optionalgenericJDBCDao, Optional<FieldData> optionalfieldData){
 
-        nome=add_text_field("Nome");
-        descrizione=add_text_field("Descrzione");
-        categoria=add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
-        categoria.getItems().addAll(populateChoice.populate(Utility.Categoria));
-        tipologia=add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
-        tipologia.getItems().addAll(populateChoice.populate(Utility.Tipologia));
-        misura=add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
-        misura.getItems().addAll(populateChoice.populate(Utility.Misura));
-        principio_Attivo=add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
-        principio_Attivo.getItems().addAll(populateChoice.populate(Utility.Principio_attivo));
-        casa_farmaceutica=add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
-        casa_farmaceutica.getItems().addAll(populateChoice.populate("pharma"));
+        if(optionalpopulateChoice.isPresent()) {
+             PopulateChoice populateChoice = optionalpopulateChoice.get();
+
+            nome = add_text_field("Nome");
+            descrizione = add_text_field("Descrzione");
+            categoria = add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
+            categoria.getItems().addAll(populateChoice.populate(Utility.Categoria));
+            tipologia = add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
+            tipologia.getItems().addAll(populateChoice.populate(Utility.Tipologia));
+            misura = add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
+            misura.getItems().addAll(populateChoice.populate(Utility.Misura));
+            principio_Attivo = add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
+            principio_Attivo.getItems().addAll(populateChoice.populate(Utility.Principio_attivo));
+            casa_farmaceutica = add_choiceBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli Valore").build());
+            casa_farmaceutica.getItems().addAll(populateChoice.populate("pharma"));
+        }
+
 
     }
+
+
+
+
+
     @Override
     protected FieldData get_return_data() {
         return FieldData.FieldDataBuilder.getbuilder().setNome(nome.getText()).setDescription(descrizione.getText()).

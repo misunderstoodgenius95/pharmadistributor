@@ -12,11 +12,13 @@ import org.controlsfx.control.SearchableComboBox;
 import pharma.Model.FieldData;
 import pharma.config.PopulateChoice;
 import pharma.dao.FarmacoDao;
+import pharma.dao.GenericJDBCDao;
 import pharma.dao.LottiDao;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class LottiDialogHandler  extends DialogHandler{
     private final LottiDao lottiDao;
@@ -36,26 +38,29 @@ public class LottiDialogHandler  extends DialogHandler{
         this.obs=observableList;
     }
 
+
     @Override
     protected void initialize() {
 
     }
 
     @Override
-    protected void initialize(PopulateChoice populateChoice) {
-        lotto_code=add_text_field_with_validation("Lotto Id",Validation.Lotto_code);
-        farmaco_searchable=add_SearchComboBox(FieldData.FieldDataBuilder.getbuilder().setNome("Aggiungi Farmaco").build());
-        farmaco_searchable.getItems().addAll(populateChoice.populate("farmaco"));
-       add_label(" Aggiungi Data di produzione");
-        production_date=add_calendar();
-       add_label(" Aggiungi Data di scadenza");
-        elapsed_date=add_calendar();
-        price_text=add_text_field_with_validation("Aggiungi Prezzo 0.0",Validation.Double_Digit);
-        spinner_vat=add_spinner();
-      add_label(" Aggiungi quantità");
-        spinner_quantity=add_spinner();
-        setupListener();
+    protected  <K>void  initialize(Optional<PopulateChoice<K>> optionalpopulateChoice, Optional<List<GenericJDBCDao>> optionalgenericJDBCDao, Optional<FieldData> optionalfieldData){
+        if(optionalpopulateChoice.isPresent()) {
+            PopulateChoice populateChoice = optionalpopulateChoice.get();
+            lotto_code = add_text_field_with_validation("Lotto Id", Validation.Lotto_code);
+            farmaco_searchable = add_SearchComboBox(FieldData.FieldDataBuilder.getbuilder().setNome("Aggiungi Farmaco").build());
+            farmaco_searchable.getItems().addAll(populateChoice.populate("farmaco"));
+            add_label(" Aggiungi Data di produzione");
+            production_date = add_calendar();
+            add_label(" Aggiungi Data di scadenza");
+            elapsed_date = add_calendar();
+
+            setupListener();
+        }
     }
+
+
     private void setupListener(){
         production_date.valueProperty().addListener(new ChangeListener<LocalDate>() {
             @Override
@@ -73,9 +78,7 @@ public class LottiDialogHandler  extends DialogHandler{
     protected FieldData get_return_data() {
         return FieldData.FieldDataBuilder.getbuilder().setLotto_id(lotto_code.getText()).setTipologia(farmaco_searchable.getValue().getId()).
                 setProduction_date(Date.valueOf(production_date.getValue()))
-                .setElapsed_date(Date.valueOf(elapsed_date.getValue()))
-                .setPrice(Double.parseDouble(price_text.getText()))
-                .setQuantity(spinner_quantity.getValue()).setVat_percent(spinner_vat.getValue()).build();
+                .setElapsed_date(Date.valueOf(elapsed_date.getValue())).build();
 
     }
 
@@ -86,9 +89,7 @@ public class LottiDialogHandler  extends DialogHandler{
           FieldData fieldData_obs= FieldData.FieldDataBuilder.getbuilder().setLotto_id(fieldData.getLotto_id()).
                     setTipologia(fieldData.getTipologia()).
                     setProduction_date(fieldData.getProduction_date())
-                    .setElapsed_date(fieldData.getElapsed_date())
-                    .setPrice(fieldData.getPrice())
-                    .setQuantity(fieldData.getQuantity()).setVat_percent(fieldData.getVat_percent()).
+                    .setElapsed_date(fieldData.getElapsed_date()).
                   setNome(farmaco_searchable.getValue().getNome()).
                   setUnit_misure(farmaco_searchable.getValue().getUnit_misure()).
                   setNome_tipologia(farmaco_searchable.getValue().getNome_tipologia()).

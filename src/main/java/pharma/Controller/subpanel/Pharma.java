@@ -132,7 +132,7 @@ public class Pharma implements Initializable {
             }
         };
 
-        table_id.getColumns().addAll( TableUtility.generate_column_string("Anagrafica Utente","nome"),
+        table_id.getColumns().addAll( TableUtility.generate_column_string("Anagrafica Utente","nome_casa_farmaceutica"),
         TableUtility.generate_column_string("Sigla","sigla"),
         TableUtility.generate_column_string("Partita Iva","partita_iva"),actionColumn);
 

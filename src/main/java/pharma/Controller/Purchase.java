@@ -70,8 +70,12 @@ public class Purchase {
     }
 
     @FXML
-    void fattura_acquisto_action(ActionEvent event) {
-
+    void fattura_acquisto_action(ActionEvent event) throws IOException {
+        Parent parent = stages.load_fxml("/subpanel/purchase_invoice.fxml");
+        parent.getStyleClass().add("subpanel");
+        change_stages(parent, -20.00);
+        Button button = (Button) event.getSource();
+        handleButton(button);
     }
 
     @FXML
@@ -85,8 +89,12 @@ public class Purchase {
     }
 
     @FXML
-    void ordini_action(ActionEvent event) {
-
+    void ordini_action(ActionEvent event) throws IOException {
+        Parent parent = stages.load_fxml("/subpanel/ordini.fxml");
+        parent.getStyleClass().add("subpanel");
+        change_stages(parent, -20.00);
+        Button button = (Button) event.getSource();
+        handleButton(button);
     }
 
     @FXML

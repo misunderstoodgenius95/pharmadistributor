@@ -69,12 +69,57 @@ public class Database {
 
         if(conn==null){
             System.out.println("conn is "+conn);
+
         throw  new IllegalArgumentException("Connection is null!");
          }
         return conn.prepareStatement(sql);
 
 
 
+
+    }
+
+
+    public void setTransaction(boolean value){
+        try {
+            if(conn==null){
+                throw new RuntimeException("conn is null");
+            }
+            conn.setAutoCommit(!value);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    public void commit() {
+        try {
+            if(conn!=null){
+                if(!conn.getAutoCommit()) {
+
+                    conn.commit();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    public void rollback(){
+
+        if(conn!=null){
+            try {
+                if(!conn.getAutoCommit()){
+                    conn.rollback();
+                    this.setTransaction(false);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
     }
 
     /*private Properties getPopertiesDatabase() {

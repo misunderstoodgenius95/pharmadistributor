@@ -66,19 +66,17 @@ public class Lotti implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         table_id.getColumns().addAll(
+                TableUtility.generate_column_string("lotto Code","lotto_id"),
         TableUtility.generate_column_string("Nome","nome"),
         TableUtility.generate_column_string("Tipologia","nome_tipologia"),
         TableUtility.generate_column_string("Casa Farmaceutica","nome_casa_farmaceutica"),
         TableUtility.generate_column_string("Misura","unit_misure"),
         TableUtility.generate_column_string("Data di produzione","production_date"),
-        TableUtility.generate_column_string("Data di scadenza","elapsed_date"),
-        TableUtility.generate_column_int("Quantità","quantity"),
-                TableUtility.generate_column_double("Prezzo","price"),
-                TableUtility.generate_column_int("Iva %","vat_percent")
+        TableUtility.generate_column_string("Data di scadenza","elapsed_date")
         );
         table_id.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         obs.addAll(lottiDao.findAll());
         table_id.getItems().addAll(obs);
-        table_id.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 16px; -fx-text-fill: #636165;");
+        table_id.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-text-fill: #636165;");
     }
 }

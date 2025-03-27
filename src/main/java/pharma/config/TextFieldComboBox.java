@@ -3,20 +3,22 @@ package pharma.config;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Skin;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.control.skin.ChoiceBoxSkin;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import pharma.Model.FieldData;
 
+import java.lang.reflect.Field;
+import java.util.Locale;
+
 public class TextFieldComboBox<T> extends  Control {
 
 
 
-    private  ComboBox<T> comboBox;
+    private ChoiceBox choiceBox;
     private TextField textField;
     private VBox vBox;
     private  ObservableList<T> observable;
@@ -24,19 +26,28 @@ public class TextFieldComboBox<T> extends  Control {
 
         vBox=new VBox();
         observable=observableList;
-        comboBox=new ComboBox<>();
-        comboBox.getItems().setAll(observableList);
+     choiceBox=new ChoiceBox(observableList);
+
+
+
 
         textField=new TextField();
-        textField.setPromptText("Cerca Lotti");
+
        // vBox.setPrefWidth(Double.MAX_VALUE);
-        comboBox.setPrefWidth(Double.MAX_VALUE);
+       choiceBox.setPrefWidth(Double.MAX_VALUE);
         setFont();
 
 
-        vBox.getChildren().addAll(textField,comboBox);
+        vBox.getChildren().addAll(textField,choiceBox);
         vBox.setBorder(new Border(new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID,new CornerRadii(3),new BorderWidths(3))));
         initialize();
+    }
+
+
+
+
+    public void setpromptValue(String text) {
+        textField.setPromptText(text);
     }
 
     private void initialize(){
@@ -44,18 +55,19 @@ public class TextFieldComboBox<T> extends  Control {
         FilteredList<T> filteredList=new FilteredList<>(observable, p->true);
 
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList.setPredicate(value->{
-                System.out.println(newValue);
-                if(newValue ==null|| newValue.isEmpty()){
-                    return  true;
+            filteredList.setPredicate(value-> {
 
-                }
-                return comboBox.getConverter().toString(value).toLowerCase().contains(newValue.toLowerCase());
-            });
-            comboBox.setItems(FXCollections.observableArrayList(filteredList));
-           comboBox.show();
+                        if (newValue == null || newValue.isEmpty()) {
+                            return true;
 
-        });
+                        }
+                        return value.toString().toLowerCase().contains(newValue.toLowerCase());
+                    });
+           choiceBox.setItems(FXCollections.observableArrayList(filteredList));
+           choiceBox.show();
+
+
+    });
     }
 
     @Override
@@ -64,21 +76,28 @@ public class TextFieldComboBox<T> extends  Control {
     }
 
 
-    public ComboBox<T> getComboBox() {
-        return comboBox;
-    }
 
     public void setConvert(StringConverter<T> stringConverter){
-            comboBox.setConverter(stringConverter);
+            choiceBox.setConverter(stringConverter);
     }
 
+public StringConverter<T> getConvert(){
 
+       return  choiceBox.getConverter();
+}
     public VBox getvBox() {
         return vBox;
     }
 
     private  void setFont(){
-      comboBox.setStyle("-fx-font-size: 15px");
+    choiceBox.setStyle("-fx-font-size: 15px");
       textField.setStyle("-fx-font-size: 15px");
   }
+
+    public ChoiceBox getChoiceBox() {
+        return choiceBox;
+    }
+
+
 }
+

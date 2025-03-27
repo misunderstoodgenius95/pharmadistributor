@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.yaml.snakeyaml.util.ArrayUtils;
 import pharma.Controller.subpanel.Pharma;
 import pharma.Model.FieldData;
 import pharma.config.*;
@@ -18,6 +19,8 @@ import pharma.dao.PharmaDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -228,6 +231,16 @@ class CustomDialogTest extends ApplicationTest {
         });
 
         sleep(5000);
+
+    }
+
+    @Test
+    public void test_radiosme(){
+        Platform.runLater(()->{
+            customDialog.add_radios(new ArrayList<>(Arrays.asList("Yes","NO")), CustomDialog.Mode.Horizontal);
+
+        });
+        sleep(4000);
 
     }
 

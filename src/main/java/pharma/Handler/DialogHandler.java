@@ -6,7 +6,12 @@ import javafx.stage.Modality;
 import pharma.Model.FieldData;
 import pharma.config.CustomDialog;
 import pharma.config.PopulateChoice;
+import pharma.dao.GenericJDBCDao;
 
+import javax.swing.text.html.Option;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class DialogHandler  extends CustomDialog<FieldData> {
@@ -23,16 +28,53 @@ public abstract class DialogHandler  extends CustomDialog<FieldData> {
 
         super(content);
 
-        initialize(populateChoice);
+        initialize(Optional.of(populateChoice),Optional.empty(),Optional.empty());
+
         setResult();
 
     }
+    public DialogHandler(String content, PopulateChoice populateChoice, List<GenericJDBCDao> genericJDBCDao) {
+
+        super(content);
+
+        initialize(Optional.of(populateChoice),Optional.of(genericJDBCDao),Optional.empty());
+        setResult();
+
+    }
+    public DialogHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
+
+        super(content);
+
+        initialize(Optional.empty(),Optional.of(genericJDBCDao),Optional.empty());
+        setResult();
+
+    }
+    public DialogHandler(String content, List<GenericJDBCDao> genericJDBCDao,FieldData fieldData) {
+
+        super(content);
+
+        initialize(Optional.empty(),Optional.of(genericJDBCDao),Optional.of(fieldData));
+        setResult();
+
+    }
+    public DialogHandler(String content,FieldData fieldData) {
+
+        super(content);
+
+        initialize(Optional.empty(),Optional.empty(),Optional.of(fieldData));
+        setResult();
+
+    }
+
+
+
+
+
     protected void setMode(Mode mode){
         this.mode=mode;
 
     }
-    protected abstract void initialize();
-    protected abstract void initialize(PopulateChoice populateChoice);
+
 
     protected Mode getMode() {
         if(mode==null){
@@ -40,6 +82,10 @@ public abstract class DialogHandler  extends CustomDialog<FieldData> {
         }
         return mode;
     }
+
+
+
+
 
     private  void setResult(){
         setResultConverter(dialog -> {
@@ -50,6 +96,8 @@ public abstract class DialogHandler  extends CustomDialog<FieldData> {
         });
 
     }
+    protected  abstract  void initialize();
+    protected abstract <K> void initialize(Optional<PopulateChoice<K>> PopulateChoice, Optional<List<GenericJDBCDao>> optionalgenericJDBCDao, Optional<FieldData> optionalfieldData);
 
     /**
      * This method can be setting with FieldData Model that contains the Corrispective date that using for Insert Dao

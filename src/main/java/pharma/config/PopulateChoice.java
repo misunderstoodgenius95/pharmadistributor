@@ -8,17 +8,17 @@ import pharma.dao.*;
 
 import java.util.List;
 
-public class PopulateChoice {
+public class PopulateChoice<T> {
     private DetailDao detailDao;
     private PharmaDao pharmaDao;
 
-    private GenericJDBCDao<FieldData,Integer> generic_dao;
+    private GenericJDBCDao<FieldData,T> generic_dao;
     public PopulateChoice(DetailDao detailDao, PharmaDao pharmaDao) {
         this.detailDao = detailDao;
         this.pharmaDao=pharmaDao;
     }
 
-    public PopulateChoice(GenericJDBCDao<FieldData,Integer> generic_dao) {
+    public   PopulateChoice(GenericJDBCDao<FieldData,T> generic_dao) {
        this.generic_dao=generic_dao;
     }
 
