@@ -16,15 +16,23 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pharma.RolesStage;
 import pharma.Stages;
+import pharma.Storage.FileStorage;
 import pharma.Storage.StorageToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import pharma.config.auth.AutorizationService;
+import pharma.config.auth.UserService;
+import pharma.security.Stytch.StytchClient;
 import pharma.security.TokenUtility;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Purchase {
@@ -36,10 +44,23 @@ public class Purchase {
     private SimpleObjectProperty<Pane> simpleObjectProperty;
     private Button last_clicked;
 
+    private AutorizationService authorizationService;
     public Purchase() {
         stages = new Stages();
         simpleObjectProperty = new SimpleObjectProperty<>();
         last_clicked = null;
+        HashMap<String,String> hashMap_json=null;
+        try {
+            hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
+            authorizationService=
+                    new AutorizationService( new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
     }
 
     private void change_stages(Parent parent, double value) throws IOException {
@@ -99,11 +120,14 @@ public class Purchase {
 
     @FXML
     void pharma_action(ActionEvent event) throws IOException {
+     String jwt=FileStorage.getProperty("jwt",new FileReader("config.properties"));
+    if(authorizationService.authorization(jwt,"read","pharma")) {
         Parent parent = stages.load_fxml("/subpanel/pharma.fxml");
         parent.getStyleClass().add("subpanel");
         change_stages(parent, -20.00);
         Button button = (Button) event.getSource();
         handleButton(button);
+    }
     }
 
     @FXML

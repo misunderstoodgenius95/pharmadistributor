@@ -1,0 +1,20 @@
+VBox Button{
+
+    -fx-background-color: rgba(128, 128, 128, 0.06);
+    -fx-text-fill: rgba(0, 0, 0, 0.38);
+}
+
+VBox Button:hover {
+    -fx-background-color: rgba(128, 128, 128, 0.19);;
+    -fx-text-fill: rgb(0, 0, 0);
+}
+.clicked{
+    -fx-background-color: rgba(128, 128, 128, 0.31);;
+    -fx-text-fill: rgb(0, 0, 0);
+
+}
+
+Button{
+
+    -fx-font-size: 20;
+}

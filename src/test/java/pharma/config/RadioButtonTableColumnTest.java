@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import pharma.Model.FieldData;
+import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
 
 @ExtendWith(ApplicationExtension.class)
 class RadioButtonTableColumnTest {

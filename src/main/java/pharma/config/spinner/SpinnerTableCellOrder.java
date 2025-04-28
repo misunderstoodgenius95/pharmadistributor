@@ -5,16 +5,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import javafx.collections.ObservableSet;
-import javafx.scene.control.SpinnerValueFactory;
 import pharma.Model.FieldData;
+import pharma.javafxlib.CustomTableView.SpinnerTableCells;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
-public class SpinnerTableCellOrder<K> extends  SpinnerTableCells<FieldData,K> {
+public class SpinnerTableCellOrder<K> extends SpinnerTableCells<FieldData,K> {
     private  String method;
     private SimpleIntegerProperty s_update;
     private  boolean initialize;
@@ -24,7 +18,15 @@ public class SpinnerTableCellOrder<K> extends  SpinnerTableCells<FieldData,K> {
         this.method=method;
      this.s_update=s_update;
      initialize=false;
+
         listener();
+        K currentValue = getSpinner().getValue();
+        if (currentValue instanceof Integer) {
+            getSpinner().getValueFactory().setValue((K) (Integer) ((Integer) currentValue + 1));
+        } else if (currentValue instanceof Double) {
+            getSpinner().getValueFactory().setValue((K) (Double) ((Double) currentValue + 1.0));
+        }
+
 
 
     }
@@ -34,7 +36,15 @@ public class SpinnerTableCellOrder<K> extends  SpinnerTableCells<FieldData,K> {
         this.method=method;
         this.s_update_result=s_update_result;
         initialize=false;
+
         listener();
+        K currentValue = getSpinner().getValue();
+        if (currentValue instanceof Integer) {
+            getSpinner().getValueFactory().setValue((K) (Integer) ((Integer) currentValue + 1));
+        } else if (currentValue instanceof Double) {
+            getSpinner().getValueFactory().setValue((K) (Double) ((Double) currentValue + 1.0));
+        }
+
     }
 
 
@@ -42,12 +52,9 @@ public class SpinnerTableCellOrder<K> extends  SpinnerTableCells<FieldData,K> {
         getSpinner().valueProperty().addListener(new ChangeListener<K>() {
             @Override
             public void changed(ObservableValue<? extends K> observable, K oldValue, K newValue) {
-                if(!initialize){
-                    initialize=true;
-                    return;
-                }
 
 
+                System.out.println("change");
                 if (newValue != null) {
 
                     Platform.runLater(() -> {
@@ -94,6 +101,7 @@ public class SpinnerTableCellOrder<K> extends  SpinnerTableCells<FieldData,K> {
                 }
             }
         });
+
     }
 
 

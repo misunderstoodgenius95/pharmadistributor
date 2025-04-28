@@ -4,11 +4,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import pharma.Controller.subpanel.Farmaco;
+import org.mockito.MockitoAnnotations;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,16 +22,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 class FarmacoDaoTest {
     private FarmacoDao pharmacoDao;
     private Database database;
+    @Mock
+    private ResultSet resultSet;
+    @Mock
+    private PreparedStatement preparedStatement;
 
     @BeforeEach
     public void setUp() throws SQLException {
+        MockitoAnnotations.openMocks(this);
         database = Mockito.mock(Database.class);
-        pharmacoDao = new FarmacoDao("farmaco", database);
+        pharmacoDao = new FarmacoDao( database);
 
     }
 
@@ -39,11 +46,8 @@ class FarmacoDaoTest {
         PreparedStatement preparedStatement = Mockito.mock(PreparedStatement.class);
         FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setNome("Tachipirina").setDescription("Farmaco per la febbre.").setCategoria(1).
                 setTipologia(1).setMisure(1).setCasa_Farmaceutica(1).setPrincipio_attivo(1).build();
-
-        Mockito.when(preparedStatement.executeUpdate()).thenReturn(1);
-
-
-        Mockito.when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
         boolean value = pharmacoDao.insert(fieldData);
         Assertions.assertTrue(value);
         Mockito.
@@ -59,6 +63,14 @@ class FarmacoDaoTest {
 
 
     }
+    @Test
+    public  void ValidUpdate() throws SQLException {
+        FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setNome("acab").setId(10).build();
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        when(database.execute_prepared_query(anyString())).thenReturn(preparedStatement);
+        boolean value=pharmacoDao.update(fieldData);
+        Assertions.assertTrue(value);
+    }
 
     @Test
     public void InValidInsert() throws SQLException {
@@ -67,10 +79,10 @@ class FarmacoDaoTest {
         FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setNome("Tachpirina").setDescription("Farmaco per la febbre.").setCategoria(1).
                 setTipologia(1).setMisure(1).setCasa_Farmaceutica(1).build();
 
-        Mockito.when(preparedStatement.executeUpdate()).thenReturn(0);
+        when(preparedStatement.executeUpdate()).thenReturn(0);
 
 
-        Mockito.when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
+        when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
         boolean value = pharmacoDao.insert(fieldData);
         Assertions.assertFalse(value);
         Mockito.verify(preparedStatement).setString(1,"Tachipirina");
@@ -86,15 +98,15 @@ class FarmacoDaoTest {
     @Test
     void findAll() throws SQLException {
         ResultSet resultSet=Mockito.mock(ResultSet.class);
-        Mockito.when(resultSet.next()).thenReturn(true,false);
-        Mockito.when(resultSet.getString(2)).thenReturn("Tachipirina");
-        Mockito.when(resultSet.getString(3)).thenReturn("Febbre");
-        Mockito.when(resultSet.getString(4)).thenReturn("Antiinfiammatorio");
-        Mockito.when(resultSet.getString(5)).thenReturn("Compresse");
-        Mockito.when(resultSet.getString(6)).thenReturn("100mg");
-        Mockito.when(resultSet.getString(7)).thenReturn("Paracetamolo");
-        Mockito.when(resultSet.getString(8)).thenReturn("Angelini");
-        Mockito.when(database.executeQuery(Mockito.anyString())).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(true,false);
+        when(resultSet.getString(2)).thenReturn("Tachipirina");
+        when(resultSet.getString(3)).thenReturn("Febbre");
+        when(resultSet.getString(4)).thenReturn("Antiinfiammatorio");
+        when(resultSet.getString(5)).thenReturn("Compresse");
+        when(resultSet.getString(6)).thenReturn("100mg");
+        when(resultSet.getString(7)).thenReturn("Paracetamolo");
+        when(resultSet.getString(8)).thenReturn("Angelini");
+        when(database.executeQuery(Mockito.anyString())).thenReturn(resultSet);
         List<FieldData> list=pharmacoDao.findAll();
         FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setNome("Tachipirina").setDescription("Febbre").
               setNome_categoria("Antiinfiammatorio").setNome_tipologia("Compresse").setUnit_misure("100mg").setNome_principio_attivo("Paracetamolo").
@@ -117,7 +129,7 @@ class FarmacoDaoTest {
        FarmacoDao farmacoDao = null;
         try {
             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
-            farmacoDao=new FarmacoDao("farmaco",Database.getInstance(properties));
+            farmacoDao=new FarmacoDao(Database.getInstance(properties));
 
 
         } catch (FileNotFoundException e) {
@@ -133,6 +145,28 @@ class FarmacoDaoTest {
         Assertions.assertTrue(value);
 
     }
+    @Test
+    public void ValidUpdateIntegrationTesting() {
+        Properties properties = null;
+        FarmacoDao farmacoDao = null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            farmacoDao=new FarmacoDao(Database.getInstance(properties));
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setNome("acab").setId(10).build();
+        boolean value=farmacoDao.update(fieldData);
+        Assertions.assertTrue(value);
+
+    }
+
+
 
 
 

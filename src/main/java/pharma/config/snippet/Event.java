@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import pharma.Model.FieldData;
-import pharma.config.TextFieldComboBox;
+import pharma.javafxlib.Controls.TextFieldComboBox;
 
 import java.sql.Date;
 import java.util.List;

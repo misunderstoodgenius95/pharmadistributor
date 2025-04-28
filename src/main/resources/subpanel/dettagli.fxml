@@ -30,7 +30,7 @@
             </GridPane.margin></ListView>
         <VBox prefHeight="210.0" prefWidth="328.0" spacing="40.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
             <children>
-                <ChoiceBox fx:id="select_detail" onAction="#change_value" prefWidth="150.0" />
+                <ChoiceBox fx:id="select_detail"  prefWidth="150.0" />
                 <TextField fx:id="detail_field_1">
                <font>
                   <Font size="18.0" />

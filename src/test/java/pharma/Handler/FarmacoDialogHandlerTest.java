@@ -1,16 +1,13 @@
 package pharma.Handler;
 
-import com.sun.javafx.collections.NonIterableChange;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import net.bytebuddy.agent.builder.AgentBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,25 +15,17 @@ import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
-import pharma.config.Database;
-import pharma.config.PopulateChoice;
-import pharma.config.SimulateEvents;
+import pharma.config.database.Database;
 import pharma.dao.DetailDao;
 import pharma.dao.FarmacoDao;
 import pharma.dao.PharmaDao;
-
-import javax.xml.crypto.Data;
 
 import java.rmi.AccessException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class FarmacoDialogHandlerTest {
     private FarmacoDao farmacoDao;
@@ -57,7 +46,7 @@ class FarmacoDialogHandlerTest {
     public void setUp() throws SQLException {
         preparedStatement=Mockito.mock(PreparedStatement.class);
         database= Mockito.mock(Database.class);
-        farmacoDao=new FarmacoDao("farmaco",database);
+        farmacoDao=new FarmacoDao(database);
          detailDao=new DetailDao(database);
          pharmaDao=new PharmaDao(database);
         Mockito.when(preparedStatement.executeUpdate()).thenReturn(1);

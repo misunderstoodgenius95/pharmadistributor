@@ -20,8 +20,8 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Handler.PurchaseCreditNoteHandler;
 import pharma.Model.FieldData;
-import pharma.config.Database;
-import pharma.config.DoubleClick_Menu;
+import pharma.config.database.Database;
+import pharma.javafxlib.DoubleClick_Menu;
 import pharma.config.TableUtility;
 import pharma.dao.*;
 
@@ -29,8 +29,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import static java.util.stream.Collectors.flatMapping;
-import static java.util.stream.Collectors.toList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(ApplicationExtension.class)
@@ -62,7 +60,7 @@ public class CreditNoteTest {
     @Mock
     private  ResultSet resultSet_pharma_house;
     private PharmaDao pharmaDao;
-    private PurchaseCreditNoteDao purchaseCreditNoteDao;
+    private PurchaseCreditNoteDetailDao purchaseCreditNoteDao;
     @Start
     public void start(Stage stage){
         MockitoAnnotations.openMocks(this);
@@ -74,10 +72,10 @@ public class CreditNoteTest {
         Scene scene=new Scene(vBox);
         purchaseOrderDao=new PurchaseOrderDao(database);
          p_detail=new PurchaseOrderDetailDao(database);
-         farmacoDao=new FarmacoDao("farmaco_all",database);
+         farmacoDao=new FarmacoDao(database);
          purchaseInvoiceDao=new PurchaseInvoiceDao(database);
          pharmaDao=new PharmaDao(database);
-         purchaseCreditNoteDao=new PurchaseCreditNoteDao(database);
+         purchaseCreditNoteDao=new PurchaseCreditNoteDetailDao(database);
          stage.setScene(scene);
          stage.show();
         obs_table_fd_order =FXCollections.observableArrayList();
@@ -294,7 +292,6 @@ public class CreditNoteTest {
                 TableUtility.generate_column_double("Quantità","quantity"),
                 TableUtility.generate_column_int("Iva","vat_percent")
         );
-
         obs_table_fd_details.setAll(p_detail.findAll());
         t_expanded_inner.setItems(obs_table_fd_details);
         t_expanded_inner.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-text-fill: #636165;");

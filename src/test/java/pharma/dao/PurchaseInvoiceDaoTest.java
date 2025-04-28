@@ -6,14 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.postgresql.util.ReaderInputStream;
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.sql.*;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class PurchaseInvoiceDaoTest {

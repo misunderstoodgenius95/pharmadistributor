@@ -1,13 +1,10 @@
 package pharma.dao;
 
-import kotlin.text.UStringsKt;
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
-import javax.swing.text.html.parser.Entity;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
                 setId(resultSet.getInt(1)).
                 setLotto_id(resultSet.getString(2)).
                 setPrice(resultSet.getDouble("price")).
-                setFarmaco_id(resultSet.getInt("farmaco")).
+                setNome_casa_farmaceutica(resultSet.getString("nome_farmaco")).
                 setPurchase_order_id(resultSet.getInt("purchase_order")).
                 setQuantity(resultSet.getInt("quantity")).
                 setVat_percent(resultSet.getInt("vat_percent")).
@@ -93,7 +90,18 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
 
             ResultSet resultSet=preparedStatement.executeQuery();
             while (resultSet.next()) {
-                list.add(mapRow(resultSet));
+                list.add(  FieldData.FieldDataBuilder.getbuilder().
+                        setId(resultSet.getInt(1)).
+                        setLotto_id(resultSet.getString(2)).
+                        setPrice(resultSet.getDouble("price")).
+                        setFarmaco_id(resultSet.getInt("farmaco")).
+                        setPurchase_order_id(resultSet.getInt("purchase_order")).
+                        setQuantity(resultSet.getInt("quantity")).
+                        setVat_percent(resultSet.getInt("vat_percent")).
+                        setNome_farmaco(resultSet.getString("nome_farmaco")).
+                        setNome_tipologia(resultSet.getString("tipologia")).
+                        setUnit_misure(resultSet.getString("misura")).
+                        build());
             }
 
 

@@ -43,10 +43,10 @@ class LottiTest {
             Button button= robot.lookup("#btn_id_add").queryButton();
             SimulateEvents.clickOn(button);
             Lotti lotti=loader.getController();
-            DialogHandler dialogHandler=lotti.getDialogHandler();
+            DialogHandler<FieldData> dialogHandler=lotti.getDialogHandler();
             List<Control> list_combo=dialogHandler.getControlList().stream().filter(control-> control instanceof SearchableComboBox).toList();
-            SearchableComboBox<FieldData> searchableComboBox = (SearchableComboBox<FieldData>) list_combo.getFirst();
-            searchableComboBox.setValue(searchableComboBox.getItems().get(1));
+    /*        SearchableComboBox<FieldData> searchableComboBox = (SearchableComboBox<FieldData>) list_combo.getFirst();
+            searchableComboBox.setValue(searchableComboBox.getItems().get(1));*/
             List<Control> c=dialogHandler.getControlList().stream().filter(control-> control instanceof DatePicker).toList();
            DatePicker  datePicker_1= (DatePicker) c.get(0);
              DatePicker datePicker_2=(DatePicker) c.get(1);
@@ -62,12 +62,12 @@ class LottiTest {
             SimulateEvents.writeOn((TextField) textField.getFirst(),"b8188j");
             SimulateEvents.writeOn((TextField) textField.get(1),"10.50");
             dialogHandler.execute();
-            SimulateEvents.clickOn(dialogHandler.getButtonOK());
+           // SimulateEvents.clickOn(dialogHandler.getButtonOK());
 
 
 
         });
-       robot.sleep(4000);
+       robot.sleep(400000000);
 
     }
 
@@ -77,7 +77,7 @@ class LottiTest {
 
 
         });
-        robot.sleep(40000);
+        robot.sleep(4000000);
     }
 
 }

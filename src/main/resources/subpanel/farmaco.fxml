@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="anchor" prefHeight="536.0" prefWidth="1178.0" xmlns:fx="http://javafx.com/fxml"  fx:controller="pharma.Controller.subpanel.Farmaco">
+<AnchorPane fx:id="anchor" prefHeight="536.0" prefWidth="1178.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.subpanel.Farmaco">
    <children>
-      <TableView fx:id="table_id" layoutX="105.0" layoutY="162.0" prefHeight="297.0" prefWidth="840.0" />
+      <TableView fx:id="table_id" layoutX="12.0" layoutY="192.0" prefHeight="300.0" prefWidth="1150.0" />
       <Button fx:id="btn_id_add" layoutX="105.0" layoutY="93.0" mnemonicParsing="false" onAction="#btn_action_add" prefHeight="33.0" prefWidth="74.0" text="Inserisci" />
+      <Button fx:id="edit_btn" layoutX="960.0" layoutY="118.0" mnemonicParsing="false" onAction="#edit_btn_action" text="Edit" />
+      <ChoiceBox fx:id="choicebox_search" layoutX="514.0" layoutY="92.0" onAction="#choicebox_search_action" prefWidth="150.0" />
+      <TextField fx:id="serch_value" layoutX="678.0" layoutY="92.0" />
    </children>
 </AnchorPane>

@@ -1,19 +1,14 @@
 package pharma.dao;
 
-import com.sun.source.tree.ModuleTree;
-import net.datafaker.Faker;
-import net.jodah.failsafe.internal.util.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import pharma.Controller.subpanel.Dettagli;
-import pharma.Controller.subpanel.Lotti;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -25,7 +20,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +29,7 @@ class LottiDaoTest {
 
     @BeforeEach
     public void setUp() {
-        database = Mockito.mock(pharma.config.Database.class);
+        database = Mockito.mock(Database.class);
         lottiDao = new LottiDao(database, "lotto");
 
     }

@@ -82,6 +82,8 @@ vat_amount double precision NOT NULL,
 total double precision NOT NULL,
 create_at TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
 );
+select  * from purchase_invoice;
+
 
 create table purchase_credit_note
 (
@@ -96,15 +98,11 @@ create table purchase_credit_note
     total double precision not null,
     created_at TIMESTAMP DEFAULT current_timestamp
 );
+alter table purchase_credit_note
+add constraint different UNIQUE (invoice_id);
 
-create table  purchase_credit_note_order(
-    id int PRIMARY KEY generated always as identity,
-    credit_note_id int  not null REFERENCES purchase_credit_note(id),
-    order_id int not null  references  purchase_order(id),
-    subtotal double precision not null,
-    vat_amount double precision not null,
-    total double precision not null
-);
+
+
 
 create table purchase_credit_note_details(
 id int PRIMARY KEY generated always as identity,
@@ -112,10 +110,8 @@ credit_note_id int NOT NULL  REFERENCES purchase_credit_note(id),
 order_details  int not null references  purchase_order_detail(id),
 quantity int not null,
 price double precision not null,
-vat_percent double precision,
-lotto varchar not null,
-farmaco int not null,
-FOREIGN KEY (lotto,farmaco) REFERENCES lotto(id,farmaco)
+nome_farmaco text,
+vat_percent double precision
 );
 
 
@@ -198,25 +194,28 @@ FROM (((((farmaco
     JOIN pharma p ON ((farmaco.casa_farmaceutica = p.id)));
 
 
-
-CREATE OR REPLACE VIEW farmaco_all
+select  * from misura;
+CREATE OR REPLACE VIEW farmaco_all as
 SELECT farmaco.id,
        farmaco.nome,
        farmaco.descrizione,
        categoria.nome AS categoria,
        tipologia.nome AS tipologia,
-       concat(m.quantity, m.unit) AS misura,
+       concat(m.misure, m.unit) AS misura,
        pa.nome AS principio_attivo,
-       p.anagrafica_cliente AS casa_farmaceutica
+       p.anagrafica_cliente AS casa_farmaceutica,
+       farmaco.qty,
+       p.id as pharma_id
 FROM (((((farmaco
     JOIN categoria ON ((farmaco.categoria = categoria.id)))
     JOIN tipologia ON ((farmaco.tipologia = tipologia.id)))
     JOIN misura m ON ((m.id = farmaco.misura)))
     JOIN principio_attivo pa ON ((pa.id = farmaco.principio_attivo)))
     JOIN pharma p ON ((farmaco.casa_farmaceutica = p.id)));
- DROP VIEW  IF EXISTS farmaco_all
 
- select * from pharma
+ DROP VIEW  IF EXISTS farmaco_all;
+
+ select * from pharma;
 
 
 select  * from lotto
@@ -233,23 +232,25 @@ select * from pharma;
 
 update purchase_order
 set pharma_id=3
-where id =29
+where id =29;
 
 
 select * from pharma;
-select * from purchase_credit_note
+select * from purchase_credit_note;
 
 select   purchase_order.id,purchase_order.data,purchase_order.subtotale,
          purchase_order.iva,purchase_order.totale, purchase_order.provider_order_id,purchase_order.pharma_id,pharma.anagrafica_cliente
          from purchase_order
 inner join pharma on  pharma.id=purchase_order.pharma_id
-where purchase_order.invoice_id IS NULL
+where purchase_order.invoice_id IS NULL;
 
 
 
-select * from purchase_invoice
+select * from purchase_order_detail;
 
 
+alter table purchase_order_detail
+add column  nome_farmaco text;
 select   purchase_order.id,purchase_order.data,purchase_order.subtotale,
                  purchase_order.iva,purchase_order.totale, purchase_order.provider_order_id,purchase_order.pharma_id,pharma.anagrafica_cliente from
                purchase_order
@@ -279,4 +280,107 @@ select purchase_order  purchase_order.id,purchase_order.data,purchase_order.subt
                 and purchase_order.pharma_id = 1
 
 
-select * from purchase_invoice
+delete from purchase_order;
+
+
+
+
+select * from misura;
+
+alter table misura;
+    update misura set quantity=28
+        where id=3;
+add column  quantity int;
+
+
+select * from misura;
+update misura set misure=150 where id=13;
+
+
+alter table  misura
+add constraint unit_miusure_check UNIQUE (misure,unit);
+
+
+select * from misura;
+
+alter table  misura
+drop column quantity;
+
+select  * from farmaco;
+alter table farmaco
+add column  qty int default 0 not null  ;
+
+update  farmaco
+set qty=20
+where id=59;
+
+select *
+from farmaco_all;
+
+select * from lotto
+                 inner join farmaco_all on farmaco_all.id=Lotto.farmaco
+select * from farmaco_all;
+
+
+select * from lotto;
+delete from lotto where id IN ('m100','m7200');
+
+select  * from lotto
+                    inner join farmaco_all on farmaco_all.id=lotto.farmaco;
+
+delete from lotto where lotto.id IN ('m100','m7200','m378','m7100','UP223','m229','m7aa')
+
+
+select count(*) from purchase_credit_note where invoice_id=1;
+
+select * from purchase_credit_note
+          inner join purchase_credit_note_details on purchase_credit_note.id = purchase_credit_note_details.credit_note_id
+         where invoice_id=8;
+
+
+            select * from purchase_credit_note
+                          inner join purchase_credit_note_details on purchase_credit_note.id = purchase_credit_note_details.credit_note_id
+                     inner join purchase_order_detail on purchase_order_detail.id= purchase_credit_note_details.order_details
+                     inner join farmaco_all on purchase_order_detail.farmaco=farmaco_all.id
+                             where invoice_id= 8;
+
+select  * from farmaco_all;
+
+CREATE OR REPLACE PROCEDURE update_all_farmaco_names()
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Update all rows in purchase_order_detail using farmaco_all view
+    UPDATE purchase_order_detail pod
+    SET nome_farmaco = fa.nome
+    FROM farmaco_all fa
+    WHERE pod.farmaco = fa.id;
+
+    -- Print how many rows were updated
+    RAISE NOTICE '% rows updated in purchase_order_detail.', FOUND;
+END;
+$$;
+
+CALL update_all_farmaco_names();
+
+
+select *
+from farmaco_all;
+
+
+
+
+
+create table  farmacia(
+id int generated always as identity,
+ragione_sociale text not null,
+p_iva text not null unique,
+street text not null,
+cap int not null,
+comune text not null,
+province text not null
+
+);
+
+
+

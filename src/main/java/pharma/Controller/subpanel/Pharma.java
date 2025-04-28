@@ -10,14 +10,20 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import pharma.Handler.DialogHandler;
 import pharma.Handler.PharmaDialogHandler;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.*;
+import pharma.config.auth.AutorizationService;
 import pharma.dao.PharmaDao;
+import pharma.config.database.Database;
+import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
+import pharma.security.Stytch.StytchClient;
 
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
@@ -34,98 +40,66 @@ public class Pharma implements Initializable {
     public TableView<FieldData> table_id;
     @FXML
     public Button button_add_click;
-
+    private PharmaDialogHandler pharmaDialogHandler;
     private  ObservableList<FieldData> obs_fieldData;
-    private final PharmaDao pharmaDao;
-    public Pharma()  {
-
-        try {
-            Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
-            pharmaDao = new PharmaDao(Database.getInstance(properties));
-        } catch (IOException e ) {
-            throw new RuntimeException(e);
-        }
-       obs_fieldData= FXCollections.observableArrayList();
-
+    private PharmaDao pharmaDao;
+    private AutorizationService authorizationService;
+    private String jwt;
+    public Pharma() throws FileNotFoundException {
+        HashMap<String,String> hashMap_json=null;
+        hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
+        authorizationService=
+                new AutorizationService( new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
+         jwt=FileStorage.getProperty("jwt",new FileReader("config.properties"));
     }
     @FXML
-    public void add_pharma_action() throws AccessException {
-        PharmaDialogHandler pharmaDialogHandler=new PharmaDialogHandler("Aggiungi Casa farmaceutica",pharmaDao,obs_fieldData);
-        pharmaDialogHandler.setOperation(DialogHandler.Mode.Insert, null);
-        pharmaDialogHandler.execute();
+    public void add_pharma_action() throws AccessException, FileNotFoundException {
 
-      /* pharmaDialogHandler.showAndWait().ifPresent(result-> {
-                   try {
-
-                       boolean cond = pharmaDao.insert(result);
-                       if (cond) {
-
-                           Utility.create_alert(Alert.AlertType.CONFIRMATION, "", "Aggiunto con sucesso!");
-                           obs_fieldData.add(result);
-                       } else {
-                           Utility.create_alert(Alert.AlertType.ERROR, "", "Errore inserimento!");
-                       }
-                   } catch (Exception e) {
-                       e.printStackTrace();
-                   }
-               });
-   /* CustomDialog<FieldData> customDialog=new CustomDialog<>("Aggiungi Casa Farmaceutica");
-    TextField anagrafica=customDialog.add_text_field("Inserisci Anagrafia Utente");
-    TextField vat=customDialog.add_text_field_with_validation("Inserisci Partita Iva", CustomDialog.Validation.Vat);
-    TextField sigla=customDialog.add_text_field("Sigla");
-
-
-    customDialog.setResultConverter(dialog->{
-        if(dialog== customDialog.getButton_click()) {
-            return FieldData.FieldDataBuilder.getbuilder().setSigla(sigla.getText()).setPartita_iva(vat.getText()).setAnagrafica_cliente(anagrafica.getText()).build();
-        }
-        return null;
-    });
-    customDialog.showAndWait().ifPresent(result->{
-        try {
-            Properties properties= FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host","username","password")),new FileReader("database.properties"));
-            PharmaDao pharmaDao=new PharmaDao(Database.getInstance(properties));
-            boolean cond=pharmaDao.insert(result);
-            if(cond){
-
-                Utility.create_alert(Alert.AlertType.CONFIRMATION,"","Aggiunto con sucesso!");
-                table_id.getItems().add(result);
-            }else{
-                Utility.create_alert(Alert.AlertType.ERROR,"","Errore inserimento!");
-
-
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if(authorizationService.authorization(jwt,"create","pharma")) {
+            pharmaDialogHandler.setOperation(DialogHandler.Mode.Insert, null);
+            pharmaDialogHandler.execute();
+            table_id.setItems(obs_fieldData);
+        }else{
+            Utility.create_alert(Alert.AlertType.ERROR,"Operation Formitten!","Operazione negata! ");
         }
 
 
-    });
-
-    */
 
 
     }
     @FXML
     void edit_pharma_event() throws AccessException {
 
-        PharmaDialogHandler pharmaDialogHandler=new PharmaDialogHandler("Aggiungi Casa farmaceutica",pharmaDao,obs_fieldData);
-        pharmaDialogHandler.setOperation(DialogHandler.Mode.Update, fieldData_property.get());
-        pharmaDialogHandler.execute();
+        if(authorizationService.authorization(jwt,"update","pharma")) {
+            pharmaDialogHandler.setOperation(DialogHandler.Mode.Update, fieldData_property.get());
+            pharmaDialogHandler.execute();
+            table_id.refresh();
+        }
 
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Utility.create_btn(button_add_click, "add.png");
+        Properties properties;
+        try {
+             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+        } catch (IOException e ) {
+            throw new RuntimeException(e);
+        }
+
+        pharmaDao = new PharmaDao(Database.getInstance(properties));
+        obs_fieldData= FXCollections.observableArrayList();
+        pharmaDialogHandler=new PharmaDialogHandler("Aggiungi Casa farmaceutica",pharmaDao,obs_fieldData);
+        Utility.add_iconButton(button_add_click, FontAwesomeSolid.PLUS);
         fieldData_property=new SimpleObjectProperty<>();
+        //For edit row
         RadioButtonTableColumn<FieldData> actionColumn = new RadioButtonTableColumn<>() {
             @Override
             protected void onButtonClick(FieldData rowData) {
+                // Show button is visibile
                 edit_pharma.setVisible(true);
+                //Setting SImplebean to rowdata
                 fieldData_property.set(rowData);
                 // Custom behavior for the button click
                 //   System.out.println("Custom action for: " + rowData.get;
@@ -134,24 +108,13 @@ public class Pharma implements Initializable {
 
         table_id.getColumns().addAll( TableUtility.generate_column_string("Anagrafica Utente","nome_casa_farmaceutica"),
         TableUtility.generate_column_string("Sigla","sigla"),
-        TableUtility.generate_column_string("Partita Iva","partita_iva"),actionColumn);
-
-
+        TableUtility.generate_column_string("Partita Iva","partita_iva"),
+                actionColumn);
         table_id.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
-
-
-
-
-       table_id.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 16px; -fx-text-fill: #636165;");
-        try {
-            Properties properties= FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host","username","password")),new FileReader("database.properties"));
-            PharmaDao pharmaDao=new PharmaDao(Database.getInstance(properties));
-            obs_fieldData.setAll(pharmaDao.findAll());
-            table_id.setItems(obs_fieldData);
-        } catch (IOException e ) {
-            throw new RuntimeException(e);
-        }
+        table_id.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 16px; -fx-text-fill: #636165;");
+        obs_fieldData.setAll(pharmaDao.findAll());
+        table_id.setItems(obs_fieldData);
         Utility.search_item(table_id,search_id);
 
     }

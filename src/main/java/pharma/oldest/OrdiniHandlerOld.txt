@@ -11,7 +11,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import pharma.Handler.DialogHandler;
 import pharma.Model.FieldData;
 import pharma.config.PopulateChoice;
-import pharma.config.TextFieldComboBox;
+import pharma.javafxlib.Controls.TextFieldComboBox;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.LottiDao;
 

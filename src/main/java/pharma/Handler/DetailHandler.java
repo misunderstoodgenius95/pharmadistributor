@@ -1,6 +1,9 @@
 package pharma.Handler;
 
-import javafx.scene.control.*;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import pharma.Model.FieldData;
 import pharma.config.InputValidation;
 import pharma.config.Utility;
@@ -9,84 +12,97 @@ import pharma.dao.DetailDao;
 import java.util.List;
 
 
-public class DetailHandler extends Handler {
+public class DetailHandler {
+    private TextField misure;
+    private TextField unit;
 
-    private final DetailDao detailDao;
+    private DetailDao detailDao;
+    private ListView<String> listView;
+    private ChoiceBox<String> choiceBox;
 
-    private  ListView<String> listView;
-    public DetailHandler(DetailDao detailDao) {
+    public DetailHandler(TextField misure, TextField unit, DetailDao detailDao, ListView<String> listView, ChoiceBox<String> choiceBox) {
+        this.misure = misure;
+        this.unit = unit;
+
         this.detailDao = detailDao;
+        this.listView = listView;
+        this.choiceBox = choiceBox;
+        change_choice();
     }
 
+    private void change_choice() {
 
 
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if ((newValue != null) && (!newValue.isEmpty()) && (!newValue.equals("Seleziona valore"))) {
 
 
+                if (newValue.equalsIgnoreCase(Utility.Misura)) {
+                    unit.setVisible(true);
 
-    public void setInsertHandler(TextField detail_field_1,TextField detail_field_2,ListView<String> listView,String mode) {
-        if (InputValidation.filled_text(detail_field_1.getText()) &&
-                (detail_field_2.isVisible() ? InputValidation.filled_text(detail_field_2.getText()) : true)) {
+                    misure.setPromptText("Inserisci Misura");
+                    unit.setPromptText("Inserisci unità");
 
-            FieldData fieldData = (detail_field_2.isVisible()) ? miusure_FieldData(detail_field_1,detail_field_2) : other_FieldData(detail_field_1);
-                detailDao.setTable_name(mode);
-                boolean result=detailDao.insert(fieldData);
-                if(result) {
 
-                    listView.getItems().add(operator_mapping(fieldData,mode));
+                } else {
+                    misure.setPromptText("Inserisci nome");
+                    unit.setVisible(false);
+
                 }
-                showAlert(result,"valore già inserito");
+                // Switch table
+                detailDao.setTable_name(choiceBox.getValue());
+                List<FieldData> fieldDataList = detailDao.findAll();
+                listView.getItems().setAll(FXCollections.observableArrayList(listMapping(fieldDataList, choiceBox.getValue())));
 
-        }else{
-            showAlert(false,"Campi vuoti o non corretti!");
-        }
-    }
-
-
-    public void setViewHandler(TextField detail_field_1,TextField detail_field_2,String mode,ListView<String> listView) {
-
-        if (mode!=null) {
-            Utility.set_fieldText(mode, detail_field_1, detail_field_2);
-            detailDao.setTable_name(mode);
-            List<FieldData> fieldDataList = detailDao.findAll();
-            System.out.println(fieldDataList.size());
-           listView.getItems().addAll(listMapping(fieldDataList,mode));
-
-        }
-    }
-    private List<String> listMapping(List<FieldData> fd_list,String mode){
-
-            return fd_list.stream().
-                    map(fieldData-> operator_mapping(fieldData,mode)
-                    ).toList();
+            }
 
 
-        }
-        private String operator_mapping (FieldData fieldData,String mode){
-
-         return (mode.equals(Utility.Misura))? (fieldData.getQuantity()+" "+fieldData.getUnit_misure())  : fieldData.getNome();
-
-
-
-        }
-
-
-
-
-    private FieldData miusure_FieldData(TextField detail_field_2,TextField detail_field_1){
-        return FieldData.FieldDataBuilder.getbuilder()
-                .setUnit_misure(detail_field_2.getText())
-                .setQuantity(Integer.parseInt(detail_field_1.getText()))
-                .build();
+        });
 
     }
-    private FieldData other_FieldData(TextField detail_field_1){
-        return FieldData.FieldDataBuilder.getbuilder()
-                .setNome(detail_field_1.getText())
-                .build();
+
+    public void setInsertHandler() {
+        boolean result = false;
+        FieldData fieldData = null;
+        if (unit.isVisible()) {
+            if ((InputValidation.filled_text(unit.getText())) && (InputValidation.validate_digit(misure.getText()))) {
+                detailDao.setTable_name(choiceBox.getValue());
+                fieldData = FieldData.FieldDataBuilder.getbuilder()
+                        .setUnit_misure(unit.getText())
+                        .setMisure(Integer.parseInt(misure.getText())).build();
+
+            }
+        } else if(InputValidation.filled_text(misure.getText())) {
+                fieldData = FieldData.FieldDataBuilder.getbuilder().setNome(misure.getText())
+                        .build();
+                detailDao.setTable_name(choiceBox.getValue());
+            }
+
+        result = detailDao.insert(fieldData);
+        Handler.showAlert(result, "valore già inserito");
+        if (result) {
+            listView.getItems().add(operator_mapping(fieldData, choiceBox.getValue()));
+        }
+
+
+
 
     }
 
 
+    //For each element into the list execute operator_mapping that create
+    private List<String> listMapping(List<FieldData> fd_list, String mode) {
+
+        return fd_list.stream().
+                map(fieldData -> operator_mapping(fieldData, mode)
+                ).toList();
 
 
+    }
+
+    private String operator_mapping(FieldData fieldData, String mode) {
+
+        return (mode.equals(Utility.Misura)) ? ("Misura: " + fieldData.getMisure() + fieldData.getUnit_misure())  : fieldData.getNome();
+
+    }
 }

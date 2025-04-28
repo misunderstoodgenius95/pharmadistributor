@@ -1,9 +1,6 @@
 package pharma.Controller.subpanel;
 
-import com.auth0.net.Telemetry;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,19 +18,15 @@ import org.testfx.framework.junit5.Start;
 
 import pharma.Model.FieldData;
 import pharma.Stages;
-import pharma.config.Database;
+import pharma.config.database.Database;
 import pharma.config.SimulateEvents;
 import pharma.config.Utility;
 import pharma.dao.DetailDao;
 
-import javax.print.attribute.standard.JobImpressionsSupported;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @ExtendWith(ApplicationExtension.class)
 class DettagliTest {
@@ -42,9 +35,7 @@ class DettagliTest {
     public void start(Stage primaryStage) throws IOException {
         Stages stage = new Stages();
         Parent parent = stage.load_fxml("/subpanel/dettagli.fxml");
-
         scene = new Scene(parent);
-
         primaryStage.setScene(scene);
         primaryStage.show();
 

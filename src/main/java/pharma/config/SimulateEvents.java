@@ -59,6 +59,11 @@ public static  void fireMouseClick(DatePicker datePicker) {
         comboBoxBase.show();
 
     }
+    public static <T> void showControl(ChoiceBox<T> choiceBox){
+
+        choiceBox.show();
+
+    }
     public static  void openDatePicker(DatePicker datePicker){
         datePicker.show();
     }

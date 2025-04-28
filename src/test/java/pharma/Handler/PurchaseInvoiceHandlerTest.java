@@ -1,6 +1,5 @@
 package pharma.Handler;
 
-import com.sun.javafx.logging.jfr.JFRInputEvent;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
@@ -20,21 +19,19 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
-import pharma.config.Database;
-import pharma.config.TextFieldComboBox;
+import pharma.config.database.Database;
+import pharma.javafxlib.Controls.TextFieldComboBox;
 import pharma.config.Utility;
 import pharma.dao.PharmaDao;
 import pharma.dao.PurchaseInvoiceDao;
 import pharma.dao.PurchaseOrderDao;
 
-import java.lang.foreign.PaddingLayout;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;

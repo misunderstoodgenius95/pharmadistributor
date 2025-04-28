@@ -4,17 +4,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import pharma.Model.FieldData;
-import pharma.config.CustomDialog;
+import pharma.javafxlib.Dialog.CustomDialog;
 import pharma.config.PopulateChoice;
 import pharma.dao.GenericJDBCDao;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalLong;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class DialogHandler  extends CustomDialog<FieldData> {
+public abstract class DialogHandler<F> extends CustomDialog<FieldData> {
     private  ButtonType buttonType;
     public enum Mode{Insert,Update}
     private  Mode mode;

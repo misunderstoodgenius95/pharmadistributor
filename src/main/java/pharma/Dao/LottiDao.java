@@ -1,10 +1,8 @@
 package pharma.dao;
 
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
-import javax.xml.transform.Result;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,11 +25,14 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
                setProduction_date(resultSet.getDate("production_date")).
                setElapsed_date(resultSet.getDate("elapsed_date")).
                setNome(resultSet.getString("nome")).
+               setNome_categoria(resultSet.getString("categoria")).
                setNome_tipologia(resultSet.getString("tipologia")).
                setUnit_misure(resultSet.getString("misura")).
                setNome_casa_farmaceutica(resultSet.getString("casa_farmaceutica")).
-               setFarmaco_id(resultSet.getInt("farmaco")).setCasa_Farmaceutica(resultSet.getInt("pharma_id"))
-        .build();
+               setFarmaco_id(resultSet.getInt("farmaco")).
+               setNome_principio_attivo(resultSet.getString("principio_attivo")).
+               setCasa_Farmaceutica(resultSet.getInt("pharma_id")).
+               setQuantity(resultSet.getInt("qty")).build();
     }
 
     @Override
@@ -65,7 +66,7 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
     @Override
     protected void setInsertParameter(PreparedStatement statement, FieldData entity) throws Exception {
     statement.setString(1,entity.getLotto_id());
-    statement.setInt(2,entity.getTipologia());
+    statement.setInt(2,entity.getFarmaco_id());
     statement.setDate(3,entity.getProduction_date());
     statement.setDate(4,entity.getElapsed_date());
     }

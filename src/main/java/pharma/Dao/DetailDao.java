@@ -1,16 +1,14 @@
 package pharma.dao;
 
-import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 import pharma.config.Utility;
 
 import java.rmi.AccessException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+
 
 public class DetailDao extends GenericJDBCDao<FieldData,Integer> {
     private  String table_name="";
@@ -25,8 +23,12 @@ public class DetailDao extends GenericJDBCDao<FieldData,Integer> {
             throw new AccessException("Table");
         }
         if(table_name.equals(Utility.Misura)) {
-        return FieldData.FieldDataBuilder.getbuilder().setId(resultSet.getInt(1)).setUnit_misure(resultSet.getString(3))
-                .setQuantity(resultSet.getInt(2)).build();
+        return FieldData.FieldDataBuilder.getbuilder().
+                setId(resultSet.getInt(1)).
+                setMisure(resultSet.getInt(2)).
+                setUnit_misure(resultSet.getString(3)).build();
+
+
         }else{
             return FieldData.FieldDataBuilder.getbuilder().setId(resultSet.getInt(1)).setNome(resultSet.getString(2)).build();
         }
@@ -45,7 +47,7 @@ public class DetailDao extends GenericJDBCDao<FieldData,Integer> {
 
         }
         if(table_name.equals(Utility.Misura)) {
-            return " INSERT INTO " + table_name+" (quantity,unit) VALUES(?,?); ";
+            return " INSERT INTO " + table_name+" (misure,unit) VALUES(?,?); ";
         }
         else{
             return " INSERT INTO "+table_name+" (nome) VALUES(?); ";
@@ -60,7 +62,7 @@ public class DetailDao extends GenericJDBCDao<FieldData,Integer> {
         }
         if(table_name.equals(Utility.Misura)){
             try {
-                statement.setInt(1,entity.getQuantity());
+                statement.setInt(1,entity.getMisure());
                 statement.setString(2,entity.getUnit_misure());
             } catch (SQLException e) {
                 throw new RuntimeException(e);

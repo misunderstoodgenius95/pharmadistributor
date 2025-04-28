@@ -1,13 +1,12 @@
 package pharma.dao;
 
-import com.sun.source.tree.ModuleTree;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,10 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static org.json.XMLTokener.entity;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import  static  org.mockito.Mock.*;
 import static org.mockito.Mockito.when;
 
 class PurchaseOrderDetailDaoTest {
@@ -161,7 +157,7 @@ class PurchaseOrderDetailDaoTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        purchaseOrderDetailDao=new PurchaseOrderDetailDao(Database.getInstance(properties));
+
     }
 
 

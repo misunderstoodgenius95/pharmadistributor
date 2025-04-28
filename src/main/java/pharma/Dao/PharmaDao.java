@@ -1,7 +1,7 @@
 package pharma.dao;
 
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -62,7 +62,7 @@ public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
     @Override
     protected void setInsertParameter(PreparedStatement statement, FieldData entity) {
         try {
-            statement.setString(1,entity.getAnagrafica_cliente());
+            statement.setString(1,entity.getNome_casa_farmaceutica());
             statement.setString(2,entity.getSigla());
             statement.setString(3,entity.getPartita_iva());
         } catch (SQLException e) {
@@ -73,7 +73,7 @@ public class PharmaDao  extends GenericJDBCDao<FieldData,Integer>{
     @Override
     protected void setUpdateParameter(PreparedStatement statement, FieldData entity) {
         try {
-            statement.setString(1,entity.getAnagrafica_cliente());
+            statement.setString(1,entity.getNome_casa_farmaceutica());
             statement.setInt(2,entity.getId());
         } catch (SQLException e) {
             throw new RuntimeException(e);

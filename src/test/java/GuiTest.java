@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import pharma.Model.FieldData;
-import pharma.config.CustomDialog;
+import pharma.javafxlib.Dialog.CustomDialog;
 
 public class GuiTest extends ApplicationTest {
     private  ChoiceBox<String> choice;

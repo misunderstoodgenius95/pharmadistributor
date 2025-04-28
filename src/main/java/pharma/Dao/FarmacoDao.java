@@ -1,19 +1,18 @@
 package pharma.dao;
 
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
     private final  String table;
     private  Database database;
-    public FarmacoDao(String table_name, Database database) {
-        super(table_name, database);
-        this.table=table_name;
+    public FarmacoDao( Database database) {
+        super("farmaco", database);
+        this.table="farmaco";
         this.database=database;
     }
 
@@ -27,7 +26,9 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
                 setNome_tipologia(resultSet.getString(5)).
                 setUnit_misure(resultSet.getString(6)).
                 setNome_principio_attivo(resultSet.getString(7)).
-                setNome_casa_farmaceutica(resultSet.getString(8)).build();
+                setNome_casa_farmaceutica(resultSet.getString(8)).
+                setQuantity(resultSet.getInt(9)).
+                build();
 
     }
 
@@ -48,14 +49,25 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected String getInsertQuery() throws Exception {
-        return " INSERT INTO "+table+" (nome,descrizione,categoria,tipologia,misura,principio_attivo,casa_farmaceutica) " +
-                " VALUES( ?,?,?,?,?,?,?) ; ";
+        return " INSERT INTO "+table+" (nome,descrizione,categoria,tipologia,misura,principio_attivo,casa_farmaceutica,qty) " +
+                " VALUES( ?,?,?,?,?,?,?,?) ; ";
     }
 
     @Override
     protected String getUpdatequery() {
-        return "";
+        return "UPDATE "+table+" SET nome= ? WHERE id= ? ; ";
     }
+    @Override
+    protected void setUpdateParameter(PreparedStatement statement, FieldData entity) {
+        try {
+            statement.setString(1,entity.getNome());
+            statement.setInt(2,entity.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     @Override
     protected String getDeletequery() {
@@ -71,14 +83,11 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
         statement.setInt(5,entity.getMisure());
         statement.setInt(6,entity.getPrincipio_attivo());
         statement.setInt(7,entity.getCasa_farmaceutica());
+        statement.setInt(8,entity.getQuantity());
     }
 
 
 
-    @Override
-    protected void setUpdateParameter(PreparedStatement statement, FieldData entity) {
-
-    }
 
     @Override
     protected void setDeleteParameter(PreparedStatement statement, FieldData entity) {

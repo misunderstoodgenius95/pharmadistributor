@@ -1,8 +1,7 @@
 package pharma.Model;
 
-import javafx.scene.control.TextField;
 import org.junit.jupiter.api.*;
-import pharma.config.CustomDialog;
+import pharma.javafxlib.Dialog.CustomDialog;
 
 class FieldDataTest  {
 
@@ -58,5 +57,11 @@ Assertions.assertTrue(size==2);
 
     @Test
     void getMisure() {
+    }
+
+    @Test
+    void getCredit_note_number() {
+       FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setCredit_note_number("100").build();
+       Assertions.assertEquals("100",fieldData.getCredit_note_number());
     }
 }

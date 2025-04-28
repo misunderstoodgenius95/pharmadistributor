@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="pharma.Controller.Seller"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.Seller">
+   <children>
+      <VBox layoutX="1.0" layoutY="5.0" prefHeight="688.0" prefWidth="185.0" spacing="50.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Crea Prezzi" />
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Crea Promozioni" />
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Farmacia" />
+            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Ordine Vendita" />
+            <Button layoutX="10.0" layoutY="190.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Fattura Vendita" />
+            <Button layoutX="10.0" layoutY="250.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Avvisi di Scadenza" />
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>

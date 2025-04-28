@@ -1,20 +1,14 @@
 package pharma.dao;
 
 
-import com.sun.source.tree.ModuleTree;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.plugins.MockitoPlugins;
 
-import pharma.Controller.subpanel.Pharma;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
-import pharma.dao.*;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -25,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 

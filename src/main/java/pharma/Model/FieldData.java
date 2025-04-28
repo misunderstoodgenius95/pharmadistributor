@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 public class FieldData {
@@ -52,6 +53,12 @@ public class FieldData {
     private Timestamp created_at;
     private  String credit_note_number;
     private String motive;
+    private  String street;
+    private int cap;
+    private  String province;
+    private  String comune;
+    private  UUID uuid;
+    private int availability;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -88,9 +95,47 @@ public class FieldData {
         this.invoice_id=builder.invoice_id;
         this.created_at=builder.created_at;
         this.motive=builder.motive;
-        this.misure=builder.misure;
+        this.credit_note_number=builder.credit_note_number;
+        this.street=builder.street;
+        this.cap=builder.cap;
+        this.province=builder.province;
+        this.comune=builder.comune;
+        this.uuid=builder.uuid;
+        this.availability=builder.availability;
 
 
+
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public int getAvailability() {
+        return availability;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public String getComune() {
+        return comune;
+    }
+
+    public int getCap() {
+        return cap;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setNome(String nome) {
+        if(nome==null){
+            throw  new IllegalArgumentException("Permitting only edit!");
+        }
+        this.nome = nome;
     }
 
     public String getMotive() {
@@ -102,6 +147,9 @@ public class FieldData {
     }
 
     public void setNome_casa_farmaceutica(String nome_casa_farmaceutica) {
+        if(nome_casa_farmaceutica==null){
+            throw  new IllegalArgumentException("Permitting only edit!");
+        }
         this.nome_casa_farmaceutica = nome_casa_farmaceutica;
     }
 
@@ -251,7 +299,7 @@ public class FieldData {
 
     public String getAnagrafica_cliente() {
        if ( anagrafica_cliente == null ) {
-           throw new NullPointerException("Anagrafia cliente nulla!");
+           throw new IllegalArgumentException("Anagrafia cliente nulla!");
        }
         return anagrafica_cliente;
     }
@@ -276,9 +324,7 @@ public class FieldData {
     }
 
     public String getNome() {
-        if ( nome == null ) {
-            throw new NullPointerException("Nome nullo!");
-        }
+
         return nome;
     }
 
@@ -297,7 +343,7 @@ public class FieldData {
 
     }
 
-    @Override
+    /*@Override
     public String toString() {
        if((nome!=null) && (description!=null) &&(nome_categoria!=null) &&( nome_tipologia!=null)
                 &&(unit_misure!=null) && (nome_principio_attivo!=null) && (nome_casa_farmaceutica!=null )){
@@ -308,7 +354,7 @@ public class FieldData {
 
 
         }  else if( unit_misure!=null){
-            return getQuantity()+" "+getUnit_misure();
+            return getMisure()+" "+getUnit_misure();
         }
 
         else if(nome!=null){
@@ -316,7 +362,7 @@ public class FieldData {
         }else{
             return "";
        }
-    }
+    }*/
 
     public int  getPrincipio_attivo() {
 
@@ -368,6 +414,12 @@ public class FieldData {
         private Timestamp created_at;
         private  String credit_note_number;
         private String motive;
+        private  String street;
+        private int cap;
+        private  String province;
+        private  String comune;
+        private  UUID uuid;
+        private int availability;
         private FieldDataBuilder() {
 
         }
@@ -379,6 +431,36 @@ public class FieldData {
             return new FieldDataBuilder();
 
 
+        }
+
+        public FieldDataBuilder setAvailability(int availability) {
+            this.availability = availability;
+            return  this;
+        }
+
+        public FieldDataBuilder setUUid(UUID uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public FieldDataBuilder setStreet(String street) {
+            this.street = street;
+            return this;
+        }
+
+        public FieldDataBuilder setCap(int cap) {
+            this.cap = cap;
+            return this;
+        }
+
+        public FieldDataBuilder setComune(String comune) {
+            this.comune = comune;
+            return  this;
+        }
+
+        public FieldDataBuilder setProvince(String province) {
+            this.province = province;
+            return this;
         }
 
         public FieldDataBuilder setCreated_at(Timestamp created_at) {

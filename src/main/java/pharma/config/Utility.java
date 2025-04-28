@@ -4,16 +4,21 @@ import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import org.controlsfx.control.SearchableComboBox;
+import org.json.JSONArray;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import pharma.Model.FieldData;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class Utility {
@@ -66,13 +71,15 @@ The reason for returning true when the filter text is null or empty is that the 
     If the predicate returns true, the item stays in the filtered list.
     If the predicate returns false, the item disappears from the TableView
     */
-                return fieldData.getAnagrafica_cliente().toLowerCase().contains(newValue.toLowerCase());
+                return fieldData.getNome().toLowerCase().contains(newValue.toLowerCase());
+
+               // return fieldData.getNome_casa_farmaceutica().toLowerCase().contains(newValue.toLowerCase());
 
             });
         });
     }
 
-    public static void set_fieldText(String mode, TextField detailField1, TextField detailField2) {
+    public static void set_fieldText(String mode, TextField detailField1, TextField detailField2,TextField detailField_3) {
 
         if (mode.equalsIgnoreCase(Utility.Misura)) {
             detailField1.setPromptText("Misura");
@@ -87,11 +94,9 @@ The reason for returning true when the filter text is null or empty is that the 
 
     public static void add_iconButton(Button button, Ikon font){
         FontIcon icon = new FontIcon(font);
-        icon.setIconSize(20);
+        icon.setIconSize(22);
         button.setGraphic(icon);
         button.setText("");
-
-
     }
     public static   <T,K>  List<T>  extract_value_from_list(List<K> list,  Class<T> class_type){
 
@@ -104,6 +109,20 @@ The reason for returning true when the filter text is null or empty is that the 
             label.setText(label.getText().split(":")[0]);
         }
     }
+
+    public  static List<FieldData> extract_province(String json_string){
+
+        JSONArray jsonArray=new JSONArray(json_string);
+
+       return  IntStream.range(0,jsonArray.length()).mapToObj(jsonArray::getJSONObject).
+                map(jsonObject -> FieldData.FieldDataBuilder.getbuilder().
+                        setProvince(jsonObject.getString("nome")).setSigla(jsonObject.getString("sigla")).build()).toList();
+
+
+    }
+
+
+
 
 
 

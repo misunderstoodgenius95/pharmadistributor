@@ -2,38 +2,32 @@ package pharma.Handler;
 
 
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import pharma.Controller.subpanel.Pharma;
 import pharma.Model.FieldData;
-import pharma.config.CustomDialog;
+import pharma.javafxlib.Dialog.CustomDialog;
 import pharma.config.PopulateChoice;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.PharmaDao;
 
-import javax.xml.transform.Result;
 import java.rmi.AccessException;
 import java.util.List;
 import java.util.Optional;
 
 
-public class PharmaDialogHandler extends DialogHandler {
+public class PharmaDialogHandler extends DialogHandler<FieldData> {
 private TextField anagrafica;
 private  TextField vat;
 private  TextField sigla;
 private int id;
 private PharmaDao pharmaDao;
 private ObservableList<FieldData> obs;
-
+private SimpleObjectProperty<FieldData> fd_property;
     public PharmaDialogHandler(String dialog, PharmaDao pharmaDao,ObservableList<FieldData> obs) {
-
         super(dialog);
-
         this.pharmaDao=pharmaDao;
         this.obs=obs;
-
     }
 @Override
    protected void initialize() {
@@ -41,6 +35,7 @@ private ObservableList<FieldData> obs;
          anagrafica = add_text_field("Inserisci Anagrafia Utente");
          vat = add_text_field_with_validation("Inserisci Partita Iva", CustomDialog.Validation.Vat);
          sigla = add_text_field("Sigla");
+         fd_property=new SimpleObjectProperty<>();
 
     }
 
@@ -52,7 +47,8 @@ private ObservableList<FieldData> obs;
 
     @Override
     protected FieldData get_return_data() {
-        return FieldData.FieldDataBuilder.getbuilder().setSigla(sigla.getText()).setPartita_iva(vat.getText()).setAnagrafica_cliente(anagrafica.getText()).build();
+        return FieldData.FieldDataBuilder.getbuilder().setSigla(sigla.getText()).setPartita_iva(vat.getText()).
+                setNome_casa_farmaceutica(anagrafica.getText()).build();
     }
 
 
@@ -63,16 +59,18 @@ private ObservableList<FieldData> obs;
         }
         super.setMode(mode);
         if(mode.equals(Mode.Update)) {
-            setUpUpdate(fieldData);
+            setUpdate(fieldData);
         }
    }
-    private void setUpUpdate(FieldData fieldData_update){
-        anagrafica.setText(fieldData_update.getAnagrafica_cliente());
+    private void setUpdate(FieldData fieldData_update){
+        anagrafica.setText(fieldData_update.getNome_casa_farmaceutica());
         sigla.setText(fieldData_update.getSigla());
         vat.setText(fieldData_update.getPartita_iva());
         id=fieldData_update.getId();
         sigla.setDisable(true);
         vat.setDisable(true);
+      fd_property.set(fieldData_update);
+
 
     }
 
@@ -86,21 +84,19 @@ private ObservableList<FieldData> obs;
              obs.add(fieldData);
 
             }
-
         }
         else if(getMode().equals(Mode.Update)){
+            System.out.println("update");
 
             FieldData fieldData_update_res =
                     FieldData.FieldDataBuilder.getbuilder().
                             setId(id).
-                            setPartita_iva(fieldData.getPartita_iva()).
-                            setSigla(fieldData.getSigla()).
-                            setAnagrafica_cliente(fieldData.getAnagrafica_cliente()).build();
+                            setNome_casa_farmaceutica(anagrafica.getText()).build();
             success=pharmaDao.update(fieldData_update_res);
-            System.out.println(success);
             if(success){
-                obs.remove(fieldData);
-                obs.add(fieldData);
+
+            fd_property.get().setNome_casa_farmaceutica(anagrafica.getText());
+
             }
         }
         return success;

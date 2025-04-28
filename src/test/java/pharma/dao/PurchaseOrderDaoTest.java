@@ -8,7 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

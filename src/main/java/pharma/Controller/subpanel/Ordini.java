@@ -13,7 +13,7 @@ import org.controlsfx.control.table.TableRowExpanderColumn;
 import pharma.Handler.PurchaseOrderHandler;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
-import pharma.config.Database;
+import pharma.config.database.Database;
 import pharma.config.TableUtility;
 import pharma.dao.LottiDao;
 import pharma.dao.PharmaDao;

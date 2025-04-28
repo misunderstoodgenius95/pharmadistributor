@@ -5,6 +5,8 @@ import net.jodah.failsafe.internal.util.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.accessibility.AccessibleStateSet;
+
 
 class InputValidationTest  {
 
@@ -103,5 +105,24 @@ class InputValidationTest  {
     }
 
 
+    @Test
+    void validate_digit() {
+        Assertions.assertTrue(InputValidation.validate_digit("11a0"));
+    }
+
+    @Test
+    void filled_text() {
+        Assertions.assertTrue(InputValidation.filled_text("Ansiolitici"));
+    }
+
+    @Test
+    void ValidatePassword(){
+        Assertions.assertTrue(InputValidation.validate_password("&6hF%@&yvBE"));
+    }
+
+    @Test
+    void validate_cap() {
+        Assertions.assertTrue(InputValidation.validate_cap("98074"));
+    }
 }
 

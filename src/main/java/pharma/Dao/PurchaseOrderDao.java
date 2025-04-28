@@ -1,7 +1,7 @@
 package pharma.dao;
 
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

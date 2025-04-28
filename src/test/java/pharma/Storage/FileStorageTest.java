@@ -275,6 +275,21 @@ class FileStorageTest {
     }
 
 
+    @Test
+    public void ValidIntegrationToken(){
+        try {
+
+             String jwt_actual="eyJhbGciOiJSUzI1NiIsImtpZCI6Imp3ay1saXZlLWJkOTNiMWYzLWQ3ZjAtNGY1NS1iMDY1LTgyYzA0MWFkZDVkNSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicHJvamVjdC1saXZlLThlMmZmNTExLTNhZTgtNGRiYy1hYWVhLWQyMzQ1MzE3NDI2MiJdLCJleHAiOjE3NDQyMDYwOTksImh0dHBzOi8vc3R5dGNoLmNvbS9zZXNzaW9uIjp7ImlkIjoic2Vzc2lvbi1saXZlLWI1YTdmYmUzLTM1YzgtNDA5Mi1hZjVhLTAxZjZiMDRhNzEwOSIsInN0YXJ0ZWRfYXQiOiIyMDI1LTA0LTA5VDEzOjM2OjM5WiIsImxhc3RfYWNjZXNzZWRfYXQiOiIyMDI1LTA0LTA5VDEzOjM2OjM5WiIsImV4cGlyZXNfYXQiOiIyMDI1LTA0LTA5VDE3OjM2OjM5WiIsImF0dHJpYnV0ZXMiOnsidXNlcl9hZ2VudCI6IiIsImlwX2FkZHJlc3MiOiIifSwiYXV0aGVudGljYXRpb25fZmFjdG9ycyI6W3sidHlwZSI6InBhc3N3b3JkIiwiZGVsaXZlcnlfbWV0aG9kIjoia25vd2xlZGdlIiwibGFzdF9hdXRoZW50aWNhdGVkX2F0IjoiMjAyNS0wNC0wOVQxMzozNjozOVoifV19LCJpYXQiOjE3NDQyMDU3OTksImlzcyI6InN0eXRjaC5jb20vcHJvamVjdC1saXZlLThlMmZmNTExLTNhZTgtNGRiYy1hYWVhLWQyMzQ1MzE3NDI2MiIsIm5iZiI6MTc0NDIwNTc5OSwic3ViIjoidXNlci1saXZlLTVhYzNlOWJkLWVhMDMtNDJhMC1hZDBiLWRmZTI0ZWUxMTI4NiJ9.uT9Wa2-zRuR3c3Uc-kkO5wmu1s1Z6bv6_Q3bMPvD7BtlMYBefc8w1IzYIqClZvEZk9xorlHSPZ-JzXFfX3U5kVYK7W1619XyPFsbyGbBP1V9UXPzAm49P4Nh2jvTY1sm3Rki9LoqfIUBtmJxm_aHGCfMll682U9ZnCkowvCTwp3aeiJz4JpnZ2Fk-EhbpKHfn462hwrytV_hbdDiBbXphw5254u_ZjK-AnaiK3SfOpmKgQ9eQ-gPsBf6gDkYp6GXsS8o4UUpwYisSIRjxgieVElwjApYQRmK-OeIC4acKH6eVtXK5Lchee8zDno7Tf07U8usTduKjFGNccIuqFOE4Q";
+             String jwt=FileStorage.getProperty("jwt",new FileReader("config.properties"));
+             Assertions.assertEquals(jwt_actual,jwt);
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
 
 
 

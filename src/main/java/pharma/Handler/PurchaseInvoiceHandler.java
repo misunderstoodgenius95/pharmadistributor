@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import pharma.Model.FieldData;
 import pharma.config.*;
@@ -18,6 +17,10 @@ import pharma.dao.GenericJDBCDao;
 import pharma.dao.PharmaDao;
 import pharma.dao.PurchaseInvoiceDao;
 import pharma.dao.PurchaseOrderDao;
+import pharma.javafxlib.Controls.TextFieldComboBox;
+import pharma.javafxlib.Dialog.CustomDialog;
+import pharma.javafxlib.DoubleClick_Menu;
+import pharma.javafxlib.RadioOptions;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -25,11 +28,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class PurchaseInvoiceHandler extends  DialogHandler {
+public class PurchaseInvoiceHandler extends  DialogHandler<FieldData> {
     private DatePicker date_invoice;
     private ObservableList<FieldData> list_populate;
     private TextField textField_number_invoice;
-    private TextFieldComboBox<String>choice_payment;
+    private TextFieldComboBox<String> choice_payment;
     private ToggleGroup toggleGroup_order_choice;
     private TextFieldComboBox<FieldData> comboBox_order;
     private  TextFieldComboBox<FieldData> combo_pharma;
@@ -74,8 +77,8 @@ public class PurchaseInvoiceHandler extends  DialogHandler {
            choice_payment = add_combox_search_with_textfield(FXCollections.observableArrayList("Bonifico_Bancario", "RD", "RB"));
            choice_payment.getChoiceBox().setValue("Scegli il metodo di pagamento");
            add_label("Seleziona Ordine mediante:");
-           toggleGroup_order_choice = add_radios(Arrays.asList("Numero Ordine", "Combinazione Data Ordine e Casa Farmaceutica"), CustomDialog.Mode.Horizontal);
-           setting_id_radio();
+           toggleGroup_order_choice = add_radios(Arrays.asList( new RadioOptions("Numero Ordine","order_id"),new RadioOptions( "Combinazione Data Ordine e Casa Farmaceutica","combo_id")), CustomDialog.Mode.Horizontal);
+         /*  setting_id_radio();*/
 
            combo_pharma = add_combox_search_with_textfield(FXCollections.observableArrayList(pharmaDao.findAllName()));
            combo_pharma.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setNome_casa_farmaceutica("Seleziona Casa Farmaceutica").build());
@@ -172,6 +175,8 @@ public class PurchaseInvoiceHandler extends  DialogHandler {
                     }
                     if(table_id.getItems().size()==1){
                         combo_pharma.setDisable(true);
+                        combo_order_provider_id.setDisable(true);
+                        comboBox_order.setDisable(true);
                     }
 
                     calculus_attribute();
@@ -197,6 +202,8 @@ public class PurchaseInvoiceHandler extends  DialogHandler {
                     if(table_id.getItems().isEmpty()){
                         menuitem.setDisable(true);
                         combo_pharma.setDisable(false);
+                        combo_order_provider_id.setDisable(false);
+                        comboBox_order.setDisable(false);
                     }
                     calculus_attribute();
                 });
@@ -253,6 +260,8 @@ public class PurchaseInvoiceHandler extends  DialogHandler {
 
     @Override
     protected FieldData get_return_data() {
+        FieldData fieldData_pharma=(FieldData) combo_pharma.getChoiceBox().getValue();
+
         return FieldData.FieldDataBuilder.getbuilder().
                 setInvoice_number(textField_number_invoice.getText()).
                 setProduction_date(Date.valueOf(date_invoice.getValue())).
@@ -260,6 +269,8 @@ public class PurchaseInvoiceHandler extends  DialogHandler {
                 setSubtotal((Double) label_subtotale.getUserData()).
                 setVat_amount((Double)label_iva.getUserData()).
                 setTotal((Double)label_totale.getUserData()).
+                setCasa_Farmaceutica(fieldData_pharma.getId()).
+                setPurchase_order_id(table_id.getItems().getFirst().getId()).
                 setFieldDataListAll(table_id.getItems())
                 .build();
     }

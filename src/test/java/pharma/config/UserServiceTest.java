@@ -6,17 +6,16 @@ import com.auth0.json.auth.TokenHolder;
 import com.auth0.net.Response;
 import com.auth0.net.TokenRequest;
 
-import com.sun.source.tree.ModuleTree;
-import kotlin.jvm.internal.unsafe.MonitorKt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.plugins.MockitoPlugins;
+import pharma.config.auth.UserService;
+import pharma.config.auth.UserServiceResponse;
+import pharma.security.Stytch.StytchClient;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 
@@ -26,13 +25,14 @@ class UserServiceTest {
     private static Response<TokenHolder> tokenHolder_response;
     private static TokenHolder tokenHolder;
     private static TokenRequest tokenRequest;
+    private  static StytchClient stytchClient;
     @BeforeAll
     static void setUp() throws Auth0Exception {
        authAPI= mock(AuthAPI.class);
        tokenHolder_response= mock(Response.class);
        tokenHolder = mock(TokenHolder.class);
        tokenRequest = mock(TokenRequest.class);
-        AuthAPI authAPI= mock(AuthAPI.class);
+        stytchClient=Mockito.mock(StytchClient.class);
 
 
 
@@ -55,9 +55,9 @@ class UserServiceTest {
             input_validation_mock.when(() -> InputValidation.validate_email(anyString())).thenReturn(true);
             input_validation_mock.when(() -> InputValidation.validate_password(anyString())).thenReturn(true);
 
-            UserService userService = new UserService(authAPI);
-            Response<TokenHolder> response = userService.authenticate("user@example.com", "@5&17Vhm5QGp", "http://example.com/api/auth");
-            Assertions.assertEquals(200, response.getStatusCode());
+            UserService userService = new UserService(stytchClient);
+            UserServiceResponse response = userService.authenticate("user@example.com", "@5&17Vhm5QGp");
+            Assertions.assertEquals(200, response.getStatus());
 
         }
 
@@ -80,9 +80,9 @@ class UserServiceTest {
             input_validation_mock.when(() -> InputValidation.validate_email(anyString())).thenReturn(true);
             input_validation_mock.when(() -> InputValidation.validate_password(anyString())).thenReturn(true);
 
-            UserService userService = new UserService(authAPI);
-            Response<TokenHolder> response = userService.authenticate("user@example.com", "@5&17Vhm5QGp", "http://example.com/api/auth");
-            Assertions.assertEquals(401, response.getStatusCode());
+            UserService userService = new UserService(stytchClient);
+            UserServiceResponse response = userService.authenticate("pinco.pallino@example","asss");
+            Assertions.assertEquals(401,response.getStatus());
 
         }
 

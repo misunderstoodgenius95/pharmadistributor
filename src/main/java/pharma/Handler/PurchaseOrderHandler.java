@@ -9,21 +9,22 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.text.Font;
-import javafx.util.StringConverter;
 import pharma.Model.FieldData;
 import pharma.config.*;
 import pharma.config.View.ComboxLotsConvert;
 import pharma.config.View.InvoicexConvert;
 import pharma.config.spinner.SpinnerTableCellOrder;
 import pharma.dao.*;
+import pharma.javafxlib.Controls.TextFieldComboBox;
+import pharma.javafxlib.Dialog.CustomDialog;
+import pharma.javafxlib.DoubleClick_Menu;
+import pharma.javafxlib.RadioOptions;
 
-import javax.lang.model.util.ElementScanner6;
 import java.sql.Date;
 import java.util.*;
 
 
-public class PurchaseOrderHandler extends DialogHandler{
+public class PurchaseOrderHandler extends DialogHandler<FieldData> {
     private PurchaseOrderDao purchaseOrderDao;
     private PurchaseOrderDetailDao purchaseOrderDetailDao;
     private DatePicker date_order;
@@ -39,7 +40,7 @@ private  SimpleBooleanProperty s_update_result;
     private  Label label_totale;
     private MenuItem menuItem;
     private ToggleGroup group;
-    private  TextFieldComboBox<FieldData> combox_pharma;
+    private TextFieldComboBox<FieldData> combox_pharma;
     private  ObservableList<FieldData> current_farmaco;
     private  ObservableList<FieldData> current_lot_farmaco;
     private SimpleBooleanProperty update_property;
@@ -77,7 +78,7 @@ private  SimpleBooleanProperty s_update_result;
                 combox_pharma.setConvert(new InvoicexConvert(InvoicexConvert.Type.combo_id
                 ));
 
-                group = add_radios(Arrays.asList("Lotto", "Farmaco"), CustomDialog.Mode.Horizontal);
+                group = add_radios(Arrays.asList(new RadioOptions("","Lotto"), new RadioOptions("","Farmaco")), CustomDialog.Mode.Horizontal);
                 group.getToggles().getFirst().setSelected(true);
 
                 combotextfield_farmaco = add_combox_search_with_textfield(FXCollections.observableArrayList());
@@ -86,8 +87,9 @@ private  SimpleBooleanProperty s_update_result;
 
 
                 combotextfield_lot = add_combox_search_with_textfield(FXCollections.observableArrayList());
+                combotextfield_lot.setUserData("lots");
                 combotextfield_lot.setConvert(new ComboxLotsConvert("Lotto"));
-                getControlList().removeAll(combotextfield_lot, combotextfield_farmaco);
+                getControlList().removeAll( combotextfield_lot,combotextfield_farmaco);
                 tableView = add_table();
                 listen_combo_pharma(lottidao);
                 listener_combo_farmaco();
@@ -111,16 +113,6 @@ private  SimpleBooleanProperty s_update_result;
 
 
         }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -235,7 +227,7 @@ private  void listener_boolean_change(){
                         if(tableView.getItems().isEmpty()){
                             menuitem.setDisable(true);
                             combox_pharma.setDisable(false);
-                            combotextfield_lot.setDisable(false);
+
                         }
                     });
                 }
@@ -257,9 +249,7 @@ private  void listener_boolean_change(){
     if(tableView.getUserData().equals(fieldData.getCasa_farmaceutica())) {
 
 
-        fieldData.setPrice(1.1);
-        fieldData.setQuantity(1);
-        fieldData.setVat_percent(1);
+
         table_obs.add(fieldData);
         tableView.setItems(table_obs);
         //  combotextfield_lot.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setNome("").build());
@@ -270,7 +260,7 @@ private  void listener_boolean_change(){
         }
         if(tableView.getItems().size()==1){
             combox_pharma.setDisable(true);
-            combotextfield_lot.setDisable(true);
+
         }
     }else{
        Utility.create_alert(Alert.AlertType.WARNING,"Warning","Impossibile inserire articoli con propertari differenti!");
@@ -321,7 +311,7 @@ private  void listener_boolean_change(){
 
     }
 
-    private  void calculus_attribute(){
+    public void calculus_attribute(){
 
         Utility.resetLabelText(label_iva,label_subtotale,label_totale);
 

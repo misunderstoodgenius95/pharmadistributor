@@ -1,10 +1,7 @@
 package pharma;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -13,12 +10,7 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
-import pharma.config.CustomDialog;
-import pharma.config.Utility;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import pharma.javafxlib.Dialog.CustomDialog;
 
 @ExtendWith(ApplicationExtension.class)
 public class CustomOrderTest {

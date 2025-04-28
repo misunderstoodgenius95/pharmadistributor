@@ -1,7 +1,6 @@
 package pharma.dao;
 
-import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -114,7 +113,10 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
 
 
 
-    protected abstract  String  getFindQueryAll();
+   protected    String  getFindQueryAll(){
+
+        return " SELECT * FROM "+table_name;
+    }
     protected  abstract void setFindByIdParameters(PreparedStatement preparedStatement, ID id);
     protected abstract String  getInsertQuery() throws Exception;
     protected abstract  String getUpdatequery();
@@ -165,6 +167,26 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
         }
 
     return resultList;
+    }
+
+    public List<T> findByParameter(String query,String parameter){
+        List<T> resultList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query(query );
+            preparedStatement.setString(1,parameter);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                resultList.add(mapRow(resultSet));
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return resultList;
     }
 
 

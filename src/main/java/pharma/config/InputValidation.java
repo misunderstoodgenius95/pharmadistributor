@@ -10,12 +10,14 @@ public class InputValidation {
 
     private  static  final String p_iva_regex ="^IT[0-9]{11}$";
     private static final String audience_regex="^https:\\/\\/[a-z]+.[a-z]+[\\/]*[a-z]*$";
-    private static final String password_regex="(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*\\W).{12,}";
+    private static final String password_regex="(?=.*[A-Z])*(?=.*[a-z])(?=.*\\d)(?=.*\\W).{8,}";
    // private static  final  String email_regex="^[\\w\\.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static  final String double_digit_regex="^[\\d]*\\.[\\d]*$";
    private static  final  String input_regex="^[A-Z a-z0-9-_]+$";
+    private static  final String cap="^[\\d]{5}$";
      private  final static   String email_regex="^[\\w]+[\\.]*[-]*[\\w]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
      private final static  String lotto_code="^[\\w]{3,}$";
+     private  final  static  String digit="^[0-9]*$";
         private  InputValidation(){
 
 
@@ -72,12 +74,28 @@ public class InputValidation {
 
 
     }
+    public static boolean validate_digit(String input){
+        System.out.println("execute digit");
+        if(input ==null){
+            throw  new IllegalArgumentException("Input is null");
+        }
+        return generic_validation(digit,input);
+
+
+    }
     public static boolean validate_double_digit(String input) {
         System.out.println("execute double digit");
         if (input == null) {
             throw new IllegalArgumentException("Input is null");
         }
         return generic_validation(double_digit_regex,input);
+    }
+    public static  boolean validate_cap(String input){
+        System.out.println("execute double digit");
+        if (input == null) {
+            throw new IllegalArgumentException("Input is null");
+        }
+        return generic_validation(cap,input);
     }
 
     public static  boolean get_validation(String id,String text){
@@ -88,6 +106,7 @@ public class InputValidation {
             case "Vat" -> validate_p_iva(text);
             case "Double_Digit"->validate_double_digit(text);
             case "Lotto_code"->validate_lotto_code(text);
+            case"Cap"->validate_cap(text);
             default -> false;
 
 

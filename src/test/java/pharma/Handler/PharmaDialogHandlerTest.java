@@ -2,11 +2,8 @@ package pharma.Handler;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Control;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
@@ -17,17 +14,13 @@ import org.mockito.Mockito;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import pharma.Controller.subpanel.Pharma;
 import pharma.Model.FieldData;
-import pharma.config.Database;
-import pharma.config.SimulateEvents;
+import pharma.config.database.Database;
 import pharma.dao.PharmaDao;
 
-import javax.xml.crypto.Data;
 import java.rmi.AccessException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 
 
 @ExtendWith(ApplicationExtension.class)

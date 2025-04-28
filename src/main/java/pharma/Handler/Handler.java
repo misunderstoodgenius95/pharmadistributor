@@ -9,11 +9,11 @@ import pharma.dao.GenericJDBCDao;
 
 import java.util.List;
 
-public abstract class Handler {
+public class Handler {
 
 
 
-    public   void  showAlert(boolean success,String error_message) {
+    public static    void  showAlert(boolean success,String error_message) {
         Alert.AlertType alertType = success ? Alert.AlertType.CONFIRMATION : Alert.AlertType.ERROR;
         String message = success ? "Inserimento effettuato" : error_message;
         Handler.create_alert(alertType, "", message);

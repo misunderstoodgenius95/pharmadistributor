@@ -17,6 +17,8 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
+import pharma.javafxlib.Dialog.CustomDialog;
+import pharma.javafxlib.RadioOptions;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -143,7 +145,7 @@ private CustomDialog<FieldData> customDialog;
     @Test
     public void test_radiosme(FxRobot robot){
         Platform.runLater(()->{
-            customDialog.add_radios(new ArrayList<>(Arrays.asList("Yes","NO")), CustomDialog.Mode.Horizontal);
+            customDialog.add_radios(new ArrayList<>(Arrays.asList(new RadioOptions("yes","Yes"),new RadioOptions("no","No"))), CustomDialog.Mode.Horizontal);
 
         });
         robot.sleep(40000);

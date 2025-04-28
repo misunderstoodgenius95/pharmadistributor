@@ -1,17 +1,15 @@
 package pharma.config;
 
-import net.jodah.failsafe.internal.util.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.database.Database;
 import pharma.dao.DetailDao;
-import pharma.dao.FarmacoDao;
 import pharma.dao.PharmaDao;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -21,10 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class PopulateChoiceTest {
-    private  Database database;
+    private Database database;
     private DetailDao detailDao;
     private PopulateChoice populateChoice;
     private PharmaDao pharmaDao;

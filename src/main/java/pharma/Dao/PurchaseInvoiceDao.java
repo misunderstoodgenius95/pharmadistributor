@@ -1,7 +1,7 @@
 package pharma.dao;
 
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,6 +63,9 @@ public class PurchaseInvoiceDao extends GenericJDBCDao<FieldData,Integer> {
         statement.setDouble(4,entity.getSubtotal());
         statement.setDouble(5,entity.getVat_amount());
         statement.setDouble(6,entity.getTotal());
+        statement.setInt(7,entity.getCasa_farmaceutica());
+        statement.setInt(8,entity.getPurchase_order_id());
+
 
 
     }

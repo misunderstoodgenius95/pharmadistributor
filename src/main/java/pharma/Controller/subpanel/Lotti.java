@@ -1,20 +1,16 @@
 package pharma.Controller.subpanel;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import org.testfx.api.FxAssert;
 import pharma.Handler.DialogHandler;
 import pharma.Handler.LottiDialogHandler;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
-import pharma.config.CustomDialog;
-import pharma.config.Database;
+import pharma.config.database.Database;
 import pharma.config.TableUtility;
 import pharma.dao.FarmacoDao;
 import pharma.dao.LottiDao;
@@ -33,7 +29,7 @@ public class Lotti implements Initializable {
     private LottiDao lottiDao;
     private FarmacoDao farmacoDao;
     private ObservableList<FieldData> obs;
-    private DialogHandler dialogHandler;
+    private DialogHandler<FieldData> dialogHandler;
 
     public Lotti() {
         Database database;
@@ -47,19 +43,19 @@ public class Lotti implements Initializable {
         }
 
         lottiDao=new LottiDao(database,"lotto");
-        farmacoDao=new FarmacoDao("faramco",database);
+        farmacoDao=new FarmacoDao(database);
 
     }
     @FXML
     public void btn_action_add(ActionEvent event) {
        dialogHandler = new LottiDialogHandler("Aggiungi Lotti", lottiDao, farmacoDao,obs);
 
-       dialogHandler.execute();
+        dialogHandler.execute();
         table_id.getItems().clear();
         table_id.getItems().setAll(obs);
     }
 
-    public DialogHandler getDialogHandler() {
+    public DialogHandler<FieldData> getDialogHandler() {
         return dialogHandler;
     }
 

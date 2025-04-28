@@ -1,13 +1,10 @@
 package pharma.Handler;
 
-import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,24 +12,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
-import pharma.config.Database;
+import pharma.config.database.Database;
+import pharma.javafxlib.Controls.TextFieldComboBox;
+import pharma.config.Utility;
 import pharma.dao.LottiDao;
 import pharma.dao.PharmaDao;
 import pharma.dao.PurchaseOrderDao;
 import pharma.dao.PurchaseOrderDetailDao;
+
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.concurrent.atomic.AtomicReference;
 
 import  static  org.mockito.Mockito.*;
 
@@ -58,6 +56,8 @@ class PurchaseOrderHandlerTest {
         @Mock
         private Database d_b_p_d;
         @Mock
+        private  PreparedStatement p_insert;
+        @Mock
         private  PreparedStatement p_detail;
         @Mock
         private  ResultSet resultSet_name;
@@ -68,7 +68,7 @@ class PurchaseOrderHandlerTest {
         void setup() throws SQLException {
             MockitoAnnotations.openMocks(this);
             result_pharma=mock(ResultSet.class);
-          purchaseOrderDetailDao=new PurchaseOrderDetailDao(d_b_p_d);
+          purchaseOrderDetailDao=new PurchaseOrderDetailDao(database);
           lottiDao=new LottiDao(database,"lotto");
           purchaseOrderDao=new PurchaseOrderDao(database);
           pharmaDao=new PharmaDao(database);
@@ -81,14 +81,13 @@ class PurchaseOrderHandlerTest {
 
             // finish pharma
             ArgumentCaptor<Integer> paramCaptor = ArgumentCaptor.forClass(Integer.class);
-            when(database.execute_prepared_query(anyString())).thenReturn(p_statement);
+            when(database.execute_prepared_query(anyString())).thenReturn(p_statement,p_insert,p_detail);
             doNothing().when(p_statement).setInt(anyInt(), paramCaptor.capture());
 
             when(p_statement.executeQuery()).thenAnswer(invocation -> {
 
                 int argument = paramCaptor.getValue();
-                System.out.println("ag"+argument);
-                ResultSet resultSet = Mockito.mock(ResultSet.class);
+
 
                 if (argument==1) {
                     when(resultSet.next()).thenReturn(true, true, true, true, false);
@@ -135,6 +134,7 @@ class PurchaseOrderHandlerTest {
                     when(resultSet.getInt("pharma_id")).thenReturn(2);
 
 
+
                 }
                 return resultSet;
             });
@@ -158,7 +158,35 @@ class PurchaseOrderHandlerTest {
             Platform.runLater(()->{
 
 
+
                 PurchaseOrderHandler p_hadler=new PurchaseOrderHandler(lottiDao,purchaseOrderDao,purchaseOrderDetailDao,s_boolean,pharmaDao);
+                DatePicker datePicker=Utility.extract_value_from_list(p_hadler.getControlList(), DatePicker.class).getFirst();
+                datePicker.setValue(LocalDate.of(2025,10,1));
+                TextField textField=(TextField) Utility.extract_value_from_list(p_hadler.getControlList(), TextField.class).getFirst();
+                textField.setText("m2pp");
+                TextFieldComboBox<FieldData> fiel_pharma=(TextFieldComboBox)Utility.extract_value_from_list(p_hadler.getControlList(), TextFieldComboBox.class).getFirst();
+                TextFieldComboBox<FieldData> fiel_lots=(TextFieldComboBox)Utility.extract_value_from_list(p_hadler.getVbox().getChildren(), TextFieldComboBox.class).getLast();
+             TableView<FieldData> tableView=(TableView<FieldData>) Utility.extract_value_from_list(p_hadler.getControlList(),TableView.class).getFirst();
+                fiel_pharma.getChoiceBox().setValue(fiel_pharma.getChoiceBox().getItems().getFirst());
+               FieldData fieldData_row=(FieldData) fiel_lots.getChoiceBox().getItems().getFirst();
+ fiel_lots.getChoiceBox().getSelectionModel().selectFirst();
+
+
+
+
+
+
+              /*  FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setLotto_id("agk1").setNome_casa_farmaceutica("Angelini").
+                        setProduction_date(Date.valueOf(LocalDate.of(2025, 01, 10))).setFarmaco_id(100).
+                        setElapsed_date(Date.valueOf(LocalDate.of(2028, 01, 10))).setNome("Amuchina").setQuantity(10).setPrice(10.8).
+                        setNome_tipologia("Supposte").setUnit_misure("100mg").setVat_percent(10).setCasa_Farmaceutica(1).build();*/
+             /*   tableView.setItems(FXCollections.observableArrayList(fd_rows));
+                p_hadler.calculus_attribute();*/
+
+
+
+
+
                 s_boolean.addListener((observable, oldValue, newValue) -> {
                     System.out.println(newValue);
                     if(newValue){
@@ -166,12 +194,56 @@ class PurchaseOrderHandlerTest {
                     }
                 });
 
-               // p_hadler.getTableView().setItems(p_hadler.getList_populate());
-                p_hadler.showAndWait().ifPresent(fieldData -> {
-                    System.out.println(fieldData.getOriginal_order_id());
-                    System.out.println(fieldData.getNome_casa_farmaceutica());
+                Platform.runLater(()->{
 
-                });
+                try {
+                    when(p_detail.executeUpdate()).thenReturn(1,1);
+                    when(p_insert.executeQuery()).thenReturn(res_insert);
+                    when(res_insert.next()).thenReturn(true,false);
+                    when(res_insert.getInt(1)).thenReturn(100);
+
+
+
+
+
+
+
+
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }});
+              //  Platform.runLater(()->SimulateEvents.clickOn(p_hadler.getButtonOK()));
+                p_hadler.execute();
+                try {
+                    verify(p_insert).setDate(1,Date.valueOf(LocalDate.of(2025, 10, 01)));
+                    verify(p_insert).setDouble(2,108);
+                    verify(p_insert).setDouble(3,10.8);
+                    verify(p_insert).setDouble(4,118.80);
+                    verify(p_insert).setString(5,"m2pp");
+                    verify(p_insert).setInt(6,1);
+                    verify(p_detail).setString(1,"agk1");
+                    verify(p_detail).setInt(2,1);
+                    verify(p_detail).setInt(3,100);
+                    verify(p_detail).setDouble(4,10.8);
+                    verify(p_detail).setInt(5,10);
+                    verify(p_detail).setInt(6,10);
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

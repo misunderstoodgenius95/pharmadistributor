@@ -1,16 +1,10 @@
 package pharma.dao;
 
-import com.github.curiousoddman.rgxgen.iterators.suppliers.IncrementalLengthIteratorSupplier;
-import com.sun.source.tree.ModuleTree;
-import jdk.jshell.execution.Util;
-import org.assertj.core.error.AssertionErrorMessagesAggregrator;
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import pharma.Handler.DetailHandler;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
-import pharma.config.Database;
+import pharma.config.database.Database;
 import pharma.config.Utility;
 
 import java.io.FileReader;
@@ -23,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DetailDaoTest {
     private  Database database;
