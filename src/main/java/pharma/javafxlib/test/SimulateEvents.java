@@ -138,16 +138,21 @@ public static  void fireMouseClick(DatePicker datePicker) {
 
     }
 
-    public static  void setCheckBox(ObservableMap map, FieldData value){
+    public static<S>  void setCheckBox(ObservableMap<S,CheckBox> map,  S value){
 
+        if (map.containsKey(value)) {
+           CheckBox checkBox=map.get(value);
+           checkBox.setSelected(true);
+           checkBox.fireEvent(new ActionEvent());
+            return;
+        }
 
-
-            map.addListener((MapChangeListener<FieldData, CheckBox>) change -> {
+            map.addListener((MapChangeListener<S, CheckBox>) change -> {
                 if (change.wasAdded()) {
-                    System.out.println("added");
                     if (change.getKey().equals(value)) {
                         CheckBox checkBox = change.getValueAdded();
                         checkBox.setSelected(true);
+                        checkBox.fireEvent(new ActionEvent());
                     }
                 }
             });

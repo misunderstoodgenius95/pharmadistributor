@@ -42,12 +42,13 @@ class CheckBoxTableColumnTest {
         tableView = new TableView<>();
         hashSet = new HashSet<>();
          checkBoxTableColumn = new CheckBoxTableColumn<>("Seleziona") {
-            @Override
-            protected void selectedRow(FieldData data) {
-                System.out.println(data);
-                hashSet.add(data);
-            }
-        };
+             @Override
+             protected void selectedRow(FieldData data) {
+                 hashSet.add(data);
+
+             }
+         };
+
         tableView.getColumns().addAll(TableUtility.generate_column_string("Nome", "nome"),
                 TableUtility.generate_column_string("Sigla", "sigla"), checkBoxTableColumn
 
@@ -70,20 +71,19 @@ class CheckBoxTableColumnTest {
     @Test
      public void ValidObteinChoiceboxRow(FxRobot robot){
         Platform.runLater(()->{
-            Set<FieldData> set =checkBoxTableColumn.getCheckBoxMap().keySet();
-            for(FieldData fieldData:set){
-                CheckBox checkBox=checkBoxTableColumn.getCheckBoxMap().get(fieldData);
-                checkBox.setSelected(true);
-            }
 
-              // SimulateEvents.setCheckBox(checkBoxTableColumn.getCheckBoxMap(),tableView.getItems().getFirst());
+               SimulateEvents.setCheckBox(checkBoxTableColumn.getCheckBoxMap(),tableView.getItems().getFirst());
+                SimulateEvents.setCheckBox(checkBoxTableColumn.getCheckBoxMap(),tableView.getItems().get(1));
+            Assertions.assertEquals(2,hashSet.size());
+
+
 
 
 
 
 
         });
-        robot.sleep(400000);
+        //robot.sleep(400000);
 
 
     }

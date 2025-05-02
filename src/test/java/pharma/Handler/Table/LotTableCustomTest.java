@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.bytebuddy.implementation.auxiliary.MethodCallProxy;
 import net.jodah.failsafe.internal.util.Assert;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -175,31 +176,32 @@ Platform.runLater(()->{
         Platform.runLater(() -> {
             setFirstElementChoiceBox(lotTableCustom.getChoiceBox());
             writeOn(lotTableCustom.getTextField_search(), "a");
-            System.out.println(lotTableCustom.getTableLot().getItems().size());
             ObservableMap<FieldData,CheckBox> map = lotTableCustom.getMapCheckBox();
 
+             SimulateEvents.setCheckBox(map,lotTableCustom.getTableLot().getItems().getFirst());
+             SimulateEvents.setCheckBox(map,lotTableCustom.getTableLot().getItems().get(1));
+
+            lotTableCustom.getButtonOK().setOnAction(event -> {
+                System.out.println("size"+lotTableCustom.getSelectedRows().size());
+
+            });
+             SimulateEvents.clickOn(lotTableCustom.getButtonOK());
+
+            /* lotTableCustom.getSelectedRows().addListener(new SetChangeListener<FieldData>() {
+                 @Override
+                 public void onChanged(Change<? extends FieldData> change) {
+                 if(change.wasAdded()){
+                     System.out.println("Added!");
+
+                     System.out.println(change.getElementAdded());
+                 }
+                 }
+             });
 
 
-
-
-       SimulateEvents.setCheckBox(map,lotTableCustom.getTableLot().getItems().getFirst());
-
-       //     SimulateEvents.setCheckBox(map,lotTableCustom.getTableLot().getItems().get(1));
-            /*
-            lotTableCustom.getSelectedRows().addListener(new SetChangeListener<FieldData>() {
-                @Override
-                public void onChanged(Change<? extends FieldData> change) {
-                  if(change.wasAdded()){
-
-                      System.out.println("me");
-                  }
-                }
-            });*/
-           // Assertions.assertEquals(2,lotTableCustom.getSelectedRows().size());
-
-
+             */
         });
-robot.sleep(40000);
+//robot.sleep(40000);
 
     }
 

@@ -24,6 +24,7 @@ public class RadioButtonTableColumn<S> extends TableColumn<S,Void> {
                     {
                         radioButton.setToggleGroup(toggleGroup);
                         radioButton.setOnAction(event ->{
+
                                S rowData= getTableView().getItems().get(getIndex());
                                 onButtonClick(rowData);
                         });
