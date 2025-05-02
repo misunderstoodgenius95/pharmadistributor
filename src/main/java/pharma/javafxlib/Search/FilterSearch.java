@@ -28,6 +28,7 @@ public class FilterSearch {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 fieldDataFilteredList.setPredicate(fieldData -> {
 
+
                     System.out.println("Filtering...");
                     if (newValue == null || newValue.isEmpty()) {
                         return true;

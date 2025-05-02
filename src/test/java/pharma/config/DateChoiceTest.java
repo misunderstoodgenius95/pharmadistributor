@@ -19,6 +19,7 @@ import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
 import pharma.javafxlib.Dialog.CustomDialog;
 import pharma.javafxlib.RadioOptions;
+import pharma.javafxlib.test.SimulateEvents;
 
 import java.sql.Date;
 import java.time.LocalDate;

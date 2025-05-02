@@ -9,21 +9,16 @@ import org.controlsfx.control.SearchableComboBox;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Execution;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
-import pharma.config.SimulateEvents;
+import pharma.javafxlib.test.SimulateEvents;
 import pharma.config.Utility;
 
 
-import javax.naming.directory.SearchControls;
-import javax.swing.text.TableView;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class FarmaciaHandlerTest {
 

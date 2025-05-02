@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testfx.api.FxRobot;
@@ -21,7 +20,7 @@ import org.testfx.framework.junit5.Start;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
 import pharma.config.database.Database;
-import pharma.config.SimulateEvents;
+import pharma.javafxlib.test.SimulateEvents;
 import pharma.dao.FarmaciaDao;
 
 import java.sql.PreparedStatement;
@@ -66,30 +65,11 @@ class FarmaciaViewTest {
             farmaciaView = new FarmaciaView("Ricerca Casa Farmaceutica", farmaciaDao, observableList);
             farmaciaView.show();
 
-            ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-            ArgumentCaptor<String> argumentCaptor_query = ArgumentCaptor.forClass(String.class);
+
 
             try {
 
 
-
-                /*    String value= argumentCaptor.getValue();
-                    System.out.println(argumentCaptor_query.capture());*/
-
-
-              /*   if(value.equals("Capo")){
-                         when(resultSet.getInt(1)).thenReturn(1);
-                         when(resultSet.getString(2)).thenReturn("Farmacia Collica");
-                         when(resultSet.getString(3)).thenReturn("IT1111111");
-                         when(resultSet.getString(4)).thenReturn("Via Guido Cavalcanti ");
-                         when(resultSet.getInt(5)).thenReturn(98071);
-                         when(resultSet.getString(6)).thenReturn("Capo");
-                         when(resultSet.getString(7)).thenReturn("ME");
-
-
-
-
-                     }*/
 
 
                 when(database.execute_prepared_query(anyString())).thenAnswer(invocation -> {

@@ -56,4 +56,6 @@ exports pharma.Storage;
     opens pharma.config.database to javafx.fxml;
     exports pharma.javafxlib.CustomTableView;
     opens pharma.javafxlib.CustomTableView to javafx.fxml;
+    exports pharma.javafxlib.test;
+    opens pharma.javafxlib.test to javafx.fxml;
 }

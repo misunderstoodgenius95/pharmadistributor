@@ -3,19 +3,24 @@ package pharma.javafxlib.CustomTableView;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import pharma.Model.FieldData;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
-    private ObservableList<S> selected_row;
-    public CheckBoxTableColumn() {
-        setCellFactory(createRadiobuttonCellFactory());
-        selected_row= FXCollections.observableArrayList();
+
+    private final ObservableMap<S, CheckBox> checkBoxMap;
+    public CheckBoxTableColumn(String columnn_header) {
+        setText(columnn_header);
+        setCellFactory(createCheckBoxTableFactory());
+        checkBoxMap= FXCollections.observableHashMap();
     }
 
-    private Callback<TableColumn<S,Void>, TableCell<S,Void>> createRadiobuttonCellFactory(){
+    private Callback<TableColumn<S,Void>, TableCell<S,Void>> createCheckBoxTableFactory(){
 
         return  new Callback<TableColumn<S, Void>, TableCell<S, Void>>() {
             @Override
@@ -26,7 +31,8 @@ public class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
 
                      checkBox.setOnAction(event ->{
                                S rowData= getTableView().getItems().get(getIndex());
-                               selected_row.add(rowData);
+                               selectedRow(rowData);
+
 
                         });
                     }
@@ -37,7 +43,11 @@ public class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
                         if(empty){
                             setGraphic(null);
                         }else{
+
                              setGraphic(checkBox);
+                            S s= getTableView().getItems().get(getIndex());
+                             checkBoxMap.put(s,checkBox);
+                            System.out.println("Inserito");
 
 
                         }
@@ -48,12 +58,10 @@ public class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
 
 
     }
+    protected void  selectedRow(S data){
+    }
 
-    public ObservableList<S> getSelected_row() {
-        if(selected_row.isEmpty()){
-
-            throw new IllegalArgumentException("Argument is empty");
-        }
-        return selected_row;
+    public ObservableMap<S, CheckBox> getCheckBoxMap() {
+        return checkBoxMap;
     }
 }

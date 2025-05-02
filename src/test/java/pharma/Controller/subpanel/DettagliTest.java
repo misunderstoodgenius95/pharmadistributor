@@ -19,7 +19,7 @@ import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
 import pharma.Stages;
 import pharma.config.database.Database;
-import pharma.config.SimulateEvents;
+import pharma.javafxlib.test.SimulateEvents;
 import pharma.config.Utility;
 import pharma.dao.DetailDao;
 

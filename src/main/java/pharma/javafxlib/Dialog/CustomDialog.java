@@ -53,6 +53,8 @@ public class CustomDialog<T> extends Dialog<T> {
         get_event();
 
     }
+
+
     public ButtonType getButton_click(){
         return okButtonType;
 
@@ -192,6 +194,15 @@ public class CustomDialog<T> extends Dialog<T> {
     }
     public ChoiceBox<T> add_choiceBox(T value){
         ChoiceBox<T> choiceBox=new ChoiceBox<>();
+        vbox.getChildren().add(choiceBox);
+        choiceBox.setValue(value);
+        choiceBox.setPrefWidth(500);
+        choiceBox.setStyle("-fx-font-size: 16px");
+        controlList.add(choiceBox);
+        return  choiceBox;
+    }
+    public ChoiceBox<String> add_choiceBox(String value){
+        ChoiceBox<String> choiceBox=new ChoiceBox<>();
         vbox.getChildren().add(choiceBox);
         choiceBox.setValue(value);
         choiceBox.setPrefWidth(500);

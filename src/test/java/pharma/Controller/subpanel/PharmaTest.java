@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
@@ -15,8 +14,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
 import pharma.Stages;
-import pharma.config.SimulateEvents;
-import pharma.dao.PharmaDao;
+import pharma.javafxlib.test.SimulateEvents;
 
 import java.io.IOException;
 

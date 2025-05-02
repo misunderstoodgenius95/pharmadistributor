@@ -1,7 +1,10 @@
-package pharma.config;
+package pharma.javafxlib.test;
 
 
 
+import javafx.application.Platform;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.Scene;
@@ -11,11 +14,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import jdk.jshell.spi.SPIResolutionException;
-import org.controlsfx.control.SearchableComboBox;
+import org.testfx.util.WaitForAsyncUtils;
+import pharma.Model.FieldData;
 
-import java.net.Inet4Address;
-import java.security.PublicKey;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class SimulateEvents {
@@ -26,7 +29,7 @@ public class SimulateEvents {
     }
 
     public  static  void clickOn(Control control) {
-        control.fireEvent(new ActionEvent());
+        Platform.runLater(()->control.fireEvent(new ActionEvent()));
 
     }
 public static  void fireMouseClick(DatePicker datePicker) {
@@ -37,7 +40,7 @@ public static  void fireMouseClick(DatePicker datePicker) {
                 MouseButton.PRIMARY, 1,
                 true, true, true, true, true, true, true, true, true, true, null
         );
-        Event.fireEvent(datePicker, clickEvent);
+     Platform.runLater(()->   Event.fireEvent(datePicker, clickEvent));
 
     }
 
@@ -45,7 +48,7 @@ public static  void fireMouseClick(DatePicker datePicker) {
     public static void clickOnButton(String query, Scene scene){
 
        Button button=(Button) scene.lookup(query);
-       button.fire();
+       Platform.runLater(button::fire);
        if(button.getParent() instanceof AnchorPane) {
            System.out.println("ok");
        }else{
@@ -55,8 +58,8 @@ public static  void fireMouseClick(DatePicker datePicker) {
 
     }
     public static <T> void showControl(ComboBoxBase<T> comboBoxBase){
-
         comboBoxBase.show();
+
 
     }
     public static <T> void showControl(ChoiceBox<T> choiceBox){
@@ -98,13 +101,70 @@ public static  void fireMouseClick(DatePicker datePicker) {
                 "","",
                 keyCode,
                 false,false,false,false);
-        control.fireEvent(keyEvent);
-        System.out.println("fire key ");
+         control.fireEvent(keyEvent);
+
 
     }
     public static  void setSpinner(Spinner<Integer> spinner,int value){
-        spinner.getValueFactory().setValue(value);
+       Platform.runLater(()-> spinner.getValueFactory().setValue(value));
+    }
+    public static <T> void  setFirstElementChoiceBox(ChoiceBox<T> choiceBox){
+ setNElementChoiceBox(choiceBox,0);
+
+    }
+    public static <T> void  setNElementChoiceBox(ChoiceBox<T> choiceBox, int n){
+        if(choiceBox==null){
+            throw new IllegalArgumentException("Choicebox is null");
+
+        }
+        if(choiceBox.getItems().isEmpty()){
+
+            throw new IllegalArgumentException("Choicebox empty");
+        }
+
+        if (n < 0 || n >= choiceBox.getItems().size()) {
+            throw new IndexOutOfBoundsException("Index " + n + " is out of bounds for ChoiceBox size " + choiceBox.getItems().size());
+        }
+
+
+
+
+
+            choiceBox.setValue(choiceBox.getItems().get(n));
+
+
+
+
+
     }
 
+    public static  void setCheckBox(ObservableMap map, FieldData value){
+
+
+
+            map.addListener((MapChangeListener<FieldData, CheckBox>) change -> {
+                if (change.wasAdded()) {
+                    System.out.println("added");
+                    if (change.getKey().equals(value)) {
+                        CheckBox checkBox = change.getValueAdded();
+                        checkBox.setSelected(true);
+                    }
+                }
+            });
+        }
+
+
+
+    public  static void  WaitAddedItemsTable(TableView tableView){
+
+        try {
+            WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS,()->
+                    tableView.getItems().isEmpty()
+
+            );
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

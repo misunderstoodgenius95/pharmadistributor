@@ -13,6 +13,7 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
+import pharma.javafxlib.test.SimulateEvents;
 
 @ExtendWith(ApplicationExtension.class)
 class RadioButtonTableColumnTest {

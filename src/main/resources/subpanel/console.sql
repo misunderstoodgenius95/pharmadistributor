@@ -365,7 +365,7 @@ CALL update_all_farmaco_names();
 
 
 select *
-from farmaco_all;
+from lotto;
 
 
 
@@ -381,6 +381,11 @@ comune text not null,
 province text not null
 
 );
+
+
+select * from lotto
+                 inner join farmaco_all on farmaco_all.id=Lotto.farmaco
+where nome ilike 'A%';
 
 
 

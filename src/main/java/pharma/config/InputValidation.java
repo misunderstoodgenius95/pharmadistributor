@@ -13,7 +13,7 @@ public class InputValidation {
     private static final String password_regex="(?=.*[A-Z])*(?=.*[a-z])(?=.*\\d)(?=.*\\W).{8,}";
    // private static  final  String email_regex="^[\\w\\.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static  final String double_digit_regex="^[\\d]*\\.[\\d]*$";
-   private static  final  String input_regex="^[A-Z a-z0-9-_]+$";
+   private static  final  String input_regex="^[\\w]+$";
     private static  final String cap="^[\\d]{5}$";
      private  final static   String email_regex="^[\\w]+[\\.]*[-]*[\\w]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
      private final static  String lotto_code="^[\\w]{3,}$";

@@ -128,4 +128,8 @@ class FarmaciaDaoTest {
     void InvalidbuildQueryasParameter() {
       Assertions.assertThrows(IllegalArgumentException.class,()->farmaciaDao.buildQueryasParameter("none"));
     }
+
+    @Test
+    void testBuildQueryasParameter() {
+    }
 }

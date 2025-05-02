@@ -1,11 +1,24 @@
 package pharma.dao;
 
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.JdbcParameter;
+import net.sf.jsqlparser.expression.StringValue;
+import net.sf.jsqlparser.expression.operators.relational.LikeExpression;
+import net.sf.jsqlparser.parser.CCJSqlParser;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.util.deparser.StatementDeParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.postgresql.core.Parser;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
@@ -121,6 +134,23 @@ class LottiDaoTest {
     }
 
     @Test
+    public void ValidIntegrationTestingFindSearch() {
+        Properties properties = null;
+        LottiDao lottiDao = null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            lottiDao = new LottiDao(Database.getInstance(properties), "lotto");
+            List<FieldData> lotti = lottiDao.findBySearch("Nome","a");
+            System.out.println(lotti.size());
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
     public void ValidIntegrationInsert() {
         Properties properties = null;
         LottiDao lottiDao = null;
@@ -197,4 +227,56 @@ class LottiDaoTest {
 
 
     }
-}
+
+    @Test
+    void buildQueryasParameterSearch() {
+
+
+        String value=lottiDao.buildQueryasParameterSearch("Tipologia");
+        System.out.println(value);
+
+/*
+        Assertions.assertDoesNotThrow(()-> {
+
+
+                    CCJSqlParserUtil.parse(value);
+        });*/
+
+
+
+
+        //Assertions.assertEquals(lottiDao.getFindQueryAll()+" where nome  ILAKE ?   ",value);
+    }
+
+    @Test
+    void TestquerySearch()throws  Exception{
+
+
+
+            String value=lottiDao.buildQueryasParameterSearch("Nome");
+
+            Statement statement=CCJSqlParserUtil.parse(value);
+
+            if( statement instanceof Select select) {
+                PlainSelect body = (PlainSelect) select.getSelectBody();
+                Expression where = body.getWhere();
+
+                if (where instanceof LikeExpression ilikeExpr) {
+                    if (ilikeExpr.getRightExpression() instanceof JdbcParameter) {
+                        // Replace ? with actual value, quoted
+                        ilikeExpr.setRightExpression(new StringValue("a%"));
+                    }
+                    System.out.println(statement.toString());
+                }
+            }
+
+    }
+
+
+    }
+
+
+
+
+
+

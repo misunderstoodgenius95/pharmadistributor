@@ -14,7 +14,7 @@ import org.testfx.framework.junit5.Start;
 import pharma.Handler.DialogHandler;
 import pharma.Model.FieldData;
 import pharma.Stages;
-import pharma.config.SimulateEvents;
+import pharma.javafxlib.test.SimulateEvents;
 
 import java.io.IOException;
 import java.time.LocalDate;

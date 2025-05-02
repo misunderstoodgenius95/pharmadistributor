@@ -10,10 +10,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
-
-
-
-import static org.junit.jupiter.api.Assertions.*;
+import pharma.javafxlib.test.SimulateEvents;
 
 class ValidationsTest extends ApplicationTest {
 

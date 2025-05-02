@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
     private final  String table;
@@ -38,7 +39,7 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
     @Override
     protected String getFindQueryAll() {
         return " select * from lotto\n " +
-                " inner join farmaco_all on farmaco_all.id=Lotto.farmaco; ";
+                " inner join farmaco_all on farmaco_all.id=Lotto.farmaco ";
     }
 
     @Override
@@ -120,6 +121,41 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
         return list;
 
     }
+
+
+
+    public String buildQueryasParameterSearch(String parameter){
+        if (parameter == null) {
+            throw new IllegalArgumentException("Parameter is null");
+        }
+
+
+
+
+        Map<String, String> paramToColumn = Map.of(
+                "Tipologia", "tipologia",
+                "Categoria", "categoria",
+                "principio_attivo", "principio_attivo",
+                "Nome", "nome",
+                "Data_di_scadenza", "elapsed_date"
+        );
+
+        String column = paramToColumn.get(parameter);
+
+        if (column == null) {
+            throw new IllegalArgumentException("Argument not present: " + parameter);
+        }
+
+        return getFindQueryAll() + " WHERE " + column + " ILIKE ?";
+    }
+
+
+
+    public List<FieldData> findBySearch(String parameter,String value) {
+         value=value+"%";
+        return super.findByParameter(buildQueryasParameterSearch(parameter), value);
+    }
+
     public List<String> findLotsByFarmacoName(String name){
         List<String> list=new ArrayList<>();
         try {
