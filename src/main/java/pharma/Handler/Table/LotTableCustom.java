@@ -37,6 +37,7 @@ public class LotTableCustom extends CustomDialog<FieldData> {
         choiceBox=add_choiceBox("Seleziona");
         textField_search=add_text_field("");
         getControlList().removeAll(choiceBox,textField_search);
+        selected_fds =FXCollections.observableSet();
         col_checkbox=new CheckBoxTableColumn<>("Seleziona"){
             @Override
             protected void selectedRow(FieldData data) {
@@ -47,9 +48,10 @@ public class LotTableCustom extends CustomDialog<FieldData> {
 
         observableList=FXCollections.observableArrayList();
         tableView = add_table();
-        selected_fds =FXCollections.observableSet();
+
         tableView.getColumns().addAll(
                 TableUtility.generate_column_string("lotto Code","lotto_id"),
+                TableUtility.generate_column_string("Farmaco ID","farmaco_id"),
                 TableUtility.generate_column_string("Nome","nome"),
                 TableUtility.generate_column_string("Categoria","nome_categoria"),
                 TableUtility.generate_column_string("Tipologia","nome_tipologia"),
@@ -107,7 +109,6 @@ public class LotTableCustom extends CustomDialog<FieldData> {
                     List<FieldData> list=lottiDao.findBySearch(choiceBox.getValue(), newValue);
                     observableList.setAll(list);
                     tableView.setItems(observableList);
-                    System.out.println("inserito"+col_checkbox.getCheckBoxMap().size());
 
                 }
             }

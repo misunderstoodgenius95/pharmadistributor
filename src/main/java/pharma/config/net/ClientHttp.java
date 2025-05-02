@@ -6,6 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.CompletableFuture;
 
 public class ClientHttp {
     private HttpClient client;
@@ -31,6 +32,14 @@ public class ClientHttp {
         return  response;
 
     }
+    public CompletableFuture<HttpResponse<String>> sendAsync(HttpRequest httpRequest){
+
+
+        return client.sendAsync(httpRequest,HttpResponse.BodyHandlers.ofString());
+
+
+    }
+
 
 
 

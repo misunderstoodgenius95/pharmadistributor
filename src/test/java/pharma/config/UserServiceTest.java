@@ -26,7 +26,6 @@ class UserServiceTest {
     private static TokenHolder tokenHolder;
     private static TokenRequest tokenRequest;
     private  static StytchClient stytchClient;
-    @BeforeAll
     static void setUp() throws Auth0Exception {
        authAPI= mock(AuthAPI.class);
        tokenHolder_response= mock(Response.class);

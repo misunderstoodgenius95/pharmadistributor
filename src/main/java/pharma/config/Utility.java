@@ -1,5 +1,6 @@
 package pharma.config;
 
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -8,6 +9,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import org.controlsfx.control.SearchableComboBox;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -26,8 +28,6 @@ public  static  final String Principio_attivo="Principio_Attivo";
 public static  final  String Tipologia="Tipologia";
 public static final  String Categoria="Categoria";
 public static final String Misura="Misura";
-
-
     public static void create_alert(Alert.AlertType alert_type, String title_header, String body) {
 
         Alert alert = new Alert(alert_type);
@@ -38,6 +38,24 @@ public static final String Misura="Misura";
         alert.showAndWait();
 
     }
+    public  static void network_status(int status){
+        switch (status){
+            case 201 -> {
+                create_alert(Alert.AlertType.CONFIRMATION,"Alert Status","Creato con successo");
+            }
+            case 422->{
+                create_alert(Alert.AlertType.WARNING,"Alert Status","Elemento già presente!");
+
+            }
+            case  400->{
+                create_alert(Alert.AlertType.WARNING,"Alert Status","Bad request!");
+            }
+            default -> create_alert(Alert.AlertType.WARNING,"",status+" ");
+
+        }
+
+    }
+
 
     public static void create_btn(Button button, String path) {
 
@@ -120,6 +138,7 @@ The reason for returning true when the filter text is null or empty is that the 
 
 
     }
+
 
 
 

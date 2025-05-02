@@ -1,6 +1,6 @@
 package pharma.config;
 
-import com.auth0.json.mgmt.selfserviceprofiles.SelfServiceProfile;
+
 import pharma.Controller.subpanel.Farmaco;
 import pharma.Controller.subpanel.Pharma;
 import pharma.Model.FieldData;

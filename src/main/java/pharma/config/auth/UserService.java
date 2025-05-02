@@ -1,9 +1,6 @@
 package pharma.config.auth;
 
-import com.auth0.client.auth.AuthAPI;
-import com.auth0.exception.Auth0Exception;
-import com.auth0.json.auth.TokenHolder;
-import com.auth0.net.Response;
+
 import pharma.config.InputValidation;
 import pharma.security.Stytch.StytchClient;
 
@@ -17,7 +14,7 @@ public class UserService {
         this.stytchClient = stytchClient;
     }
 
-    public UserServiceResponse authenticate(String email, String password) throws Auth0Exception {
+    public UserServiceResponse authenticate(String email, String password) {
 
         if (email == null || !InputValidation.validate_email(email)) {
             throw new IllegalArgumentException("Username cannot be null or empty");

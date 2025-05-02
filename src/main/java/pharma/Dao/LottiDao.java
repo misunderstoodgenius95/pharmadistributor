@@ -123,6 +123,28 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
     }
 
 
+    public FieldData findByIds(int farmaco_id,String id_code) {
+
+        FieldData fieldData = null;
+        try {
+             PreparedStatement preparedStatement=postegresql.execute_prepared_query("select * from lotto\n" +
+                    "                 inner join farmaco_all on farmaco_all.id=Lotto.farmaco where lotto.id=? and farmaco= ? ");
+            preparedStatement.setString(1,id_code);
+            preparedStatement.setInt(2,farmaco_id);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            if(resultSet.next()){
+                 fieldData=mapRow(resultSet);
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return fieldData;
+
+
+    }
 
     public String buildQueryasParameterSearch(String parameter){
         if (parameter == null) {

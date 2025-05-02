@@ -384,8 +384,12 @@ province text not null
 
 
 select * from lotto
-                 inner join farmaco_all on farmaco_all.id=Lotto.farmaco
-where nome ilike 'A%';
+                 inner join farmaco_all on farmaco_all.id=Lotto.farmaco;
 
 
+select avg( lotto.elapsed_date-current_date) as remaining
+       from lotto
+                inner join farmaco_all on farmaco_all.id=Lotto.farmaco where  farmaco=60
+
+select * from farmaco_all;
 

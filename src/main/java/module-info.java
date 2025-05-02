@@ -1,10 +1,10 @@
 module pharma {
-    requires com.auth0.jwt;
+
     requires java.net.http;
     requires javafx.fxml;
     requires org.json;
     requires  org.testfx;
-    requires auth0;
+
     requires jdk.jshell;
     requires org.hamcrest;
     requires org.postgresql.jdbc;
@@ -12,7 +12,7 @@ module pharma {
 
     requires rgxgen;
     requires java.rmi;
-    requires com.fasterxml.jackson.databind;
+
     requires java.sql;
     requires  org.controlsfx.controls;
     requires java.desktop;
@@ -20,8 +20,11 @@ module pharma {
     requires org.kordamp.ikonli.fontawesome5;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.core;
-    requires kotlin.stdlib;
-    requires annotations;
+
+    requires commons.math3;
+    requires json.path;
+    requires com.fasterxml.jackson.core;
+    requires org.apache.commons.text;
 
     opens pharma to javafx.fxml;
     exports pharma to javafx.fxml,javafx.graphics;
@@ -58,4 +61,6 @@ exports pharma.Storage;
     opens pharma.javafxlib.CustomTableView to javafx.fxml;
     exports pharma.javafxlib.test;
     opens pharma.javafxlib.test to javafx.fxml;
+    exports pharma.javafxlib.Controls.Notification;
+    opens pharma.javafxlib.Controls.Notification to javafx.fxml;
 }

@@ -80,18 +80,19 @@ class LottiDaoTest {
         when(resultSet.getString("tipologia")).thenReturn("Compresse");
         when(resultSet.getString("misura")).thenReturn("100mg");
         when(resultSet.getString("casa_farmaceutica")).thenReturn("Angelini");
-        when(resultSet.getDouble("price")).thenReturn(6.50);
         List<FieldData> fieldData = lottiDao.findAll();
         Assertions.assertEquals("Tachipirina", fieldData.get(0).getNome());
         verify(resultSet).getString("id");
         verify(resultSet).getDate("production_date");
-        Assertions.assertEquals(Date.valueOf(LocalDate.of(2024, 10, 01)), fieldData.getFirst().getProduction_date());
-        Assertions.assertEquals(Date.valueOf(LocalDate.of(2025, 10, 01)), fieldData.getFirst().getElapsed_date());
-        Assertions.assertEquals(300, fieldData.getFirst().getQuantity());
-        Assertions.assertEquals("Tachipirina", fieldData.getFirst().getNome());
-        Assertions.assertEquals("Compresse", fieldData.getFirst().getNome_tipologia());
-        Assertions.assertEquals("100mg", fieldData.getFirst().getUnit_misure());
-        Assertions.assertEquals(6.50, fieldData.getFirst().getPrice());
+        Assertions.assertAll(
+                ()-> Assertions.assertEquals(Date.valueOf(LocalDate.of(2024, 10, 01)), fieldData.getFirst().getProduction_date()),
+        ()->Assertions.assertEquals(Date.valueOf(LocalDate.of(2025, 10, 01)), fieldData.getFirst().getElapsed_date()),
+                ()->   Assertions.assertEquals(300, fieldData.getFirst().getQuantity()),
+                ()->Assertions.assertEquals("Tachipirina", fieldData.getFirst().getNome()),
+                ()->Assertions.assertEquals("Compresse", fieldData.getFirst().getNome_tipologia()),
+                ()-> Assertions.assertEquals("100mg", fieldData.getFirst().getUnit_misure()),
+                ()->Assertions.assertEquals(6.50, fieldData.getFirst().getPrice()));
+
 
     }
 
@@ -105,6 +106,32 @@ class LottiDaoTest {
 
         List<String> list = lottiDao.FindByFarmacoNameHaveLot();
         Assertions.assertEquals("Angelini", list.getFirst());
+
+
+    }
+    @Test
+    void findByIds() throws SQLException {
+        PreparedStatement preparedStatement = Mockito.mock(PreparedStatement.class);
+        ResultSet resultSet = Mockito.mock(ResultSet.class);
+        when(resultSet.next()).thenReturn(true,false);
+        when(resultSet.getString("id")).thenReturn("aaa");
+        when(resultSet.getDate("production_date")).thenReturn(Date.valueOf(LocalDate.of(2024, 10, 01)));
+        when(resultSet.getDate("elapsed_date")).thenReturn(Date.valueOf(LocalDate.of(2025, 10, 01)));
+        when(resultSet.getInt("quantity")).thenReturn(300);
+        when(resultSet.getString("nome")).thenReturn("Tachipirina");
+        when(resultSet.getString("tipologia")).thenReturn("Compresse");
+        when(resultSet.getString("categoria")).thenReturn("Antibiotico");
+        when(resultSet.getString("misura")).thenReturn("100mg");
+        when(resultSet.getString("casa_farmaceutica")).thenReturn("Angelini");
+
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
+        FieldData fieldData=lottiDao.findByIds(10,"aaa");
+        Assertions.assertAll(
+                ()->Assertions.assertEquals("Tachipirina",fieldData.getNome()),
+                ()->Assertions.assertEquals("Compresse",fieldData.getNome_tipologia()),
+                ()->Assertions.assertEquals("100mg",fieldData.getUnit_misure()));
+
 
 
     }
@@ -143,6 +170,21 @@ class LottiDaoTest {
             List<FieldData> lotti = lottiDao.findBySearch("Nome","a");
             System.out.println(lotti.size());
 
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Test
+    public void ValidIntegrationFindIds() {
+        Properties properties = null;
+        LottiDao lottiDao = null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            lottiDao = new LottiDao(Database.getInstance(properties), "lotto");
+            FieldData fieldData=lottiDao.findByIds(60,"aaa");
+            Assertions.assertNotNull(fieldData);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -273,7 +315,8 @@ class LottiDaoTest {
     }
 
 
-    }
+
+}
 
 
 

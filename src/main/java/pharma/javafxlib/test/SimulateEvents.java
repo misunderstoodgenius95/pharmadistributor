@@ -2,8 +2,11 @@ package pharma.javafxlib.test;
 
 
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -14,11 +17,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class SimulateEvents {
@@ -45,18 +52,84 @@ public static  void fireMouseClick(DatePicker datePicker) {
     }
 
 
-    public static void clickOnButton(String query, Scene scene){
+    public static void clickOnButton(String query, Scene scene) {
 
-       Button button=(Button) scene.lookup(query);
-       Platform.runLater(button::fire);
-       if(button.getParent() instanceof AnchorPane) {
-           System.out.println("ok");
-       }else{
-           System.out.println("nok");
-       }
-
-
+        Button button = (Button) scene.lookup(query);
+        Platform.runLater(button::fire);
+        if (button.getParent() instanceof AnchorPane) {
+            System.out.println("ok");
+        } else {
+            System.out.println("nok");
+        }
     }
+       public static  void openContextMenu(TableView<FieldData> tableview,int row_number){
+
+
+
+           tableview.layout(); // Ensure the TableView has laid out its children
+
+           TableRow<FieldData> tableRow = (TableRow<FieldData>) tableview.lookupAll(".table-row-cell")
+                   .stream()
+                   .filter(node -> node instanceof TableRow)
+                   .skip(row_number).
+                   findFirst().orElseThrow(() -> new IllegalArgumentException("TableRow is not found!"));
+
+           // Obtain the coordinate for point 0,0 of RowTable
+           double point_x = tableRow.localToScene(0, 0).getX();
+           double point_y = tableRow.localToScene(0, 0).getY();
+           SimulateEvents.RightMouseClickMouse(tableRow);
+           WaitForAsyncUtils.waitForFxEvents();
+           tableRow.getContextMenu().show(tableRow, point_x, point_y);
+/*
+           MenuItem menuItem = tableRow.getContextMenu().getItems().getFirst();
+
+           menuItem.fire();
+           WaitForAsyncUtils.waitForFxEvents();
+           tableRow.getContextMenu().hide();
+*/
+
+
+
+
+
+        }
+
+        public  static  void fireItemMenu(TableView<FieldData> tableView,int num_row,int num_voice){
+
+
+            TableRow<FieldData> tableRow = (TableRow<FieldData>) tableView.lookupAll(".table-row-cell")
+                    .stream()
+                    .filter(node -> node instanceof TableRow)
+                    .skip(num_row).
+                    findFirst().orElseThrow(() -> new IllegalArgumentException("TableRow is not found!"));
+            if(tableRow.getContextMenu()!=null){
+
+                ContextMenu contextMenu=tableRow.getContextMenu();
+                if(contextMenu.getItems().isEmpty()){
+                    throw new IllegalArgumentException("Context Menu Empty");
+
+                } if(num_voice <0 || num_voice>=contextMenu.getItems().size()){
+                    throw new IllegalArgumentException("Index Out bound");
+
+                }else{
+                    contextMenu.getItems().get(num_voice).fire();
+                    tableRow.getContextMenu().hide();
+
+                }
+            }
+
+
+
+
+
+
+
+
+
+        }
+
+
+
     public static <T> void showControl(ComboBoxBase<T> comboBoxBase){
         comboBoxBase.show();
 
@@ -105,6 +178,45 @@ public static  void fireMouseClick(DatePicker datePicker) {
 
 
     }
+
+
+
+    public static  void RightMouseClickMouse(Control control){
+        MouseEvent rightClickEvent = new MouseEvent(
+                MouseEvent.MOUSE_CLICKED,    // Event type
+                0, 0,                        // X, Y (local coordinates)
+                0, 0,                        // Screen X, Y
+                MouseButton.SECONDARY,        // Mouse button (SECONDARY = right click)
+                1,                            // Click count
+                false, false, false, false,  // Modifiers (Shift, Ctrl, Alt, Meta)
+                false,                        // Primary button down (left click)
+                false,                        // Middle button down
+                true,                         // Secondary button down (right click)
+                false,                        // Synthesized event (e.g., touch-to-mouse)
+                true,                         // Popup trigger (triggers context menu)
+                false,                        // Still since press (for drag events)
+                null                          // PickResult (optional)
+        );
+       control.fireEvent(rightClickEvent);
+    }
+    public static  void PrimaryMouseClickMouse(Control control){
+        MouseEvent primaryMouseClicked = new MouseEvent(
+                MouseEvent.MOUSE_CLICKED,    // Event type
+                0, 0,                        // X, Y (local coordinates)
+                0, 0,                        // Screen X, Y
+                MouseButton.PRIMARY,        // Mouse button
+                1,                            // Click count
+                false, false, false, false,  // Modifiers (Shift, Ctrl, Alt, Meta)
+                true,                        // Primary button down (left click)
+                false,                        // Middle button down
+                false,                         // Secondary button down (right click)
+                false,                        // Synthesized event (e.g., touch-to-mouse)
+                true,                         // Popup trigger (triggers context menu)
+                false,                        // Still since press (for drag events)
+                null                          // PickResult (optional)
+        );
+        control.fireEvent(primaryMouseClicked);
+    }
     public static  void setSpinner(Spinner<Integer> spinner,int value){
        Platform.runLater(()-> spinner.getValueFactory().setValue(value));
     }
@@ -138,21 +250,25 @@ public static  void fireMouseClick(DatePicker datePicker) {
 
     }
 
-    public static  void setCheckBox(ObservableMap map, FieldData value){
+    public static<S>  void setCheckBox(ObservableMap<S,CheckBox> map,  S value){
 
+        if (map.containsKey(value)) {
+           CheckBox checkBox=map.get(value);
+           checkBox.setSelected(true);
+           checkBox.fireEvent(new ActionEvent());
+            return;
+        }
 
-
-            map.addListener((MapChangeListener<FieldData, CheckBox>) change -> {
+            map.addListener((MapChangeListener<S, CheckBox>) change -> {
                 if (change.wasAdded()) {
-                    System.out.println("added");
                     if (change.getKey().equals(value)) {
                         CheckBox checkBox = change.getValueAdded();
                         checkBox.setSelected(true);
+                        checkBox.fireEvent(new ActionEvent());
                     }
                 }
             });
         }
-
 
 
     public  static void  WaitAddedItemsTable(TableView tableView){
@@ -166,5 +282,48 @@ public static  void fireMouseClick(DatePicker datePicker) {
             throw new RuntimeException(e);
         }
     }
+
+/*    public static boolean Check_last_elem_add(ObservableList<FieldData> list){
+        AtomicBoolean atomicBoolean=new AtomicBoolean(false);
+        list.addListener((ListChangeListener<FieldData>) c -> {
+       *//*     while (c.next()) {*//*
+                if (c.wasRemoved()) {
+
+                    System.out.println("removed");
+                    atomicBoolean.set(true);
+                }
+           // }
+        });
+        System.out.println(list.size());
+        return  atomicBoolean.get();
+
+    }
+    public static boolean Check_last_elem_added(ObservableList<FieldData> list){
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        try {
+            future.get(2, TimeUnit.SECONDS);
+
+
+             return SimulateEvents.Check_last_elem_add(list);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }*/
+    public static int  CheckRemovedElemList(ObservableList<FieldData> list){
+        AtomicInteger value = new AtomicInteger();
+        PauseTransition pauseTransition=new PauseTransition(Duration.seconds(2));
+        pauseTransition.setOnFinished(event ->{
+            value.set(list.size());
+            System.out.println("list"+list.size());
+        });
+        pauseTransition.play();
+        return value.get();
+
+    }
+
+
+
+
 
 }

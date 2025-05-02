@@ -1,9 +1,16 @@
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pharma.Model.FieldData;
 import pharma.Storage.StorageToken;
 import pharma.security.TokenUtility;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class JwtExtractTest {
 
@@ -41,6 +48,55 @@ Assertions.assertTrue(actual);
     Assertions.assertTrue(TokenUtility.check_permission("pharma","view",permissions));
 
 
+
+    }
+    @Test
+    public  void  test(){
+
+
+        FieldData data1 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("L001")
+                .setNome("Paracetamolo")
+                .setNome_categoria("Antidolorifico")
+                .setNome_tipologia("Compresse")
+                .setUnit_misure("mg")
+                .setNome_principio_attivo("Paracetamolo")
+                .setNome_casa_farmaceutica("Pharma S.p.A").
+                setQuantity(50).setProduction_date(Date.valueOf(LocalDate.of(2023, 01, 15))).
+                setElapsed_date(Date.valueOf(LocalDate.of(2025, 01, 15))).
+                setAvailability(300)
+                .build();
+        FieldData data2 = FieldData.FieldDataBuilder.getbuilder()
+                .setLotto_id("L002")
+                .setNome("Ibuprofene")
+                .setNome_categoria("Antinfiammatorio")
+                .setNome_tipologia("Compresse")
+                .setUnit_misure("mg")
+                .setNome_principio_attivo("Ibuprofene")
+                .setNome_casa_farmaceutica("Salute SRL")
+                .setQuantity(30)
+                .setProduction_date(Date.valueOf(LocalDate.of(2023, 5, 10)))
+                .setElapsed_date(Date.valueOf(LocalDate.of(2025, 5, 10)))
+                .setAvailability(150)
+                .build();
+
+        FieldData data3 = FieldData.FieldDataBuilder.getbuilder()
+                .setLotto_id("L003")
+                .setNome("Amoxicillina")
+                .setNome_categoria("Antibiotico")
+                .setNome_tipologia("Capsule")
+                .setUnit_misure("mg")
+                .setNome_principio_attivo("Amoxicillina")
+                .setNome_casa_farmaceutica("Medicina Generale")
+                .setQuantity(20)
+                .setProduction_date(Date.valueOf(LocalDate.of(2023, 3, 20)))
+                .setElapsed_date(Date.valueOf(LocalDate.of(2024, 3, 20)))
+                .setAvailability(0)
+                .build();
+        ArrayList<FieldData> arrayList=new ArrayList<>();
+        arrayList.add(data1);
+        arrayList.add(data2);
+        arrayList.add(data3);
+        ObservableList<FieldData> observableList= FXCollections.observableArrayList(arrayList);
 
     }
 

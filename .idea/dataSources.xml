@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="bafminpmzlmmjl5hcxmg@bafminpmzlmmjl5hcxmg-postgresql.services.clever-cloud.com" uuid="664a9564-9415-4fc3-8000-b86eee6787c3">
+    <data-source source="LOCAL" name="bafminpmzlmmjl5hcxmg@bafminpmzlmmjl5hcxmg-postgresql.services.clever-cloud.com" uuid="25e7a1f1-f2e5-48ff-aeb0-44afd3fa47b8">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>

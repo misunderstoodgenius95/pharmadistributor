@@ -47,7 +47,7 @@ public class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
                              setGraphic(checkBox);
                             S s= getTableView().getItems().get(getIndex());
                              checkBoxMap.put(s,checkBox);
-                            System.out.println("Inserito");
+
 
 
                         }
@@ -59,6 +59,7 @@ public class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
 
     }
     protected void  selectedRow(S data){
+        System.out.println("Button clicked for: " + data);
     }
 
     public ObservableMap<S, CheckBox> getCheckBoxMap() {
