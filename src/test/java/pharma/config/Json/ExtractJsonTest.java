@@ -90,14 +90,10 @@ class ExtractJsonTest {
     @MethodSource("invalid_values")
     public void InvalidTestJson(List<String> data) {
 
-
         Assertions.assertThrows(IllegalArgumentException.class,()->ExtractJson.extract_first(data.getFirst(),data.get(1)));
-
-
     }
     
     @Test
-    
     public  void Test(){
 
         System.out.println(ExtractJson.extract_first(json_string,"$[?(@.name==Alice )]"));

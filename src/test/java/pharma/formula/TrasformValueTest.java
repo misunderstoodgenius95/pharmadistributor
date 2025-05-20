@@ -1,6 +1,9 @@
 package pharma.formula;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -15,80 +18,78 @@ class TrasformValueTest {
         System.out.println(bigDecimal.doubleValue());
 
     }
+    @ParameterizedTest
+    @CsvSource({"0.45,10.0","0.4,20.0","0.55,-10",""})
+    void ValidNormalize_percentuages(double expected,double input) {
+        Assertions.assertEquals(expected,TrasformValue.normalize_percentuages(input));
 
- @Nested
+
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {-100.01,100.1})
+    public  void Invalid_percentages(double value){
+        Assertions.assertThrows(IllegalArgumentException.class,()->TrasformValue.normalize_percentuages(value));
+
+    }
+    @Test
+    public void NormalizePercentuages(){
+
+
+    }
+
+
+
+    @Test
+    void Validgain() {
+
+        Assertions.assertEquals(1200,TrasformValue.gain(1000,20));
+    }
+
+
+
+
+    @Nested
  class TestNormalize {
      @Nested
      class LevelofStock {
          @Test
          void EqualCalculus_level_of_stock() {
-             Assertions.assertEquals(0.5, TrasformValue.normalizeStock(550, 550));
+             Assertions.assertEquals(0.5, TrasformValue.normalizeValue(550, 550));
          }
 
          @Test
          void ExLessCalculus_level_of_stock() {
-             Assertions.assertEquals(0.4, TrasformValue.normalizeStock(400, 550));
+             Assertions.assertEquals(0.4, TrasformValue.normalizeValue(400, 550));
          }
 
          @Test
          void ExAboveCalculus_level_of_stock() {
-             Assertions.assertEquals(0.5, TrasformValue.normalizeStock(630, 550));
+             Assertions.assertEquals(0.6, TrasformValue.normalizeValue(630, 550));
+
          }
+     }
 
          @Nested
          class DateExpire {
              @Test
              void EqualCalculus_level_of_stock() {
-                 Assertions.assertEquals(0.5, TrasformValue.normalizeStock(180, 180));
+                 Assertions.assertEquals(0.5, TrasformValue.normalizeValue(180, 180));
              }
-
              @Test
              void ExLessCalculus_level_of_stock() {
-                 Assertions.assertEquals(0.4, TrasformValue.normalizeStock(160, 180));
+                 Assertions.assertEquals(0.4, TrasformValue.normalizeValue(160, 180));
              }
-
              @Test
              void ExAboveCalculus_level_of_stock() {
-                 Assertions.assertEquals(0.6, TrasformValue.normalizeStock(190, 180));
+                 Assertions.assertEquals(0.6, TrasformValue.normalizeValue(190, 180));
              }
          }
 
 
-           /*  @Disabled
-             @Nested
-             class Less {
-                 @Test
-                 void ExLessCalculus_level_of_stock1() {
-                     Assertions.assertEquals(0.9, TrasformValue.normalizeStock(List.of(100, 200, 200), 550));
-                 }
-
-                 @Test
-                 void ExLessCalculus_level_of_stock2() {
-                     Assertions.assertEquals(0.7, TrasformValue.normalizeStock(List.of(100, 100, 200), 550));
-                 }
-
-                 @Test
-                 void ExLessCalculus_level_of_stock3() {
-                     Assertions.assertEquals(0.4, TrasformValue.normalizeStock(List.of(200), 550));
-                 }
-
-                 @Test
-                 void ExLessCalculus_level_of_stock7() {
-                     Assertions.assertEquals(0.4, TrasformValue.normalizeStock(List.of(300), 550));
-                 }
-
-                 @Test
-                 void ExLessCalculus_level_of_stock4() {
-                     Assertions.assertEquals(0.2, TrasformValue.normalizeStock(List.of(100), 550));
-                 }
 
 
-             }
-
-            */
-
-
-         }
 
 
      }
@@ -153,7 +154,6 @@ class TrasformValueTest {
              Assertions.assertEquals(-0.01, TrasformValue.calculus_trend(0.4));
          }
 
-         @Test
          public void ValidTrendStabile() {
              Assertions.assertEquals(-0, TrasformValue.calculus_trend(0.5));
          }
@@ -161,60 +161,66 @@ class TrasformValueTest {
      }
 
 
-   /*  @Nested
-     class LevelofStock {
-         @Test
-         void ExAboveCalculus_level_of_stock() {
-             Assertions.assertEquals(1, TrasformValue.normalizeStock(List.of(100, 200, 300), 550));
-         }
 
-         @Test
-         void ExLessCalculus_level_of_stock() {
-             Assertions.assertEquals(0.9, TrasformValue.normalizeStock(List.of(100, 200, 200), 550));
-         }
 
-         @Test
-         void ExEqualCalculus_level_of_stock() {
-             Assertions.assertEquals(0.5, TrasformValue.normalizeStock(List.of(100, 150, 300), 550));
-         }
-
-         @Nested
-         class Less {
-             @Test
-             void ExLessCalculus_level_of_stock1() {
-                 Assertions.assertEquals(0.9, TrasformValue.normalizeStock(List.of(100, 200, 200), 550));
+       @ParameterizedTest(name = "stock{0},expected{1}")
+       @CsvSource({"650"})
+       @ValueSource(ints ={650,200,300,100} )
+       @ValueSource(doubles = {})
+             void ExLessCalculus_level_of_stock(int stock,double expected) {
+                 Assertions.assertEquals(expected, TrasformValue.normalizeValue(stock, 550));
              }
 
-             @Test
-             void ExLessCalculus_level_of_stock2() {
-                 Assertions.assertEquals(0.7, TrasformValue.normalizeStock(List.of(100, 100, 200), 550));
-             }
 
-             @Test
-             void ExLessCalculus_level_of_stock3() {
-                 Assertions.assertEquals(0.4, TrasformValue.normalizeStock(List.of(200), 550));
-             }
+        @Nested
+        class AjdustValue{
 
-             @Test
-             void ExLessCalculus_level_of_stock7() {
-                 Assertions.assertEquals(0.4, TrasformValue.normalizeStock(List.of(300), 550));
-             }
 
-             @Test
-             void ExLessCalculus_level_of_stock4() {
-                 Assertions.assertEquals(0.2, TrasformValue.normalizeStock(List.of(100), 550));
-             }
+            @ParameterizedTest()
+            @ValueSource(doubles = {-0.1,1.1})
+            public void InvalidAdjFactor(double normalize_factor) {
+
+                Assertions.assertThrows(IllegalArgumentException.class,()->TrasformValue.adjust_factor(500,normalize_factor));
+            }
+            @ParameterizedTest
+            @CsvSource({"450,500,0.6","550,500,0.4"})
+                 public  void ValidAdjustFactor(double expected,double cost,double factor){
+                Assertions.assertEquals(expected,TrasformValue.adjust_factor(cost,factor));
+            }
+
+
+
+
+
+
+
+
+
+
         }
-
-         }*/
-
-
-
-
 
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

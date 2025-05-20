@@ -15,10 +15,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import pharma.Model.FieldData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -54,6 +51,18 @@ public static final String Misura="Misura";
 
         }
 
+    }
+
+    public static double getRequiredDoubleFromMap(Map<String, String> map, String key) {
+        String value = map.get(key);
+        if (value == null) {
+            throw new IllegalArgumentException("Missing required config key: " + key);
+        }
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number format for key '" + key + "': " + value, e);
+        }
     }
 
 
