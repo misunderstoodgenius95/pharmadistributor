@@ -1,6 +1,7 @@
 package pharma.security;
 
 import org.json.JSONObject;
+import pharma.javafxlib.Controls.Notification.JsonNotify;
 
 
 public class TokenUtility {
@@ -21,6 +22,10 @@ public class TokenUtility {
    public static String extractRole(String json) {
 
         return new JSONObject(json).getJSONObject("user").getJSONObject("trusted_metadata").getString("role");
+    }
+    public  static   String extract_email(String json){
+      return new  JSONObject(new JSONObject(json).getJSONObject("user").getJSONArray("emails").get(0).toString()).getString("email");
+
     }
 
     /**

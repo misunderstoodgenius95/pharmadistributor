@@ -11,6 +11,11 @@ public  class KMeans {
     private  KMeansPlusPlusClusterer<ClusterPoint> cluster;
     private   List<CentroidCluster<ClusterPoint>> centroidClusterList;
     public KMeans(List<ClusterPoint> clusterPoints,int num_cluster) {
+        int n=clusterPoints.size();
+        if(n<num_cluster || n==num_cluster){
+            throw  new IllegalArgumentException("Data Points are less or equal that Cluster");
+
+        }
         this.clusterPoints=clusterPoints;
         cluster =new KMeansPlusPlusClusterer<>(num_cluster,1000,new EuclideanDistance());
         centroidClusterList=cluster.cluster(clusterPoints);

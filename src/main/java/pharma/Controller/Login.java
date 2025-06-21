@@ -17,7 +17,7 @@ import pharma.config.auth.UserServiceResponse;
 import pharma.security.Stytch.StytchClient;
 import pharma.security.TokenUtility;
 
-import javax.print.DocFlavor;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;

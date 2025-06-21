@@ -57,12 +57,12 @@ public HttpResponse<String> create_user(String email, String password,String rol
 
 
     }
-    public HttpResponse<String> authenticate_session_token(String token){
+ /*   public HttpResponse<String> authenticate_session_token(String token){
     HttpRequest httpRequest=stytchRequest.auth_request(EndPoints.getAuth_token(endpoint),PayLoadStytch.buildAuthPayload_token(token));
      return clientHttp.send(httpRequest);
 
 
-    }
+    }*/
     public HttpResponse<String> authenticate_jwt_token(String token){
         HttpRequest httpRequest=stytchRequest.auth_request(EndPoints.getAuth_token(endpoint),PayLoadStytch.buildAuthPayload_jwt_token(token));
         return clientHttp.send(httpRequest);

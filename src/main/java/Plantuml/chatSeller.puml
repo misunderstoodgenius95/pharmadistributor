@@ -1,0 +1,217 @@
+@startuml
+actor Seller as A
+actor Phararmacist as PH
+
+boundary UI
+control Controller as S
+participant "Client Socket" as  WL
+participant "ServerSocket" as W
+activate W
+participant "Certificate Authority" as CA
+entity "Local Storage" as LS
+A->UI:Accede area riservata
+UI->S:Invia richiesta
+S->WL:<<create>>
+PH->UI:Richiede apertura chat
+UI->S:Invia richiesta apertura
+S->WL:<<create>>
+W->W:Genera Coppia Chiave Pu/Pr EDCDHE(X25519)
+WL->WL:Genera Coppia Chiave Pu/Pr EDCDHE(X25519)
+WL->W:Invia richiesta di connessione
+ note right
+ Essa contiene:
+        •  Versioni TLS Da Scegliere [TLS 1.2, 1.3]
+        • Cifrari Supportati
+          • Random Nonce
+        •  Public Key X25519
+    end note
+    W->W:Seleziona  versioneTLS
+    W->W:Seleziona Cifrario
+    W-->WL:Restuisce parametri
+      note left
+        • Seleziona TLS version
+        • Seleziona CHACHA20 POly103 sha250
+        •  Public key x25519
+    end note
+    W->W:Calcola shared Key
+
+    WL->WL:Calcola shared key
+    W->W:Calcolo  Early Secret
+    W->W:Calcolo HandShake Secret
+    W->W:Calcolo Traffic Secret HandShake
+
+    WL->WL:Calcola shared Key
+    WL->WL:Calcola shared key
+    WL->WL:Calcolo  Early Secret
+    WL->WL:Calcolo HandShake Secret
+    WL->WL:Calcolo Traffic Secret
+
+
+    W->W:Genera ChaCha20 key
+    W->W:Calcolo  Base IV
+    W->W:Calcolo Header Base
+    WL->WL:Genera ChaCha20 key
+    WL->WL:Calcolo  Base IV
+    WL->WL:Calcolo Header Base
+
+   W->WL:Invia il primo messaggio crittografato
+    W->WL:Invia il certificato
+    W->WL:Invio firma digitale
+
+    WL->CA:Verifica il cerificato end firma digitale
+alt Cerificato non valido
+WL->WL:Chudi Connesione
+destroy WL
+end if
+
+
+
+    W->WL:Invia  hash(Messaggio) di conferma
+    WL->WL:Ricrea messaggio di conferma
+    WL->W:Verifica messaggio di conferma
+
+    WL->WL:Crea Master Secret
+    WL->WL:Crea Application Traffic Secret
+    WL->WL: Deriva Client Key
+    WL->WL:Deriva Servet Key
+
+        W->W:Crea Master Secret
+        W->W:Crea Application Traffic Secret
+        W->W: Deriva Client Key
+        W->W:Deriva Server Key
+
+
+
+
+par Accept Thread Creation
+loop
+W->W:Wait new Connection
+opt Client Join
+W->W:Accept new Client
+create ClientThread as CT
+W-->CT<<new>>
+end par
+end loop
+end if
+
+par ClientThread
+create ReadTread as RT
+CT->RT<<new>>
+
+
+
+create WriterThread as WT
+CT->WT<<new>>
+end par
+
+
+' Client Thread
+
+par
+loop Connection are active
+ opt  Button is Unblocked
+alt Seller  send message
+A->UI:Scrivi Messagio
+UI->S:Send request
+S->WL:Send Message
+WL->LS:Inserisco messaggio in coda
+else Phararmacist
+PH->UI:Scrivi Mesaggio
+UI->S:Send request
+S->WL:Send Message
+WL->LS:Inserisco messaggio in coda
+end if
+end opt
+end par
+end loop
+
+create  ClientWriterThread as CW
+WL->CW<<new>>
+ par ClientWriterT
+ loop While connection
+CW->LS:Estraggo messaggio in coda
+ CW->W:Invia messaggio;
+
+
+ end loop
+
+end par
+
+ create ClientReadTread as CR
+ WL->CR<<new>>
+
+ par ClientReadThread
+ loop while connection
+ alt "\waiting"
+ CR->S:Mostra messaggio di waiting
+S->S:Blocking button UI
+ else "\join"
+ CR->S:Mostra messaggio di join
+ S->S:Reactive Button UI
+else  "\chatting"
+CR->S:Mostra messaggio chat
+ else "\closing""
+
+ WL->WL:Closing connection
+
+ end loop
+
+ end par
+
+
+
+par ReadThread
+loop while conection is alive
+opt  Messaggio in Arrivo
+
+RT->RT:Estrae il JWT token
+RT->API:Verifica il token
+opt Token valido
+alt "\starting"
+alt   Role  is Seller and not present
+RT->LS:Inserisci Seller
+alt Pharmacist in Wait
+RT->LS:Retrieve pharmacist
+RT->LS: Store Join Chat(Seller,Pharmacist)
+RT->LS:Creo Messaggo di Join Seller
+RT->LS:Creo Messaggi di Join  Pharmacist
+else
+RT->LS:Creo Messaggio di Wait
+end if
+else Role is Phararmacist and not present
+RT->LS:Inserisci Phararmacist
+alt Seller Wait
+RT->LS:Retrieve Seller
+RT->LS: Store Join Chat(Seller,Pharmacist)
+RT->LS:Creo Messaggo di Join Seller
+RT->LS:Creo Messaggi di Join  Pharmacist
+else
+RT->LS:Creo Messaggio di Wait
+end if
+end if
+
+else "\chatting"
+RT->LS:Store message
+else "\closing"
+RT->LS:Delete Chat
+destroy CT
+end opt
+end if
+end opt
+end loop
+end par
+
+
+par WriterTread
+loop while conection is alive
+
+WT->LS:Extract message or log
+WT->WL:Send message
+end loop
+end par
+end if
+
+
+@enduml
+
+@enduml

@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -17,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
@@ -39,6 +41,23 @@ public class SimulateEvents {
         Platform.runLater(()->control.fireEvent(new ActionEvent()));
 
     }
+
+    // because we are firing the event directly at the button, not at a specific pixel.
+    MouseEvent clickEvent = new MouseEvent(
+            MouseEvent.MOUSE_CLICKED, // Event Type
+            0, 0,                     // Local coordinates (relative to button)
+            0, 0,                     // Scene coordinates
+            MouseButton.PRIMARY,      // Which button was clicked
+            1,                        // Click count
+            false, false, false, false, // Modifier keys (shift, ctrl, alt, meta)
+            true,                     // Primary button down
+            false,                    // Middle button down
+            false,                    // Secondary button down
+            false,                    // Is synthesized
+            false,                    // Is popup trigger
+            false,null                      // PickResult
+    );
+
 public static  void fireMouseClick(DatePicker datePicker) {
 
         MouseEvent clickEvent = new MouseEvent(
@@ -47,7 +66,7 @@ public static  void fireMouseClick(DatePicker datePicker) {
                 MouseButton.PRIMARY, 1,
                 true, true, true, true, true, true, true, true, true, true, null
         );
-     Platform.runLater(()->   Event.fireEvent(datePicker, clickEvent));
+        Platform.runLater(()->   Event.fireEvent(datePicker, clickEvent));
 
     }
 

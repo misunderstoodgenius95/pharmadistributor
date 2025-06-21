@@ -13,18 +13,24 @@ module pharma {
     requires rgxgen;
     requires java.rmi;
 
-    requires java.sql;
     requires  org.controlsfx.controls;
-    requires java.desktop;
-    requires java.management;
     requires org.kordamp.ikonli.fontawesome5;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.core;
 
     requires commons.math3;
     requires json.path;
-    requires com.fasterxml.jackson.core;
     requires org.apache.commons.text;
+    requires jdk.xml.dom;
+    requires net.sf.jsqlparser;
+    requires annotations;
+    requires net.datafaker;
+    requires java.management;
+    requires kotlin.stdlib;
+    requires auth0;
+    requires com.fasterxml.jackson.databind;
+    requires java.sql;
+
 
     opens pharma to javafx.fxml;
     exports pharma to javafx.fxml,javafx.graphics;
@@ -62,5 +68,7 @@ exports pharma.Storage;
     exports pharma.javafxlib.test;
     opens pharma.javafxlib.test to javafx.fxml;
     exports pharma.javafxlib.Controls.Notification;
+    opens pharma.testChat to javafx.fxml, javafx.graphics;
+    opens pharma.test2 to javafx.graphics;
     opens pharma.javafxlib.Controls.Notification to javafx.fxml;
 }

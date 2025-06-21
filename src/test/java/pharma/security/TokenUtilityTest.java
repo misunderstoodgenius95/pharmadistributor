@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.yaml.snakeyaml.tokens.Token;
 
 
 import static org.mockito.Mockito.*;
@@ -89,6 +90,64 @@ class TokenUtilityTest {
 
     @Test
     void testCheck_permission() {
+        String extract = "{ \"request_id\":\"request-id-live-97c55986-0f30-4755-be02-2549bf5b93e4\","
+                + "\"session\":{"
+                + "\"attributes\":{\"ip_address\":\"\",\"user_agent\":\"\"},"
+                + "\"authentication_factors\":[{"
+                + "\"created_at\":\"2025-06-04T16:30:30Z\","
+                + "\"delivery_method\":\"knowledge\","
+                + "\"last_authenticated_at\":\"2025-06-04T16:30:30Z\","
+                + "\"type\":\"password\","
+                + "\"updated_at\":\"2025-06-04T16:30:30Z\""
+                + "}],"
+                + "\"custom_claims\":{},"
+                + "\"expires_at\":\"2025-06-04T20:30:30Z\","
+                + "\"last_accessed_at\":\"2025-06-04T16:31:25Z\","
+                + "\"session_id\":\"session-live-6d5cf602-7e9e-40be-9744-331d168d23d4\","
+                + "\"started_at\":\"2025-06-04T16:30:30Z\","
+                + "\"user_id\":\"user-live-5ac3e9bd-ea03-42a0-ad0b-dfe24ee11286\""
+                + "},"
+                + "\"session_jwt\":\"eyJhbGciOi...zFBZqhjB6q-BA\","
+                + "\"session_token\":\"\","
+                + "\"status_code\":200,"
+                + "\"user\":{"
+                + "\"biometric_registrations\":[],"
+                + "\"created_at\":\"2025-04-08T11:35:48Z\","
+                + "\"crypto_wallets\":[],"
+                + "\"emails\":[{"
+                + "\"email\":\"luigi.bianchi@azienda.com\","
+                + "\"email_id\":\"email-live-5cf4bf17-1059-4962-a7ac-9cdb3d7c98a9\","
+                + "\"verified\":false"
+                + "}],"
+                + "\"external_id\":null,"
+                + "\"is_locked\":false,"
+                + "\"lock_created_at\":null,"
+                + "\"lock_expires_at\":null,"
+                + "\"name\":{"
+                + "\"first_name\":\"luigi\","
+                + "\"last_name\":\"bianchi\","
+                + "\"middle_name\":\"\""
+                + "},"
+                + "\"password\":{"
+                + "\"password_id\":\"password-live-67052b05-bcd4-46c8-9fe1-510b54ee5ade\","
+                + "\"requires_reset\":false"
+                + "},"
+                + "\"phone_numbers\":[],"
+                + "\"providers\":[],"
+                + "\"status\":\"active\","
+                + "\"totps\":[],"
+                + "\"trusted_metadata\":{"
+                + "\"permissions\":{\"pharma\":[\"create\",\"read\",\"update\"]},"
+                + "\"role\":\"purchase\""
+                + "},"
+                + "\"untrusted_metadata\":{},"
+                + "\"user_id\":\"user-live-5ac3e9bd-ea03-42a0-ad0b-dfe24ee11286\","
+                + "\"webauthn_registrations\":[]"
+                + "}"
+                + "}";
+      //  System.out.println(TokenUtility.extractRole(extract));
+        System.out.println(TokenUtility.extract_email(extract));
+
 
 
 
