@@ -59,6 +59,9 @@ public class FieldData {
     private  String comune;
     private  UUID uuid;
     private int availability;
+    private String email;
+    private String role;
+    private boolean is_enable;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;

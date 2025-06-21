@@ -1,5 +1,6 @@
 package pharma.security;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import pharma.javafxlib.Controls.Notification.JsonNotify;
 
@@ -20,13 +21,53 @@ public class TokenUtility {
     }
 
    public static String extractRole(String json) {
+       JSONObject jsonObject= extactObjectFromJsonArray(json);
+       if(jsonObject.has("user")){
+           return jsonObject.getJSONObject("user").getJSONObject("trusted_metadata").getString("role");
+       }else{
+           return jsonObject.getJSONObject("trusted_metadata").getString("role");
+       }
 
-        return new JSONObject(json).getJSONObject("user").getJSONObject("trusted_metadata").getString("role");
+    }
+    public static String extract_enabled(String json){
+
+
     }
     public  static   String extract_email(String json){
-      return new  JSONObject(new JSONObject(json).getJSONObject("user").getJSONArray("emails").get(0).toString()).getString("email");
+
+        if(json==null ||json.isEmpty()){
+            throw new IllegalArgumentException("Json is empty or null");
+        }
+        JSONObject jsonObject=extactObjectFromJsonArray(json);
+
+        if(jsonObject.has("user")){
+
+         return new JSONObject(jsonObject.getJSONObject("user").getJSONArray("emails").get(0).toString()).getString("email").toString();
+
+        }else{
+            return new  JSONObject(jsonObject.getJSONArray("emails").get(0).toString()).getString("email");
+
+        }
+
+
 
     }
+
+
+
+    private  static  JSONObject extactObjectFromJsonArray(String json){
+        if(json==null ||json.isEmpty()){
+            throw new IllegalArgumentException("Json is empty or null");
+        }
+        String  trimmed_json=json.trim();
+        String first=trimmed_json.substring(0,1);
+        if(first.equals("[")){
+            return new JSONArray(json).getJSONObject(0);
+        }else{
+            return new JSONObject(json);
+        }
+    }
+
 
     /**
      *

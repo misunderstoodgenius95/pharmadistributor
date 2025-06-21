@@ -1,6 +1,10 @@
 package JPath;
 
+import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.text.StringEscapeUtils;
+
+import java.util.List;
+import java.util.Map;
 
 public class Query {
 
@@ -39,6 +43,11 @@ public class Query {
         }
         //$[?(@.name =~ /(?i).*mak.*/)]
         return "$[?(@." + StringEscapeUtils.escapeJava(key) + " =~ /(?i).*"+StringEscapeUtils.escapeJava(value)+".*/)]";
+    }
+
+    public  static  List<Map<String, Object>> filterUsersByRole(String stytchJsonResponse, String role) {
+        String jsonPath = String.format("$.results[?(@.trusted_metadata.role == '%s')]", role);
+        return JsonPath.read(stytchJsonResponse, jsonPath);
     }
 
 

@@ -15,9 +15,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
+
 
 public class ChatClientApp extends Application {
-
+    private static Logger logger=Logger.getLogger(ChatClientApp.class.getName());
     private TextArea chatArea;
     private TextField messageField;
     private Button sendButton;
@@ -175,4 +179,18 @@ public class ChatClientApp extends Application {
             connection.disconnect();
         }
     }
+
+    public static void message(){
+
+        ExecutorService executorService=Executors.newSingleThreadExecutor();
+        executorService.submit(()->{
+
+            ActiveClient.setPharmacist_map("aaa",new ThreadServerManager(null,null));
+            logger.info("size_message"+ActiveClient.getPharmacist_map().size());
+        });
+
+    }
+
+
+
 }

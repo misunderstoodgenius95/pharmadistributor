@@ -393,3 +393,5 @@ select avg( lotto.elapsed_date-current_date) as remaining
 
 select * from farmaco_all;
 
+
+select * from farmacia

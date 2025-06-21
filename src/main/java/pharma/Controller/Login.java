@@ -69,8 +69,10 @@ public class Login implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        password_field.setText("@a5699910");
-        password_field.setText("&6hF%@&yvBE");
+        //password_field.setText("1+;IeXU,f@j!");
+
+       // user_field.setText("luigi.bianchi@azienda.com");
         user_field.setText("flaviana.buccho@azienda.com");
+        password_field.setText("&6hF%@&yvBE");
     }
 }

@@ -21,6 +21,7 @@ import pharma.test2.Command;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.*;
+import java.util.logging.Logger;
 
 public class ChatPharmacist implements Initializable {
     @FXML
@@ -30,12 +31,14 @@ public class ChatPharmacist implements Initializable {
 
     @FXML
     public VBox wait_panel_id;
-    @FXML
-    public Text textfield_id;
+
     @FXML
     public HBox hbox_header_text;
+    @FXML
     public TextField text_field_id;
+    @FXML
     public Button btn_id;
+    @FXML
     public Button btn_disconnect_id;
 
     @FXML
@@ -47,6 +50,7 @@ public class ChatPharmacist implements Initializable {
     private String email_identify;
     private final String jwt;
     private String receiver_seller;
+    private Logger logger=Logger.getLogger(ChatPharmacist.class.getName());
     public ChatPharmacist(ChatHandler chatHandler, String jwt) {
        this.chatHandler=chatHandler;
        this.objectProperty=new SimpleObjectProperty<>();
@@ -69,12 +73,14 @@ public class ChatPharmacist implements Initializable {
     @FXML
     public void btn_action(ActionEvent actionEvent) {
 
-        String msg= textfield_id.getText();
+        String msg= text_field_id.getText();
         if(!msg.isEmpty()){
             ChatMsg chatMsg=new ChatMsg(jwt,msg,Command.CHATTING,email_identify,"");
             chatClientConnection.sendMessage(chatMsg);
             text_field_id.clear();
-            textarea_id.appendText(email_identify+":"+msg);
+            logger.info(msg);
+            textarea_id.appendText(email_identify+":"+msg+"\n");
+            logger.info("e_identify: "+email_identify);
 
         }
 
@@ -91,11 +97,14 @@ public class ChatPharmacist implements Initializable {
                             wait_panel_id.setVisible(true);
                             textarea_id.appendText("System:"+newValue.getPayload() + "\n");
                             email_identify=newValue.getReceiver();
+                            logger.info("email_id: "+email_identify);
                         }
                         case JOIN_SUCCESS -> {
                             hbox_header_text.setVisible(true);
                             wait_panel_id.setVisible(false);
-                            textarea_id.appendText("SYSTEM"+newValue.getPayload()+"\n");
+                            email_identify=newValue.getReceiver();
+                            textarea_id.appendText("SYSTEM: "+newValue.getPayload()+"\n");
+
 
                         }
                         case Command.CHATTING -> {

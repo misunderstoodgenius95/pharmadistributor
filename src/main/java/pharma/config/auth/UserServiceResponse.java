@@ -1,5 +1,7 @@
 package pharma.config.auth;
 
+import pharma.Model.FieldData;
+
 public class UserServiceResponse {
     private  String body;
     private  int status;

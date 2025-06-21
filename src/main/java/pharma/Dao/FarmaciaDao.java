@@ -61,7 +61,7 @@ public class FarmaciaDao  extends  GenericJDBCDao<FieldData,Integer> {
         String query=" SELECT * FROM  "+ table+" WHERE  ";
         switch(parameter){
             case "comune"-> query= query+" comune = ?  ";
-            case "partita_iva"-> query=query+ " partita_iva = ? ";
+            case "p_iva"-> query=query+ " p_iva = ? ";
             case "ragione_sociale"-> query=query+ " ragione_sociale = ? ";
             default-> throw new IllegalArgumentException("Argument not present!");
         }

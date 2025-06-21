@@ -27,6 +27,12 @@ public class ActiveClient {
         return chat_map.isEmpty();
 
     }
+    public static boolean is_pharmacist_is_present(String pharmacist){
+        return pharmacist_map.containsKey(pharmacist);
+
+    }
+
+
 
 
 
@@ -63,16 +69,14 @@ public class ActiveClient {
             List<String> list=new ArrayList<>();
             list.add(pharmacist);
             chat_map.put(seller,list);
-
         }
         listener_msg(pharmacist,seller);
     }
     private static void listener_msg(String pharmacist,String seller){
-
     ThreadServerManager serverManager_seller=ActiveClient.getInstanceSellerByEmail(seller);
     ThreadServerManager serverManager_pharmacist=ActiveClient.getInstanceThreadPharmacistByEmail(pharmacist);
-    serverManager_pharmacist.sendMessage(ActiveClient.create_msg("Join With Seller",Command.JOIN_SUCCESS,"","SERVER",pharmacist));
-    serverManager_seller.sendMessage(ActiveClient.create_msg("Join with Pharmacist",Command.JOIN_SUCCESS,"","SERVER",seller));
+    serverManager_pharmacist.sendMessage(ActiveClient.create_msg("Join With Seller:"+seller,Command.JOIN_SUCCESS,"","SERVER",pharmacist));
+    serverManager_seller.sendMessage(ActiveClient.create_msg("Join with Pharmacist:"+pharmacist,Command.JOIN_SUCCESS,"","SERVER",seller));
 
 
 
@@ -89,10 +93,12 @@ public class ActiveClient {
 
 
     public static  String  get_SellerJoinChat(String pharma_email){
-        if(pharmacist_map.get(pharma_email)==null){
-            throw  new IllegalArgumentException("pharma email not found");
 
-        }
+            if (pharmacist_map.get(pharma_email) == null) {
+                throw new IllegalArgumentException("pharma email not found");
+
+            }
+
          return ActiveClient.chat_map.keySet().stream().filter(seller->chat_map.get(seller).contains(pharma_email)).findFirst().get();
 
     }

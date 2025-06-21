@@ -30,6 +30,7 @@ module pharma {
     requires auth0;
     requires com.fasterxml.jackson.databind;
     requires java.sql;
+    requires okhttp3.logging;
 
 
     opens pharma to javafx.fxml;
@@ -68,7 +69,6 @@ exports pharma.Storage;
     exports pharma.javafxlib.test;
     opens pharma.javafxlib.test to javafx.fxml;
     exports pharma.javafxlib.Controls.Notification;
-    opens pharma.testChat to javafx.fxml, javafx.graphics;
     opens pharma.test2 to javafx.graphics;
     opens pharma.javafxlib.Controls.Notification to javafx.fxml;
 }

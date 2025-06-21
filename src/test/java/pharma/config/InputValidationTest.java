@@ -3,7 +3,13 @@ package pharma.config;
 
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.accessibility.AccessibleStateSet;
 
@@ -38,21 +44,36 @@ class InputValidationTest  {
 
     }
 
-    @Test
-    void validate_password() {
-        //Valid password
+    @Nested
+     class ValidatePassword {
 
-        Assertions.assertTrue(InputValidation.validate_password("@5&17Vhm5QGp"));
+        @Test
+        void Validate_password() {
+            //Valid password
 
-        //Invalid password
-        Assertions.assertFalse(InputValidation.validate_password("")); // empty
-        Assertions.assertThrows(IllegalArgumentException.class,()->{ //null
-            InputValidation.validate_password(null);
-        });
-        Assertions.assertFalse(InputValidation.validate_password("abcde")); //Less than 12
-        Assertions.assertFalse(InputValidation.validate_password("abcedghilm11@")); //No Upper Case
-        Assertions.assertFalse(InputValidation.validate_password("aMbcedghilm11")); //No special Character
-        Assertions.assertFalse(InputValidation.validate_password("aMbcedghilmiii%"));//No digit
+            //Assertions.assertTrue(InputValidation.validate_password("@5&17Vhm5QGp"));
+            Assertions.assertTrue(InputValidation.validate_password("B!jdH6a5N$g1"));
+        }
+        @Test
+        void InvalidEmpty() {
+            //Invalid password
+            Assertions.assertFalse(InputValidation.validate_password(""));
+        }
+        @Test
+        void InvalidNull() {// empty
+            Assertions.assertThrows(IllegalArgumentException.class, () -> { //null
+                InputValidation.validate_password(null);
+            });
+        }
+        @ParameterizedTest
+        @CsvSource({"abcde","abcedghilm11@","aMbcedghilm11","aMbcedghilmiii%"})
+        public  void InvalidFalse(String input){
+
+            Assertions.assertFalse(InputValidation.validate_password(input)); //Less than 12
+
+        }
+
+
     }
 
     @Test
@@ -124,5 +145,41 @@ class InputValidationTest  {
     void validate_cap() {
         Assertions.assertTrue(InputValidation.validate_cap("98074"));
     }
+    @Nested
+        class Stytch_project_id {
+            @Test
+        void Valid_validate_stytch_project_id() {
+            Assertions.assertTrue(InputValidation.validate_stytch_project_id("project-test-4acd22c0-ef21-4294-97b1-38d96e7a77c2"));
+        }     @Test
+        void Invalid_validate_stytch_project_id() {
+            Assertions.assertThrows(IllegalArgumentException.class,()->InputValidation.validate_stytch_project_id(null));
+        }
+
+
+
+
+        }
+        @Nested
+        class ValidateStytchSecret {
+            @ParameterizedTest
+            @CsvSource({"secret-live-BWW4Lql0pdxl7JqobBndAhqPzIG7BzQlC5U=",
+            "secret-test-ed1zX4Tr-3_zWFncQ_yEkm6o3yzeyJ8vr8Y="})
+            void Validvalidate_stytch_secret_key(String input) {
+                Assertions.assertTrue(InputValidation.validate_stytch_secret_key(input));
+            }
+            @ParameterizedTest
+            @NullSource
+            void InValidvalidate_stytch_secret_keyNull(String input) {
+                Assertions.assertThrows(IllegalArgumentException.class,()->InputValidation.validate_stytch_secret_key(input));
+            }
+            @ParameterizedTest
+            @CsvSource({"secret-live-","secret-live-11111"})
+            void InValidvalidate_stytch_secret_key(String input) {
+                Assertions.assertFalse(InputValidation.validate_stytch_secret_key(input));
+            }
+
+
+
+        }
 }
 

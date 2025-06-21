@@ -66,10 +66,10 @@ current_pharmacist =new SimpleStringProperty(null);
         vBox.setStyle("-fx-border-color: #9ea8a2; -fx-border-width:2px");
         chatHandler = new ChatHandler(vBox,textArea);
         borderPane.setCenter(textArea);
-        chatHandler.getProperty_btn_active().addListener(((observable, oldValue, newValue) -> {
+ /*       chatHandler.getProperty_btn_active().addListener(((observable, oldValue, newValue) -> {
             current_pharmacist.setValue(oldValue.getText());
 
-        }));
+        }));*/
 
         Scene scene=new Scene(borderPane,1000,1000);
         stage.setScene(scene);
@@ -134,17 +134,9 @@ current_pharmacist =new SimpleStringProperty(null);
         }
 
 
+    @Test
+    void extract_sender() {
 
-
-
-
-
-
-
-
-
-
-
-
-
+        Assertions.assertEquals("marco@farmaciamia.com",ChatHandler.extract_sender("Join with Pharmacist:marco@farmaciamia.com").get());
     }
+}

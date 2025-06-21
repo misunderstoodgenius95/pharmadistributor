@@ -10,7 +10,7 @@ public class InputValidation {
 
     private  static  final String p_iva_regex ="^IT[0-9]{11}$";
     private static final String audience_regex="^https:\\/\\/[a-z]+.[a-z]+[\\/]*[a-z]*$";
-    private static final String password_regex="(?=.*[A-Z])*(?=.*[a-z])(?=.*\\d)(?=.*\\W).{8,}";
+    private static final String password_regex="(?=.*[A-Z])*(?=.*[a-z])(?=.*\\d)(?=.*\\W).{11,}";
    // private static  final  String email_regex="^[\\w\\.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static  final String double_digit_regex="^[\\d]*\\.[\\d]*$";
    private static  final  String input_regex="^[\\w]+$";
@@ -18,6 +18,8 @@ public class InputValidation {
      private  final static   String email_regex="^[\\w]+[\\.]*[-]*[\\w]*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
      private final static  String lotto_code="^[\\w]{3,}$";
      private  final  static  String digit="^[0-9]*$";
+     private final  static  String stytch_project_id="^project-[a-z]+-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$";
+     private final  static  String stytch_secret_key="^secret-(test|live)-[ \\w \\- =]{24,40}$";
         private  InputValidation(){
 
 
@@ -97,6 +99,19 @@ public class InputValidation {
         }
         return generic_validation(cap,input);
     }
+    public  static boolean validate_stytch_project_id(String input){
+            if(input==null){
+                throw new IllegalArgumentException("Input is null");
+            }
+            return generic_validation(stytch_project_id,input);
+    }
+    public  static boolean validate_stytch_secret_key(String input){
+        if(input==null){
+            throw new IllegalArgumentException("Input is null");
+        }
+        return generic_validation(stytch_secret_key,input);
+    }
+
 
     public static  boolean get_validation(String id,String text){
         System.out.println("value"+id);

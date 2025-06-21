@@ -22,11 +22,15 @@ import pharma.test2.ChatMsg;
 import pharma.test2.Command;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 public class ChatSeller implements Initializable {
+
     @FXML
     public VBox aside_container_user;
     @FXML
@@ -35,9 +39,8 @@ public class ChatSeller implements Initializable {
     @FXML
     public VBox wait_panel_id;
     @FXML
-    public Text textfield_id;
-    @FXML
     public HBox hbox_header_text;
+    @FXML
     public TextField text_field_id;
     public Button btn_id;
     public Button btn_disconnect_id;
@@ -49,7 +52,8 @@ public class ChatSeller implements Initializable {
     private  ObjectProperty<ChatMsg> objectProperty;
     private ExecutorService  executorService;
     private String email_identify;
-    private final String jwt;
+    private  String jwt;
+    private Logger logger=Logger.getLogger(ChatSeller.class.getName());
 
     public ChatSeller( String jwt) {
        this.objectProperty=new SimpleObjectProperty<>();
@@ -71,12 +75,12 @@ public class ChatSeller implements Initializable {
     @FXML
     public void btn_action(ActionEvent actionEvent) {
 
-        String msg= textfield_id.getText();
+        String msg= text_field_id.getText();
         if(!msg.isEmpty()){
-            ChatMsg chatMsg=new ChatMsg(jwt,msg,Command.CHATTING,email_identify,"");
+            ChatMsg chatMsg=new ChatMsg(jwt,msg,Command.CHATTING,email_identify,chatHandler.getProperty_pharmacist_active());
             chatClientConnection.sendMessage(chatMsg);
             text_field_id.clear();
-            textarea_id.appendText(email_identify+":"+msg);
+            textarea_id.appendText(email_identify+":"+msg+"\n");
 
         }
 
@@ -91,6 +95,9 @@ public class ChatSeller implements Initializable {
                         case Command.WAIT -> {
                             hbox_header_text.setVisible(false);
                             wait_panel_id.setVisible(true);
+
+                            logger.info("receiver: "+newValue.getReceiver());
+                           // chatHandler.add_chat_msg(newValue.getReceiver(), newValue.getJwt());
                             textarea_id.appendText(newValue.getPayload() + "\n");
                             email_identify=newValue.getReceiver();
 
@@ -99,7 +106,12 @@ public class ChatSeller implements Initializable {
                         case JOIN_SUCCESS -> {
                             hbox_header_text.setVisible(true);
                             wait_panel_id.setVisible(false);
-                            textarea_id.appendText(newValue.getPayload()+"\n");
+                            logger.info("Msg"+newValue.getPayload());
+
+                            Optional<String> optional_pharamcist_email=ChatHandler.extract_sender(newValue.getPayload());
+                            optional_pharamcist_email.
+                            ifPresent(string -> chatHandler.add_chat_msg(string, newValue.getPayload() ));
+
                         }
                         case Command.CHATTING -> {
                             textarea_id.appendText(newValue.getSender() + ":" + newValue.getPayload()+"\n");

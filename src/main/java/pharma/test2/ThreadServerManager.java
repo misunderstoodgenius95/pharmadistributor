@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 public class ThreadServerManager implements Runnable {
 
+
     private final SSLSocket sslSocket;
     private final UserService userService;
     private final Logger logger;
@@ -114,13 +115,15 @@ public class ThreadServerManager implements Runnable {
 
                     if (role.equals("seller")) {
                         ActiveClient.setSeller_map(email_identifier, this);
+                        logger.info("email_udem: "+email_identifier);
                         Optional<String> random_pharmacist=ActiveClient.random_pharmacist();
                         if(random_pharmacist.isEmpty()){
+                            // The receiver is always the client that can be conected to sever in wait
                           ChatMsg chatMsg=create_msg("Wait to Join "+role,Command.WAIT,msg.getJwt(),"SERVER",email_identifier);
                           sendMessage(chatMsg);
                         }else{
                            ActiveClient.setJoinChat(random_pharmacist.get(),email_identifier);
-                ;
+
 
                         }
                         // Pharmacist
@@ -128,6 +131,7 @@ public class ThreadServerManager implements Runnable {
                         ActiveClient.setPharmacist_map(email_identifier, this);
                         Optional<String> random_seller=ActiveClient.get_random_seller();
                         if(random_seller.isEmpty()){
+                            // The receiver is always the client that can be conected to sever in wait
                             ChatMsg chatMsg=create_msg("Wait to Join "+role,Command.WAIT,msg.getJwt(),"SERVER",email_identifier);
                             sendMessage(chatMsg);
                         }else{
@@ -141,6 +145,7 @@ public class ThreadServerManager implements Runnable {
 
                     if (role.equals("pharmacist")) {
 
+
                         String seller_email = ActiveClient.get_SellerJoinChat(msg.getSender());
                         ThreadServerManager seller_thread = ActiveClient.getInstanceSellerByEmail(seller_email);
                         seller_thread.sendMessage(msg);
@@ -148,6 +153,14 @@ public class ThreadServerManager implements Runnable {
                         // Cerco il farmacista ed ottengo il seller al suo interno
 
                     } else if (role.equals("seller")) {
+                        ThreadServerManager serverManager_p=ActiveClient.getInstanceThreadPharmacistByEmail(msg.getReceiver());
+                        serverManager_p.sendMessage(msg);
+
+
+
+
+
+
 
                         // Cerco il seller -> N farmacisti
 

@@ -2,6 +2,7 @@ package pharma.config.Json;
 
 import JPath.Query;
 import com.fasterxml.jackson.core.io.JsonEOFException;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.jayway.jsonpath.InvalidPathException;
 import com.jayway.jsonpath.JsonPath;
 import org.json.JSONArray;
@@ -32,5 +33,10 @@ public class ExtractJson {
 
 
     }
+  /*  public static JSONObject extract_all(String json, String query){
+
+
+
+    }*/
 
 }

@@ -1,7 +1,12 @@
 package pharma.test2;
 
-public class Identify {
+import org.postgresql.largeobject.LargeObject;
 
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
+
+public class Identify {
+    private static Logger logger= Logger.getLogger(Identify.class.getName());
    private String email;
     private ThreadServerManager serverManager;
     private boolean is_joined;
@@ -27,4 +32,10 @@ public class Identify {
     public void setIs_joined(boolean is_joined) {
         this.is_joined = is_joined;
     }
+    public static void execute_ispharmacist(){
+        Executors.newSingleThreadExecutor().submit(()->
+        logger.info("size p: "+ActiveClient.getPharmacist_map().size()));
+
+    }
+
 }

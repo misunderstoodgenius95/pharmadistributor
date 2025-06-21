@@ -4,6 +4,8 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.postgresql.replication.fluent.AbstractCreateSlotBuilder;
+import pharma.Controller.subpanel.ChatSeller;
+import pharma.Handler.ChatHandler;
 
 import javax.print.DocFlavor;
 import java.util.*;
@@ -130,6 +132,28 @@ class ActiveClientTest {
         CopyOnWriteArrayList<Identify> phramacist=new CopyOnWriteArrayList<>();
         phramacist.add(new Identify("pico",ts));
     Identify ids=phramacist.stream().filter(identify -> !identify.isIs_joined()).findFirst().get();
+
+    }
+
+    @Test
+    void extract_sender() {
+
+        Assertions.assertEquals("example.com", ChatHandler.extract_sender("Join with Pharmacist:example.com").get());
+    }
+
+
+
+
+    @Test
+    void ValidsetPharmascist(){
+        ActiveClient.setPharmacist_map("luigi.bianchi@azienda.com",ts);
+        ChatClientApp.message();
+        Identify.execute_ispharmacist();
+      //  Assertions.assertEquals(1,ActiveClient.getPharmacist_map().size());
+    /*    if(!ActiveClient.getPharmacist_map().containsKey(email_pharmacist)){
+            throw new IllegalArgumentException("Phramacist not present!"+ ActiveClient.getPharmacist_map().keySet());
+        }
+        */
 
     }
 

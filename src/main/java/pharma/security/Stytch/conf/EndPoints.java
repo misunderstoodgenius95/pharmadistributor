@@ -7,6 +7,9 @@ public class EndPoints {
     private   static  final String create_user="/v1/passwords";
     private static  final  String auth_email_password="/v1/passwords/authenticate";
     private  static  final String auth_token="/v1/sessions/authenticate";
+    private static  final String search_users="/v1/users/search";
+    private static final  String user_revoke="/v1/sessions/revoke";
+    private  static  final  String user_session="/v1/sessions";
     public static String getCreate_user(String endpoint){
 
         return endpoint+create_user;
@@ -17,9 +20,16 @@ public class EndPoints {
     }
     public  static  String getAuth_token(String endpoint){
         return  endpoint+auth_token;
+    }
 
-
-
+    public static String getSearch_users(String endpoint){
+        return  endpoint+search_users;
+    }
+    public static  String getRevoke(String endpoint){
+        return endpoint+user_revoke;
+    }
+    public static String getUser_session(String endpoint){
+        return endpoint+user_session;
     }
 
 

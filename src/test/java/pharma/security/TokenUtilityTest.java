@@ -146,9 +146,50 @@ class TokenUtilityTest {
                 + "}"
                 + "}";
       //  System.out.println(TokenUtility.extractRole(extract));
-        System.out.println(TokenUtility.extract_email(extract));
+        String actual=TokenUtility.extract_email(extract);
+        Assertions.assertEquals("luigi.bianchi@azienda.com",actual);
 
 
+
+
+    }
+
+    @Test
+    public void  ValidTestIsEnable(){
+        StringBuilder json = new StringBuilder();
+        json.append("[{")
+                .append("\"biometric_registrations\":[],")
+                .append("\"created_at\":\"2025-04-09T17:35:52Z\",")
+                .append("\"crypto_wallets\":[],")
+                .append("\"emails\":[{")
+                .append("\"email\":\"flaviana.buccho@azienda.com\",")
+                .append("\"email_id\":\"email-live-9ffbe8f9-a68f-4c38-9b7c-de72b325038e\",")
+                .append("\"verified\":false")
+                .append("}],")
+                .append("\"external_id\":null,")
+                .append("\"is_locked\":false,")
+                .append("\"lock_created_at\":null,")
+                .append("\"lock_expires_at\":null,")
+                .append("\"name\":{")
+                .append("\"first_name\":\"flaviana\",")
+                .append("\"last_name\":\"buccho\",")
+                .append("\"middle_name\":\"\"")
+                .append("},")
+                .append("\"password\":{")
+                .append("\"password_id\":\"password-live-bdfd3e70-f76b-4554-bde8-b72dcee0183d\",")
+                .append("\"requires_reset\":false")
+                .append("},")
+                .append("\"phone_numbers\":[],")
+                .append("\"providers\":[],")
+                .append("\"roles\":[],")
+                .append("\"status\":\"active\",")
+                .append("\"totps\":[],")
+                .append("\"trusted_metadata\":{\"role\":\"seller\", \"is_enable\":true}")
+                .append("\"untrusted_metadata\":{},")
+                .append("\"user_id\":\"user-live-3927dadb-5d0b-4e0e-9738-dda318f29270\",")
+                .append("\"webauthn_registrations\":[]")
+                .append("}]");
+        System.out.println(json);
 
 
     }
