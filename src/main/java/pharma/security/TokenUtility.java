@@ -29,10 +29,10 @@ public class TokenUtility {
        }
 
     }
-    public static String extract_enabled(String json){
+/*    public static String extract_enabled(String json){
 
 
-    }
+    }*/
     public  static   String extract_email(String json){
 
         if(json==null ||json.isEmpty()){

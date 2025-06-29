@@ -105,9 +105,25 @@ public class FieldData {
         this.comune=builder.comune;
         this.uuid=builder.uuid;
         this.availability=builder.availability;
+        this.email=builder.email;
+        this.role=builder.role;
+        this.is_enable= builder.is_enable;
 
 
 
+
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public boolean isIs_enable() {
+        return is_enable;
     }
 
     public UUID getUuid() {
@@ -423,6 +439,9 @@ public class FieldData {
         private  String comune;
         private  UUID uuid;
         private int availability;
+        private String email;
+        private String role;
+        private boolean is_enable;
         private FieldDataBuilder() {
 
         }
@@ -434,6 +453,21 @@ public class FieldData {
             return new FieldDataBuilder();
 
 
+        }
+
+        public FieldDataBuilder setIs_enable(boolean is_enable) {
+            this.is_enable = is_enable;
+            return this;
+        }
+
+        public FieldDataBuilder setRole(String role) {
+            this.role = role;
+            return this;
+        }
+
+        public FieldDataBuilder setEmail(String email) {
+            this.email = email;
+            return this;
         }
 
         public FieldDataBuilder setAvailability(int availability) {

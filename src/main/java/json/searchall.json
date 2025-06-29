@@ -1,0 +1,288 @@
+{
+  "request_id": "request-id-live-62307dff-ea05-4875-a321-44af7b664839",
+  "results": [
+    {
+      "biometric_registrations": [],
+      "created_at": "2025-06-28T07:13:18Z",
+      "crypto_wallets": [],
+      "emails": [
+        {
+          "email": "paolobiasin.rossi@example.com",
+          "email_id": "email-live-506fb0ad-7f76-4d46-9029-62fd71313eba",
+          "verified": false
+        }
+      ],
+      "external_id": null,
+      "is_locked": false,
+      "lock_created_at": null,
+      "lock_expires_at": null,
+      "name": {
+        "first_name": "paolo",
+        "last_name": "biasin",
+        "middle_name": ""
+      },
+      "password": {
+        "password_id": "password-live-16bbb443-b755-4276-8a0a-804ec0a4298f",
+        "requires_reset": false
+      },
+      "phone_numbers": [],
+      "providers": [],
+      "roles": [],
+      "status": "active",
+      "totps": [],
+      "trusted_metadata": {
+        "role": "seller"
+      },
+      "untrusted_metadata": {},
+      "user_id": "user-live-a462acc5-230n-49e3-bb13-9f664e8cc6d1",
+      "webauthn_registrations": []
+    },
+    {
+      "biometric_registrations": [],
+      "created_at": "2025-06-28T07:13:18Z",
+      "crypto_wallets": [],
+      "emails": [
+        {
+          "email": "paola.rossi@example.com",
+          "email_id": "email-live-506fb0ad-7f76-4d46-9029-62fd71313eba",
+          "verified": false
+        }
+      ],
+      "external_id": null,
+      "is_locked": false,
+      "lock_created_at": null,
+      "lock_expires_at": null,
+      "name": {
+        "first_name": "paolo",
+        "last_name": "rossi",
+        "middle_name": ""
+      },
+      "password": {
+        "password_id": "password-live-16bbb443-b755-4276-8a0a-804ec0a4298f",
+        "requires_reset": false
+      },
+      "phone_numbers": [],
+      "providers": [],
+      "roles": [],
+      "status": "active",
+      "totps": [],
+      "trusted_metadata": {
+        "role": "admin"
+      },
+      "untrusted_metadata": {},
+      "user_id": "user-live-a462acc5-230a-49e3-bb13-9f664e8cc6d1",
+      "webauthn_registrations": []
+    },
+    {
+      "biometric_registrations": [],
+      "created_at": "2025-06-17T16:58:29Z",
+      "crypto_wallets": [],
+      "emails": [
+        {
+          "email": "marco@farmaciamia.com",
+          "email_id": "email-live-0c0bda3b-1184-43d2-b6e5-a8290daea8d0",
+          "verified": false
+        }
+      ],
+      "external_id": null,
+      "is_locked": false,
+      "lock_created_at": null,
+      "lock_expires_at": null,
+      "name": {
+        "first_name": "marco",
+        "last_name": "f",
+        "middle_name": ""
+      },
+      "password": {
+        "password_id": "password-live-4dc07aa3-72c6-4f51-973b-85ef64907b6d",
+        "requires_reset": false
+      },
+      "phone_numbers": [],
+      "providers": [],
+      "roles": [],
+      "status": "active",
+      "totps": [],
+      "trusted_metadata": {
+        "is_enable": true,
+        "role": "pharmacist"
+      },
+      "untrusted_metadata": {},
+      "user_id": "user-live-d12c0411-7a47-4fa8-86d2-f3504ba3e72c",
+      "webauthn_registrations": []
+    },
+    {
+      "biometric_registrations": [],
+      "created_at": "2025-05-31T16:39:30Z",
+      "crypto_wallets": [],
+      "emails": [
+        {
+          "email": "neri.pier99o@azienda.com",
+          "email_id": "email-live-de2ba07f-0ccd-4b2b-8de9-198ae46b0d72",
+          "verified": false
+        }
+      ],
+      "external_id": null,
+      "is_locked": false,
+      "lock_created_at": null,
+      "lock_expires_at": null,
+      "name": {
+        "first_name": "",
+        "last_name": "",
+        "middle_name": ""
+      },
+      "password": {
+        "password_id": "password-live-eb5bd0a6-2b05-4090-a281-a2eeafc25482",
+        "requires_reset": false
+      },
+      "phone_numbers": [],
+      "providers": [],
+      "roles": [],
+      "status": "active",
+      "totps": [],
+      "trusted_metadata": {},
+      "untrusted_metadata": {},
+      "user_id": "user-live-6e661a7b-129d-4a91-805b-31e062c40ca4",
+      "webauthn_registrations": []
+    },
+    {
+      "biometric_registrations": [],
+      "created_at": "2025-04-09T17:35:52Z",
+      "crypto_wallets": [],
+      "emails": [
+        {
+          "email": "flaviana.buccho@azienda.com",
+          "email_id": "email-live-9ffbe8f9-a68f-4c38-9b7c-de72b325038e",
+          "verified": false
+        }
+      ],
+      "external_id": null,
+      "is_locked": false,
+      "lock_created_at": null,
+      "lock_expires_at": null,
+      "name": {
+        "first_name": "flaviana",
+        "last_name": "buccho",
+        "middle_name": ""
+      },
+      "password": {
+        "password_id": "password-live-bdfd3e70-f76b-4554-bde8-b72dcee0183d",
+        "requires_reset": false
+      },
+      "phone_numbers": [],
+      "providers": [],
+      "roles": [],
+      "status": "active",
+      "totps": [],
+      "trusted_metadata": {
+        "is_enable": true,
+        "role": "seller"
+      },
+      "untrusted_metadata": {},
+      "user_id": "user-live-3927dadb-5d0b-4e0e-9738-dda318f29270",
+      "webauthn_registrations": []
+    },
+    {
+      "biometric_registrations": [],
+      "created_at": "2025-04-08T11:35:48Z",
+      "crypto_wallets": [],
+      "emails": [
+        {
+          "email": "luigi.bianchi@azienda.com",
+          "email_id": "email-live-5cf4bf17-1059-4962-a7ac-9cdb3d7c98a9",
+          "verified": false
+        }
+      ],
+      "external_id": null,
+      "is_locked": false,
+      "lock_created_at": null,
+      "lock_expires_at": null,
+      "name": {
+        "first_name": "luigi",
+        "last_name": "bianchi",
+        "middle_name": ""
+      },
+      "password": {
+        "password_id": "password-live-67052b05-bcd4-46c8-9fe1-510b54ee5ade",
+        "requires_reset": false
+      },
+      "phone_numbers": [],
+      "providers": [],
+      "roles": [],
+      "status": "active",
+      "totps": [],
+      "trusted_metadata": {
+        "is_enable": true,
+        "permissions": {
+          "credit_note": [
+            "create",
+            "read"
+          ],
+          "details": [
+            "create",
+            "read",
+            "update"
+          ],
+          "lots": [
+            "create",
+            "read",
+            "update"
+          ],
+          "pharma": [
+            "create",
+            "read",
+            "update"
+          ],
+          "product": [
+            "create",
+            "read",
+            "update"
+          ],
+          "purchase_order": [
+            "create",
+            "read"
+          ]
+        },
+        "role": "purchase"
+      },
+      "untrusted_metadata": {},
+      "user_id": "user-live-5ac3e9bd-ea03-42a0-ad0b-dfe24ee11286",
+      "webauthn_registrations": []
+    },
+    {
+      "biometric_registrations": [],
+      "created_at": "2025-04-07T11:57:39Z",
+      "crypto_wallets": [],
+      "emails": [
+        {
+          "email": "donlucadj@gmail.com",
+          "email_id": "email-live-88e58d98-7c44-4be6-8247-5332e8707a62",
+          "verified": false
+        }
+      ],
+      "external_id": null,
+      "is_locked": false,
+      "lock_created_at": null,
+      "lock_expires_at": null,
+      "name": {
+        "first_name": "Luca Giuseppe Caliò",
+        "last_name": "Caliò",
+        "middle_name": ""
+      },
+      "password": null,
+      "phone_numbers": [],
+      "providers": [],
+      "roles": [],
+      "status": "active",
+      "totps": [],
+      "trusted_metadata": {},
+      "untrusted_metadata": {},
+      "user_id": "user-live-b079ae67-d122-4604-a30a-2bdda002be6b",
+      "webauthn_registrations": []
+    }
+  ],
+  "results_metadata": {
+    "next_cursor": null,
+    "total": 6
+  },
+  "status_code": 200
+}

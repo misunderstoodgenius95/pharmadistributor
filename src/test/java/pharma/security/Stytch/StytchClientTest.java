@@ -138,7 +138,7 @@ class StytchClientTest {
         HashMap<String,String> hashMap_json=
                 FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
         stytchClient=new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url"));
-        HttpResponse<String> response=stytchClient.get_session("user-live-5ac3e9bd-ea03-42a0-ad0b-dfe24ee11286");
+        HttpResponse<String> response=stytchClient.get_session("user-live-3927dadb-5d0b-4e0e-9738-dda318f29270");
         System.out.println(response.body());
 
     }

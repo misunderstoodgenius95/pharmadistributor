@@ -1,32 +1,32 @@
 package pharma.config.auth;
 
-import JPath.Query;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import pharma.Model.Session;
+import pharma.Model.User;
 import pharma.Storage.FileStorage;
-import pharma.config.Json.ExtractJson;
 import pharma.security.Stytch.StytchClient;
-import pharma.security.TokenUtility;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
     @Mock
     private StytchClient stytchClient;
     @Mock
-    private HttpResponse<String> httpResponse;
+    private HttpResponse<String> httpResponse_user;
     private UserService userService;
     @BeforeEach
     public  void  setUp(){
@@ -35,9 +35,30 @@ class UserServiceTest {
     }
     @Test
     void ValidSearchUser() {
-        when(httpResponse.statusCode()).thenReturn(200);
-        when(stytchClient.get_users()).thenReturn(httpResponse);
+        when(httpResponse_user.statusCode()).thenReturn(200);
+        when(stytchClient.get_users()).thenReturn(httpResponse_user);
+
         Assertions.assertEquals(200,userService.searchUser().getStatus());
+    }
+
+
+
+    @Test
+    void get_user_byrole() {
+        String jsonContent_user = null;
+        try {
+            jsonContent_user = Files.readString(Paths.get("src/main/java/json/searchall.json"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        when(httpResponse_user.body()).thenReturn(jsonContent_user);
+        when(httpResponse_user.statusCode()).thenReturn(200);
+        when(stytchClient.get_users()).thenReturn(httpResponse_user);
+
+            User user = userService.get_user_byrole("seller");
+                Assertions.assertEquals("paolobiasin.rossi@example.com",user.getResults().getFirst().getEmails().getFirst().getEmail());
+
 
     }
 
@@ -54,18 +75,145 @@ class UserServiceTest {
                 FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
         UserService userService=new UserService(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
         UserServiceResponse ur=userService.searchUser();
+
         System.out.println("before: "+ur.getBody());
-        List<Map<String,Object>> extract=Query.filterUsersByRole(ur.getBody(),"seller");
+
+ /*       List<Map<String,Object>> extract=Query.filterUsersByRole(ur.getBody(),"seller");
         System.out.println("after: "+extract);
         System.out.println("email: "+TokenUtility.extract_email(extract.toString()));
         System.out.println("role: "+TokenUtility.extractRole(extract.toString()));
-
+*/
 
 
 
 
         //Assertions.assertEquals(200,ur.getStatus());
     }
+    public List<User.Results> list(){
+        List<User.Results> list=new ArrayList<>();
+        List<String> roles=List.of("seller_one@example.com,","seller_two@example.com","purchase_three@example.com","purchase_for@example.com");
+       roles.forEach(role->{
+           User.Results results=new User.Results();
+           User.TrustedMetadata usertrussted= new User.TrustedMetadata();
+           String[] splitted=role.split("_");
+
+           usertrussted.setRole(splitted[0]);
+           results.setTrustedMetadata(usertrussted);
+
+           User.Emails emails=new User.Emails(splitted[1]);
+           results.setEmails(List.of(emails));
+
+
+           results.setTrustedMetadata(usertrussted);
+           list.add(results);
+
+
+       });
+
+
+        return list;
+    }
+
+    @Test
+    void extract_Session_role() {
+
+    User user=new User(list());
+
+        User user_extracted=UserService.extract_Session_role(user,"seller");
+        Assertions.assertEquals(2,user.getResults().size());
+    }
+
+
+    @Nested
+    class UserbyEmail {
+        UserService userService;
+        @Mock
+        private HttpResponse<String> httpResponse_session;
+        @Mock
+        private HttpResponse<String> httpResponse_search;
+        @Mock
+        private StytchClient stytchClient;
+        User user;
+        @BeforeEach
+        public void SetUp() throws FileNotFoundException {
+            MockitoAnnotations.openMocks(this);
+            userService=new UserService(stytchClient);
+            String jsonContent_user = null;
+            try {
+                jsonContent_user = Files.readString(Paths.get("src/main/java/json/fileuser.json"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            String jsonContent_session = null;
+            try {
+                jsonContent_session = Files.readString(Paths.get("src/main/java/json/file3.json"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+
+
+            when(httpResponse_session.body()).thenReturn(jsonContent_session);
+            when(httpResponse_session.statusCode()).thenReturn(200);
+            when(stytchClient.get_session(anyString())).thenReturn(httpResponse_session);
+            when(httpResponse_user.body()).thenReturn(jsonContent_user);
+            when(httpResponse_user.statusCode()).thenReturn(200);
+            when(stytchClient.get_user_by_email(anyString())).thenReturn(httpResponse_user);
+            user = userService.searchUserByEmail("flaviana.buccho@azienda.com");
+        }
+
+        @Test
+        public void TestValid(){
+
+
+            Assertions.assertEquals("user-live-3927dadb-5d0b-4e0e-9738-dda318f29270",user.getResults().getFirst().getUser_id());
+
+
+
+        }
+
+
+        @Test
+        void ValidTrustedMetadata() {
+            Assertions.assertEquals("seller", user.getResults().getFirst().getTrustedMetadata().getRole());
+        }
+        @Test
+        void ValidEmail() {
+
+            Assertions.assertNotNull(user.getResults().getFirst().getEmails().getFirst().getEmail());
+        }
+        @Test
+        void ValidTrusted() {
+
+            Assertions.assertNotNull(user.getResults().getFirst().getTrustedMetadata());
+        }
+        @Test
+        void ValidRole() {
+
+            Assertions.assertEquals("seller",user.getResults().getFirst().getTrustedMetadata().getRole());
+        }
+        @Test
+        void ValidIsEnable() {
+
+            Assertions.assertTrue(user.getResults().getFirst().getTrustedMetadata().isIs_enable());
+        }
+        @Test
+        void ValidInstant(){
+
+            Instant instant=Instant.parse("2025-06-30T09:40:08Z");
+            Assertions.assertEquals(instant,user.getLast_access());
+        }
+
+
+
+
+    }
+
+
+
+
+
 
     @Test
     public void ValidExtractResults(){
@@ -73,6 +221,51 @@ class UserServiceTest {
         System.out.println(UserService.extract_results(json));
 
     }
+
+
+
+
+    @Nested
+    class Deserialization_object {
+        Session session;
+
+        @BeforeEach
+        public void setUp() {
+
+
+            String jsonContent = null;
+            try {
+                jsonContent = Files.readString(Paths.get("src/main/java/json/file3.json"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            session = UserService.deserialization_object(jsonContent, Session.class).get();
+        }
+
+        @Test
+        void ValidDeserialization_objectNumber() throws FileNotFoundException {
+
+
+            Assertions.assertEquals(3, session.getSessions().size());
+
+        }
+        @Test
+        void ValidDeserialization_object_number_get_variable(){
+            String value=session.getSessions().getFirst().getAuthenticationFactor().getFirst().getLast_authenticated_at();
+            Assertions.assertEquals("2025-06-30T09:26:19Z",value);
+
+        }
+
+
+        @Test
+        void recent_last_access() {
+        Instant instant_expected= Instant.parse( "2025-06-30T09:40:08Z");
+        Assertions.assertEquals(instant_expected,UserService.recent_last_access(session));
+
+        }
+    }
+
+
 
 
 

@@ -1,0 +1,65 @@
+{
+  "request_id": "request-id-live-363ae387-1d2c-484f-9785-f1cdaae44a74",
+  "session": {
+    "attributes": {
+      "ip_address": "",
+      "user_agent": ""
+    },
+    "authentication_factors": [
+      {
+        "created_at": "2025-06-30T09:40:08Z",
+        "delivery_method": "knowledge",
+        "last_authenticated_at": "2025-06-30T09:40:08Z",
+        "type": "password",
+        "updated_at": "2025-06-30T09:40:08Z"
+      }
+    ],
+    "custom_claims": {},
+    "expires_at": "2025-06-30T13:40:08Z",
+    "last_accessed_at": "2025-06-30T09:40:08Z",
+    "session_id": "session-live-dfd26724-71b0-43c2-9ac3-4f45a3942e42",
+    "started_at": "2025-06-30T09:40:08Z",
+    "user_id": "user-live-3927dadb-5d0b-4e0e-9738-dda318f29270"
+  },
+  "session_jwt": "eyJhbGciOiJSUzI1NiIsImtpZCI6Imp3ay1saXZlLWJkOTNiMWYzLWQ3ZjAtNGY1NS1iMDY1LTgyYzA0MWFkZDVkNSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicHJvamVjdC1saXZlLThlMmZmNTExLTNhZTgtNGRiYy1hYWVhLWQyMzQ1MzE3NDI2MiJdLCJleHAiOjE3NTEyNzY3MDgsImh0dHBzOi8vc3R5dGNoLmNvbS9zZXNzaW9uIjp7ImlkIjoic2Vzc2lvbi1saXZlLWRmZDI2NzI0LTcxYjAtNDNjMi05YWMzLTRmNDVhMzk0MmU0MiIsInN0YXJ0ZWRfYXQiOiIyMDI1LTA2LTMwVDA5OjQwOjA4WiIsImxhc3RfYWNjZXNzZWRfYXQiOiIyMDI1LTA2LTMwVDA5OjQwOjA4WiIsImV4cGlyZXNfYXQiOiIyMDI1LTA2LTMwVDEzOjQwOjA4WiIsImF0dHJpYnV0ZXMiOnsidXNlcl9hZ2VudCI6IiIsImlwX2FkZHJlc3MiOiIifSwiYXV0aGVudGljYXRpb25fZmFjdG9ycyI6W3sidHlwZSI6InBhc3N3b3JkIiwiZGVsaXZlcnlfbWV0aG9kIjoia25vd2xlZGdlIiwibGFzdF9hdXRoZW50aWNhdGVkX2F0IjoiMjAyNS0wNi0zMFQwOTo0MDowOFoifV19LCJpYXQiOjE3NTEyNzY0MDgsImlzcyI6Imh0dHBzOi8vbG9naW4uYXBpbWUub25saW5lIiwibmJmIjoxNzUxMjc2NDA4LCJzdWIiOiJ1c2VyLWxpdmUtMzkyN2RhZGItNWQwYi00ZTBlLTk3MzgtZGRhMzE4ZjI5MjcwIn0.efPzPstPsixzIlHPEnPCm87zgFFh2UuAKn11H950qrOx95_Krjt8GFURLv4hDJbuMCb9Aq0MKPXITBwhUDqto0mQx1V7u5fAGV9KZl5kOd6FaKMAgYnxBH7eg3fVEvbhaxBFkTajtf0WzTRTiKqdUqdIKWgs6eEKLBJERa6q0CPSJyCu53ncOmBGXUxXuCEEMzJ8NhlSTo7VRM-wj8u2JvOJgkkvTvHc4GB4Jkzu6mNBYrBj6jWtamtkWZ9nAbi_SNLsuwHizAuuJX9Dpp5HsrsAfl8vsd_-YAeg_Vk1DoHUmdNg3VxR3NejcJi0YVC4dxAwsPM6RTthlmVRbG3Wyg",
+  "session_token": "QpcIkD_wh4zgjfYmSO8BEuLi48EQ6PiyjlKGWPDP5B10",
+  "status_code": 200,
+  "user": {
+    "biometric_registrations": [],
+    "created_at": "2025-04-09T17:35:52Z",
+    "crypto_wallets": [],
+    "emails": [
+      {
+        "email": "flaviana.buccho@azienda.com",
+        "email_id": "email-live-9ffbe8f9-a68f-4c38-9b7c-de72b325038e",
+        "verified": false
+      }
+    ],
+    "external_id": null,
+    "is_locked": false,
+    "lock_created_at": null,
+    "lock_expires_at": null,
+    "name": {
+      "first_name": "flaviana",
+      "last_name": "buccho",
+      "middle_name": ""
+    },
+    "password": {
+      "password_id": "password-live-bdfd3e70-f76b-4554-bde8-b72dcee0183d",
+      "requires_reset": false
+    },
+    "phone_numbers": [],
+    "providers": [],
+    "roles": [],
+    "status": "active",
+    "totps": [],
+    "trusted_metadata": {
+      "is_enable": true,
+      "role": "seller"
+    },
+    "untrusted_metadata": {},
+    "user_id": "user-live-3927dadb-5d0b-4e0e-9738-dda318f29270",
+    "webauthn_registrations": []
+  },
+  "user_id": "user-live-3927dadb-5d0b-4e0e-9738-dda318f29270"
+}
