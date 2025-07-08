@@ -51,9 +51,13 @@ public class PayLoadStytch {
     }
 
 
-    public static String buildRevoke(String user_id){
-        return new JSONObject().put("session_id",user_id).toString();
+    public static JSONObject buildUpdateTustedMetadataIsEnable(boolean status){
+
+        return new JSONObject().put("trusted_metadata",new JSONObject().put("is_enable",status));
     }
+
+
+
     public static String buildSession(String user_id){
         return new JSONObject().put("user_id",user_id).toString();
     }

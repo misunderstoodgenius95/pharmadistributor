@@ -152,7 +152,7 @@ create table purchase_credit_note
             while (resultSet.next()) {
                 list.add(FieldData.FieldDataBuilder.getbuilder().
                         setId(resultSet.getInt(1)).
-                        setLotto_id(resultSet.getString(2)).
+                        setcode(resultSet.getString(2)).
                         setPrice(resultSet.getDouble("price")).
                         setFarmaco_id(resultSet.getInt("farmaco")).
                         setPurchase_order_id(resultSet.getInt("purchase_order")).

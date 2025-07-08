@@ -16,9 +16,8 @@ public class SpinnerTableCellOrder<K> extends SpinnerTableCells<FieldData,K> {
     public SpinnerTableCellOrder(Class<K> type,  SimpleIntegerProperty s_update, String method) {
         super(type);
         this.method=method;
-     this.s_update=s_update;
-     initialize=false;
-
+        this.s_update=s_update;
+        initialize=false;
         listener();
         K currentValue = getSpinner().getValue();
         if (currentValue instanceof Integer) {

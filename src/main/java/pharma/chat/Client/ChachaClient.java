@@ -281,7 +281,7 @@ public class ChachaClient {
 package pharma.chat.Client;
 
 import javafx.collections.ObservableList;
-import org.w3c.dom.stylesheets.LinkStyle;
+
 import pharma.Storage.FileStorage;
 import pharma.chat.Command;
 import pharma.chat.Server.ChatMsg;

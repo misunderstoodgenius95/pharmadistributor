@@ -21,6 +21,7 @@ import pharma.dao.PharmaDao;
 import java.rmi.AccessException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 
 @ExtendWith(ApplicationExtension.class)
@@ -86,6 +87,22 @@ class PharmaDialogHandlerTest {
         }
     });
 }
+
+    @Test
+    public void test(FxRobot robot){
+        Platform.runLater(()->{
+            PharmaDialogHandler pharmaDialogHandler = new PharmaDialogHandler("Aggiungi Casa farmaceutica", pharmaDao, obs_fieldData);
+            pharmaDialogHandler.show();
+
+
+
+
+
+        });
+        robot.sleep(5000);
+
+
+    }
 
 
 

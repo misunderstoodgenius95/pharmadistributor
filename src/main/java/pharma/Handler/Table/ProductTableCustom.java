@@ -11,9 +11,8 @@ public class ProductTableCustom extends CustomDialog<FieldData> {
 
     public ProductTableCustom(String content) {
         super(content);
-
-        getDialogPane().setPrefWidth(800);
-       getDialogPane().setPrefHeight(500);
+        getDialogPane().setPrefWidth(1200);
+       getDialogPane().setPrefHeight(900);
        add_table_view();
 
 
@@ -30,9 +29,8 @@ public class ProductTableCustom extends CustomDialog<FieldData> {
                 TableUtility.generate_column_string("Casa Farmaceutica","nome_casa_farmaceutica"),
                 TableUtility.generate_column_int("Quantità","quantity"));
 
-
-
     }
+
 
 
     public TableView<FieldData> getTableViewProductTable() {

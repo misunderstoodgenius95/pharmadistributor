@@ -9,17 +9,16 @@ import pharma.Model.Session;
 import pharma.Model.User;
 import pharma.config.InputValidation;
 import pharma.security.Stytch.StytchClient;
+import pharma.security.Stytch.conf.PayLoadStytch;
 
 import java.net.http.HttpResponse;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
 public class UserService {
-    private static final Logger logger= Logger.getLogger(UserService.class.getName());
+    private static final Logger logger = Logger.getLogger(UserService.class.getName());
     private StytchClient stytchClient;
 
     public UserService(StytchClient stytchClient) {
@@ -70,42 +69,45 @@ public class UserService {
 
 
         HttpResponse<String> response = stytchClient.create_user(email, password, role, first_name, surname);
-        return  new UserServiceResponse(response.body(),response.statusCode());
+        return new UserServiceResponse(response.body(), response.statusCode());
 
     }
-    public  UserServiceResponse searchUser(){
-       HttpResponse<String> response=stytchClient.get_users();
-        return  new UserServiceResponse(response.body(), response.statusCode());
+
+    public UserServiceResponse searchUser() {
+        HttpResponse<String> response = stytchClient.get_users();
+        return new UserServiceResponse(response.body(), response.statusCode());
 
     }
-   public  User searchUserByEmail(String email) {
-       HttpResponse<String> json_user_by_search = stytchClient.get_user_by_email(email);
-       if (json_user_by_search.statusCode() == 200) {
-           User user = deserialization_object(json_user_by_search.body(), User.class).get();
-            HttpResponse<String> response=stytchClient.get_session(user.getResults().getFirst().getUser_id());
-        if(response.statusCode()==200){
-            String json_session=response.body();
-            Session session= deserialization_object(json_session, Session.class).get();
-            Instant instant=recent_last_access(session);
-            user.setLast_access(instant);
-       }
-           return user;
-       }
+
+    public User searchUserByEmail(String email) {
+        HttpResponse<String> json_user_by_search = stytchClient.get_user_by_email(email);
+        if (json_user_by_search.statusCode() == 200) {
+            User user = deserialization_object(json_user_by_search.body(), User.class).get();
+            if(!user.getResults().isEmpty()) {
+                HttpResponse<String> response = stytchClient.get_session(user.getResults().getFirst().getUser_id());
+                if (response.statusCode() == 200) {
+                    String json_session = response.body();
+                    Session session = deserialization_object(json_session, Session.class).get();
+                    Instant instant = recent_last_access(session);
+                    user.getResults().getFirst().setLast_access(instant);
+                }
+            }
+            return user;
+        }
         return null;
 
-   }
+    }
 
 
-
-  public  static  <T> Optional<T> deserialization_object(String json, Class<T> tclass){
-        if(json==null || json.isEmpty()){
+    public static <T> Optional<T> deserialization_object(String json, Class<T> tclass) {
+        if (json == null || json.isEmpty()) {
             throw new IllegalArgumentException("json is null or empty");
         }
-        ObjectMapper objectMapper=new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
 
-              return Optional.of(objectMapper.readValue(json,tclass));
+            return Optional.of(objectMapper.readValue(json, tclass));
         } catch (JsonProcessingException e) {
             logger.warning(e.getMessage());
 
@@ -113,23 +115,36 @@ public class UserService {
         return Optional.empty();
 
 
-
     }
-    public User get_user_byrole(String role){
-        if(role==null && role.isEmpty()){
+
+    public User get_user_byRole(String role) {
+        if (role == null && role.isEmpty()) {
             throw new IllegalArgumentException("role is null or empty");
         }
-        HttpResponse<String> response=stytchClient.get_users();
-        User user=deserialization_object(response.body(),User.class).get();
+        HttpResponse<String> response = stytchClient.get_users();
+        User user = deserialization_object(response.body(), User.class).get();
+        return  extract_Session_role(user,role);
 
-        return user;
+
 
     }
 
-    public static User extract_Session_role(User user,String role){
+    public UserServiceResponse user_revocate(String user_id, boolean status) {
+        if (!InputValidation.validate_stytch_user_id(user_id)) {
+            throw new IllegalArgumentException("User id  is not valid");
+        }
+        HttpResponse<String> response=stytchClient.update_user(user_id, PayLoadStytch.buildUpdateTustedMetadataIsEnable(status));
+        return new UserServiceResponse(response.body(),response.statusCode());
 
-        user.getResults().removeIf(result -> !result.getTrustedMetadata().getRole().equals(role));
-        return user;
+    }
+
+
+    public static User extract_Session_role(User user,String role){
+            user.getResults().removeIf(results -> results.getTrustedMetadata().getRole()==null);
+            user.getResults().removeIf(result -> !result.getTrustedMetadata().getRole().equals(role));
+            return user;
+
+
 
 
     }

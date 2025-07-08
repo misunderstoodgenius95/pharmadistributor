@@ -25,7 +25,7 @@ public class FarmaciaView  extends CustomDialog<FieldData> {
         getDialogPane().setPrefHeight(600);
        List<RadioOptions> list=new ArrayList<>(Arrays.asList(new RadioOptions("ragione_sociale","Anagrafica Cliente"),
                 new RadioOptions("comune","Comune"),
-               new RadioOptions("p_iva","Partita Iva"),new RadioOptions("nothing","Nessun campo"))
+               new RadioOptions("p_iva","Partita Iva"))
        );
         toggleGroup=add_radios(list,Mode.Horizontal);
         field_search=add_text_field("Inserisci");

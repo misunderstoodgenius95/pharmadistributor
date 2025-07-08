@@ -1,5 +1,7 @@
 package pharma.security.Stytch.conf;
 
+import org.json.JSONObject;
+
 import java.net.URI;
 import java.net.http.HttpRequest;
 
@@ -55,16 +57,16 @@ public class StytchRequest {
 
 
 
-    public HttpRequest revoke_user( String uri,String session_id_json){
+    public HttpRequest update_user(String uri, JSONObject payload){
         if (uri == null || uri.trim().isEmpty()) {
             throw new IllegalArgumentException("URI cannot be null or empty");
         }
-        if(session_id_json==null || session_id_json.isEmpty()){
+        if(payload ==null){
             throw new IllegalArgumentException(" Payload cannot be null or empty");
 
         }
 
-      return basic_request_post(uri).POST(HttpRequest.BodyPublishers.ofString(session_id_json)).build();
+      return basic_request_post(uri).PUT(HttpRequest.BodyPublishers.ofString(payload.toString())).build();
 
     }
 

@@ -54,7 +54,7 @@ Assertions.assertTrue(actual);
     public  void  test(){
 
 
-        FieldData data1 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("L001")
+        FieldData data1 = FieldData.FieldDataBuilder.getbuilder().setcode("L001")
                 .setNome("Paracetamolo")
                 .setNome_categoria("Antidolorifico")
                 .setNome_tipologia("Compresse")
@@ -66,7 +66,7 @@ Assertions.assertTrue(actual);
                 setAvailability(300)
                 .build();
         FieldData data2 = FieldData.FieldDataBuilder.getbuilder()
-                .setLotto_id("L002")
+                .setcode("L002")
                 .setNome("Ibuprofene")
                 .setNome_categoria("Antinfiammatorio")
                 .setNome_tipologia("Compresse")
@@ -80,7 +80,7 @@ Assertions.assertTrue(actual);
                 .build();
 
         FieldData data3 = FieldData.FieldDataBuilder.getbuilder()
-                .setLotto_id("L003")
+                .setcode("L003")
                 .setNome("Amoxicillina")
                 .setNome_categoria("Antibiotico")
                 .setNome_tipologia("Capsule")

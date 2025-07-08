@@ -36,7 +36,7 @@ class PurchaseOrderDetailDaoTest {
 
     @Test
     public void ValidInsert() throws SQLException {
-        FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setLotto_id("abb1").setTipologia(100).setId(1).setPrice(10.2).setQuantity(10).
+        FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setcode("abb1").setTipologia(100).setId(1).setPrice(10.2).setQuantity(10).
                 setVat_percent(1).build();
         when(preparedStatement.executeUpdate()).thenReturn(1);
         when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
@@ -64,7 +64,7 @@ class PurchaseOrderDetailDaoTest {
         when(database.executeQuery(Mockito.anyString())).thenReturn(resultSet);
         FieldData fd=purchaseOrderDetailDao.findAll().getFirst();
         Assertions.assertEquals(1,fd.getId());
-        Assertions.assertEquals("aaa",fd.getLotto_id());
+        Assertions.assertEquals("aaa",fd.getCode());
         Assertions.assertEquals(2,fd.getTipologia());
         Assertions.assertEquals(100,fd.getCategoria());
         Assertions.assertEquals(10.1,fd.getPrice());
@@ -98,7 +98,7 @@ class PurchaseOrderDetailDaoTest {
 
         FieldData fd=purchaseOrderDetailDao.findDetailbyPurchaseOrderId(15).getFirst();
         Assertions.assertEquals(1,fd.getId());
-        Assertions.assertEquals("aaa",fd.getLotto_id());
+        Assertions.assertEquals("aaa",fd.getCode());
         Assertions.assertEquals(100,fd.getPurchase_order_id());
         Assertions.assertEquals(10.1,fd.getPrice());
         Assertions.assertEquals(10,fd.getQuantity());
@@ -130,7 +130,7 @@ class PurchaseOrderDetailDaoTest {
         try {
             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
             purchaseOrderDetailDao=new PurchaseOrderDetailDao(Database.getInstance(properties));
-            boolean value=purchaseOrderDetailDao.insert(FieldData.FieldDataBuilder.getbuilder().setLotto_id("m20733").setPurchase_order_id(15).setFarmaco_id(60).setId(1).setPrice(10.2).setQuantity(10).
+            boolean value=purchaseOrderDetailDao.insert(FieldData.FieldDataBuilder.getbuilder().setcode("m20733").setPurchase_order_id(15).setFarmaco_id(60).setId(1).setPrice(10.2).setQuantity(10).
                     setVat_percent(1).build());
             Assertions.assertTrue(value);
 

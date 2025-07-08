@@ -6,13 +6,14 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import pharma.Model.FieldData;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
-
+public abstract class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
+// using a list for isnert checkbox
     private final ObservableMap<S, CheckBox> checkBoxMap;
     public CheckBoxTableColumn(String columnn_header) {
         setText(columnn_header);
@@ -65,4 +66,6 @@ public class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
     public ObservableMap<S, CheckBox> getCheckBoxMap() {
         return checkBoxMap;
     }
+
+    protected abstract void selectedRow(FieldData data);
 }

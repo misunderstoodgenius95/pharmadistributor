@@ -125,6 +125,18 @@
             <artifactId>commons-math3</artifactId>
             <version>3.6.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>22</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
 
 
         <dependency>
@@ -139,12 +151,23 @@
             <version>3.0.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.postgis</groupId>
+            <artifactId>postgis-jdbc</artifactId>
+            <version>2025.1.1</version>
+        </dependency>
     </dependencies>
 
  <build>
 <plugins>
+    <plugin>
+        <groupId>com.github.jeluard</groupId>
+        <artifactId>plantuml-maven-plugin</artifactId>
+        <version>1.2</version>
+    </plugin>
 
     <plugin>
+
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
@@ -164,7 +187,12 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
                 <argLine>
-                    --add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                    --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                    --add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                    --add-opens javafx.base/com.sun.javafx.reflect=ALL-UNNAMED
+                    --add-opens javafx.base/com.sun.javafx.beans=ALL-UNNAMED
+                    --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
+                    --add-opens javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED
                     -Dapple.awt.UIElement=true
 
                 </argLine>

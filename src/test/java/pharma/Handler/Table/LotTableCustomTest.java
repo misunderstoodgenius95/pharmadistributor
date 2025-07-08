@@ -129,6 +129,15 @@ Platform.runLater(()->{
 
 
     }
+        @Test
+    public void test(FxRobot fx){
+      Platform.runLater(()->{
+
+
+      });
+
+        fx.sleep(10000000);
+    }
 
     @Test
     public  void ValidDisableTest(FxRobot robot) {
@@ -170,6 +179,7 @@ Platform.runLater(()->{
 
     }
 
+
     @Test
     public  void ValidVerifySelectedCheckBox(FxRobot robot) {
 
@@ -201,7 +211,13 @@ Platform.runLater(()->{
 
              */
         });
-//robot.sleep(40000);
+
+
+    }
+
+    @Test
+    void check_validateProperty() {
+
 
     }
 

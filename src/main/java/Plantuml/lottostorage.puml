@@ -1,0 +1,51 @@
+@startuml
+actor Magazziniere as M
+boundary  UI as UI
+control Controller as S
+entity Database as D
+M->UI:Inserisce numero lotto
+UI->S:Invia numero lotto
+S->D:Richiedi lotto
+D-->S:Recupera lotto
+opt Lotto non trovato
+break
+S-->UI:Mostra messaggio lotto non trovato
+end
+end
+S->D:Richiedi  magazzini
+D-->S:Recupera magazzini
+M->UI:Inserisci altezza
+M->UI:Inserisci lunghezza
+M->UI:Inserisci profondità
+M->UI:Conferma scelte
+UI->S:Invia dati
+loop finchè non conferma
+S->D:Richiedi ripiano con (Altezza,larghezza e profindità)
+S->D:Rihiedi prodotto
+alt trova ripiano
+D->S:Restuisce il ripiano
+S->UI:Mostra il ripiano e lo scaffale
+M->UI:Conferma o rifiuta
+
+else
+S->D:Richiedi ripiani corrispondenti al lotto
+alt Rpiani trovati
+D-->S:Restuisce ripiani
+S->UI:Mostra i ripiani e gli scaffali
+M->UI:Conferma o rifiuta
+else Nessun ripiano
+
+break
+D-->S:Restruisce nessun ripiano
+S-->UI:Mostra nessun ripiano trovato
+end
+end
+end
+end
+opt conferma
+S->D:Riduco le dimensioni dei ripiani
+D-->S:Conferma riduzione
+S->D:Salvo i dati
+
+end
+@enduml

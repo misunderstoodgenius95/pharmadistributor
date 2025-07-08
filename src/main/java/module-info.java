@@ -1,6 +1,5 @@
 module pharma {
 
-    requires java.net.http;
     requires javafx.fxml;
     requires org.json;
     requires  org.testfx;
@@ -21,7 +20,6 @@ module pharma {
     requires commons.math3;
     requires json.path;
     requires org.apache.commons.text;
-    requires jdk.xml.dom;
     requires net.sf.jsqlparser;
     requires annotations;
     requires net.datafaker;
@@ -30,13 +28,16 @@ module pharma {
     requires auth0;
     requires com.fasterxml.jackson.databind;
     requires java.sql;
-    requires okhttp3.logging;
+    requires net.postgis.jdbc.geometry;
+    requires javafx.web;
+    requires okhttp3;
+    requires java.net.http;
+    requires net.postgis.jdbc;
 
 
     opens pharma to javafx.fxml;
     exports pharma to javafx.fxml,javafx.graphics;
 opens pharma.Controller to javafx.fxml;
-
 opens pharma.Controller.subpanel to javafx.fxml;
 exports  pharma.config;
 exports pharma.Controller.subpanel to javafx.fxml;
@@ -71,5 +72,7 @@ exports pharma.Storage;
     exports pharma.javafxlib.Controls.Notification;
     opens pharma.test2 to javafx.graphics;
     opens pharma.javafxlib.Controls.Notification to javafx.fxml;
+    exports algo to javafx.fxml, javafx.graphics;
+    opens algo to javafx.fxml;
 
 }

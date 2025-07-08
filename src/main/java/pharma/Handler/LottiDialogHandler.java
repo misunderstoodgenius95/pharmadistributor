@@ -96,7 +96,7 @@ public class LottiDialogHandler  extends DialogHandler<FieldData> {
         }
         System.out.println("id"+fieldData_row.getId());
         return FieldData.FieldDataBuilder.getbuilder().
-                setLotto_id(lotto_code.getText()).
+                setcode(lotto_code.getText()).
                 setFarmaco_id(fieldData_row.getId()).
                 setProduction_date(Date.valueOf(production_date.getValue()))
                 .setElapsed_date(Date.valueOf(elapsed_date.getValue())).

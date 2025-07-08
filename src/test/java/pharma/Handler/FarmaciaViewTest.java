@@ -26,6 +26,7 @@ import pharma.dao.FarmaciaDao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -129,6 +130,25 @@ class FarmaciaViewTest {
 
         });
     }
+
+    @Test
+    public void testExecution(FxRobot robot){
+        Platform.runLater(()->{
+            farmaciaView = new FarmaciaView("Ricerca Casa Farmaceutica", farmaciaDao, observableList);
+            farmaciaView.show();
+
+
+
+
+
+
+        });
+        robot.sleep(5000);
+
+
+    }
+
+
 
 
 

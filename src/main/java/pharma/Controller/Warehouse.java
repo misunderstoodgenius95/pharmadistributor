@@ -1,4 +1,5 @@
 package pharma.Controller;
 
-public class Warehouser {
+public class Warehouse {
+
 }

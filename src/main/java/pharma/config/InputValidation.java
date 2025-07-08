@@ -7,7 +7,8 @@ import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 
 public class InputValidation {
-
+    private static final String latitude_regex="^-?([0-8]?[0-9](\\.[0-9]{1,15})?|90(\\.0{1,15})?)$";
+    private  static final String longitude_regex="^-?(1[0-7][0-9](\\.[0-9]{1,15})?|180(\\.0{1,15})?|[0-9]{1,2}(\\.[0-9]{1,15})?)$";
     private  static  final String p_iva_regex ="^IT[0-9]{11}$";
     private static final String audience_regex="^https:\\/\\/[a-z]+.[a-z]+[\\/]*[a-z]*$";
     private static final String password_regex="(?=.*[A-Z])*(?=.*[a-z])(?=.*\\d)(?=.*\\W).{11,}";
@@ -20,6 +21,7 @@ public class InputValidation {
      private  final  static  String digit="^[0-9]*$";
      private final  static  String stytch_project_id="^project-[a-z]+-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$";
      private final  static  String stytch_secret_key="^secret-(test|live)-[ \\w \\- =]{24,40}$";
+     private final static  String stytch_user_id="^user-(test|live)-[a-f\\d]{8}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{4}-[a-f\\d]{12}$";
         private  InputValidation(){
 
 
@@ -111,10 +113,17 @@ public class InputValidation {
         }
         return generic_validation(stytch_secret_key,input);
     }
+    public static  boolean validate_stytch_user_id(String input){
+            if(input==null){
+                throw new IllegalArgumentException("Input is null");
+            }
+            return generic_validation(stytch_user_id,input);
+    }
+
 
 
     public static  boolean get_validation(String id,String text){
-        System.out.println("value"+id);
+        
         return switch (id) {
             case "Email" -> validate_email(text);
             case "Password" -> validate_password(text);
@@ -122,17 +131,30 @@ public class InputValidation {
             case "Double_Digit"->validate_double_digit(text);
             case "Lotto_code"->validate_lotto_code(text);
             case"Cap"->validate_cap(text);
+            case "lat"->validate_lat(text);
+            case "lng"->validate_lng(text);
             default -> false;
 
 
         };
     }
 
+    public static boolean validate_lng(String text) {
+        if(text==null){
+            throw new IllegalArgumentException("Input is null");
+        }
+        return generic_validation(longitude_regex,text);
+    }
 
 
 
+   public static boolean validate_lat(String text) {
 
-
+        if(text==null){
+            throw new IllegalArgumentException("Input is null");
+        }
+        return generic_validation(latitude_regex,text);
+    }
 
 
 

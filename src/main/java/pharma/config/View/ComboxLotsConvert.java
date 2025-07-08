@@ -19,7 +19,7 @@ private SimpleStringProperty simpleStringProperty;
     public String toString(FieldData fieldData) {
       if(fieldData!=null) {
         if(simpleStringProperty.get().equals("Lotto")) {
-            return fieldData.getLotto_id();
+            return fieldData.getCode();
         }else if(simpleStringProperty.get().equals("Farmaco")){
             return  fieldData.getNome();
         }

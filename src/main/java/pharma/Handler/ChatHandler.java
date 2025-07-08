@@ -15,7 +15,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import okhttp3.logging.HttpLoggingInterceptor;
+
 import pharma.Storage.FileStorage;
 import pharma.config.auth.ExpireToken;
 import pharma.config.auth.UserService;
