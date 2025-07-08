@@ -44,6 +44,22 @@ class InputValidationTest  {
 
     }
 
+    @Test
+    void validate_stytch_user_id() {
+
+        Assertions.assertTrue(InputValidation.validate_stytch_user_id("user-test-16d9ba61-97a1-4ba4-9720-b03761dc50c6"));
+    }
+
+    @Test
+    void validate_lng() {
+       Assertions.assertTrue(InputValidation.validate_lng("-39.09529473"));
+    }
+
+    @Test
+    void validate_lat() {
+        Assertions.assertTrue(InputValidation.validate_lat("-18.818886984"));
+    }
+
     @Nested
      class ValidatePassword {
 

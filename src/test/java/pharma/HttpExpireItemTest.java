@@ -41,13 +41,13 @@ import static org.mockito.Mockito.when;
     }
 
     public  static  ObservableList<FieldData> get_list(){
-        FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setLotto_id("11a").
+        FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setcode("11a").
                 setFarmaco_id(30).
                 setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
-        FieldData fieldData_1 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("31a").
+        FieldData fieldData_1 = FieldData.FieldDataBuilder.getbuilder().setcode("31a").
                 setFarmaco_id(20).
                 setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
-        FieldData fieldData_3 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("21a").
+        FieldData fieldData_3 = FieldData.FieldDataBuilder.getbuilder().setcode("21a").
                 setFarmaco_id(10).
                 setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
         return  FXCollections.observableArrayList(fieldData,fieldData_1,fieldData_3);
@@ -184,7 +184,7 @@ import static org.mockito.Mockito.when;
             jsonObject_actutal.put("farmaco_id", 60);
             jsonObject_actutal.put("expiration_date", "10/10/2028");
             jsonObject_actutal.put("time_of_day", 30);
-            FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setLotto_id("11a").setFarmaco_id(60).setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
+            FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setcode("11a").setFarmaco_id(60).setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
             JSONObject expected = HttpExpireItem.fieldata_to_json(fieldData, 30);
             System.out.println(expected);
             Assertions.assertEquals(expected.toString(), jsonObject_actutal.toString());
@@ -219,7 +219,7 @@ import static org.mockito.Mockito.when;
                 jsonObject_actutal.put("farmaco_id", 60);
                 jsonObject_actutal.put("expiration_date", "10/10/2028");
                 jsonObject_actutal.put("time_of_day", 30);
-                FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setLotto_id("11a").setFarmaco_id(60).setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
+                FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setcode("11a").setFarmaco_id(60).setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
 
                 Assertions.assertThrows(IllegalArgumentException.class, () -> {
                     HttpExpireItem.fieldata_to_json(fieldData, 0);
@@ -288,13 +288,13 @@ import static org.mockito.Mockito.when;
         }
         @Test
         public void Invalid_Zero_Expiration_days_Fieldata_to_json_array(){
-            FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setLotto_id("11a").
+            FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setcode("11a").
                     setFarmaco_id(30).
                     setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
-            FieldData fieldData_1 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("31a").
+            FieldData fieldData_1 = FieldData.FieldDataBuilder.getbuilder().setcode("31a").
                     setFarmaco_id(20).
                     setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
-            FieldData fieldData_3 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("21a").
+            FieldData fieldData_3 = FieldData.FieldDataBuilder.getbuilder().setcode("21a").
                     setFarmaco_id(10).
                     setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
             Assertions.assertThrows(IllegalArgumentException.class,()-> {
@@ -307,7 +307,7 @@ import static org.mockito.Mockito.when;
         }
         @Test
         public void ValidFieldata_to_json_array(){
-            FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setLotto_id("11a").
+            FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setcode("11a").
                     setFarmaco_id(30).
                     setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
 
@@ -319,7 +319,7 @@ import static org.mockito.Mockito.when;
             json1.put("expiration_date", "10/10/2028");
             json1.put("time_of_day", 30);
 
-            FieldData fieldData_2 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("31a").
+            FieldData fieldData_2 = FieldData.FieldDataBuilder.getbuilder().setcode("31a").
                     setFarmaco_id(20).
                     setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
             JSONObject json2 = new JSONObject();
@@ -335,7 +335,7 @@ import static org.mockito.Mockito.when;
             json3.put("time_of_day", 30);
             jsonArray_expected.putAll(List.of(json1,json2,json3));
 
-            FieldData fieldData_3 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("41a").
+            FieldData fieldData_3 = FieldData.FieldDataBuilder.getbuilder().setcode("41a").
                     setFarmaco_id(20).
                     setElapsed_date(Date.valueOf(LocalDate.of(2028, 10, 10))).build();
 

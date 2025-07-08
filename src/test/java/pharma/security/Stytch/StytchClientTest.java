@@ -37,7 +37,6 @@ class StytchClientTest {
 
 
 
-
     @Nested
     class Login{
         @Test
@@ -123,16 +122,7 @@ class StytchClientTest {
             HttpResponse<String> response=stytchClient.get_user_by_email("flaviana.buccho@azienda.com");
         System.out.println(response.body());
     }
-    @Test
-    void Validget_revoke() throws FileNotFoundException {
 
-        HashMap<String,String> hashMap_json=
-                FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
-        stytchClient=new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url"));
-        HttpResponse<String> response=stytchClient.revoke_user("session-live-229996f7-78fa-455b-a655-e362c68cd377");
-        System.out.println(response.body());
-
-    }
     @Test
     void ValidGetSession() throws FileNotFoundException {
         HashMap<String,String> hashMap_json=

@@ -20,7 +20,7 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
     protected FieldData mapRow(ResultSet resultSet) throws Exception {
         return  FieldData.FieldDataBuilder.getbuilder().
                 setId(resultSet.getInt(1)).
-                setLotto_id(resultSet.getString(2)).
+                setcode(resultSet.getString(2)).
                 setPrice(resultSet.getDouble("price")).
                 setNome_casa_farmaceutica(resultSet.getString("nome_farmaco")).
                 setPurchase_order_id(resultSet.getInt("purchase_order")).
@@ -59,7 +59,7 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected void setInsertParameter(PreparedStatement statement, FieldData entity) throws Exception {
-        statement.setString(1,entity.getLotto_id());
+        statement.setString(1,entity.getCode());
         statement.setInt(2,entity.getFarmaco_id());
         statement.setInt(3,entity.getPurchase_order_id());
         statement.setDouble(4,entity.getPrice());
@@ -92,7 +92,7 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
             while (resultSet.next()) {
                 list.add(  FieldData.FieldDataBuilder.getbuilder().
                         setId(resultSet.getInt(1)).
-                        setLotto_id(resultSet.getString(2)).
+                        setcode(resultSet.getString(2)).
                         setPrice(resultSet.getDouble("price")).
                         setFarmaco_id(resultSet.getInt("farmaco")).
                         setPurchase_order_id(resultSet.getInt("purchase_order")).

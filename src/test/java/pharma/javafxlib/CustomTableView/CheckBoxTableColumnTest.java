@@ -83,7 +83,6 @@ class CheckBoxTableColumnTest {
 
 
         });
-        //robot.sleep(400000);
 
 
     }

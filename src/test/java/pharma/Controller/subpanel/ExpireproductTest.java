@@ -62,7 +62,7 @@ class ExpireproductTest {
     @Test
     public void ValidTestRemoveFirstElementByContextMenu(FxRobot robot) {
         TableView<FieldData> tableView = robot.lookup("#table_id").queryAs(TableView.class);
-        FieldData data1 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("L001")
+        FieldData data1 = FieldData.FieldDataBuilder.getbuilder().setcode("L001")
                 .setNome("Paracetamolo")
                 .setNome_categoria("Antidolorifico")
                 .setNome_tipologia("Compresse")
@@ -74,7 +74,7 @@ class ExpireproductTest {
                 setAvailability(300)
                 .build();
         FieldData data2 = FieldData.FieldDataBuilder.getbuilder()
-                .setLotto_id("L002")
+                .setcode("L002")
                 .setNome("Ibuprofene")
                 .setNome_categoria("Antinfiammatorio")
                 .setNome_tipologia("Compresse")
@@ -88,7 +88,7 @@ class ExpireproductTest {
                 .build();
 
         FieldData data3 = FieldData.FieldDataBuilder.getbuilder()
-                .setLotto_id("L003")
+                .setcode("L003")
                 .setNome("Amoxicillina")
                 .setNome_categoria("Antibiotico")
                 .setNome_tipologia("Capsule")
@@ -119,7 +119,7 @@ class ExpireproductTest {
         TableView<FieldData> tableView = robot.lookup("#table_id").queryAs(TableView.class);
         Spinner<Integer> spinner=robot.lookup("#spinner_id_days").queryAs(Spinner.class);
         Button  button_send=robot.lookup("#btn_send").queryAs(Button.class);
-        FieldData data1 = FieldData.FieldDataBuilder.getbuilder().setLotto_id("L001")
+        FieldData data1 = FieldData.FieldDataBuilder.getbuilder().setcode("L001")
                 .setNome("Paracetamolo")
                 .setNome_categoria("Antidolorifico")
                 .setNome_tipologia("Compresse")
@@ -131,7 +131,7 @@ class ExpireproductTest {
                 setAvailability(300)
                 .build();
         FieldData data2 = FieldData.FieldDataBuilder.getbuilder()
-                .setLotto_id("L0002")
+                .setcode("L0002")
                 .setNome("Ibuprofene")
                 .setNome_categoria("Antinfiammatorio")
                 .setNome_tipologia("Compresse")
@@ -145,7 +145,7 @@ class ExpireproductTest {
                 .build();
 
         FieldData data3 = FieldData.FieldDataBuilder.getbuilder()
-                .setLotto_id("L0003")
+                .setcode("L0003")
                 .setNome("Amoxicillina")
                 .setNome_categoria("Antibiotico")
                 .setNome_tipologia("Capsule")

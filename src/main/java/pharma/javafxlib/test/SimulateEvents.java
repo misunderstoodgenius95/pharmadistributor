@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.controlsfx.control.SearchableComboBox;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
 
@@ -238,6 +239,9 @@ public static  void fireMouseClick(DatePicker datePicker) {
     }
     public static  void setSpinner(Spinner<Integer> spinner,int value){
        Platform.runLater(()-> spinner.getValueFactory().setValue(value));
+    }
+    public static <T> void setFirstElementSearchableBox(SearchableComboBox<T> searchableBox){
+        searchableBox.setValue(searchableBox.getItems().getFirst());
     }
     public static <T> void  setFirstElementChoiceBox(ChoiceBox<T> choiceBox){
  setNElementChoiceBox(choiceBox,0);

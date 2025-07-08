@@ -18,8 +18,8 @@ public class InvoicexConvert  extends StringConverter<FieldData> {
         }
         if (type.equals(Type.order_id)) {
 
-            if (object.getLotto_id() != null) {
-                return object.getLotto_id();
+            if (object.getCode()!= null) {
+                return object.getCode();
 
             } else {
                 return "" + object.getId();

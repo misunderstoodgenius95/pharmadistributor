@@ -8,23 +8,27 @@ import java.util.List;
 
 public class User {
     private List<Results> results;
+    @JsonIgnore
+    private int status;
 
-    private Instant last_access;
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public User() {
 
     }
+
 
     public User(List<Results> results) {
         this.results = results;
     }
 
-    public Instant getLast_access() {
-        return last_access;
-    }
 
-    public void setLast_access(Instant last_access) {
-        this.last_access = last_access;
-    }
 
     public List<Results> getResults() {
         return results;
@@ -85,6 +89,7 @@ public class User {
     public static class  Results{
         private  String user_id;
         private  List<Emails> emails;
+        private Instant last_access;
         @JsonProperty("trusted_metadata")
         private  TrustedMetadata trustedMetadata;
 
@@ -95,6 +100,13 @@ public class User {
             this.user_id = user_id;
             this.emails = emails;
             this.trustedMetadata = trustedMetadata;
+        }
+        public Instant getLast_access() {
+            return last_access;
+        }
+
+        public void setLast_access(Instant last_access) {
+            this.last_access = last_access;
         }
 
         public String getUser_id() {

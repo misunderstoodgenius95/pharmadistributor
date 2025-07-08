@@ -1,0 +1,45 @@
+@startuml
+
+
+skinparam classAttributeIconSize 0
+class Magazzino{
++ nome
+}
+
+ class Lots{
+  + DataDiproduzione
+  + Datadiscadenza
+  + quantità
+  + prezzo
+
+ }
+ class Scaffale{
+ +Magazzino
++Lunghezza
++Altezza
++Spessore
++num_Ripiani
+ }
+  class LottoStorage{
+Ripiano
+    +altezza
+    +larghezza
+    +profondità
+    +quantità_memorizza
+  }
+
+  class Ripiano{
+  +Scaffale
+  +num_ripiano
+  +Lunghezza_corrente
+ +Altezza_corrente
+ +Spessore Corrente
+  }
+note right  : Ripiano è relativo alla disponibilità
+Scaffale o-- Ripiano:contiene
+
+Magazzino o-- Scaffale:contiene
+
+Lots o-- LottoScaffale:contiene
+Ripiano o-- LottoStorage:contiene
+@enduml

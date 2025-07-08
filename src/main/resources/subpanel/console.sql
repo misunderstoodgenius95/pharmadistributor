@@ -9,7 +9,11 @@ WHERE i.indrelid = 'purchase_order_detail'::regclass
 
 SELECT column_name
 FROM information_schema.columns
-WHERE table_name = 'purchase_order_detail';
+WHERE table_name = 'farmacia';
+ alter table farmacia
+     add columns   geography(point,4326);
+
+
 
 drop table  lotto;
 
@@ -395,3 +399,11 @@ select * from farmaco_all;
 
 
 select * from farmacia
+
+
+create
+
+
+
+
+

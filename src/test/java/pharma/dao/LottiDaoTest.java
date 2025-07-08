@@ -52,7 +52,7 @@ class LottiDaoTest {
         PreparedStatement preparedStatement = Mockito.mock(PreparedStatement.class);
 
 
-        FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setLotto_id("b9188j").setTipologia(1).
+        FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().setcode("b9188j").setTipologia(1).
                 setProduction_date(Date.valueOf(LocalDate.of(2024, 10, 10))).
                 setElapsed_date(Date.valueOf(LocalDate.of(2025, 10, 01))).build();
         when(preparedStatement.executeUpdate()).thenReturn(1);
@@ -151,7 +151,7 @@ class LottiDaoTest {
             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
             lottiDao = new LottiDao(Database.getInstance(properties), "lotto");
             List<FieldData> lotti = lottiDao.findAll();
-            System.out.println(lotti.getFirst().getLotto_id());
+            System.out.println(lotti.getFirst().getCode());
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -199,7 +199,7 @@ class LottiDaoTest {
         try {
             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
             lottiDao = new LottiDao(Database.getInstance(properties), "lotto");
-            boolean value = lottiDao.insert(FieldData.FieldDataBuilder.getbuilder().setLotto_id("aaa").setTipologia(60).
+            boolean value = lottiDao.insert(FieldData.FieldDataBuilder.getbuilder().setcode("aaa").setTipologia(60).
                     setProduction_date(Date.valueOf(LocalDate.of(2024, 10, 01)))
                     .setElapsed_date(Date.valueOf(LocalDate.of(2025, 01, 9))).build());
 

@@ -1,5 +1,7 @@
 package pharma.security.Stytch.conf;
 
+import pharma.dao.GenericDaoAble;
+
 public class EndPoints {
 
 
@@ -10,6 +12,7 @@ public class EndPoints {
     private static  final String search_users="/v1/users/search";
     private static final  String user_revoke="/v1/sessions/revoke";
     private  static  final  String user_session="/v1/sessions";
+    private static  final  String user_update="/v1/users/";
     public static String getCreate_user(String endpoint){
 
         return endpoint+create_user;
@@ -25,11 +28,13 @@ public class EndPoints {
     public static String getSearch_users(String endpoint){
         return  endpoint+search_users;
     }
-    public static  String getRevoke(String endpoint){
-        return endpoint+user_revoke;
-    }
+
     public static String getUser_session(String endpoint){
         return endpoint+user_session;
+    }
+    public static String getUser_update(String endpoint,String user_id){
+        return endpoint+user_update+user_id;
+
     }
 
 

@@ -85,7 +85,7 @@ public class PurchaseInvoiceHandler extends  DialogHandler<FieldData> {
            combo_pharma.setPrefWidth(300);
            combo_pharma.setConvert(new InvoicexConvert(InvoicexConvert.Type.combo_id));
            comboBox_order = add_combox_search_with_textfield(FXCollections.observableArrayList());
-           comboBox_order.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setLotto_id("Seleziona Ordine Id").build());
+           comboBox_order.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setcode("Seleziona Ordine Id").build());
            comboBox_order.setConvert(new InvoicexConvert(InvoicexConvert.Type.order_id));
            // Id Ordine Fornitore
            combo_order_provider_id = add_combox_search_with_textfield(FXCollections.observableArrayList());

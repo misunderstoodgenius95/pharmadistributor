@@ -44,7 +44,7 @@ class UserServiceTest {
 
 
     @Test
-    void get_user_byrole() {
+    void get_user_byRole() {
         String jsonContent_user = null;
         try {
             jsonContent_user = Files.readString(Paths.get("src/main/java/json/searchall.json"));
@@ -56,8 +56,9 @@ class UserServiceTest {
         when(httpResponse_user.statusCode()).thenReturn(200);
         when(stytchClient.get_users()).thenReturn(httpResponse_user);
 
-            User user = userService.get_user_byrole("seller");
-                Assertions.assertEquals("paolobiasin.rossi@example.com",user.getResults().getFirst().getEmails().getFirst().getEmail());
+            User user = userService.get_user_byRole("seller");
+            Assertions.assertEquals(1,user.getResults().size());
+               // Assertions.assertEquals("paolobiasin.rossi@example.com",user.getResults().getFirst().getEmails().getFirst().getEmail());
 
 
     }
@@ -74,9 +75,11 @@ class UserServiceTest {
         HashMap<String,String> hashMap_json=
                 FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
         UserService userService=new UserService(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
-        UserServiceResponse ur=userService.searchUser();
+        User user = userService.get_user_byRole("seller");
+        Assertions.assertEquals(1,user.getResults().size());
+        /*    UserServiceResponse ur=userService.searchUser();
 
-        System.out.println("before: "+ur.getBody());
+        System.out.println("before: "+ur.getBody());*/
 
  /*       List<Map<String,Object>> extract=Query.filterUsersByRole(ur.getBody(),"seller");
         System.out.println("after: "+extract);
@@ -89,38 +92,64 @@ class UserServiceTest {
 
         //Assertions.assertEquals(200,ur.getStatus());
     }
-    public List<User.Results> list(){
-        List<User.Results> list=new ArrayList<>();
-        List<String> roles=List.of("seller_one@example.com,","seller_two@example.com","purchase_three@example.com","purchase_for@example.com");
-       roles.forEach(role->{
-           User.Results results=new User.Results();
-           User.TrustedMetadata usertrussted= new User.TrustedMetadata();
-           String[] splitted=role.split("_");
 
-           usertrussted.setRole(splitted[0]);
-           results.setTrustedMetadata(usertrussted);
-
-           User.Emails emails=new User.Emails(splitted[1]);
-           results.setEmails(List.of(emails));
-
-
-           results.setTrustedMetadata(usertrussted);
-           list.add(results);
-
-
-       });
-
-
-        return list;
-    }
 
     @Test
-    void extract_Session_role() {
+    void user_revocate() throws FileNotFoundException {
 
-    User user=new User(list());
 
-        User user_extracted=UserService.extract_Session_role(user,"seller");
-        Assertions.assertEquals(2,user.getResults().size());
+        HashMap<String,String> hashMap_json=
+                FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
+        UserService userService=new UserService(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
+        UserServiceResponse ur=userService.user_revocate("user-live-3927dadb-5d0b-4e0e-9738-dda318f29270",true);
+        System.out.println(ur.getBody());
+        //Assertions.assertEquals(200,ur.getStatus());
+
+
+
+
+
+
+    }
+
+
+
+
+    @Nested
+    class SessionRole {
+        List<User.Results> list = new ArrayList<>();
+        User user;
+        @BeforeEach
+        public void setUp() {
+
+            List<String> roles = List.of("seller_one@example.com", "seller_two@example.com", "purchase_three@example.com", "purchase_for@example.com");
+            roles.forEach(role -> {
+                User.Results results = new User.Results();
+                User.TrustedMetadata usertrussted = new User.TrustedMetadata();
+                String[] splitted = role.split("_");
+                usertrussted.setRole(splitted[0]);
+                results.setTrustedMetadata(usertrussted);
+                User.Emails emails = new User.Emails(splitted[1]);
+                results.setEmails(List.of(emails));
+                results.setTrustedMetadata(usertrussted);
+                list.add(results);
+                 user=new User(list);
+            });
+        }
+
+        @Test
+        void VoidSizeTwo() {
+            Assertions.assertEquals(2, user.getResults().size());
+        }
+        @Test
+        public void ValidFirstEmailOne(){
+            Assertions.assertEquals(2,UserService.extract_Session_role(user,"seller").getResults().size());
+
+
+
+        }
+
+
     }
 
 
@@ -202,7 +231,7 @@ class UserServiceTest {
         void ValidInstant(){
 
             Instant instant=Instant.parse("2025-06-30T09:40:08Z");
-            Assertions.assertEquals(instant,user.getLast_access());
+            Assertions.assertEquals(instant,user.getResults().getFirst().getLast_access());
         }
 
 

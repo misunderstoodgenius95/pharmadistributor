@@ -2,15 +2,12 @@ package pharma.Model;
 
 
 
-import com.github.curiousoddman.rgxgen.iterators.suppliers.IncrementalLengthIteratorSupplier;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.ObservableList;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +34,7 @@ public class FieldData {
     private Date production_date;
     private  Date elapsed_date;
     private SimpleDoubleProperty price;
-    private String lotto_id;
+    private String code;
     private  SimpleIntegerProperty vat_percent;
     private List<FieldData> fieldDataList;
     private  double subtotal;
@@ -62,6 +59,14 @@ public class FieldData {
     private String email;
     private String role;
     private boolean is_enable;
+    private double latitude;
+    private double longitude;
+    private double lunghezza;
+    private  double altezza;
+    private double profondita;
+    private  double spessore;
+    private int  num_rip;
+    private int  capacity;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -83,7 +88,7 @@ public class FieldData {
         this.elapsed_date=builder.elapsed_date;
         this.production_date=builder.production_date;
         this.price= new SimpleDoubleProperty(builder.price);
-        this.lotto_id=builder.lotto_id;
+        this.code=builder.code;
         this.vat_percent=new SimpleIntegerProperty(builder.vat_percent);
         this.fieldDataList= builder.fieldDataList;
         this.subtotal=builder.subtotal;
@@ -108,10 +113,47 @@ public class FieldData {
         this.email=builder.email;
         this.role=builder.role;
         this.is_enable= builder.is_enable;
+        this.latitude=builder.latitude;
+        this.longitude=builder.longitude;
+        this.lunghezza=builder.lunghezza;
+        this.altezza=builder.altezza;
+        this.profondita=builder.profondita;
+        this.spessore=builder.spessore;
+        this.num_rip=builder.num_rip;
+        this.capacity=builder.capacity;
 
+    }
 
+    public int getCapacity() {
+        return capacity;
+    }
 
+    public double getLunghezza() {
+        return lunghezza;
+    }
 
+    public double getAltezza() {
+        return altezza;
+    }
+
+    public double getProfondita() {
+        return profondita;
+    }
+
+    public double getSpessore() {
+        return spessore;
+    }
+
+    public int  getNum_rip() {
+        return num_rip;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
     }
 
     public String getEmail() {
@@ -226,8 +268,8 @@ public class FieldData {
         return original_order_id;
     }
 
-    public String getLotto_id() {
-        return lotto_id;
+    public String getCode() {
+        return code;
     }
 
     public double getTotal() {
@@ -417,7 +459,7 @@ public class FieldData {
         private String nome_principio_attivo;
         private  String nome_casa_farmaceutica;
         private  double price;
-        private String lotto_id;
+        private String code;
         private int  vat_percent;
         private List<FieldData> fieldDataList;
         private  double subtotal;
@@ -442,17 +484,63 @@ public class FieldData {
         private String email;
         private String role;
         private boolean is_enable;
+        private double latitude;
+        private double longitude;
+        private double lunghezza;
+        private  double altezza;
+        private double profondita;
+        private  double spessore;
+        private int  num_rip;
+        private int  capacity;
         private FieldDataBuilder() {
 
         }
 
+        public FieldDataBuilder setCapacity(int capacity) {
+            this.capacity = capacity;
+            return  this;
+        }
 
+        public FieldDataBuilder setNum_rip(int  num_rip) {
+            this.num_rip = num_rip;
+            return this;
+        }
+
+        public FieldDataBuilder setAltezza(double altezza) {
+            this.altezza = altezza;
+            return  this;
+        }
+
+        public FieldDataBuilder setLunghezza(double lunghezza) {
+            this.lunghezza = lunghezza;
+            return  this;
+        }
+
+        public FieldDataBuilder setSpessore(double spessore) {
+            this.spessore = spessore;
+            return  this;
+        }
+
+        public FieldDataBuilder setProfondita(double profondita) {
+            this.profondita = profondita;
+            return  this;
+        }
 
         //*
         public static   FieldDataBuilder getbuilder() {
             return new FieldDataBuilder();
 
 
+        }
+
+        public FieldDataBuilder setLatitude(double latitude) {
+            this.latitude = latitude;
+            return this;
+        }
+
+        public FieldDataBuilder setLongitude(double longitude) {
+            this.longitude = longitude;
+            return  this;
         }
 
         public FieldDataBuilder setIs_enable(boolean is_enable) {
@@ -590,8 +678,8 @@ public class FieldData {
             return this;
         }
 
-        public FieldDataBuilder setLotto_id(String lotto_id) {
-            this.lotto_id = lotto_id;
+        public FieldDataBuilder setcode(String code) {
+            this.code = code;
             return this;
         }
 

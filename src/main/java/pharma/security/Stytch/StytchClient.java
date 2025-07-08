@@ -1,6 +1,6 @@
 package pharma.security.Stytch;
 
-import com.auth0.json.mgmt.client.Client;
+import org.json.JSONObject;
 import pharma.config.InputValidation;
 import pharma.security.Stytch.conf.EncodeStytch;
 import pharma.security.Stytch.conf.EndPoints;
@@ -100,14 +100,17 @@ public class StytchClient {
     }
 
 
-    public HttpResponse<String> revoke_user(String session_id){
-        if(session_id.isEmpty()){
-            throw new IllegalArgumentException("User id  is not present");
+    public HttpResponse<String> update_user(String user_id, JSONObject payload){
+        if(!InputValidation.validate_stytch_user_id(user_id)){
+            throw new IllegalArgumentException("User id  is not valid");
         }
-        return clientHttp.send(stytchRequest.revoke_user(EndPoints.getRevoke(endpoint),PayLoadStytch.buildRevoke(session_id)));
+        return clientHttp.send(stytchRequest.update_user(EndPoints.getUser_update(endpoint,user_id),payload));
 
 
     }
+
+
+
     public HttpResponse<String> get_session(String user_id){
 
         if(user_id.isEmpty()){

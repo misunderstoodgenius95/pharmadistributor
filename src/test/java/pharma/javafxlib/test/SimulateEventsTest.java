@@ -177,10 +177,10 @@ class SimulateEventsTest {
                         TableUtility.generate_column_string("Data di produzione","production_date"),
                         TableUtility.generate_column_string("Data di scadenza","elapsed_date"),
                         TableUtility.generate_column_string("Disponibilità","availability"));
-                tableView.getItems().addAll(FieldData.FieldDataBuilder.getbuilder().setLotto_id("b9188j").
+                tableView.getItems().addAll(FieldData.FieldDataBuilder.getbuilder().setcode("b9188j").
                                 setProduction_date(Date.valueOf(LocalDate.of(2024, 10, 10))).
                                 setElapsed_date(Date.valueOf(LocalDate.of(2025, 10, 01))).setNome("Amuchina").build(),
-                        FieldData.FieldDataBuilder.getbuilder().setLotto_id("b9188j").setTipologia(1).
+                        FieldData.FieldDataBuilder.getbuilder().setcode("b9188j").setTipologia(1).
                                 setProduction_date(Date.valueOf(LocalDate.of(2024, 10, 10))).setNome("Almareex").
                                 setElapsed_date(Date.valueOf(LocalDate.of(2025, 10, 01))).build()
                 );

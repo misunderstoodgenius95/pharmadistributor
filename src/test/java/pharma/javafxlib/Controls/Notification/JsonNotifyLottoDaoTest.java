@@ -55,7 +55,7 @@ class JsonNotifyLottoDaoTest {
 
         json_dao=new JsonNotifyLottoDao(json1.toString(), List.of("lot_id"),"Lotti Scaduto","Avviso Scadenza Lotti",lottiDao);
         Platform.runLater(()->{
-            FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setLotto_id("11a").setNome("Tachipirina").setUnit_misure("100mg").
+            FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setcode("11a").setNome("Tachipirina").setUnit_misure("100mg").
                     setNome_tipologia("Capsule").build();
 
             Mockito.when(lottiDao.findByIds(Mockito.anyInt(),Mockito.anyString())).thenReturn(fieldData);

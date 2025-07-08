@@ -1,5 +1,7 @@
 package pharma.Handler;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
@@ -16,51 +18,55 @@ public abstract class DialogHandler<F> extends CustomDialog<FieldData> {
     private  ButtonType buttonType;
     public enum Mode{Insert,Update}
     private  Mode mode;
-    public DialogHandler(String content) {
+    private BooleanProperty condition_test;
+    public DialogHandler(String content)  {
         super(content);
         initialize();
         setResult();
         buttonType=getDialogPane().getButtonTypes().get(1);
+        condition_test=new SimpleBooleanProperty();
     }
-    public DialogHandler(String content,PopulateChoice populateChoice) {
+    public DialogHandler(String content,PopulateChoice populateChoice)  {
 
-        super(content);
-
+       this(content);
+        initialize();
         initialize(Optional.of(populateChoice),Optional.empty(),Optional.empty());
 
         setResult();
 
+
     }
-    public DialogHandler(String content, PopulateChoice populateChoice, List<GenericJDBCDao> genericJDBCDao) {
+    public DialogHandler(String content, PopulateChoice populateChoice, List<GenericJDBCDao> genericJDBCDao)  {
 
-        super(content);
-
+        this(content);
         initialize(Optional.of(populateChoice),Optional.of(genericJDBCDao),Optional.empty());
-        setResult();
+
+
 
     }
     public DialogHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
 
-        super(content);
+        this(content);
 
         initialize(Optional.empty(),Optional.of(genericJDBCDao),Optional.empty());
-        setResult();
+
+
 
     }
     public DialogHandler(String content, List<GenericJDBCDao> genericJDBCDao,FieldData fieldData) {
 
-        super(content);
+        this(content);
 
         initialize(Optional.empty(),Optional.of(genericJDBCDao),Optional.of(fieldData));
-        setResult();
+
 
     }
     public DialogHandler(String content,FieldData fieldData) {
 
-        super(content);
+        this(content);
 
         initialize(Optional.empty(),Optional.empty(),Optional.of(fieldData));
-        setResult();
+
 
     }
 
@@ -94,6 +100,13 @@ public abstract class DialogHandler<F> extends CustomDialog<FieldData> {
         });
 
     }
+
+    public boolean isCond() {
+        return condition_test.get();
+    }
+
+
+
     protected  abstract  void initialize();
     protected abstract <K> void initialize(Optional<PopulateChoice<K>> PopulateChoice, Optional<List<GenericJDBCDao>> optionalgenericJDBCDao, Optional<FieldData> optionalfieldData);
 
@@ -106,11 +119,12 @@ public abstract class DialogHandler<F> extends CustomDialog<FieldData> {
     public   void execute(){
 
 
-        AtomicBoolean success = new AtomicBoolean(false);
+       AtomicBoolean  success = new AtomicBoolean(false);
         while(!success.get()) {
             showAndWait().ifPresentOrElse(result -> {
                 try {
                     boolean cond = condition_event(result);
+                    condition_test.set(cond);
                     showAlert(cond, "Errore Inserimento!");
 
 
@@ -130,6 +144,13 @@ public abstract class DialogHandler<F> extends CustomDialog<FieldData> {
             );
         }
     }
+
+    /**
+     * Method that return condition Dao
+     * @param fieldData
+     * @return
+     * @throws Exception
+     */
     protected abstract boolean condition_event(FieldData fieldData) throws  Exception;
 
     public   void  showAlert(boolean success,String error_message) {

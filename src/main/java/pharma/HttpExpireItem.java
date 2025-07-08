@@ -68,7 +68,7 @@ public class HttpExpireItem {
        DateTimeFormatter timeFormatter=DateTimeFormatter.ofPattern("dd/MM/yyyy");
        String date=fieldData.getElapsed_date().toLocalDate().format(timeFormatter);
 
-        return new JSONObject().put("lot_id",fieldData.getLotto_id()).
+        return new JSONObject().put("lot_id",fieldData.getCode()).
                 put("product_id",fieldData.getFarmaco_id()).
                 put("expiration_date",date).put("time_of_day", expiration_days);
 

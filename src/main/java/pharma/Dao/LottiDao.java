@@ -22,7 +22,7 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
     @Override
     protected FieldData mapRow(ResultSet resultSet) throws Exception {
        return FieldData.FieldDataBuilder.getbuilder().
-               setLotto_id(resultSet.getString("id")).
+               setcode(resultSet.getString("id")).
                setProduction_date(resultSet.getDate("production_date")).
                setElapsed_date(resultSet.getDate("elapsed_date")).
                setNome(resultSet.getString("nome")).
@@ -66,7 +66,7 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected void setInsertParameter(PreparedStatement statement, FieldData entity) throws Exception {
-    statement.setString(1,entity.getLotto_id());
+    statement.setString(1,entity.getCode());
     statement.setInt(2,entity.getFarmaco_id());
     statement.setDate(3,entity.getProduction_date());
     statement.setDate(4,entity.getElapsed_date());
@@ -142,6 +142,27 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
             throw new RuntimeException(e);
         }
         return fieldData;
+
+
+    }
+    public List<FieldData> findByLottoCode(String id_code) {
+
+        List<FieldData> list=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=postegresql.execute_prepared_query("select * from lotto\n" +
+                    "                 inner join farmaco_all on farmaco_all.id=Lotto.farmaco where lotto.id=? ");
+            preparedStatement.setString(1,id_code);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                list.add(mapRow(resultSet));
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return list;
 
 
     }

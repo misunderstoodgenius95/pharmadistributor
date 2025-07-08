@@ -26,16 +26,35 @@ public  static  final String Principio_attivo="Principio_Attivo";
 public static  final  String Tipologia="Tipologia";
 public static final  String Categoria="Categoria";
 public static final String Misura="Misura";
-    public static void create_alert(Alert.AlertType alert_type, String title_header, String body) {
+    public static void  create_alert(Alert.AlertType alert_type, String title_header, String body) {
 
         Alert alert = new Alert(alert_type);
-        alert.setTitle(title_header);
+        alert.setTitle(title_header);  
         alert.setHeaderText(body);
         alert.getDialogPane().setId("alert");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.showAndWait();
 
+
     }
+    public static Alert create_alert_confirm(Alert.AlertType alert_type, String title_header, String body) {
+
+        Alert alert = new Alert(alert_type);
+        alert.setTitle(title_header);
+        alert.setHeaderText(body);
+        alert.getDialogPane().setId("alert");
+        alert.initModality(Modality.APPLICATION_MODAL);;
+        return alert;
+
+    }
+    public  static  ButtonType accept() {
+    return new ButtonType("Accept", ButtonBar.ButtonData.OK_DONE);
+    }
+    public static  ButtonType refuse(){
+
+   return new ButtonType("Refuse", ButtonBar.ButtonData.CANCEL_CLOSE);
+    }
+
     public  static void network_status(int status){
         switch (status){
             case 201 -> {

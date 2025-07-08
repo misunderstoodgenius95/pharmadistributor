@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
@@ -20,57 +21,65 @@ import pharma.javafxlib.Search.FilterSearch;
 
 import java.util.*;
 
-public class LotTableCustom extends CustomDialog<FieldData> {
-
+public class LotTableCustom extends LotTableBase {
     private ChoiceBox<String> choiceBox;
-    private TextField textField_search;
-    private TableView<FieldData> tableView;
+    private TextField textField_search;;
     private  LottiDao lottiDao;
     private ObservableList<FieldData> observableList;
     private ObservableSet<FieldData> selected_fds;
     private  CheckBoxTableColumn<FieldData> col_checkbox;
+
+
     public LotTableCustom(String content, LottiDao lottiDao) {
         super(content);
         getDialogPane().setPrefHeight(900);
         getDialogPane().setPrefWidth(1200);
         this.lottiDao=lottiDao;
         choiceBox=add_choiceBox("Seleziona");
+        col_checkbox=add_check_box_column();
+
+
+
         textField_search=add_text_field("");
+        swap(getVbox().getChildren());
         getControlList().removeAll(choiceBox,textField_search);
         selected_fds =FXCollections.observableSet();
-        col_checkbox=new CheckBoxTableColumn<>("Seleziona"){
-            @Override
-            protected void selectedRow(FieldData data) {
-                System.out.println("execute");
-            selected_fds.add(data);
-            }
-        };
+
 
         observableList=FXCollections.observableArrayList();
-        tableView = add_table();
 
-        tableView.getColumns().addAll(
-                TableUtility.generate_column_string("lotto Code","lotto_id"),
-                TableUtility.generate_column_string("Farmaco ID","farmaco_id"),
-                TableUtility.generate_column_string("Nome","nome"),
-                TableUtility.generate_column_string("Categoria","nome_categoria"),
-                TableUtility.generate_column_string("Tipologia","nome_tipologia"),
-                TableUtility.generate_column_string("Misura","unit_misure"),
-                TableUtility.generate_column_string("Principio Attivo","nome_principio_attivo"),
-                TableUtility.generate_column_string("Casa Farmaceutica","nome_casa_farmaceutica"),
-                TableUtility.generate_column_int( "Pezzi","quantity"),
-                TableUtility.generate_column_string("Data di produzione","production_date"),
-                TableUtility.generate_column_string("Data di scadenza","elapsed_date"),
-                TableUtility.generate_column_string("Disponibilità","availability"),col_checkbox);
+
 
         choiceBox.getItems().setAll(FXCollections.observableArrayList("Nome","Tipologia","Categoria","Principio_Attivo","Data_di_scadenza"));
         textField_search.setDisable(true);
         listener_choicebox();
         listener_textfield();
     }
+    private void swap(ObservableList<Node> children){
+        Node node1 = children.get(0);
+        Node node2 = children.get(1);
+        Node node3=children.get(2);
+        children.removeAll(node1, node2,node3);
+        children.add(0, node2);
+        children.add(1, node3);
+        children.add(2,node1);
+
+    }
+    public void listener_checkbox() {
+        getCheckBoxValue().addListener(new ChangeListener<FieldData>() {
+            @Override
+            public void changed(ObservableValue<? extends FieldData> observable, FieldData oldValue, FieldData newValue) {
+                if (newValue != null) {
+                    selected_fds.add(newValue);
+
+                }
+            }
+        });
+    }
+
 
     public TableView<FieldData> getTableLot() {
-        return tableView;
+        return getTableViewProductTable();
     }
 
     public TextField getTextField_search() {
@@ -108,7 +117,7 @@ public class LotTableCustom extends CustomDialog<FieldData> {
                 if(InputValidation.filled_text(newValue)&& (!choiceBox.getValue().isEmpty()) && (!Objects.equals(choiceBox.getValue(), "Seleziona"))){
                     List<FieldData> list=lottiDao.findBySearch(choiceBox.getValue(), newValue);
                     observableList.setAll(list);
-                    tableView.setItems(observableList);
+                    getTableViewProductTable().setItems(observableList);
 
                 }
             }
@@ -120,27 +129,6 @@ public class LotTableCustom extends CustomDialog<FieldData> {
 
     public ObservableMap<FieldData, CheckBox> getMapCheckBox() {
         return  col_checkbox.getCheckBoxMap();
-    }
-
-    public void execute_filter() {
-        FilterSearch filterSearch = new FilterSearch(tableView, textField_search) {
-
-            @Override
-            protected boolean condition(String newValue, FieldData fieldData) {
-                return FilterSearch.choice_value(choiceBox.getValue(),
-                                new AbstractMap.SimpleEntry<>("Tipologia", fieldData.getNome_tipologia()),
-                                new AbstractMap.SimpleEntry<>("Categoria", fieldData.getNome_categoria()),
-                                new AbstractMap.SimpleEntry<>("Principio_Attivo", fieldData.getNome_principio_attivo()),
-                                new AbstractMap.SimpleEntry<>("Misura", fieldData.getUnit_misure()),
-                                new AbstractMap.SimpleEntry<>("Casa_Farmaceutica", fieldData.getNome_casa_farmaceutica())).toLowerCase().
-                        contains(newValue.toLowerCase());
-
-
-            }
-        };
-
-
-
     }
 
 

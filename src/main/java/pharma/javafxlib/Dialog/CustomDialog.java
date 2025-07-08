@@ -1,5 +1,7 @@
 package pharma.javafxlib.Dialog;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -7,6 +9,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import org.controlsfx.control.SearchableComboBox;
 import pharma.Model.FieldData;
@@ -17,16 +21,19 @@ import pharma.javafxlib.RadioOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.stream.Collectors.partitioningBy;
+import static java.util.stream.Collectors.reducing;
 
 public class CustomDialog<T> extends Dialog<T> {
     private final VBox vbox;
     private  Button button_ok;
     private ButtonType okButtonType;
-    public enum Validation{Email,Password,Vat,Double_Digit,Lotto_code,Cap}
+    public enum Validation{Email,Password,Vat,Double_Digit,Lotto_code,Cap,lng,lat}
     public enum  Mode{Horizontal,Vertical}
+    private BooleanProperty check_validate;
     public ObservableList<Control> getControlList() {
         return controlList;
     }
@@ -43,6 +50,7 @@ public class CustomDialog<T> extends Dialog<T> {
      this.getDialogPane().setPrefHeight(400);
      this.getDialogPane().setPrefWidth(400);
         this.getDialogPane().setContent(vbox);
+        this.check_validate=new SimpleBooleanProperty();
 
         okButtonType = new ButtonType("OK",ButtonBar.ButtonData.OK_DONE); // inizializzo il bottone ok
         this.getDialogPane().getButtonTypes().addAll(okButtonType,ButtonType.CANCEL); // Lo aggiungo al Dialog
@@ -58,6 +66,14 @@ public class CustomDialog<T> extends Dialog<T> {
     public ButtonType getButton_click(){
         return okButtonType;
 
+    }
+
+    public boolean isCheck_validate() {
+        return check_validate.get();
+    }
+
+    public BooleanProperty check_validateProperty() {
+        return check_validate;
     }
 
     public Button getButtonOK() {
@@ -90,14 +106,12 @@ public class CustomDialog<T> extends Dialog<T> {
                     } else if (textField.getUserData() != null) {
                         FieldData fieldData= (FieldData) textField.getUserData();
                         if(fieldData!=null) {
-
-
                             boolean validation=!InputValidation.get_validation(fieldData.getNome(),textField.getText());
-
-
-                            /*             boolean validation=!InputValidation.get_validation(textField.getId().split("-")[0], textField.getText());*/
                             if(validation) {
                                 Utility.create_alert(Alert.AlertType.WARNING, "", "Errore: "+textField.getPromptText());
+                                check_validate.setValue(false);
+                            }else{
+                                check_validate.setValue(true);
                             }
                             return validation;
                         }
@@ -132,7 +146,10 @@ public class CustomDialog<T> extends Dialog<T> {
 
             if (validate) {
                 Utility.create_alert(Alert.AlertType.WARNING, "Attenzione!", " Riempire tutti campi!");
+                check_validate.setValue(false);
                 event.consume();
+            }else{
+                check_validate.setValue(true);
             }
 
         });
@@ -141,6 +158,20 @@ public class CustomDialog<T> extends Dialog<T> {
 
 
     }
+    public  WebView add_web_page(String url){
+        WebView webView = new WebView();
+        WebEngine engine=webView.getEngine();
+
+        engine.load(url);
+
+   //     engine.load("http://esamebasicalio.altervista.org/map.php?lat="+lat+"&"+"lng="+lng);
+// Disable security manager for tile loading
+        vbox.getChildren().add(webView);
+        return webView;
+
+
+    }
+
 
     public  ToggleGroup add_group(){
          return new ToggleGroup();
@@ -175,6 +206,16 @@ public class CustomDialog<T> extends Dialog<T> {
     public Spinner<Integer> add_spinner() {
         Spinner<Integer> spinner = new Spinner<>();
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
+        spinner.setEditable(true);
+        vbox.getChildren().add(spinner);
+        controlList.add(spinner);
+
+        return spinner;
+
+    }
+    public Spinner<Double> add_spinner_double() {
+        Spinner<Double> spinner = new Spinner<>();
+       spinner.setValueFactory( new SpinnerValueFactory.DoubleSpinnerValueFactory((Double)1.1, (Double) 2000.79, (Double) 1.1, (Double) 0.1));
         spinner.setEditable(true);
         vbox.getChildren().add(spinner);
         controlList.add(spinner);
@@ -364,35 +405,6 @@ public class CustomDialog<T> extends Dialog<T> {
 
 
 
-     /*   switch (validation){
-
-            case Email:{
-                field.setUserData(FieldData.FieldDataBuilder.getbuilder().setNome("Email").setId(Integer.parseInt(UUID.randomUUID().toString()));
-                break;
-            }
-            case Password:{
-                field.setId("Password"+"-"+UUID.randomUUID());
-                break;
-            }
-            case Vat:{
-                field.setId("Vat"+"-"+UUID.randomUUID());
-                break;
-            }
-            case Double_Digit:{
-                System.out.println("digit");
-                field.setId(Validation.Double_Digit+"-"+UUID.randomUUID());
-                break;
-            }
-            case Lotto_code:{
-
-                field.setId("Lotto_code"+"-"+UUID.randomUUID());
-                break;
-            }
-            case Cap:{
-                field.setId(Validation.Cap+"-"+UUID.randomUUID());
-            }
-
-        }*/
         controlList.add(field);
         vbox.getChildren().add(field);
 

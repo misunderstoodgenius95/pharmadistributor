@@ -15,6 +15,13 @@ class FieldDataTest  {
    FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setAnagrafica_cliente("Agrafia Cliente").setSigla("AF").
             setPartita_iva("IT122222222").build();
 }
+    @Test
+
+    public void testCode() {
+        FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setcode("11as")
+                .build();
+        Assertions.assertEquals("11as",fieldData.getCode());
+    }
 
 
 @Test

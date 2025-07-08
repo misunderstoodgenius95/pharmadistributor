@@ -143,7 +143,7 @@ private  SimpleBooleanProperty s_update_result;
 
            boolean value= fieldData.getFieldDataList().stream().allMatch(fieldata_detail -> {
                 FieldData fieldData_curr = FieldData.FieldDataBuilder.getbuilder().
-                        setLotto_id(fieldata_detail.getLotto_id()).
+                        setcode(fieldata_detail.getCode()).
                         setFarmaco_id(fieldata_detail.getFarmaco_id())
                         .setPurchase_order_id(index).
                         setQuantity(fieldata_detail.getQuantity()).
