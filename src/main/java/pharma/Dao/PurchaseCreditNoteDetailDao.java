@@ -51,7 +51,7 @@ public class PurchaseCreditNoteDetailDao extends  GenericJDBCDao<FieldData,Integ
     @Override
     protected void setInsertParameter(PreparedStatement statement, FieldData entity) throws Exception {
         statement.setInt(1,entity.getInvoice_id());
-        statement.setInt(2,entity.getPurchase_order_id());
+        statement.setInt(2,entity.getOrder_id());
         statement.setInt(3,entity.getQuantity());
         statement.setDouble(4,entity.getPrice());
         statement.setInt(5,entity.getVat_percent());

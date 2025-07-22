@@ -99,7 +99,7 @@ class PurchaseOrderDetailDaoTest {
         FieldData fd=purchaseOrderDetailDao.findDetailbyPurchaseOrderId(15).getFirst();
         Assertions.assertEquals(1,fd.getId());
         Assertions.assertEquals("aaa",fd.getCode());
-        Assertions.assertEquals(100,fd.getPurchase_order_id());
+        Assertions.assertEquals(100,fd.getOrder_id());
         Assertions.assertEquals(10.1,fd.getPrice());
         Assertions.assertEquals(10,fd.getQuantity());
         Assertions.assertEquals(4,fd.getVat_percent());
@@ -130,7 +130,7 @@ class PurchaseOrderDetailDaoTest {
         try {
             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
             purchaseOrderDetailDao=new PurchaseOrderDetailDao(Database.getInstance(properties));
-            boolean value=purchaseOrderDetailDao.insert(FieldData.FieldDataBuilder.getbuilder().setcode("m20733").setPurchase_order_id(15).setFarmaco_id(60).setId(1).setPrice(10.2).setQuantity(10).
+            boolean value=purchaseOrderDetailDao.insert(FieldData.FieldDataBuilder.getbuilder().setcode("m20733").setOrder_id(15).setFarmaco_id(60).setId(1).setPrice(10.2).setQuantity(10).
                     setVat_percent(1).build());
             Assertions.assertTrue(value);
 

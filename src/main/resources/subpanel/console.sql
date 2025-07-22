@@ -398,10 +398,13 @@ select avg( lotto.elapsed_date-current_date) as remaining
 select * from farmaco_all;
 
 
-select * from farmacia
+select * from farmacia;
 
 
-create
+alter table  farmacia
+    alter column  id set generated  always;
+
+
 
 
 

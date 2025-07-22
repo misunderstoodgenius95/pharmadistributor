@@ -7,6 +7,7 @@ import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MagazzinoDao extends GenericJDBCDao<FieldData,Integer> {
@@ -22,23 +23,21 @@ public class MagazzinoDao extends GenericJDBCDao<FieldData,Integer> {
                 setNome(resultSet.getString("nome")).
                 setStreet(resultSet.getString("address")).
                 setComune(resultSet.getString("comune")).
-                setLatitude(resultSet.getDouble("longitude")).
-                setLongitude(resultSet.getDouble("latitude"))
+                setLocation((PGgeometry) resultSet.getObject("location"))
                 .build();
 
     }
 
 
-    @Override
-    protected String getFindQueryAll() {
-    return     "select  id, nome, ST_X(location::geometry) as longitude,\n" +
-                "           ST_Y(location::geometry) as latitude,address,comune,province\n" +
-                "from warehouse;\n" +
-                "\n";
-    }
+
 
     @Override
     protected void setFindByIdParameters(PreparedStatement preparedStatement, Integer integer) {
+        try {
+            preparedStatement.setInt(1,integer);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

@@ -78,6 +78,7 @@ class LottoStorageHandlerTest {
         Platform.runLater(()->{
             lottoStorageHandler=new LottoStorageHandler("Scegli Lotto", List.of(lottiDao));
             lottoStorageHandler.show();
+
             SimulateEvents.writeOn(lottoStorageHandler.getTextField_lot_code(),"amax");
             SimulateEvents.clickOn(lottoStorageHandler.getSelect_lot());
 

@@ -127,7 +127,7 @@ class PurchaseCreditNoteHandlerTest {
             FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().
                     setInvoice_number("p1000").
                     setId(1).
-                    setPurchase_order_id(100).
+                    setOrder_id(100).
                     setProduction_date(Date.valueOf(LocalDate.of(2025, 10, 1))).
                     setPayment_mode("BONIFICO_BANCARIO").
                     setSubtotal(42.60).
@@ -216,7 +216,7 @@ class PurchaseCreditNoteHandlerTest {
             FieldData fieldData = FieldData.FieldDataBuilder.getbuilder().
                     setInvoice_number("p1000").
                     setId(7).
-                    setPurchase_order_id(100).
+                    setOrder_id(100).
                     setProduction_date(Date.valueOf(LocalDate.of(2025, 10, 1))).
                     setPayment_mode("BONIFICO_BANCARIO").
                     setSubtotal(42.60).

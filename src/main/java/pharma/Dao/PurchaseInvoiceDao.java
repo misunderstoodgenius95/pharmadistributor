@@ -26,7 +26,7 @@ public class PurchaseInvoiceDao extends GenericJDBCDao<FieldData,Integer> {
                 setTotal(resultSet.getDouble(7)).
                 setCreated_at(resultSet.getTimestamp(8)).
                 setCasa_Farmaceutica(resultSet.getInt(9)).
-                setPurchase_order_id(resultSet.getInt(10)).
+                setOrder_id(resultSet.getInt(10)).
                 build();
     }
 
@@ -64,7 +64,7 @@ public class PurchaseInvoiceDao extends GenericJDBCDao<FieldData,Integer> {
         statement.setDouble(5,entity.getVat_amount());
         statement.setDouble(6,entity.getTotal());
         statement.setInt(7,entity.getCasa_farmaceutica());
-        statement.setInt(8,entity.getPurchase_order_id());
+        statement.setInt(8,entity.getOrder_id());
 
 
 

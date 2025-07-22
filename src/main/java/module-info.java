@@ -45,7 +45,6 @@ exports pharma.Controller.subpanel to javafx.fxml;
     exports pharma.Controller to javafx.controls, javafx.fxml, javafx.graphics;
 exports pharma.Storage;
     opens pharma.config to javafx.fxml;
-    opens pharma.Model to javafx.base,com.fasterxml.jackson.databind;
     exports pharma.dao;
     exports pharma.Model;
     exports pharma.security;
@@ -75,5 +74,6 @@ exports pharma.Storage;
     opens pharma.javafxlib.Controls.Notification to javafx.fxml;
     exports algo to javafx.fxml, javafx.graphics;
     opens algo to javafx.fxml;
+    opens pharma.Model to com.fasterxml.jackson.databind, javafx.base, javafx.fxml;
 
 }

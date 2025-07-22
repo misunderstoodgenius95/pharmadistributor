@@ -1,5 +1,6 @@
 package pharma.Handler;
 
+import algo.ChoiceWarehouse;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -7,14 +8,16 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import org.jetbrains.annotations.TestOnly;
 import pharma.Handler.Table.LotTableBase;
+import pharma.Model.ChoiceAssigned;
+import pharma.Model.Farmacia;
 import pharma.Model.FieldData;
+import pharma.Model.Warehouse;
 import pharma.config.PopulateChoice;
 import pharma.config.Utility;
-import pharma.dao.GenericJDBCDao;
-import pharma.dao.LotDimension;
-import pharma.dao.LottiDao;
+import pharma.dao.*;
 import pharma.javafxlib.Dialog.CustomDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,24 +29,44 @@ public class LottoStorageHandler extends DialogHandler<FieldData> {
     private LotTableBase lotTableBase;
     private Button bnt_lot_dimension;
     private Spinner<Integer> quantity;
-
+private SellerOrderDetails s_order_details;
+private SellerOrderDao s_order;
+private MagazzinoDao magazzinoDao;
     private LotDimension lotDimension;
     private Label visibile_label;
     CustomLots customLots;
+    FarmaciaDao farmaciaDao;
     private ObservableList<Control> optional_value;
     public LottoStorageHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
         super(content, genericJDBCDao);
         lotDimension=(LotDimension) genericJDBCDao.stream().
                 filter(dao->dao instanceof LotDimension).findFirst().orElseThrow();
         this.lottiDao = (LottiDao) genericJDBCDao.stream().filter(dao -> dao instanceof LottiDao).toList().getFirst();
+        s_order_details=(SellerOrderDetails) genericJDBCDao.stream().filter(dao->dao instanceof SellerOrderDetails).findFirst().
+                orElseThrow(()->new IllegalArgumentException(" SellerOrderDetails Not found!"));
+        s_order=(SellerOrderDao) genericJDBCDao.stream().filter(dao->dao instanceof SellerOrderDetails).findFirst().
+                orElseThrow(()->new IllegalArgumentException(" SellerOrderDao Not found!"));
+        farmaciaDao=(FarmaciaDao) genericJDBCDao.stream().filter(dao->dao instanceof FarmaciaDao).findFirst().
+                orElseThrow(()->new IllegalArgumentException(" Farmacia Not found!"));
+        magazzinoDao=(MagazzinoDao) genericJDBCDao.stream().filter(dao->dao instanceof MagazzinoDao).findFirst().
+                orElseThrow(()->new IllegalArgumentException(" Farmacia Not found!"));
          lotTableBase=new LotTableBase("Scegli lotti");
-        lotTableBase.add_check_box_column();
+         lotTableBase.add_radio();
+        //lotTableBase.add_check_box_column();
         customLots=new CustomLots("", List.of(lotDimension),lotTableBase.getCheckBoxValue());
         listener_addedd_table_lot();
 
 
 
     }
+
+
+
+
+
+
+
+
     @TestOnly
     public LotTableBase getTableLot(){
         return  lotTableBase;
@@ -71,6 +94,7 @@ public class LottoStorageHandler extends DialogHandler<FieldData> {
         bnt_lot_dimension=addButton("Inserisci i dati");
         bnt_lot_dimension.setVisible(false);
         quantity=add_spinner();
+
       //  add_optional_data();
         listener_text_table();
         listener_button_table();
@@ -90,17 +114,38 @@ public class LottoStorageHandler extends DialogHandler<FieldData> {
 
 
     }
-    private void listener_addedd_table_lot(){
+ /*   private void listener_addedd_table_lot(){
 
         lotTableBase.getCheckBoxValue().addListener(new ChangeListener<FieldData>() {
             @Override
             public void changed(ObservableValue<? extends FieldData> observable, FieldData oldValue, FieldData newValue) {
                 if(newValue!=null){
                     select_lot.setText("Lotto Selezionato");
-                   FieldData fieldData=lotDimension.findByIds(newValue.getFarmaco_id(),newValue.getCode());
-                   if(fieldData==null){
+                    FieldData fieldData=lotDimension.findByIds(newValue.getFarmaco_id(),newValue.getCode());
+                    if(fieldData==null){
+                        visibile_label.setVisible(true);
+                        bnt_lot_dimension.setVisible(true);
+
+                    }
+
+
+
+
+                }
+            }
+        });
+    }*/
+    private void listener_addedd_table_lot(){
+
+        lotTableBase.radio_valueProperty().addListener(new ChangeListener<FieldData>() {
+            @Override
+            public void changed(ObservableValue<? extends FieldData> observable, FieldData oldValue, FieldData newValue) {
+                if(newValue!=null){
+                    select_lot.setText("Lotto Selezionato");
+                  Optional<FieldData> optionalFieldData=lotDimension.findByIds(newValue.getFarmaco_id(),newValue.getCode());
+                  if(optionalFieldData.isPresent()){
                        visibile_label.setVisible(true);
-                    bnt_lot_dimension.setVisible(true);
+                       bnt_lot_dimension.setVisible(true);
 
                    }
 
@@ -155,6 +200,30 @@ public class LottoStorageHandler extends DialogHandler<FieldData> {
 
     @Override
     protected boolean condition_event(FieldData fieldData) throws Exception {
+        //find by farmaco_id and lotto_id
+     List<ChoiceAssigned> choiceAssigneds=new ArrayList<>();
+        List<Warehouse> fd_warehouse=magazzinoDao.findAll().stream().map(value->new Warehouse(value.getId(),value.getNome(),value.getLocation())).toList();
+
+        List<FieldData> order_details=s_order_details.findbyProduct(fieldData.getFarmaco_id(),fieldData.getCode());
+        for (FieldData orderDetail : order_details) {
+            //obtein  the order id
+            int order_id=orderDetail.getOrder_id();
+         //obtein the  order
+            FieldData fd_order=s_order.findById(order_id);
+            // obetin the farmacia
+            int farmacia_id=fd_order.getForeign_id();
+
+            FieldData fd_farmacia=farmaciaDao.findById(farmacia_id);
+           Farmacia farmacia= new Farmacia(fd_farmacia.getNome(),fd_farmacia.getId(), fd_farmacia.getLocation());
+            choiceAssigneds.add(new ChoiceAssigned(farmacia,orderDetail.getQuantity()));
+
+        }
+        ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouse,choiceAssigneds);
+
+
+
+
+
         return true;
     }
     private void listener_button_table(){

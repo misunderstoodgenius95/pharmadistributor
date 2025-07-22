@@ -59,7 +59,7 @@ public class PurchaseCreditNoteHandler extends  DialogHandler<FieldData> {
             date_credit_note = add_calendar();
             textField_motivo = this.add_text_field("Inserisci Motivazione");
             add_header(fieldData_header);
-            obs_table.setAll(p_detail.findDetailbyPurchaseOrderId(fieldData_header.getPurchase_order_id()));
+            obs_table.setAll(p_detail.findDetailbyPurchaseOrderId(fieldData_header.getOrder_id()));
             table_id = add_table();
             add_column();
             table_id.setItems(obs_table);
@@ -170,7 +170,7 @@ public class PurchaseCreditNoteHandler extends  DialogHandler<FieldData> {
         boolean result= fieldData.getFieldDataList().stream().allMatch(fieldata_detail -> {
                     FieldData fieldData_insert_details= FieldData.FieldDataBuilder.getbuilder()
                             .setInvoice_id(index_credit_note).
-                            setPurchase_order_id(fieldata_detail.getId()).
+                            setOrder_id(fieldata_detail.getId()).
                             setQuantity(fieldata_detail.getQuantity()).
                             setVat_percent(fieldata_detail.getVat_percent()).
                             setPrice(fieldata_detail.getPrice()).build();
@@ -194,6 +194,7 @@ public class PurchaseCreditNoteHandler extends  DialogHandler<FieldData> {
 
     @Override
     protected void initialize() {
+
 
     }
 

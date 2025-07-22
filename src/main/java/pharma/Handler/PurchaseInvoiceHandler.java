@@ -270,7 +270,7 @@ public class PurchaseInvoiceHandler extends  DialogHandler<FieldData> {
                 setVat_amount((Double)label_iva.getUserData()).
                 setTotal((Double)label_totale.getUserData()).
                 setCasa_Farmaceutica(fieldData_pharma.getId()).
-                setPurchase_order_id(table_id.getItems().getFirst().getId()).
+                setOrder_id(table_id.getItems().getFirst().getId()).
                 setFieldDataListAll(table_id.getItems())
                 .build();
     }
@@ -287,8 +287,8 @@ public class PurchaseInvoiceHandler extends  DialogHandler<FieldData> {
             boolean update_cond=fieldData.getFieldDataList().stream().allMatch(fd_inner -> {
                 System.out.println("update value");
                 System.out.println(index);
-                System.out.println(fd_inner.getPurchase_order_id());
-                FieldData fieldData_update = FieldData.FieldDataBuilder.getbuilder().setInvoice_id(index).setPurchase_order_id(fd_inner.getId()).build();
+                System.out.println(fd_inner.getOrder_id());
+                FieldData fieldData_update = FieldData.FieldDataBuilder.getbuilder().setInvoice_id(index).setOrder_id(fd_inner.getId()).build();
                return p_dao.update(fieldData_update);
             });
             if(update_cond){

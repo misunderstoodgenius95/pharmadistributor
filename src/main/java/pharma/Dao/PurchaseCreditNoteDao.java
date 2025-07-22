@@ -155,7 +155,7 @@ create table purchase_credit_note
                         setcode(resultSet.getString(2)).
                         setPrice(resultSet.getDouble("price")).
                         setFarmaco_id(resultSet.getInt("farmaco")).
-                        setPurchase_order_id(resultSet.getInt("purchase_order")).
+                        setOrder_id(resultSet.getInt("purchase_order")).
                         setQuantity(resultSet.getInt("quantity")).
                         setVat_percent(resultSet.getInt("vat_percent")).
                         setNome_farmaco(resultSet.getString("nome_farmaco")).

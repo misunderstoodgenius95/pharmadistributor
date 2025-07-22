@@ -27,6 +27,8 @@ public class FarmaciaHandler  extends  DialogHandler<FieldData> {
     private SearchableComboBox<FieldData> combo_province;
     private  TextField textField_comune;
     private FarmaciaDao farmaciaDao;
+    private  TextField textField_lat;
+    private TextField textField_lng;
     public FarmaciaHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
         super(content, genericJDBCDao);
         textfield_header=add_text_field("Inserisci Intestazione Farmaceutica");
@@ -35,6 +37,8 @@ public class FarmaciaHandler  extends  DialogHandler<FieldData> {
         textField_cap=add_text_field_with_validation("Inserisci Cap",Validation.Cap);
         combo_province=add_SearchComboBox(FieldData.FieldDataBuilder.getbuilder().setProvince("Inserisci Provincia").build());
         combo_province.setConverter(new FarmaciaLotConvert());
+        textField_lat= add_text_field("Inserisci Latitudine");
+        textField_lng=add_text_field("Inserisci Longitudine");
 
         String json_string = "";
         try {
@@ -64,7 +68,10 @@ public class FarmaciaHandler  extends  DialogHandler<FieldData> {
                 setStreet(textField_street.getText()).
                 setCap(Integer.parseInt(textField_cap.getText())).
                 setComune(textField_comune.getText()).
-                setProvince(combo_province.getValue().getSigla()).build();
+                setProvince(combo_province.getValue().getSigla()).
+                setLatitude(Double.parseDouble(textField_lat.getText())).
+                setLongitude(Double.parseDouble(textField_lng.getText())).
+        build();
     }
 
     @Override

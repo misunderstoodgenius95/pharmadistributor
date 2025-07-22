@@ -189,9 +189,9 @@ class PurchaseInvoiceHandlerTest{
             setPayment_mode("BONIFICO_BANCARIO").
             setSubtotal(10.1).
             setVat_amount(4.1).
-            setTotal(14.2).setFieldDataListAll(Arrays.asList(FieldData.FieldDataBuilder.getbuilder().setPurchase_order_id(10).build(),
-                    FieldData.FieldDataBuilder.getbuilder().setPurchase_order_id(11).build(),
-                    FieldData.FieldDataBuilder.getbuilder().setPurchase_order_id(12).build())).build();
+            setTotal(14.2).setFieldDataListAll(Arrays.asList(FieldData.FieldDataBuilder.getbuilder().setOrder_id(10).build(),
+                    FieldData.FieldDataBuilder.getbuilder().setOrder_id(11).build(),
+                    FieldData.FieldDataBuilder.getbuilder().setOrder_id(12).build())).build();
 
     purchaseInvoiceHandler = new PurchaseInvoiceHandler(inv_dao,purchaseOrderDao);
 
@@ -224,9 +224,9 @@ class PurchaseInvoiceHandlerTest{
                         setPayment_mode("BONIFICO_BANCARIO").
                         setSubtotal(10.1).
                         setVat_amount(4.1).
-                        setTotal(14.2).setFieldDataListAll(Arrays.asList(FieldData.FieldDataBuilder.getbuilder().setPurchase_order_id(10).build(),
-                                FieldData.FieldDataBuilder.getbuilder().setPurchase_order_id(11).build(),
-                                FieldData.FieldDataBuilder.getbuilder().setPurchase_order_id(12).build())).build();
+                        setTotal(14.2).setFieldDataListAll(Arrays.asList(FieldData.FieldDataBuilder.getbuilder().setOrder_id(10).build(),
+                                FieldData.FieldDataBuilder.getbuilder().setOrder_id(11).build(),
+                                FieldData.FieldDataBuilder.getbuilder().setOrder_id(12).build())).build();
 
                 purchaseInvoiceHandler = new PurchaseInvoiceHandler(inv_dao,purchaseOrderDao);
 

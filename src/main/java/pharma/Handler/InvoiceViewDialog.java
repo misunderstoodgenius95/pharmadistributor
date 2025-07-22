@@ -28,7 +28,7 @@ public class InvoiceViewDialog  extends CustomDialog<FieldData> {
         add_header_invoice();
         table_id=add_table();
         add_column();
-        obs_table_innner.setAll(p_detail.findDetailbyPurchaseOrderId(fieldData_header.getPurchase_order_id()));
+        obs_table_innner.setAll(p_detail.findDetailbyPurchaseOrderId(fieldData_header.getOrder_id()));
         table_id.setItems(obs_table_innner);
     }
     public InvoiceViewDialog(String content, FieldData fieldData_header, PurchaseCreditNoteDao purchaseCreditNoteDao) {

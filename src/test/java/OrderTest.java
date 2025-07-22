@@ -134,7 +134,7 @@ public class OrderTest {
                 TableUtility.generate_column_double("Quantità","quantity"),
                 TableUtility.generate_column_int("Iva","vat_percent")
         );
-        System.out.println(fd_order.getPurchase_order_id());
+        System.out.println(fd_order.getOrder_id());
         obs_table_fd_details.setAll(p_detail.findDetailbyPurchaseOrderId(fd_order.getId()));
         t_expanded.setItems(obs_table_fd_details);
         t_expanded.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 14px; -fx-text-fill: #636165;");

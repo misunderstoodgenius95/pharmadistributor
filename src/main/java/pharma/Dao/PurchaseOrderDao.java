@@ -77,7 +77,7 @@ private  final Database database;
     protected void setUpdateParameter(PreparedStatement statement, FieldData entity) {
         try {
             statement.setInt(1,entity.getInvoice_id());
-            statement.setInt(2,entity.getPurchase_order_id());
+            statement.setInt(2,entity.getOrder_id());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

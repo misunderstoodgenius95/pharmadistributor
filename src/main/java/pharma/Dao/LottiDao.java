@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
     private final  String table;
@@ -123,9 +124,9 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
     }
 
 
-    public FieldData findByIds(int farmaco_id,String id_code) {
+    public Optional<FieldData> findByIds(int farmaco_id, String id_code) {
 
-        FieldData fieldData = null;
+
         try {
              PreparedStatement preparedStatement=postegresql.execute_prepared_query("select * from lotto\n" +
                     "                 inner join farmaco_all on farmaco_all.id=Lotto.farmaco where lotto.id=? and farmaco= ? ");
@@ -133,15 +134,16 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
             preparedStatement.setInt(2,farmaco_id);
             ResultSet resultSet=preparedStatement.executeQuery();
             if(resultSet.next()){
-                 fieldData=mapRow(resultSet);
-
+               FieldData  fieldData=mapRow(resultSet);
+                 return Optional.of(fieldData);
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return fieldData;
+        return Optional.empty();
 
 
     }

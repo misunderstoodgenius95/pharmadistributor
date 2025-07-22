@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
@@ -188,6 +189,41 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
 
         return resultList;
     }
+    public List<T> findByParameters(String query,Object... objects ){
+        List<T> resultList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query(query );
+            for(int i=0;i<objects.length;i++) {
+                switch_type(preparedStatement, objects[i], i);
+            }
+
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                resultList.add(mapRow(resultSet));
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return resultList;
+    }
+
+    private void switch_type( PreparedStatement p_statement,Object object, int index) throws SQLException {
+        index++;
+        switch (object){
+
+            case String s->p_statement.setString(index,s);
+            case Integer i->p_statement.setInt(index,i);
+            case Double d->p_statement.setDouble(index,d);
+            default -> throw new IllegalStateException("Unexpected value: " + object);
+        }
+
+    }
+
 
 
 

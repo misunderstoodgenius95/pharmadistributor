@@ -12,8 +12,9 @@ D-->S:Recupera lotto
 alt Lotto trovato
 M->UI:Seleziona Lotto
 UI->S:Invia lotto selezionato
-
 S->D:Recupera Dimensioni lotto
+M->S:Conferma lotto
+M->S:Inserisci Quantità
 opt Dimensione lotto non trovate
 M->UI:Inserisci altezza
 M->UI:Inserisci lunghezza
@@ -21,7 +22,18 @@ M->UI:Inserisci profondità
 M->UI:Conferma scelte
 UI->S:Invia dati
 end
-S->D:Richiedi  ripiani
+
+S->D:Recupera  Dettagli Ordini di vendita inerenti al lotto
+loop Per Ogni Dettagli Ordini
+S->D:Recupera la farmacia corrispondente nell'ordine
+end
+S->D:Recupera Magazzini
+S->D:Recupero farmacie correlate al lotto
+create ChoiceWarehouse AS CW
+S->CW:<<create>>
+CW->CW:Scegli magazzino in base alla distanza con le farmacie che lo hanno acquistato
+CW->S:Restuisci magazzino
+S->D:Richiedi  ripiani per il magazzino scelto
 D-->S:Recupera ripiani
 opt Ripiani trovati
 
@@ -40,7 +52,6 @@ S->PS:<<create>>
 PS->PS:Calcola i ripiani che si possono adattare
 PS->PS:Ordina i ripiani in base a quello con maggior capienza
 PS->
-
 else
 S->D:Richiedi ripiani corrispondenti al lotto
 alt Rpiani trovati

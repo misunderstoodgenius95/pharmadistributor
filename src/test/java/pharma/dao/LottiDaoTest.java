@@ -1,5 +1,6 @@
 package pharma.dao;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.JdbcParameter;
@@ -126,7 +127,7 @@ class LottiDaoTest {
 
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
-        FieldData fieldData=lottiDao.findByIds(10,"aaa");
+        FieldData fieldData=lottiDao.findByIds(10,"aaa").get();
         Assertions.assertAll(
                 ()->Assertions.assertEquals("Tachipirina",fieldData.getNome()),
                 ()->Assertions.assertEquals("Compresse",fieldData.getNome_tipologia()),
@@ -183,7 +184,7 @@ class LottiDaoTest {
         try {
             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
             lottiDao = new LottiDao(Database.getInstance(properties), "lotto");
-            FieldData fieldData=lottiDao.findByIds(60,"aaa");
+            FieldData fieldData=lottiDao.findByIds(60,"aaa").get();
             Assertions.assertNotNull(fieldData);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -288,6 +289,23 @@ class LottiDaoTest {
 
 
         //Assertions.assertEquals(lottiDao.getFindQueryAll()+" where nome  ILAKE ?   ",value);
+    }
+
+    @Test
+    public void ValidFindbyParameters(){
+        LottiDao lottiDao = null;
+        try {
+           Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            lottiDao = new LottiDao(Database.getInstance(properties), "lotto");
+            List<FieldData> lotti = lottiDao.findByParameters("SELECT * FROM lotto WHERE  lotto = ? and farmaco= ? ","m20733",60);
+       Assertions.assertEquals(1,lotti.size());
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Test

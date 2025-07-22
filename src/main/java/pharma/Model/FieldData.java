@@ -5,6 +5,7 @@ package pharma.Model;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import net.postgis.jdbc.PGgeometry;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -43,7 +44,7 @@ public class FieldData {
     private  String original_order_id;
     private  String nome_farmaco;
     private  int farmaco_id;
-    private  int   purchase_order_id;
+    private  int order_id;
     private  String invoice_number;
     private String payment_mode;
     private  int invoice_id;
@@ -67,6 +68,8 @@ public class FieldData {
     private  double spessore;
     private int  num_rip;
     private int  capacity;
+    private PGgeometry location;
+    private int foreign_id;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -97,7 +100,7 @@ public class FieldData {
         this.original_order_id=builder.original_order_id;
         this.nome_farmaco=builder.nome_farmaco;
         this.farmaco_id=builder.farmaco_id;
-        this.purchase_order_id=builder.purchase_order_id;
+        this.order_id =builder.order_id;
         this.invoice_number=builder.invoice_number;
         this.payment_mode=builder.payment_mode;
         this.invoice_id=builder.invoice_id;
@@ -121,7 +124,13 @@ public class FieldData {
         this.spessore=builder.spessore;
         this.num_rip=builder.num_rip;
         this.capacity=builder.capacity;
+        this.location=builder.location;
+        this.foreign_id=builder.foreign_id;
 
+    }
+
+    public PGgeometry getLocation() {
+        return location;
     }
 
     public int getCapacity() {
@@ -199,6 +208,10 @@ public class FieldData {
         this.nome = nome;
     }
 
+    public int getForeign_id() {
+        return foreign_id;
+    }
+
     public String getMotive() {
         return motive;
     }
@@ -242,8 +255,8 @@ public class FieldData {
         return farmaco_id;
     }
 
-    public int getPurchase_order_id() {
-        return purchase_order_id;
+    public int getOrder_id() {
+        return order_id;
     }
 
     public List<FieldData> getFieldDataList() {
@@ -468,7 +481,7 @@ public class FieldData {
         private  String original_order_id;
         private  String nome_farmaco;
         private  int farmaco_id;
-        private int  purchase_order_id;
+        private int order_id;
         private  String invoice_number;
         private String payment_mode;
         private  int invoice_id;
@@ -492,8 +505,15 @@ public class FieldData {
         private  double spessore;
         private int  num_rip;
         private int  capacity;
+        private PGgeometry location;
+        private  int foreign_id;
         private FieldDataBuilder() {
 
+        }
+
+        public FieldDataBuilder setLocation(PGgeometry location) {
+            this.location = location;
+            return this;
         }
 
         public FieldDataBuilder setCapacity(int capacity) {
@@ -618,8 +638,8 @@ public class FieldData {
             return  this;
         }
 
-        public FieldDataBuilder setPurchase_order_id(int  purchase_order_id) {
-            this.purchase_order_id = purchase_order_id;
+        public FieldDataBuilder setOrder_id(int order_id) {
+            this.order_id = order_id;
             return this;
         }
 
@@ -688,6 +708,10 @@ public class FieldData {
             return this;
         }
 
+        public FieldDataBuilder setForeign_id(int foreign_id) {
+            this.foreign_id = foreign_id;
+            return this;
+        }
 
         public FieldDataBuilder setNome_categoria(String nome_categoria) {
             this.nome_categoria = nome_categoria;

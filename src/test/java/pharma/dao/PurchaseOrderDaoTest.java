@@ -124,7 +124,7 @@ ArgumentCaptor<Integer> argumentCaptor=ArgumentCaptor.forClass(Integer.class);
     @Test
     void ValidUpdate() throws SQLException {
         PreparedStatement preparedStatement_update = Mockito.mock(PreparedStatement.class);
-        FieldData fd_update = FieldData.FieldDataBuilder.getbuilder().setInvoice_id(1000).setPurchase_order_id(3000).build();
+        FieldData fd_update = FieldData.FieldDataBuilder.getbuilder().setInvoice_id(1000).setOrder_id(3000).build();
 
         Mockito.when(preparedStatement_update.executeUpdate()).thenReturn(1);
 

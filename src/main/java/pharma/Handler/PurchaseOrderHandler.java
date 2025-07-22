@@ -145,7 +145,7 @@ private  SimpleBooleanProperty s_update_result;
                 FieldData fieldData_curr = FieldData.FieldDataBuilder.getbuilder().
                         setcode(fieldata_detail.getCode()).
                         setFarmaco_id(fieldata_detail.getFarmaco_id())
-                        .setPurchase_order_id(index).
+                        .setOrder_id(index).
                         setQuantity(fieldata_detail.getQuantity()).
                         setVat_percent(fieldata_detail.getVat_percent()).setPrice(fieldata_detail.getPrice()).build();
                   return purchaseOrderDetailDao.insert(fieldData_curr);

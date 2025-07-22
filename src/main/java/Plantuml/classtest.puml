@@ -34,6 +34,15 @@ Ripiano
  +Altezza_corrente
  +Spessore Corrente
   }
+  class SellerOrder{
+  +farmacista_id
+   +data
+   +subtotale
+   +iva
+   +totale
+   +invoice_id
+  }
+
 note right  : Ripiano è relativo alla disponibilità
 Scaffale o-- Ripiano:contiene
 

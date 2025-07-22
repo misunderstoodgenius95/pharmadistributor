@@ -22,6 +22,7 @@ import pharma.dao.LottiDao;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
@@ -58,7 +59,7 @@ class JsonNotifyLottoDaoTest {
             FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setcode("11a").setNome("Tachipirina").setUnit_misure("100mg").
                     setNome_tipologia("Capsule").build();
 
-            Mockito.when(lottiDao.findByIds(Mockito.anyInt(),Mockito.anyString())).thenReturn(fieldData);
+            Mockito.when(lottiDao.findByIds(Mockito.anyInt(),Mockito.anyString())).thenReturn(Optional.ofNullable(fieldData));
             json_dao.execute();
 
 

@@ -22,7 +22,7 @@ public class JsonNotifyLottoDao extends JsonNotify {
             throw new IllegalArgumentException("Argument Not Find");
         }
 
-        FieldData fieldData=lottiDao.findByIds(input.getInt("product_id"),input.getString("lot_id"));
+        FieldData fieldData=lottiDao.findByIds(input.getInt("product_id"),input.getString("lot_id")).get();
         String body=super.create_body(input);
         if(fieldData.getNome()!=null && fieldData.getNome_tipologia()!=null && fieldData.getUnit_misure()!=null){
 

@@ -22,11 +22,11 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
                 setId(resultSet.getInt(1)).
                 setcode(resultSet.getString(2)).
                 setPrice(resultSet.getDouble("price")).
+                setFarmaco_id(resultSet.getInt("farmaco_id")).
                 setNome_casa_farmaceutica(resultSet.getString("nome_farmaco")).
-                setPurchase_order_id(resultSet.getInt("purchase_order")).
+                setOrder_id(resultSet.getInt("purchase_order")).
                 setQuantity(resultSet.getInt("quantity")).
                 setVat_percent(resultSet.getInt("vat_percent")).
-                setNome_farmaco(resultSet.getString("nome")).
                 setNome_tipologia(resultSet.getString("tipologia")).
                 setUnit_misure(resultSet.getString("misura")).
                 build();
@@ -61,7 +61,7 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
     protected void setInsertParameter(PreparedStatement statement, FieldData entity) throws Exception {
         statement.setString(1,entity.getCode());
         statement.setInt(2,entity.getFarmaco_id());
-        statement.setInt(3,entity.getPurchase_order_id());
+        statement.setInt(3,entity.getOrder_id());
         statement.setDouble(4,entity.getPrice());
         statement.setInt(5,entity.getQuantity());
         statement.setInt(6,entity.getVat_percent());
@@ -95,7 +95,7 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
                         setcode(resultSet.getString(2)).
                         setPrice(resultSet.getDouble("price")).
                         setFarmaco_id(resultSet.getInt("farmaco")).
-                        setPurchase_order_id(resultSet.getInt("purchase_order")).
+                        setOrder_id(resultSet.getInt("purchase_order")).
                         setQuantity(resultSet.getInt("quantity")).
                         setVat_percent(resultSet.getInt("vat_percent")).
                         setNome_farmaco(resultSet.getString("nome_farmaco")).
