@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+
+if(max_threshold list is empty) then(yes)
+:Divide  phramacy list in middle;
+:Calculus average coordinate of created list;
+stop
+else (no)
+
+while( loop  treshold_list )
+while(loop pharmacist)
+:calculate distance two point;
+if( fpoint.distance and fother.distance <=65) then (yes)
+:Group pharmacist;
+
+endif
+endwhile
+endwhile
+if(list is empty) then (yes)
+:Divide  phramacy list in middle;
+
+
+else(no)
+:Calculus average coordinate  of n point;
+
+
+endif
+:Return list coordinate;
+end
+@enduml

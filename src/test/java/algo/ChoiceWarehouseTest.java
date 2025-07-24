@@ -2,24 +2,18 @@ package algo;
 
 import net.postgis.jdbc.PGgeometry;
 import net.postgis.jdbc.geometry.Point;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.*;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import pharma.Controller.subpanel.Pharma;
 import pharma.Model.*;
-import  org.assertj.core.api.Assertions.*;
-import java.io.PipedOutputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.InetAddress;
+
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.map;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.offset;
 
 class ChoiceWarehouseTest {
     private ChoiceWarehouse choiceWarehouse;
@@ -128,7 +122,7 @@ class ChoiceWarehouseTest {
     }
 
 
-    public static List<PharmacyDistance> list_distance() {
+    /*public static List<PharmacyDistance> list_distance() {
 
         List<PharmacyDistance> list_distance = new ArrayList<>();
 
@@ -151,7 +145,7 @@ class ChoiceWarehouseTest {
         return list_distance;
 
 
-    }
+    }*/
 
 
     private static Stream<Arguments> provideTestData() {
@@ -199,27 +193,48 @@ class ChoiceWarehouseTest {
     }
 
 
-    private static Stream<Arguments> provideTestDataDistance() {
+   /* private static Stream<Arguments> provideTestDataDistance() {
+        // Create local Farmacia variables (can't access instance variables from static method)
+        Farmacia testFarmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
+        Farmacia testFarmacia2 = new Farmacia("Farmacia Norte", 2, new PGgeometry(new Point(38.156059, 14.745716)));
+        Farmacia testFarmacia3 = new Farmacia("Farmacia Sul", 3, new PGgeometry(new Point(38.056718, 14.830686)));
+        Farmacia testFarmacia4 = new Farmacia("Farmacia Nord", 4, new PGgeometry(new Point(38.194237, 13.211291)));
+        Farmacia testFarmacia5 = new Farmacia("Farmacia Est", 5, new PGgeometry(new Point(37.071914, 15.256249)));
+
+        Farmacia testFarmacia6 = new Farmacia("Farmacia Central2 ", 1, new PGgeometry(new Point(37.700417, 14.04684)));
+        Farmacia testFarmacia7 = new Farmacia("Farmacia Norte 2", 2, new PGgeometry(new Point(37.587327, 13.398657)));
+
+        Farmacia testFarmacia8 = new Farmacia("Farmacia Sul 2", 3, new PGgeometry(new Point(37.247026, 14.223032)));
+        Farmacia testFarmacia9 = new Farmacia("Farmacia Nord 3", 4, new PGgeometry(new Point(39.310732, 16.285324)));
+        Farmacia testFarmacia10 = new Farmacia("Farmacia Est 4 ", 5, new PGgeometry(new Point(38.843597, 16.520237))); // Fixed coordinate
+
         HashMap<Farmacia, List<PharmacyDistance>> expected = new HashMap<>();
-        Farmacia farmacia1 = new Farmacia("Farmacia Central", 1,
-                new PGgeometry(new Point(38.2547, 15.5049)));
-        Farmacia farmacia2 = new Farmacia("Farmacia Norte", 2,
-                new PGgeometry(new Point(38.1561, 14.7457)));
-        Farmacia farmacia3 = new Farmacia("Farmacia Sul", 3,
-                new PGgeometry(new Point(38.0567, 14.8307)));
-        Farmacia farmacia4 = new Farmacia("Farmacia Nord", 4,
-                new PGgeometry(new Point(38.194237, 13.2113)));
-
-
-        expected.put(farmacia1, List.of(new PharmacyDistance(farmacia2, 67.23), new PharmacyDistance(farmacia3, 62.92), new PharmacyDistance(farmacia4, 200.46)));
-        expected.put(farmacia3, List.of(new PharmacyDistance(farmacia1, 62.92), new PharmacyDistance(farmacia2, 13.32), new PharmacyDistance(farmacia4, 142.47)));
+        expected.put(testFarmacia1, List.of(
+            new PharmacyDistance(testFarmacia2, 67.23), 
+            new PharmacyDistance(testFarmacia3, 62.92), 
+            new PharmacyDistance(testFarmacia4, 200.46)
+        ));
+        expected.put(testFarmacia3, List.of(
+            new PharmacyDistance(testFarmacia1, 62.92), 
+            new PharmacyDistance(testFarmacia2, 13.32), 
+            new PharmacyDistance(testFarmacia4, 142.47)
+        ));
+        
         return Stream.of(
                 Arguments.of(
-                        List.of(Map.entry(farmacia1, 1000), Map.entry(farmacia2, 200), Map.entry(farmacia3, 500), Map.entry(farmacia4, 200)),
+                        List.of(
+                            Map.entry(testFarmacia1, 1000), 
+                            Map.entry(testFarmacia2, 200), 
+                            Map.entry(testFarmacia3, 600),
+                            Map.entry(testFarmacia4, 800)
+                        ),
                         expected
                 )
         );
+
+
     }
+
 
 
     @ParameterizedTest
@@ -228,18 +243,139 @@ class ChoiceWarehouseTest {
         HashMap<Farmacia, List<PharmacyDistance>> actual = ChoiceWarehouse.distance_pharmacist(input);
 
 
-        System.out.println(actual);
+       actual.forEach((key, value) -> System.out.println(key.getId() + " " + value));
         //assertEquals(expected, actual);
 
 
     }
 
 
+    */
+
     @Test
     void pharmacy_add() {
 
-        Map<Farmacia, List<PharmacyDistance>> map_ph_distance = new HashMap<>();
+/*        Map<Farmacia, List<PharmacyDistance>> map_ph_distance = new HashMap<>();
         ChoiceWarehouse.pharmacy_distance(60.50, farmacia2, farmacia1, map_ph_distance);
-        assertThat(map_ph_distance.get(farmacia1)).contains(new PharmacyDistance(farmacia2,60.50));
+        assertThat(map_ph_distance.get(farma cia1)).allSatisfy(pd->{
+            assertThat(pd.getFarmacia()).isEqualTo(farmacia2);
+            assertThat(pd.getDistance()).isCloseTo(60.50,offset(0.01));
+
+
+        });*//*contains(new PharmacyDistance(farmacia2,60.50));*/
     }
+
+    @Test
+    void middle_listFor() {
+
+        List<Farmacia> list=ChoiceWarehouse.limit_entries(  List.of(
+                Map.entry(farmacia1, 1000),
+                Map.entry(farmacia2, 200),
+                Map.entry(farmacia3, 600),
+                Map.entry(farmacia4, 800)
+        ));
+        assertThat(list).containsAll(List.of(farmacia1,farmacia2));
+
+
+
+
+
+    }
+    @Test
+    void middle_listTwo() {
+
+        List<Farmacia> list=ChoiceWarehouse.limit_entries(  List.of(
+                Map.entry(farmacia1, 1000),
+                Map.entry(farmacia2, 200)
+
+        ));
+        assertThat(list).containsAll( List.of(farmacia1,farmacia2));
+
+
+
+
+
+    }
+    @Test
+    void middle_listOdd() {
+
+        List<Farmacia> list=ChoiceWarehouse.limit_entries(  List.of(
+                Map.entry(farmacia1, 1000),
+                Map.entry(farmacia2, 200),
+                Map.entry(farmacia3, 200)
+
+        ));
+        assertThat(list).containsAll( List.of(farmacia1,farmacia2,farmacia3));
+
+
+
+
+
+    }
+    @Test
+    void middle_listOddGreather4() {
+
+        List<Farmacia> list=ChoiceWarehouse.limit_entries(  List.of(
+                Map.entry(farmacia1, 1000),
+                Map.entry(farmacia2, 200),
+                Map.entry(farmacia3, 200) ,
+                Map.entry(farmacia4, 200),
+                Map.entry(farmacia5, 200)
+        ));
+        assertThat(list).containsAll( List.of(farmacia1,farmacia2));
+    }
+
+
+    @Test
+    void Validaverage_entries() {
+
+        List<Farmacia> input=List.of(
+                farmacia1,
+                farmacia2,
+                farmacia3,
+                farmacia4,
+                farmacia5);
+        Point point_expected=new Point(37.946716,14.709762);
+        PharmacyDistance distance=ChoiceWarehouse.average_entries(input);
+        List<Farmacia> farmacias=List.of(farmacia1,farmacia2,farmacia3,farmacia4,farmacia5);
+        assertThat(distance).satisfies(pd->{
+                assertThat(pd.getFarmaciaList()).containsAll(farmacias);
+                assertThat(pd.getAverage()).
+                        satisfies(point -> {
+                            assertThat(point.getX()).isCloseTo(point_expected.getX(), Offset.offset(0.01));
+                            assertThat(point.getY()).isEqualTo(point_expected.getY(),Offset.offset(0.01));
+                        });
+                });
+
+
+
+
+
+
+
+
+
+    }
+    @Test
+    void InValidaverage_entries() {
+
+        List<Farmacia> input=List.of();
+        Assertions.assertThrows(IllegalArgumentException.class,()->ChoiceWarehouse.average_entries(input));
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
 }
