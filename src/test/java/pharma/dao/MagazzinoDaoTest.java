@@ -1,5 +1,7 @@
 package pharma.dao;
 
+import net.postgis.jdbc.PGgeometry;
+import net.postgis.jdbc.geometry.Point;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -23,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -43,8 +46,37 @@ class MagazzinoDaoTest {
 
     }
 
+    @Test
+    void findById() throws SQLException {
+        Point point = new Point(38.1257128, 14.7595248);
+        PGgeometry geom = new PGgeometry(point);
+        when(resultSet.getObject("location")).thenReturn((PGgeometry) geom);
+        when(resultSet.getInt("id")).thenReturn(1);
+        when(resultSet.getString("nome")).thenReturn("a11");
+        when(resultSet.getString("address")).thenReturn("Via Corso Cavour 42");
+        when(resultSet.getString("comune")).thenReturn("Roma");
 
-        @Nested
+        when(resultSet.next()).thenReturn(true, false);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
+        FieldData magazzino=magazzinoDao.findById(1);
+       assertThat(magazzino).satisfies(p-> {
+                   assertThat(p.getId()).isEqualTo(1);
+                   assertThat(p.getNome()).isEqualTo("a11");
+                   assertThat(p.getStreet()).isEqualTo("Via Corso Cavour 42");
+                   assertThat(p.getComune()).isEqualTo("Roma");
+                   assertThat((Point)p.getLocation().getGeometry()).satisfies(point1->{
+                   assertThat(point1.getX()).isEqualTo(point.getX());
+                   assertThat(point1.getY()).isEqualTo(point.getY());
+                   });
+               });
+
+
+
+    }
+
+
+    @Nested
      public class FindALl {
             private List<FieldData> list;
 

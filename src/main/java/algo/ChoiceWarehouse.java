@@ -3,6 +3,7 @@ package algo;
 import net.postgis.jdbc.geometry.Point;
 import org.jetbrains.annotations.TestOnly;
 import pharma.Model.*;
+import pharma.dao.MagazzinoDao;
 import pharma.formula.HarvesinFormula;
 
 import java.util.*;
@@ -10,14 +11,18 @@ import java.util.stream.Collectors;
 
 
 public class ChoiceWarehouse {
-private static final int  PHARMACY_LOW_THRESHOLD=500;
-
+private static final int  PHARMACY_LOW_THRESHOLD=600;
+private static final int  PHARMACY_NEIGHTBOUR_THRESHOLD=300;
+private static final double RADIUS_KM_WAREHOUSE_RANGE=40;
+private static final double LATITUDE_DEGREE=111.0;
 private List<Warehouse> warehouses;
+private MagazzinoDao magazzinoDao;
 private final List<ChoiceAssigned> assigneds;
 private final  double DISTANCE_KM=70;
-    public ChoiceWarehouse(List<Warehouse> warehouses, List<ChoiceAssigned> assigneds) {
+    public ChoiceWarehouse(List<Warehouse> warehouses, List<ChoiceAssigned> assigneds, MagazzinoDao magazzinoDao) {
         this.warehouses = warehouses;
         this.assigneds = assigneds;
+        this.magazzinoDao=magazzinoDao;
     }
 
     public Map<Integer, Integer> max_qty_pharmacy_for_lot(){
@@ -27,15 +32,57 @@ private final  double DISTANCE_KM=70;
            assigneds-> assigneds.getFarmacia().getId(),
                 Collectors.summingInt(ChoiceAssigned::getQuantity))
 
-
         );
 
     }
-    public void calculate_warehouse(){
+    public void calculate_warehouse(LotDimension dimension,int quantity){
         Map<Farmacia,Integer> map_by_qty=pharmacy_by_qty();
         List<Map. Entry<Farmacia, Integer>> sorted_values= sorted_by_max(map_by_qty);
-     distance_pharmacist(sorted_values);
-   /*     ChoiceWarehouse.sorted_coordinate(distance);*/
+        List<PharmacyDistance> pharmacyDistances=distance_pharmacist(sorted_values);
+
+
+
+
+    }
+
+
+    private  void calculate_availability(List<PharmacyDistance> distanceList,LotDimension dimension,int quantity){
+        distanceList.forEach(pharmacy->{
+
+            warehouses.forEach(warehouse->{
+                Point point_warehouse=(Point) warehouse.getpGgeometry().getGeometry();
+                if(in_range(pharmacy.getAverage(),point_warehouse)){
+
+
+                }
+            });
+
+
+
+
+
+
+
+        });
+
+
+
+
+    }
+    public static boolean in_range(Point average_point,Point warehouse_point){
+
+        double latitude_offset=RADIUS_KM_WAREHOUSE_RANGE/LATITUDE_DEGREE;
+        double min_lat=average_point.getX()-latitude_offset;
+        double max_lat=average_point.getX()+latitude_offset;
+        double lng_offset=RADIUS_KM_WAREHOUSE_RANGE/ (LATITUDE_DEGREE *Math.cos(Math.toRadians(average_point.getX())));
+        double min_lng=average_point.getY()-lng_offset;
+        double max_lng=average_point.getY()+lng_offset;
+
+        return (warehouse_point.getX()>min_lat &&   warehouse_point.getX()<max_lat) && ( warehouse_point.getY() >min_lng  &&   warehouse_point.getY()<max_lng);
+
+
+
+
 
 
 
@@ -70,43 +117,35 @@ private final  double DISTANCE_KM=70;
         return map.entrySet().stream().sorted(Map.Entry.<Farmacia,Integer>comparingByValue().reversed()).collect(Collectors.toList());
 
     }
-/*  public static List<PharmacyDistance> sorted_coordinate(List<PharmacyDistance> list_distance){
-        return list_distance.stream().sorted(Comparator.comparing(PharmacyDistance::getDistance)).toList();
 
-    }*/
+
 
     /**
-     * Sorts the distances of pharmacies for each Farmacia entry in the provided map in ascending order.
-     *
-     * @param list_distance a HashMap where the key is a Farmacia object and the value is a list of PharmacyDistance objects representing distances to nearby pharmacies
-     * @return a new HashMap with the same keys but where the lists of PharmacyDistance objects are sorted in ascending order of distance
+     * Calculates the clusters of pharmacies based on geographical distance and thresholds.
+     * Determines groups of pharmacies that fall within a specified distance range
+     * and calculates the average geographical point for each group.
+     *We have three case:
+     * Pharmacy Point
+     * @param entries a list of Map.Entry objects, where each entry contains a Farmacia (pharmacy) object as the key
+     *                and an Integer value representing some metric associated with the pharmacy.
+     *                The list is used to calculate proximity and categorize pharmacies based on distance thresholds.
+     * @return a List of PharmacyDistance objects, where each object represents one group of pharmacies
+     *         and their average geographical point. If no eligible clusters are found, a default average
+     *         list may be calculated and returned instead. Throws IllegalArgumentException if the input list is empty.
      */
-/*    public static HashMap<Farmacia,List<PharmacyDistance>> sorted_coordinate(HashMap<Farmacia,List<PharmacyDistance>> list_distance){
-        HashMap<Farmacia,List<PharmacyDistance>> map=new HashMap<>();
-            for(Map.Entry<Farmacia,List<PharmacyDistance>> distance:list_distance.entrySet()){
-                List<PharmacyDistance> distances=distance.getValue().stream().sorted(Comparator.comparing(PharmacyDistance::getDistance)).toList();
-                map.put(distance.getKey(),distances);
-            }
-            return map;
 
-    }*/
-    /**
-     *
-     * Calculate distance between n pharmacist
-     * @param entries
-     * @return
-     */
+
 @TestOnly
    public  List<PharmacyDistance> distance_pharmacist(List<Map.Entry<Farmacia,Integer>> entries) {
     if(entries.isEmpty()){
         throw new IllegalArgumentException("Map is empty");
     }
 
-       HashMap<Farmacia,List<PharmacyDistance>> pharmacy_distance=new HashMap<>();
+
     List<Map.Entry<Farmacia, Integer>>  pharmacy_points=ChoiceWarehouse.extract_max_threshold_lot(entries);
     if(pharmacy_points.isEmpty()){
-        List<Farmacia> list_divide= ChoiceWarehouse.limit_entries(entries);
-       return  List.of(average_entries(list_divide));
+        List<Farmacia> list_limit= ChoiceWarehouse.limit_entries(entries);
+       return  List.of(average_entries(list_limit));
     }else{
         List<PharmacyDistance> pharmacyDistanceList=new ArrayList<>();
         for(Map.Entry<Farmacia,Integer> pharmacy_point:pharmacy_points){
@@ -122,13 +161,13 @@ private final  double DISTANCE_KM=70;
                 Farmacia farmacia_neightbour=set.getKey();
                 Point point_other=(Point) farmacia_neightbour.getCoordianate().getGeometry();
                 double distance=HarvesinFormula.calculate_harvesinDistance(lat_point, lng_pont,point_other.getX(),point_other.getY());
-                if(Math.ceil(distance)<=DISTANCE_KM){
+                if(Math.ceil(distance)<=DISTANCE_KM  &&  set.getValue()>=PHARMACY_NEIGHTBOUR_THRESHOLD){
                     Pharmacylist.add(farmacia_neightbour);
                 }
             });
         }
         if( pharmacyDistanceList.isEmpty()){
-            average_entries(limit_entries(pharmacy_points));
+              return  List.of(average_entries(limit_entries(pharmacy_points)));
 
         }else{
             pharmacyDistanceList.forEach(list-> list.setAverage( average_point(list.getFarmaciaList())));
@@ -143,7 +182,7 @@ private final  double DISTANCE_KM=70;
 
 
 
-    return null;
+
 
 
    }
@@ -163,11 +202,11 @@ private final  double DISTANCE_KM=70;
 
 
     /**
-     * If list is <4 return list, otherwise divide by middle
-     * Greather than 4, if the value is odd it considerate the default value(an aproximation value).
-     * Limit the faram
-     * @param list
-     * @return
+     * Limits the number of entries in a list to a maximum of 20 and retrieves the Farmacia keys.
+     *
+     * @param list a list of Map.Entry objects where each entry contains a Farmacia object as the key
+     *             and an Integer value as the associated metric.
+     * @return a list of Farmacia objects limited to the first 20 entries in the input list.
      */
    @TestOnly
    public  static List<Farmacia> limit_entries(List<Map.Entry<Farmacia,Integer>> list){

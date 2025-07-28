@@ -6,11 +6,13 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.LoggerFactory;
 import pharma.Model.FieldData;
 
 public class ShelfInfo
 {
+
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(ShelfInfo.class);
     private String  shelf_code;
@@ -120,7 +122,7 @@ public class ShelfInfo
     public void setShelvesCapacities(List<ShelvesCapacity> shelvesCapacities) {
         this.shelvesCapacities = shelvesCapacities;
     }
-
+    @TestOnly
     public boolean canFitProduct(LotDimension lotDimension){
         return lotDimension.getLength()<= lenght &&
                 lotDimension.getHeight()<=(height /num_rip)&&
@@ -128,7 +130,7 @@ public class ShelfInfo
                 lotDimension.getWeight()<= deep;
 
     }
-
+@TestOnly
  public Optional<List<ShelvesCapacity>> space_shelves_space_exist(LotDimension lotDimension){
               List<ShelvesCapacity> current_space_capacity=new ArrayList<>();
                 if(!canFitProduct(lotDimension)){
@@ -160,6 +162,7 @@ public class ShelfInfo
      *         representing the remaining spaces, or an empty {@code Optional} if the
      *         product cannot fit in any available space.
      */
+
  public Optional<List<ShelvesRemain>> remaining_levels(LotDimension lotDimension) {
      List<ShelvesRemain> remain = new ArrayList<>();
      if (!canFitProduct(lotDimension)) {

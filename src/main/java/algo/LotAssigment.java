@@ -25,6 +25,7 @@ public class LotAssigment {
 
     }
 
+
     public List<ShelvesAssigment> getShelvesAssigmentList() {
         return shelvesAssigmentList;
     }
@@ -41,6 +42,7 @@ public class LotAssigment {
             this.shelf_code = shelf_code;
             this.quantity = quantity;
             this.shelf_level = shelf_level;
+
         }
 
 

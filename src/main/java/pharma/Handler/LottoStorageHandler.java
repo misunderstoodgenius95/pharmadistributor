@@ -218,7 +218,7 @@ private MagazzinoDao magazzinoDao;
             choiceAssigneds.add(new ChoiceAssigned(farmacia,orderDetail.getQuantity()));
 
         }
-        ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouse,choiceAssigneds);
+        /*ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouse,choiceAssigneds);*/
 
 
 

@@ -8,12 +8,15 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mock;
 import pharma.Model.*;
+import pharma.dao.MagazzinoDao;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.offset;
+
+import static org.assertj.core.api.Assertions.*;
 
 class ChoiceWarehouseTest {
     private ChoiceWarehouse choiceWarehouse;
@@ -27,13 +30,14 @@ class ChoiceWarehouseTest {
     private Farmacia farmacia8;
     private Farmacia farmacia9;
     private Farmacia farmacia10;
-
+    @Mock
+    private MagazzinoDao magazzinoDao;
     @BeforeEach
     public void setUp() {
         List<Warehouse> list_warehouse = List.of(
                 new Warehouse(1, "mag1", new PGgeometry(new Point(-23.5501, -46.6330))),
                 new Warehouse(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330))),
-                new Warehouse(3, "mag3", new PGgeometry(new Point(-34.5501, -46.6330))),
+                new Warehouse(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330))),
                 new Warehouse(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330))));
 
         farmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
@@ -67,8 +71,7 @@ class ChoiceWarehouseTest {
                 new ChoiceAssigned(farmacia9, 10),
                 new ChoiceAssigned(farmacia10, 35));
 
-
-        choiceWarehouse = new ChoiceWarehouse(list_warehouse, assigneds);
+        choiceWarehouse = new ChoiceWarehouse(list_warehouse, assigneds,magazzinoDao);
 
 
     }
@@ -268,114 +271,214 @@ class ChoiceWarehouseTest {
     @Test
     void middle_listFor() {
 
-        List<Farmacia> list=ChoiceWarehouse.limit_entries(  List.of(
+        List<Farmacia> list = ChoiceWarehouse.limit_entries(List.of(
                 Map.entry(farmacia1, 1000),
                 Map.entry(farmacia2, 200),
                 Map.entry(farmacia3, 600),
                 Map.entry(farmacia4, 800)
         ));
-        assertThat(list).containsAll(List.of(farmacia1,farmacia2));
-
-
-
+        assertThat(list).containsAll(List.of(farmacia1, farmacia2));
 
 
     }
+
     @Test
     void middle_listTwo() {
 
-        List<Farmacia> list=ChoiceWarehouse.limit_entries(  List.of(
+        List<Farmacia> list = ChoiceWarehouse.limit_entries(List.of(
                 Map.entry(farmacia1, 1000),
                 Map.entry(farmacia2, 200)
 
         ));
-        assertThat(list).containsAll( List.of(farmacia1,farmacia2));
-
-
-
+        assertThat(list).containsAll(List.of(farmacia1, farmacia2));
 
 
     }
+
     @Test
     void middle_listOdd() {
 
-        List<Farmacia> list=ChoiceWarehouse.limit_entries(  List.of(
+        List<Farmacia> list = ChoiceWarehouse.limit_entries(List.of(
                 Map.entry(farmacia1, 1000),
                 Map.entry(farmacia2, 200),
                 Map.entry(farmacia3, 200)
 
         ));
-        assertThat(list).containsAll( List.of(farmacia1,farmacia2,farmacia3));
-
-
-
+        assertThat(list).containsAll(List.of(farmacia1, farmacia2, farmacia3));
 
 
     }
+
     @Test
     void middle_listOddGreather4() {
 
-        List<Farmacia> list=ChoiceWarehouse.limit_entries(  List.of(
+        List<Farmacia> list = ChoiceWarehouse.limit_entries(List.of(
                 Map.entry(farmacia1, 1000),
                 Map.entry(farmacia2, 200),
-                Map.entry(farmacia3, 200) ,
+                Map.entry(farmacia3, 200),
                 Map.entry(farmacia4, 200),
                 Map.entry(farmacia5, 200)
         ));
-        assertThat(list).containsAll( List.of(farmacia1,farmacia2));
+        assertThat(list).containsAll(List.of(farmacia1, farmacia2));
     }
 
 
     @Test
     void Validaverage_entries() {
 
-        List<Farmacia> input=List.of(
+        List<Farmacia> input = List.of(
                 farmacia1,
                 farmacia2,
                 farmacia3,
                 farmacia4,
                 farmacia5);
-        Point point_expected=new Point(37.946716,14.709762);
-        PharmacyDistance distance=ChoiceWarehouse.average_entries(input);
-        List<Farmacia> farmacias=List.of(farmacia1,farmacia2,farmacia3,farmacia4,farmacia5);
-        assertThat(distance).satisfies(pd->{
-                assertThat(pd.getFarmaciaList()).containsAll(farmacias);
-                assertThat(pd.getAverage()).
-                        satisfies(point -> {
-                            assertThat(point.getX()).isCloseTo(point_expected.getX(), Offset.offset(0.01));
-                            assertThat(point.getY()).isEqualTo(point_expected.getY(),Offset.offset(0.01));
-                        });
-                });
-
-
-
-
-
-
-
+        Point point_expected = new Point(37.946716, 14.709762);
+        PharmacyDistance distance = ChoiceWarehouse.average_entries(input);
+        List<Farmacia> farmacias = List.of(farmacia1, farmacia2, farmacia3, farmacia4, farmacia5);
+        assertThat(distance).satisfies(pd -> {
+            assertThat(pd.getFarmaciaList()).containsAll(farmacias);
+            assertThat(pd.getAverage()).
+                    satisfies(point -> {
+                        assertThat(point.getX()).isCloseTo(point_expected.getX(), Offset.offset(0.01));
+                        assertThat(point.getY()).isEqualTo(point_expected.getY(), Offset.offset(0.01));
+                    });
+        });
 
 
     }
+
     @Test
-    void InValidaverage_entries() {
+    void InValidAverage_entries() {
 
-        List<Farmacia> input=List.of();
-        Assertions.assertThrows(IllegalArgumentException.class,()->ChoiceWarehouse.average_entries(input));
+        List<Farmacia> input = List.of();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ChoiceWarehouse.average_entries(input));
+    }
+
+    @Test
+    void ValidIn_range() {
+        Point point_pharmacy=new Point(40.7589,-73.9851);
+        Point point_wharehouse=new Point(40.5017,-74.2291);
+
+        Assertions.assertTrue(ChoiceWarehouse.in_range(point_pharmacy,point_wharehouse));
+    }
+
+    @Test
+    void InValidIn_range() {
+        Point point_pharmacy=new Point(40.75,-73.9851);
+        Point point_wharehouse=new Point(41.55,-74.98);
+
+        Assertions.assertFalse(ChoiceWarehouse.in_range(point_pharmacy,point_wharehouse));
+    }
+
+    @Nested
+    class ValidPharmacyDistance {
+        @Test
+        public void InvalidPhramcyDistanceNoPharmacy() {
+            List<Map.Entry<Farmacia, Integer>> entries = new ArrayList<>();
+            Assertions.assertThrows(IllegalArgumentException.class, () -> choiceWarehouse.distance_pharmacist(entries));
 
 
+        }
+
+        @Test
+        public void ValidPharamcyDistanceNoPharmacyPoint() {
+            List<Map.Entry<Farmacia, Integer>> entries = new ArrayList<>();
+            entries.add(Map.entry(farmacia1, 300));
+            entries.add(Map.entry(farmacia2, 200));
+            entries.add(Map.entry(farmacia3, 400));
+            entries.add(Map.entry(farmacia4, 400));
+
+            List<PharmacyDistance> list = choiceWarehouse.distance_pharmacist(entries);
+
+            assertThat(list).allSatisfy(p -> {
+                assertThat(list).hasSize(1);
+                assertThat(p.getAverage()).satisfies(
+                        point -> {
+                            assertThat(point.getX()).isCloseTo(38.16, Offset.offset(0.01));
+                            assertThat(point.getY()).isCloseTo(14.57, Offset.offset(0.01));
+                        });
+            });
+        }
+
+        @Test
+        public void ValidPharamcyDistanceNoPharmacyPointNeighbour() {
+            List<Map.Entry<Farmacia, Integer>> entries = new ArrayList<>();
+            entries.add(Map.entry(farmacia1, 600));
+            entries.add(Map.entry(farmacia5, 500));
+            entries.add(Map.entry(farmacia3, 400));
+            entries.add(Map.entry(farmacia4, 400));
+            List<PharmacyDistance> list = choiceWarehouse.distance_pharmacist(entries);
+            assertThat(list).allSatisfy(p -> {
+                assertThat(list).hasSize(1);
+                assertThat(p.getAverage()).satisfies(
+                        point -> {
+                            assertThat(point.getX()).isCloseTo(38.16, Offset.offset(0.01));
+                            assertThat(point.getY()).isCloseTo(14.57, Offset.offset(0.01));
+                        });
+            });
+        }
+
+        @Test
+        public void ValidPharamcyDistancePharmacyPointNeighbour() {
+            List<Map.Entry<Farmacia, Integer>> entries = new ArrayList<>();
+            entries.add(Map.entry(farmacia1, 600));
+            entries.add(Map.entry(farmacia2, 500));
+            entries.add(Map.entry(farmacia3, 400));
+            entries.add(Map.entry(farmacia4, 400));
+            List<PharmacyDistance> list = choiceWarehouse.distance_pharmacist(entries);
+            assertThat(list).allSatisfy(p -> {
+                assertThat(list).hasSize(1);
+                assertThat(p.getAverage()).satisfies(
+                        point -> {
+                            assertThat(point.getX()).isCloseTo(38.15, Offset.offset(0.01));
+                            assertThat(point.getY()).isCloseTo(15.02, Offset.offset(0.01));
+                        });
+            });
+        }
+
+        @Test
+        public void ValidPharamcyDistancePharmacyMoreOnePointNeighbour() {
+            List<Map.Entry<Farmacia, Integer>> entries = new ArrayList<>();
+            entries.add(Map.entry(farmacia1, 600));
+            entries.add(Map.entry(farmacia2, 500));
+            entries.add(Map.entry(farmacia3, 400));
+            entries.add(Map.entry(farmacia4, 400));
+            entries.add(Map.entry(farmacia6, 600));
+            entries.add(Map.entry(farmacia7, 400));
+            entries.add(Map.entry(farmacia8, 300));
+            List<PharmacyDistance> list = choiceWarehouse.distance_pharmacist(entries);
+            Assertions.assertAll(
+                    () -> assertThat(list.getFirst()).satisfies(p -> {
+
+                        assertThat(p.getAverage()).satisfies(
+                                point -> {
+                                    assertThat(point.getX()).isCloseTo(38.15, Offset.offset(0.01));
+                                    assertThat(point.getY()).isCloseTo(15.02, Offset.offset(0.01));
+                                });
+                    }),
+                    () -> assertThat(list.get(1)).satisfies(p -> {
+
+                        assertThat(p.getAverage()).satisfies(
+                                point -> {
+                                    assertThat(point.getX()).isCloseTo(37.51, Offset.offset(0.01));
+                                    assertThat(point.getY()).isCloseTo(13.88, Offset.offset(0.01));
+                                });
+                    })
+            );
 
 
-
-
-
-
-
-
-
+        }
 
 
     }
+
+
 
 
 
 }
+
+
+
+
+

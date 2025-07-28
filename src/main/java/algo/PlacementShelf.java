@@ -1,5 +1,7 @@
 package algo;
 
+import org.jetbrains.annotations.TestOnly;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +19,8 @@ private List<ShelfInfo> list_shelf;
         this.list_shelf = list_shelf;
     }
 
-    private int max_fitProduct(List<ShelvesRemain> remains){
-    return remains.stream().mapToInt(ShelvesRemain::getQuantity).sum();
-}
+
+
 
 
     /**
@@ -34,6 +35,7 @@ private List<ShelfInfo> list_shelf;
      *         for that shelf based on the input dimensions.
      * @throws IllegalArgumentException if the provided LotDimension is null.
      */
+    @TestOnly
     public HashMap<ShelfInfo,List<ShelvesRemain>> calculatePlacement(LotDimension dimension){
         if(dimension==null){
             throw  new IllegalArgumentException("Missing LotDimension");
@@ -45,23 +47,19 @@ private List<ShelfInfo> list_shelf;
                 shelf_remaing.put(shelfInfo,shelvesRemain);
             });
 
-
-
         }
-
-
-
         return shelf_remaing;
 
     }
 
 
-
+    @TestOnly
     public static List <Map.Entry<ShelfInfo, Integer>> sorted_max_shelf_with(HashMap<ShelfInfo,Integer> hashMap){
         return  hashMap.entrySet().stream().
                 sorted(Map.Entry.<ShelfInfo, Integer>comparingByValue().reversed()).toList();
 
     }
+    @TestOnly
     public static List <Map.Entry<ShelfInfo, Integer>> filter_value(List <Map.Entry<ShelfInfo, Integer>> list,int quantity){
         return list.stream().filter(value->value.getValue()>=quantity).toList();
 
@@ -80,6 +78,7 @@ private List<ShelfInfo> list_shelf;
      *         and the values are integers indicating the total remaining capacity
      *         (in terms of number of items that can fit) for each shelf.
      */
+    @TestOnly
     public  HashMap<ShelfInfo, Integer> calculate_max_fit(HashMap<ShelfInfo,List<ShelvesRemain>> capacity){
         HashMap<ShelfInfo,Integer> capacity_max=new HashMap<>();
         capacity.keySet().forEach(key->{
@@ -105,10 +104,9 @@ private List<ShelfInfo> list_shelf;
         HashMap<ShelfInfo,Integer> capacity_max_shelf=calculate_max_fit(capacity_single_shelves);
 
         List<Map.Entry<ShelfInfo,Integer>> sorted_shelf_by_max= sorted_max_shelf_with(capacity_max_shelf);
+
         List<Map.Entry<ShelfInfo,Integer>>  sorted_filter=filter_value(sorted_shelf_by_max,quantity_remain);
         if(sorted_filter.isEmpty()){
-
-
             for (Map.Entry<ShelfInfo, Integer> map : sorted_shelf_by_max) {
                 if (quantity_remain <= 0) {
                     break;
@@ -140,6 +138,7 @@ private List<ShelfInfo> list_shelf;
 
 
     }
+    @TestOnly
     public int  placingIntoShelf(LotDimension dimension,ShelfInfo shelfInfo,int quantity,List<ShelvesRemain> remains,LotAssigment assigment){
         int remainingToPlace = quantity;
 
@@ -182,6 +181,7 @@ private List<ShelfInfo> list_shelf;
      * @param shelf an object containing the physical dimensions of the shelf, such as length and depth.
      * @return true if the specified quantity of items can fit within the given shelf's remaining capacity, false otherwise.
      */
+    @TestOnly
     public static boolean calculate_fit(LotDimension lotDimension, ShelvesRemain shelvesRemain,
                               int quantity, ShelfInfo shelf) {
 
@@ -243,7 +243,7 @@ private List<ShelfInfo> list_shelf;
 
 
 
-
+@TestOnly
     public static Optional<ShelfInfo> extract_max_shelf(HashMap<ShelfInfo,Integer> capacity_max, int quantity){
         AtomicInteger max= new AtomicInteger(0);
         AtomicReference<ShelfInfo> shelfInfo= new AtomicReference<>();

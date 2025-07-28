@@ -2,11 +2,13 @@
 'https://plantuml.com/activity-diagram-beta
 
 start
-
+:Insert lot dimension;
+:insert quantity;
+:Retrieve Order ;
 if(max_threshold list is empty) then(yes)
 :Divide  phramacy list in middle;
 :Calculus average coordinate of created list;
-stop
+
 else (no)
 
 while( loop  treshold_list )
@@ -24,9 +26,17 @@ if(list is empty) then (yes)
 
 else(no)
 :Calculus average coordinate  of n point;
-
-
 endif
-:Return list coordinate;
-end
+endif
+while (loop list coordinate)
+while (loop Warehouse List)
+  if (Warehouse is in range?) then (yes)
+    if (Available quantity >= Required quantity?) then (yes)
+      :Select this warehouse;
+      break
+    endif
+  endif
+endwhile
+endwhile
+:Choice Warehouse;
 @enduml
