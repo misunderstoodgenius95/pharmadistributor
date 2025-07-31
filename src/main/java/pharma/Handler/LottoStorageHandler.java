@@ -1,6 +1,5 @@
 package pharma.Handler;
 
-import algo.ChoiceWarehouse;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -8,14 +7,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import org.jetbrains.annotations.TestOnly;
 import pharma.Handler.Table.LotTableBase;
-import pharma.Model.ChoiceAssigned;
+import pharma.Model.PharmacyAssigned;
 import pharma.Model.Farmacia;
 import pharma.Model.FieldData;
 import pharma.Model.Warehouse;
 import pharma.config.PopulateChoice;
 import pharma.config.Utility;
 import pharma.dao.*;
-import pharma.javafxlib.Dialog.CustomDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -201,8 +199,8 @@ private MagazzinoDao magazzinoDao;
     @Override
     protected boolean condition_event(FieldData fieldData) throws Exception {
         //find by farmaco_id and lotto_id
-     List<ChoiceAssigned> choiceAssigneds=new ArrayList<>();
-        List<Warehouse> fd_warehouse=magazzinoDao.findAll().stream().map(value->new Warehouse(value.getId(),value.getNome(),value.getLocation())).toList();
+     List<PharmacyAssigned> pharmacyAssigneds =new ArrayList<>();
+        List<Warehouse> fd_warehouse=magazzinoDao.findAll().stream().map(value->new Warehouse(value.getId(),value.getNome(),value.getpGgeometry())).toList();
 
         List<FieldData> order_details=s_order_details.findbyProduct(fieldData.getFarmaco_id(),fieldData.getCode());
         for (FieldData orderDetail : order_details) {
@@ -210,15 +208,15 @@ private MagazzinoDao magazzinoDao;
             int order_id=orderDetail.getOrder_id();
          //obtein the  order
             FieldData fd_order=s_order.findById(order_id);
-            // obetin the farmacia
+            // obtein the farmacia
             int farmacia_id=fd_order.getForeign_id();
 
             FieldData fd_farmacia=farmaciaDao.findById(farmacia_id);
            Farmacia farmacia= new Farmacia(fd_farmacia.getNome(),fd_farmacia.getId(), fd_farmacia.getLocation());
-            choiceAssigneds.add(new ChoiceAssigned(farmacia,orderDetail.getQuantity()));
+            pharmacyAssigneds.add(new PharmacyAssigned(farmacia,orderDetail.getQuantity()));
 
         }
-        /*ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouse,choiceAssigneds);*/
+        /*ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouse,pharmacyAssigneds);*/
 
 
 

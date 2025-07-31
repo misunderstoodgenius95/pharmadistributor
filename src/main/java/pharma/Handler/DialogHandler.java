@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class DialogHandler<F> extends CustomDialog<FieldData> {
+public abstract class DialogHandler<F> extends CustomDialog<F> {
     private  ButtonType buttonType;
     public enum Mode{Insert,Update}
     private  Mode mode;
@@ -114,7 +114,7 @@ public abstract class DialogHandler<F> extends CustomDialog<FieldData> {
      * This method can be setting with FieldData Model that contains the Corrispective date that using for Insert Dao
      * @return
      */
-    protected abstract FieldData get_return_data();
+    protected abstract F get_return_data();
 
     public   void execute(){
 
@@ -147,11 +147,11 @@ public abstract class DialogHandler<F> extends CustomDialog<FieldData> {
 
     /**
      * Method that return condition Dao
-     * @param fieldData
+     * @param
      * @return
      * @throws Exception
      */
-    protected abstract boolean condition_event(FieldData fieldData) throws  Exception;
+    protected abstract boolean condition_event(F type) throws  Exception;
 
     public   void  showAlert(boolean success,String error_message) {
         Alert.AlertType alertType = success ? Alert.AlertType.CONFIRMATION : Alert.AlertType.ERROR;

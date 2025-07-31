@@ -18,6 +18,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
+import pharma.Model.Warehouse;
 import pharma.Storage.FileStorage;
 import pharma.config.Utility;
 import pharma.config.database.Database;
@@ -146,7 +147,7 @@ class MagazzinoHandlerTest {
             SimulateEvents.writeOn(list.get(4),"-18.818886984");
             SimulateEvents.writeOn(list.get(5),"-39.09529473");
             SimulateEvents.clickOn(magazzinoHandler.getButtonOK());
-            when(magazzinoDao.insert(any(FieldData.class))).thenReturn(true);
+            when(magazzinoDao.insert(any(Warehouse.class))).thenReturn(true);
             magazzinoHandler.execute();
 
 

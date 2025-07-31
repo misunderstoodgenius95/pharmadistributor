@@ -13,7 +13,6 @@ import pharma.Model.*;
 import pharma.dao.MagazzinoDao;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
@@ -31,14 +30,15 @@ class ChoiceWarehouseTest {
     private Farmacia farmacia9;
     private Farmacia farmacia10;
     @Mock
-    private MagazzinoDao magazzinoDao;
+    private List<Warehouse> list_warehouse;
+    private List<PharmacyAssigned> assigneds;
     @BeforeEach
     public void setUp() {
-        List<Warehouse> list_warehouse = List.of(
-                new Warehouse(1, "mag1", new PGgeometry(new Point(-23.5501, -46.6330))),
-                new Warehouse(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330))),
-                new Warehouse(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330))),
-                new Warehouse(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330))));
+         list_warehouse = List.of(
+                new Warehouse(1, "mag1", new PGgeometry(new Point(-23.5501, -46.6330)),List.of()),
+                new Warehouse(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330)),List.of()),
+                new Warehouse(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)),List.of()),
+                new Warehouse(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330)),List.of()));
 
         farmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
         farmacia2 = new Farmacia("Farmacia Norte", 2, new PGgeometry(new Point(38.156059, 14.745716)));
@@ -52,26 +52,26 @@ class ChoiceWarehouseTest {
         farmacia8 = new Farmacia("Farmacia Sul 2", 3, new PGgeometry(new Point(37.247026, 14.223032)));
         farmacia9 = new Farmacia("Farmacia Nord 3", 4, new PGgeometry(new Point(39.310732, 16.285324)));
         farmacia10 = new Farmacia("Farmacia Est 4 ", 5, new PGgeometry(new Point(38, 843597, 16.520237)));
-        List<ChoiceAssigned> assigneds = Arrays.asList(
+      assigneds = Arrays.asList(
 
                 // Using Point constructor
-                new ChoiceAssigned(farmacia1, 100),// Near São Paulo
-                new ChoiceAssigned(farmacia2, 25), // Near Rio
-                new ChoiceAssigned(farmacia1, 150), // Same as farmacia
-                new ChoiceAssigned(farmacia3, 30), // Near Curitiba
-                new ChoiceAssigned(farmacia2, 20), // Near Rio
-                new ChoiceAssigned(farmacia1, 50),
-                new ChoiceAssigned(farmacia4, 20),
-                new ChoiceAssigned(farmacia4, 100),
-                new ChoiceAssigned(farmacia5, 10),
-                new ChoiceAssigned(farmacia5, 35),
-                new ChoiceAssigned(farmacia6, 50),
-                new ChoiceAssigned(farmacia7, 20),
-                new ChoiceAssigned(farmacia8, 100),
-                new ChoiceAssigned(farmacia9, 10),
-                new ChoiceAssigned(farmacia10, 35));
+                new PharmacyAssigned(farmacia1, 100),// Near São Paulo
+                new PharmacyAssigned(farmacia2, 25), // Near Rio
+                new PharmacyAssigned(farmacia1, 150), // Same as farmacia
+                new PharmacyAssigned(farmacia3, 30), // Near Curitiba
+                new PharmacyAssigned(farmacia2, 20), // Near Rio
+                new PharmacyAssigned(farmacia1, 50),
+                new PharmacyAssigned(farmacia4, 20),
+                new PharmacyAssigned(farmacia4, 100),
+                new PharmacyAssigned(farmacia5, 10),
+                new PharmacyAssigned(farmacia5, 35),
+                new PharmacyAssigned(farmacia6, 50),
+                new PharmacyAssigned(farmacia7, 20),
+                new PharmacyAssigned(farmacia8, 100),
+                new PharmacyAssigned(farmacia9, 10),
+                new PharmacyAssigned(farmacia10, 35));
 
-        choiceWarehouse = new ChoiceWarehouse(list_warehouse, assigneds,magazzinoDao);
+        choiceWarehouse = new ChoiceWarehouse(list_warehouse, assigneds);
 
 
     }
@@ -196,77 +196,8 @@ class ChoiceWarehouseTest {
     }
 
 
-   /* private static Stream<Arguments> provideTestDataDistance() {
-        // Create local Farmacia variables (can't access instance variables from static method)
-        Farmacia testFarmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
-        Farmacia testFarmacia2 = new Farmacia("Farmacia Norte", 2, new PGgeometry(new Point(38.156059, 14.745716)));
-        Farmacia testFarmacia3 = new Farmacia("Farmacia Sul", 3, new PGgeometry(new Point(38.056718, 14.830686)));
-        Farmacia testFarmacia4 = new Farmacia("Farmacia Nord", 4, new PGgeometry(new Point(38.194237, 13.211291)));
-        Farmacia testFarmacia5 = new Farmacia("Farmacia Est", 5, new PGgeometry(new Point(37.071914, 15.256249)));
-
-        Farmacia testFarmacia6 = new Farmacia("Farmacia Central2 ", 1, new PGgeometry(new Point(37.700417, 14.04684)));
-        Farmacia testFarmacia7 = new Farmacia("Farmacia Norte 2", 2, new PGgeometry(new Point(37.587327, 13.398657)));
-
-        Farmacia testFarmacia8 = new Farmacia("Farmacia Sul 2", 3, new PGgeometry(new Point(37.247026, 14.223032)));
-        Farmacia testFarmacia9 = new Farmacia("Farmacia Nord 3", 4, new PGgeometry(new Point(39.310732, 16.285324)));
-        Farmacia testFarmacia10 = new Farmacia("Farmacia Est 4 ", 5, new PGgeometry(new Point(38.843597, 16.520237))); // Fixed coordinate
-
-        HashMap<Farmacia, List<PharmacyDistance>> expected = new HashMap<>();
-        expected.put(testFarmacia1, List.of(
-            new PharmacyDistance(testFarmacia2, 67.23), 
-            new PharmacyDistance(testFarmacia3, 62.92), 
-            new PharmacyDistance(testFarmacia4, 200.46)
-        ));
-        expected.put(testFarmacia3, List.of(
-            new PharmacyDistance(testFarmacia1, 62.92), 
-            new PharmacyDistance(testFarmacia2, 13.32), 
-            new PharmacyDistance(testFarmacia4, 142.47)
-        ));
-        
-        return Stream.of(
-                Arguments.of(
-                        List.of(
-                            Map.entry(testFarmacia1, 1000), 
-                            Map.entry(testFarmacia2, 200), 
-                            Map.entry(testFarmacia3, 600),
-                            Map.entry(testFarmacia4, 800)
-                        ),
-                        expected
-                )
-        );
 
 
-    }
-
-
-
-    @ParameterizedTest
-    @MethodSource("provideTestDataDistance")
-    public void ValidTestCalculateDistance(List<Map.Entry<Farmacia, Integer>> input, HashMap<Farmacia, List<PharmacyDistance>> expected) {
-        HashMap<Farmacia, List<PharmacyDistance>> actual = ChoiceWarehouse.distance_pharmacist(input);
-
-
-       actual.forEach((key, value) -> System.out.println(key.getId() + " " + value));
-        //assertEquals(expected, actual);
-
-
-    }
-
-
-    */
-
-    @Test
-    void pharmacy_add() {
-
-/*        Map<Farmacia, List<PharmacyDistance>> map_ph_distance = new HashMap<>();
-        ChoiceWarehouse.pharmacy_distance(60.50, farmacia2, farmacia1, map_ph_distance);
-        assertThat(map_ph_distance.get(farma cia1)).allSatisfy(pd->{
-            assertThat(pd.getFarmacia()).isEqualTo(farmacia2);
-            assertThat(pd.getDistance()).isCloseTo(60.50,offset(0.01));
-
-
-        });*//*contains(new PharmacyDistance(farmacia2,60.50));*/
-    }
 
     @Test
     void middle_listFor() {
@@ -361,6 +292,14 @@ class ChoiceWarehouseTest {
 
         Assertions.assertTrue(ChoiceWarehouse.in_range(point_pharmacy,point_wharehouse));
     }
+    @Test
+    void ValidIn_range2() {
+        Point point_pharmacy=new Point(38.15,15.02);
+        Point point_wharehouse=new Point(38.40,15.40);
+
+        Assertions.assertTrue(ChoiceWarehouse.in_range(point_pharmacy,point_wharehouse));
+    }
+
 
     @Test
     void InValidIn_range() {
@@ -369,6 +308,9 @@ class ChoiceWarehouseTest {
 
         Assertions.assertFalse(ChoiceWarehouse.in_range(point_pharmacy,point_wharehouse));
     }
+
+
+
 
     @Nested
     class ValidPharmacyDistance {
@@ -447,6 +389,7 @@ class ChoiceWarehouseTest {
             entries.add(Map.entry(farmacia7, 400));
             entries.add(Map.entry(farmacia8, 300));
             List<PharmacyDistance> list = choiceWarehouse.distance_pharmacist(entries);
+
             Assertions.assertAll(
                     () -> assertThat(list.getFirst()).satisfies(p -> {
 
@@ -471,6 +414,129 @@ class ChoiceWarehouseTest {
 
 
     }
+    @Nested
+    class Availability_Warehouse {
+        @BeforeEach
+        public void setUp(){
+            ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A21")
+                    .setLenght(102)
+                    .setHeight(100)
+                    .setDeep(50)
+                    .setWeight(200)
+                    .setNum_rip(4)
+                    .setShelf_thickness(20)
+                    .setShelvesCapacities(List.of(
+                            new ShelvesCapacity(1, "A21", 1, 102.0, 50.0, 85.5),  // Full - max capacity
+                            new ShelvesCapacity(2, "A21", 2, 80.0, 35.0, 58.8),   // 78% occupied
+                            new ShelvesCapacity(3, "A21", 3, 45.0, 20.0, 22.5),   // 44% occupied
+                            new ShelvesCapacity(4, "A21", 4, 0.0, 0.0, 0.0)       // Empty
+                    ))
+                    .build();
+
+// Shelf 2 - Length: 150, Depth: 70 (4 levels with different occupancy)
+            ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A22")
+                    .setLenght(150)
+                    .setHeight(100)
+                    .setDeep(70)
+                    .setWeight(250)
+                    .setNum_rip(4)
+                    .setShelf_thickness(20)
+                    .setShelvesCapacities(List.of(
+                            new ShelvesCapacity(5, "A22", 1, 150.0, 70.0, 131.25), // Full - max capacity
+                            new ShelvesCapacity(6, "A22", 2, 120.0, 55.0, 82.5),   // 80% occupied
+                            new ShelvesCapacity(7, "A22", 3, 75.0, 35.0, 32.8),    // 50% occupied
+                            new ShelvesCapacity(8, "A22", 4, 30.0, 15.0, 5.6)      // 20% occupied
+                    ))
+                    .build();
+
+// Shelf 3 - Length: 80, Depth: 35 (4 levels with different occupancy)
+            ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A23")
+                    .setLenght(80)
+                    .setHeight(100)
+                    .setDeep(35)
+                    .setWeight(150)
+                    .setNum_rip(4)
+                    .setShelf_thickness(20)
+                    .setShelvesCapacities(List.of(
+                            new ShelvesCapacity(9, "A23", 1, 80.0, 35.0, 35.0),    // Full - max capacity
+                            new ShelvesCapacity(10, "A23", 2, 65.0, 28.0, 22.8),   // 81% occupied
+                            new ShelvesCapacity(11, "A23", 3, 40.0, 18.0, 9.0),    // 51% occupied
+                            new ShelvesCapacity(12, "A23", 4, 0.0, 0.0, 0.0)       // Empty
+                    ))
+                    .build();
+
+// Shelf 4 - Length: 200, Depth: 30 (4 levels with different occupancy)
+            ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A24")
+                    .setLenght(200)
+                    .setHeight(100)
+                    .setDeep(30)
+                    .setWeight(180)
+                    .setNum_rip(4)
+                    .setShelf_thickness(20)
+                    .setShelvesCapacities(List.of(
+                            new ShelvesCapacity(13, "A24", 1, 200.0, 30.0, 75.0),  // Full - max capacity
+                            new ShelvesCapacity(14, "A24", 2, 160.0, 24.0, 48.0),  // 80% occupied
+                            new ShelvesCapacity(15, "A24", 3, 100.0, 15.0, 18.75), // 50% occupied
+                            new ShelvesCapacity(16, "A24", 4, 25.0, 8.0, 2.5)      // 12% occupied
+                    ))
+                    .build();
+
+
+            List<Warehouse> warehouses= List.of(
+                    new Warehouse(1, "mag1", new PGgeometry(new Point(38.40,15.40)),List.of(shelfInfo1)),
+                    new Warehouse(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330)),List.of(shelfInfo2)),
+                    new Warehouse(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)),List.of(shelfInfo3)),
+                    new Warehouse(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330)),List.of(shelfInfo4)));
+            choiceWarehouse=new ChoiceWarehouse(warehouses,assigneds);
+
+
+
+
+
+        }
+        @Test
+        public void ValidTest(){
+            LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
+        List<PharmacyDistance>distances=List.of(new PharmacyDistance(List.of(farmacia1,farmacia2,farmacia3),new Point(38.15,15.02)),
+        new PharmacyDistance(List.of(farmacia6,farmacia7,farmacia8),new Point(37.51,13.88)));
+           Set<Warehouse> warehouses= choiceWarehouse.calculate_availability(distances,lotDimension,10);
+           assertThat(warehouses).hasSize(1);
+
+
+
+        }
+        @Test
+        public void InValidTest(){
+            LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
+            List<PharmacyDistance>distances=List.of(new PharmacyDistance(List.of(farmacia1,farmacia2,farmacia3),new Point(38.15,15.02)),
+                    new PharmacyDistance(List.of(farmacia6,farmacia7,farmacia8),new Point(37.51,13.88)));
+            Set<Warehouse> warehouses= choiceWarehouse.calculate_availability(distances,lotDimension,140);
+            assertThat(warehouses).hasSize(0);
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+    }
+
+
+
 
 
 

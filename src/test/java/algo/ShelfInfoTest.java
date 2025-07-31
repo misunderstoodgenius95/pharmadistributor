@@ -44,7 +44,8 @@ class ShelfInfoTest {
                         new ShelvesCapacity(1, "a22", 2, 0, 0,0),
                         new ShelvesCapacity(1, "a22", 3, 0, 0,0),
                         new ShelvesCapacity(1, "a22", 4, 0, 0,0));
-                shelfInfo=new ShelfInfo(fieldData_shelf, list);
+
+
             }
 
 
@@ -85,7 +86,18 @@ class ShelfInfoTest {
                 shelvesCapacities.add(new ShelvesCapacity(5, "a25", 2, 180.0, 30.0, 0.0));
                 shelvesCapacities.add(new ShelvesCapacity(5, "a25", 3, 120, 20.0, 0.0));
                 shelvesCapacities.add(new ShelvesCapacity(5, "a25", 4, 80, 7.0, 0.0));
-                ShelfInfo shelfInfo = new ShelfInfo("a21", 1, 200, 40, 4, 10, shelvesCapacities, 180, 200.0);
+
+                ShelfInfo shelfInfo = ShelfInfo.ShelfInfoBuilder.get_builder()
+                        .setMagazzino_id(1)
+                        .setShelf_code("A21")
+                        .setLenght(102)
+                        .setHeight(100)
+                        .setDeep(50)
+                        .setWeight(200)
+                        .setNum_rip(4)
+                        .setShelf_thickness(20)
+                        .setShelvesCapacities(List.of(new ShelvesCapacity(1, "A21", 1, 100.0, 20.0, 0.0)))
+                        .build();
                 Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0));
                 remains.ifPresent(shelvesRemains -> remains_list = shelvesRemains);
 
@@ -126,7 +138,20 @@ class ShelfInfoTest {
             shelvesCapacities.add(new ShelvesCapacity(5, "a25", 2, 200.0, 40.0, 0.0));
             shelvesCapacities.add(new ShelvesCapacity(5, "a25", 3, 200.0, 40.0, 0.0));
             shelvesCapacities.add(new ShelvesCapacity(5, "a25", 4, 200, 40.0, 0.0));
-            ShelfInfo shelfInfo = new ShelfInfo("a21", 1, 200, 40.0, 4, 10, shelvesCapacities, 180, 200.0);
+
+
+
+            ShelfInfo shelfInfo = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A21")
+                    .setLenght(200)
+                    .setHeight(40.0)
+                    .setDeep(40)
+                    .setWeight(180)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities)
+                    .build();
              remains = shelfInfo.remaining_levels(new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0));
 
 
@@ -165,9 +190,28 @@ class ShelfInfoTest {
         shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 2, 200.0, 40.0, 0.0));// 2
         shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 200.0, 40.0, 0.0));//24
         shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 200.0, 40.0, 0.0));//72
-
-        ShelfInfo shelfInfo1 = new ShelfInfo("a21", 1, 200.0, 40.0, 4, 10, shelvesCapacities1, 180, 200);
-        ShelfInfo shelfInfo5 = new ShelfInfo("a25", 5, 200.0, 40.0, 4, 10, shelvesCapacities5, 180, 200);
+        ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setMagazzino_id(1)
+                .setShelf_code("A21")
+                .setLenght(200)
+                .setHeight(100)
+                .setDeep(40)
+                .setWeight(180)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities1)
+                .build();
+        ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setMagazzino_id(5)
+                .setShelf_code("A25")
+                .setLenght(200)
+                .setHeight(200)
+                .setDeep(40)
+                .setWeight(180)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities5)
+                .build();
 
         List<ShelfInfo> shelfInfoList = Arrays.asList(shelfInfo1, shelfInfo5);
 

@@ -1,22 +1,19 @@
 package pharma.Handler;
 
 import javafx.scene.control.TextField;
-import okhttp3.HttpUrl;
-import pharma.Controller.subpanel.Magazzino;
+import net.postgis.jdbc.PGgeometry;
+import net.postgis.jdbc.geometry.Point;
 import pharma.Model.FieldData;
-import pharma.config.HttpJsonClient;
+import pharma.Model.Warehouse;
 import pharma.config.PopulateChoice;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.MagazzinoDao;
-import pharma.dao.PharmaDao;
-import pharma.javafxlib.Dialog.CustomDialog;
 
-import java.math.BigDecimal;
-import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class MagazzinoHandler extends DialogHandler<FieldData> {
+public class MagazzinoHandler extends DialogHandler<Warehouse> {
     private TextField textField_warehouse;
     private TextField textField_address;
     private TextField textField_comune;
@@ -55,19 +52,24 @@ public class MagazzinoHandler extends DialogHandler<FieldData> {
     }
 
     @Override
-    protected FieldData get_return_data() {
-        return FieldData.FieldDataBuilder.getbuilder().
-                setNome(textField_warehouse.getText()).
-                setStreet(textField_address.getText()).setProvince(textField_province.getText()).
-                setComune(textField_comune.getText()).setLatitude(Double.parseDouble(textfield_lat.getText())).
-                setLongitude(Double.parseDouble(textField_lng.getText())).
-                build();
+    protected Warehouse get_return_data() {
+
+        Warehouse warehouse=new Warehouse();
+        Point point=new Point(Double.parseDouble(textfield_lat.getText()),Double.parseDouble(textField_lng.getText()));
+        warehouse.setNome(textField_warehouse.getText());
+        warehouse.setAddress(textField_address.getText());
+        warehouse.setComune(textField_comune.getText());
+        warehouse.setProvince(textField_province.getText());
+        warehouse.setpGgeometry(new PGgeometry(point));
+        return warehouse;
+
     }
 
     @Override
-    protected boolean condition_event(FieldData fieldData) throws Exception {
-        return  magazzinoDao.insert(fieldData);
-
-
+    protected boolean condition_event(Warehouse type) throws Exception {
+        return false;
     }
+
+
+
 }

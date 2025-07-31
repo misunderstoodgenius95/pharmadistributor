@@ -3,6 +3,7 @@ package pharma.dao;
 import net.postgis.jdbc.PGgeometry;
 import net.postgis.jdbc.geometry.Point;
 import pharma.Model.FieldData;
+import pharma.Model.Warehouse;
 import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
@@ -10,26 +11,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class MagazzinoDao extends GenericJDBCDao<FieldData,Integer> {
-    private final String table ="warehouse";
+public class MagazzinoDao extends GenericJDBCDao<Warehouse,Integer> {
+    private String table="warehouse";
     public MagazzinoDao( Database database) {
         super("warehouse", database);
     }
 
     @Override
-    protected FieldData mapRow(ResultSet resultSet) throws Exception {
-        return FieldData.FieldDataBuilder.getbuilder().
-                setId(resultSet.getInt("id")).
-                setNome(resultSet.getString("nome")).
-                setStreet(resultSet.getString("address")).
-                setComune(resultSet.getString("comune")).
-                setLocation((PGgeometry) resultSet.getObject("location"))
-                .build();
+    protected Warehouse mapRow(ResultSet resultSet) throws Exception {
 
+
+        Warehouse warehouse=new Warehouse();
+        warehouse.setId(resultSet.getInt(1));
+        warehouse.setNome(resultSet.getString("nome"));
+        warehouse.setAddress(resultSet.getString("address"));
+        warehouse.setComune(resultSet.getString("comune"));
+        warehouse.setpGgeometry((PGgeometry) resultSet.getObject("location"));
+        return warehouse;
     }
-
-
-
 
     @Override
     protected void setFindByIdParameters(PreparedStatement preparedStatement, Integer integer) {
@@ -58,24 +57,25 @@ public class MagazzinoDao extends GenericJDBCDao<FieldData,Integer> {
     }
 
     @Override
-    protected void setInsertParameter(PreparedStatement statement, FieldData entity) throws Exception {
-        Point point = new Point(entity.getLongitude(), entity.getLatitude());
-        PGgeometry geom = new PGgeometry(point);
+    protected void setInsertParameter(PreparedStatement statement, Warehouse entity) throws Exception {
+
+
         statement.setString(1,entity.getNome());
-        statement.setObject(2, geom);
-        statement.setString(3,entity.getStreet());
+        statement.setObject(2, entity.getpGgeometry());
+        statement.setString(3,entity.getAddress());
         statement.setString(4,entity.getComune());
         statement.setString(5, entity.getProvince());
 
-    }
-
-    @Override
-    protected void setUpdateParameter(PreparedStatement statement, FieldData entity) {
 
     }
 
     @Override
-    protected void setDeleteParameter(PreparedStatement statement, FieldData entity) {
+    protected void setUpdateParameter(PreparedStatement statement, Warehouse entity) {
+
+    }
+
+    @Override
+    protected void setDeleteParameter(PreparedStatement statement, Warehouse entity) {
 
     }
 }

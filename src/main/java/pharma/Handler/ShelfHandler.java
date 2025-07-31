@@ -1,11 +1,12 @@
 package pharma.Handler;
 
-import javafx.scene.control.Dialog;
+import algo.ShelfInfo;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
 import pharma.Model.FieldData;
+import pharma.Model.Warehouse;
 import pharma.config.PopulateChoice;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.MagazzinoDao;
@@ -14,8 +15,8 @@ import pharma.dao.ShelfDao;
 import java.util.List;
 import java.util.Optional;
 
-public class ShelfHandler  extends DialogHandler<FieldData> {
-    private SearchableComboBox<FieldData> s_choice_warehouse;
+public class ShelfHandler  extends DialogHandler<ShelfInfo> {
+    private SearchableComboBox<Warehouse> s_choice_warehouse;
     private MagazzinoDao magazzinoDao;
     private ShelfDao shelfDao;
     private Spinner<Double> lunghezza;
@@ -45,17 +46,19 @@ public class ShelfHandler  extends DialogHandler<FieldData> {
 
         this.magazzinoDao = (MagazzinoDao) optionalgenericJDBCDao.get().stream().
                 filter(dao -> dao instanceof MagazzinoDao).findFirst().orElseThrow(() -> new IllegalArgumentException("MagazzinoDao not found in the list"));
-        List<FieldData> list_warehouse=magazzinoDao.findAll();
-        s_choice_warehouse = add_SearchComboBox(FieldData.FieldDataBuilder.getbuilder().setcode("Seleziona Magazzino").build());
+        List<Warehouse> list_warehouse=magazzinoDao.findAll();
+        Warehouse warehouse=new Warehouse();
+        warehouse.setNome("Seleziona Magazzino");
+        s_choice_warehouse = add_SearchComboBoxs(warehouse);
         s_choice_warehouse.getItems().addAll(list_warehouse);
-        s_choice_warehouse.setConverter(new StringConverter<FieldData>() {
+        s_choice_warehouse.setConverter(new StringConverter<Warehouse>() {
             @Override
-            public String toString(FieldData object) {
-                return object.getCode();
+            public String toString(Warehouse object) {
+                return ""+object.getId();
             }
 
             @Override
-            public FieldData fromString(String string) {
+            public Warehouse fromString(String string) {
                 return null;
             }
         });
@@ -77,20 +80,20 @@ public class ShelfHandler  extends DialogHandler<FieldData> {
     }
 
     @Override
-    protected FieldData get_return_data() {
-        return FieldData.FieldDataBuilder.getbuilder().
-                setcode(codice.getText()).
-                setId(s_choice_warehouse.getValue().getId()).
-                setLunghezza(lunghezza.getValue())
-                .setAltezza(altezza.getValue()).
-                setProfondita(profondita.getValue()).
-                setSpessore(spessore.getValue()).
-                setNum_rip(num_rip.getValue()).setCapacity(capacity.getValue()).
-                build();
+    protected ShelfInfo get_return_data() {
+        return ShelfInfo.ShelfInfoBuilder.get_builder().
+                setShelf_code(codice.getText()).
+                setMagazzino_id(s_choice_warehouse.getValue().getId()).
+                setLenght(lunghezza.getValue()).setHeight(altezza.getValue()).
+                setDeep(profondita.getValue()).setShelf_thickness(spessore.getValue()).setNum_rip(num_rip.getValue()).setWeight(capacity.getValue()).build();
+
+
     }
 
     @Override
-    protected boolean condition_event(FieldData fieldData) throws Exception {
-        return shelfDao.insert(fieldData);
+    protected boolean condition_event(ShelfInfo type) throws Exception {
+        return shelfDao.insert(type);
     }
+
+
 }

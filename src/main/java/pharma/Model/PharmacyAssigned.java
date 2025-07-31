@@ -1,13 +1,14 @@
 package pharma.Model;
 
-import net.postgis.jdbc.geometry.Point;
 
-public class ChoiceAssigned {
-
+public class PharmacyAssigned {
+    /**
+     * Used for represented the quantity of product that a pharmacy has purchased.
+     */
     private Farmacia farmacia;
     private int quantity;
 
-    public ChoiceAssigned(Farmacia farmacia, int quantity) {
+    public PharmacyAssigned(Farmacia farmacia, int quantity) {
         this.farmacia = farmacia;
         this.quantity = quantity;
     }

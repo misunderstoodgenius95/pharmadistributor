@@ -118,7 +118,7 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
 
         return " SELECT * FROM "+table_name;
     }
-    protected  abstract void setFindByIdParameters(PreparedStatement preparedStatement, ID id);
+    protected  abstract void setFindByIdParameters(PreparedStatement preparedStatement, ID id) throws SQLException;
     protected abstract String  getInsertQuery() throws Exception;
     protected abstract  String getUpdatequery();
     protected  abstract  String getDeletequery();

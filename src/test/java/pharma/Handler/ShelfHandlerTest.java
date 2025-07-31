@@ -1,10 +1,13 @@
 package pharma.Handler;
 
+import algo.ShelfInfo;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import net.postgis.jdbc.PGgeometry;
+import net.postgis.jdbc.geometry.Point;
 import org.controlsfx.control.SearchableComboBox;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +21,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
+import pharma.Model.Warehouse;
 import pharma.Storage.FileStorage;
 import pharma.config.Utility;
 import pharma.config.database.Database;
@@ -63,9 +67,9 @@ class ShelfHandlerTest {
     @Test
     public void ValidValidationForms(FxRobot robot){
         Platform.runLater(()->{
-            FieldData f1=FieldData.FieldDataBuilder.getbuilder().
-                    setId(1).setcode("A10").setStreet("Via Crescenzio").setComune("Roma").setLatitude(18.111999).setLongitude(20.008888).build();
-            when(magazzinoDao.findAll()).thenReturn(List.of(f1));
+
+            Warehouse warehouse=new Warehouse(1,"A10",new PGgeometry(new Point(18.111999,20.008888)),"Via Crescenzio","Roma","Roma",List.of());
+            when(magazzinoDao.findAll()).thenReturn((List<Warehouse>) List.of(warehouse));
             shelfHandler=new ShelfHandler("Inserisci Ripiani", new ArrayList<>(Arrays.asList(magazzinoDao,shelfDao)));
             TextField t_code=Utility.extract_value_from_list(shelfHandler.getControlList(), TextField.class).getFirst();
             SearchableComboBox<FieldData> s_combox=Utility.extract_value_from_list(shelfHandler.getControlList(),SearchableComboBox.class).getFirst();
@@ -87,9 +91,8 @@ class ShelfHandlerTest {
     @Test
     public void InvalidValidationForms(FxRobot robot){
         Platform.runLater(()->{
-            FieldData f1=FieldData.FieldDataBuilder.getbuilder().
-                    setId(1).setcode("A10").setStreet("Via Crescenzio").setComune("Roma").setLatitude(18.111999).setLongitude(20.008888).build();
-            when(magazzinoDao.findAll()).thenReturn(List.of(f1));
+            Warehouse warehouse=new Warehouse(1,"A10",new PGgeometry(new Point(18.111999,20.008888)),"Via Crescenzio","Roma","Roma",List.of());
+            when(magazzinoDao.findAll()).thenReturn(List.of(warehouse));
             shelfHandler=new ShelfHandler("Inserisci Ripiani", new ArrayList<>(Arrays.asList(magazzinoDao,shelfDao)));
             TextField t_code=Utility.extract_value_from_list(shelfHandler.getControlList(), TextField.class).getFirst();
             SearchableComboBox<FieldData> s_combox=Utility.extract_value_from_list(shelfHandler.getControlList(),SearchableComboBox.class).getFirst();
@@ -108,16 +111,15 @@ class ShelfHandlerTest {
     @Test
     public void ValidFormInsert(FxRobot robot){
         Platform.runLater(()->{
-            FieldData f1=FieldData.FieldDataBuilder.getbuilder().
-                    setId(1).setcode("A10").setStreet("Via Crescenzio").setComune("Roma").setLatitude(18.111999).setLongitude(20.008888).build();
-            when(magazzinoDao.findAll()).thenReturn(List.of(f1));
+            Warehouse warehouse=new Warehouse(1,"A10",new PGgeometry(new Point(18.111999,20.008888)),"Via Crescenzio","Roma","Roma",List.of());
+            when(magazzinoDao.findAll()).thenReturn(List.of(warehouse));
             shelfHandler=new ShelfHandler("Inserisci Ripiani", new ArrayList<>(Arrays.asList(magazzinoDao,shelfDao)));
             TextField t_code=Utility.extract_value_from_list(shelfHandler.getControlList(), TextField.class).getFirst();
             SearchableComboBox<FieldData> s_combox=Utility.extract_value_from_list(shelfHandler.getControlList(),SearchableComboBox.class).getFirst();
             SimulateEvents.writeOn(t_code,"A1200");
             SimulateEvents.setFirstElementSearchableBox(s_combox);
             SimulateEvents.clickOn(shelfHandler.getButtonOK());
-            when(shelfDao.insert(Mockito.any(FieldData.class))).thenReturn(true);
+            when(shelfDao.insert(Mockito.any(ShelfInfo.class))).thenReturn(true);
 
             shelfHandler.execute();
 

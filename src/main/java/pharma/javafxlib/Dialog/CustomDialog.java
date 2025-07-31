@@ -333,6 +333,15 @@ public class CustomDialog<T> extends Dialog<T> {
         return searchableComboBox;
 
     }
+    public <K>SearchableComboBox add_SearchComboBoxs (K value){
+        SearchableComboBox<K> searchableComboBox=new SearchableComboBox<>();
+        vbox.getChildren().add(searchableComboBox);
+        searchableComboBox.setStyle("-fx-font-size: 16px");
+        searchableComboBox.setValue(value);
+        controlList.add(searchableComboBox);
+        return searchableComboBox;
+
+    }
     public SearchableComboBox add_SearchComboBox (String value){
         SearchableComboBox<String> searchableComboBox=new SearchableComboBox<>();
         vbox.getChildren().add(searchableComboBox);

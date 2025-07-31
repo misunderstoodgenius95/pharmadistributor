@@ -22,20 +22,39 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlacementShelfTest {
+    private ShelfInfo shelfInfo1;
+   private ShelfInfo shelfInfo2;
+    @BeforeEach
+    public void setUp(){
+     shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setMagazzino_id(1)
+                .setShelf_code("a22")
+                .setLenght(102)
+                .setHeight(100)
+                .setDeep(40)
+                .setWeight(60)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(List.of())
+                .build();
 
+         shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setMagazzino_id(1)
+                .setShelf_code("a22")
+                .setLenght(102)
+                .setHeight(100)
+                .setDeep(40)
+                .setWeight(60)
+                .setNum_rip(4)
+                .setShelf_thickness(20)
+                .setShelvesCapacities(List.of())
+                .build();
+    }
 
     @Test
     void extract_max_shelf() {
-        FieldData fieldData_shelf = FieldData.FieldDataBuilder.getbuilder().setId(1).setcode("a22").setLunghezza(102).setAltezza(100).
-                setProfondita(40).setCapacity(60).setNum_rip(4).setSpessore(20).setCapacity(30).build();
-
-        ShelfInfo shelfInfo1 = new ShelfInfo(fieldData_shelf, List.of());
 
 
-        FieldData fieldData_shelf2 = FieldData.FieldDataBuilder.getbuilder().setId(1).setcode("a23").setLunghezza(102).setAltezza(100).
-                setProfondita(40).setCapacity(60).setNum_rip(4).setSpessore(20).setCapacity(30).build();
-
-        ShelfInfo shelfInfo2 = new ShelfInfo(fieldData_shelf2, List.of());
 
 
         HashMap<ShelfInfo, Integer> shelfInfoIntegerHashMap = new HashMap<>();
@@ -48,30 +67,71 @@ class PlacementShelfTest {
 
     @Test
     void calculate_fit() {
-        FieldData fieldData_shelf = FieldData.FieldDataBuilder.getbuilder().setId(1).setcode("a22").setLunghezza(102).setAltezza(100).
-                setProfondita(40).setCapacity(600).setNum_rip(4).setSpessore(20).build();
+
 
         List<ShelvesCapacity> list = List.of(new ShelvesCapacity(1, "a22", 1, 0, 0, 0.0),
                 new ShelvesCapacity(1, "a22", 2, 0, 0, 0),
                 new ShelvesCapacity(1, "a22", 3, 0, 0, 0),
                 new ShelvesCapacity(1, "a22", 4, 0, 0, 0));
-        ShelfInfo shelfInfo = new ShelfInfo(fieldData_shelf, list);
+            shelfInfo2.setShelvesCapacities(list);
 
         LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
         ShelvesRemain shelvesRemain = new ShelvesRemain(new ShelvesCapacity(1, "a22", 1, 0, 0, 0.0), 80);
-        PlacementShelf.calculate_fit(lotDimension, shelvesRemain, 30, shelfInfo);
+        PlacementShelf.calculate_fit(lotDimension, shelvesRemain, 30, shelfInfo2);
     }
 
 
     @Test
     void sorted_max_shelf_with() {
 
-        ShelfInfo shelfInfo1 = new ShelfInfo("a21", 1, 200, 40, 4, 10, null, 180, 200);
-        ShelfInfo shelfInfo2 = new ShelfInfo("a22", 2, 200, 40, 4, 10, null, 180, 200);
-        ShelfInfo shelfInfo3 = new ShelfInfo("a23", 3, 200, 40, 4, 10, null, 180, 200);
-        ShelfInfo shelfInfo4 = new ShelfInfo("a24", 4, 200, 40, 4, 10, null, 180, 200);
-        ShelfInfo shelfInfo5 = new ShelfInfo("a25", 5, 200, 40, 4, 10, null, 180, 200);
+        ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder().setShelf_code("a21").setMagazzino_id(1).setLenght(200).setDeep(40).setNum_rip( 4).setShelf_thickness(10).setShelvesCapacities(List.of()).setWeight( 180).setLenght(200).build();
+        ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a22")
+                .setMagazzino_id(2)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
 
+        ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a23")
+                .setMagazzino_id(3)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
+
+        ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a24")
+                .setMagazzino_id(4)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
+
+        ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a25")
+                .setMagazzino_id(5)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
         HashMap<ShelfInfo, Integer> hashMap = new HashMap<>();
         hashMap.put(shelfInfo1, 100);
         hashMap.put(shelfInfo2, 300);
@@ -85,13 +145,67 @@ class PlacementShelfTest {
 
     @Test
     void sorted_max_shelf_with_Filter() {
+ShelfInfo.ShelfInfoBuilder.get_builder().build();
 
+        ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a21")
+                .setMagazzino_id(1)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
 
-        ShelfInfo shelfInfo1 = new ShelfInfo("a21", 1, 200, 40, 4, 10, null, 180, 200);
-        ShelfInfo shelfInfo2 = new ShelfInfo("a22", 2, 200, 40, 4, 10, null, 180, 200);
-        ShelfInfo shelfInfo3 = new ShelfInfo("a23", 3, 200, 40, 4, 10, null, 180, 200);
-        ShelfInfo shelfInfo4 = new ShelfInfo("a24", 4, 200, 40, 4, 10, null, 180, 200);
-        ShelfInfo shelfInfo5 = new ShelfInfo("a25", 5, 200, 40, 4, 10, null, 180, 200);
+        ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a22")
+                .setMagazzino_id(2)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
+
+        ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a23")
+                .setMagazzino_id(3)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
+
+        ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a24")
+                .setMagazzino_id(4)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
+
+        ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a25")
+                .setMagazzino_id(5)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(null)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
 
         HashMap<ShelfInfo, Integer> hashMap = new HashMap<>();
         hashMap.put(shelfInfo1, 100);
@@ -141,13 +255,65 @@ class PlacementShelfTest {
         shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 0.0, 0.0, 0.0));
         shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 0.0, 0.0, 0.0));
 
-        // Create 5 ShelfInfo objects
-        ShelfInfo shelfInfo1 = new ShelfInfo("a21", 1, 200, 40, 4, 10, shelvesCapacities1, 180, 200);
-        ShelfInfo shelfInfo2 = new ShelfInfo("a22", 2, 200, 40, 4, 10, shelvesCapacities2, 180, 200);
-        ShelfInfo shelfInfo3 = new ShelfInfo("a23", 3, 200, 40, 4, 10, shelvesCapacities3, 180, 200);
-        ShelfInfo shelfInfo4 = new ShelfInfo("a24", 4, 200, 40, 4, 10, shelvesCapacities4, 180, 200);
-        ShelfInfo shelfInfo5 = new ShelfInfo("a25", 5, 200, 40, 4, 10, shelvesCapacities5, 180, 200);
+        ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a21")
+                .setMagazzino_id(1)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities1)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
 
+        ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a22")
+                .setMagazzino_id(2)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities2)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
+
+        ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a23")
+                .setMagazzino_id(3)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities3)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
+
+        ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a24")
+                .setMagazzino_id(4)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities4)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
+
+        ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a25")
+                .setMagazzino_id(5)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities5)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
         // Optional: Add them to a list if needed
         List<ShelfInfo> shelfInfoList = new ArrayList<>();
         shelfInfoList.add(shelfInfo1);
@@ -206,13 +372,67 @@ class PlacementShelfTest {
             shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 2, 20.0, 40.0, 0.0));
             shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 20.0, 40.0, 0.0));
             shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 0.0, 0.0, 0.0));
+            ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a21")
+                    .setMagazzino_id(1)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities1)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
 
+            ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a22")
+                    .setMagazzino_id(2)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities2)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
+
+            ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a23")
+                    .setMagazzino_id(3)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities3)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
+
+            ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a24")
+                    .setMagazzino_id(4)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities4)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
+
+            ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a25")
+                    .setMagazzino_id(5)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities5)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
             // Create 5 ShelfInfo objects
-            ShelfInfo shelfInfo1 = new ShelfInfo("a21", 1, 200, 40, 4, 10, shelvesCapacities1, 180, 200);
-            ShelfInfo shelfInfo2 = new ShelfInfo("a22", 2, 200, 40, 4, 10, shelvesCapacities2, 180, 200);
-            ShelfInfo shelfInfo3 = new ShelfInfo("a23", 3, 200, 40, 4, 10, shelvesCapacities3, 180, 200);
-            ShelfInfo shelfInfo4 = new ShelfInfo("a24", 4, 200, 40, 4, 10, shelvesCapacities4, 180, 200);
-            ShelfInfo shelfInfo5 = new ShelfInfo("a25", 5, 200, 40, 4, 10, shelvesCapacities5, 180, 200);
+
 
             // Optional: Add them to a list if needed
             List<ShelfInfo> shelfInfoList = new ArrayList<>();
@@ -286,11 +506,65 @@ class PlacementShelfTest {
             shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 80, 7.0, 0.0));//72
 
             // Create 5 ShelfInfo objects
-            ShelfInfo shelfInfo1 = new ShelfInfo("a21", 1, 200, 40, 4, 10, shelvesCapacities1, 180, 200);
-            ShelfInfo shelfInfo2 = new ShelfInfo("a22", 2, 200, 40, 4, 10, shelvesCapacities2, 180, 200);
-            ShelfInfo shelfInfo3 = new ShelfInfo("a23", 3, 200, 40, 4, 10, shelvesCapacities3, 180, 200);
-            ShelfInfo shelfInfo4 = new ShelfInfo("a24", 4, 200, 40, 4, 10, shelvesCapacities4, 180, 200);
-            ShelfInfo shelfInfo5 = new ShelfInfo("a25", 5, 200, 40, 4, 10, shelvesCapacities5, 180, 200);
+            ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a21")
+                    .setMagazzino_id(1)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities1)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
+
+            ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a22")
+                    .setMagazzino_id(2)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities2)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
+
+            ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a23")
+                    .setMagazzino_id(3)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities3)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
+
+            ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a24")
+                    .setMagazzino_id(4)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities4)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
+
+            ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a25")
+                    .setMagazzino_id(5)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities5)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
 
             // Optional: Add them to a list if needed
             List<ShelfInfo> shelfInfoList = new ArrayList<>();
@@ -347,9 +621,29 @@ class PlacementShelfTest {
             shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 120, 20.0, 0.0));//24
             shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 80, 7.0, 0.0));//72
 
+            ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a21")
+                    .setMagazzino_id(1)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities1)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
 
-            ShelfInfo shelfInfo1 = new ShelfInfo("a21", 1, 200, 40, 4, 10, shelvesCapacities1, 180, 200);
-            ShelfInfo shelfInfo5 = new ShelfInfo("a25", 5, 200, 40, 4, 10, shelvesCapacities5, 180, 200);
+            ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a25")
+                    .setMagazzino_id(5)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities5)
+                    .setWeight(180)
+                    .setLenght(200)
+                    .build();
 
             List<ShelfInfo> shelfInfoList = Arrays.asList(shelfInfo1, shelfInfo5);
 
@@ -408,9 +702,29 @@ class PlacementShelfTest {
         shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 120, 20.0, 0.0));//24
         shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 80, 7.0, 0.0));//72*/
 
+        ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a21")
+                .setMagazzino_id(1)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities1)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
 
-        ShelfInfo shelfInfo1 = new ShelfInfo("a21", 1, 200.0, 40.0, 4, 10, shelvesCapacities1, 180, 200);
-        ShelfInfo shelfInfo5 = new ShelfInfo("a25", 5, 200.0, 40.0, 4, 10, shelvesCapacities5, 180, 200);
+        ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setShelf_code("a25")
+                .setMagazzino_id(5)
+                .setLenght(200)
+                .setDeep(40)
+                .setNum_rip(4)
+                .setShelf_thickness(10)
+                .setShelvesCapacities(shelvesCapacities5)
+                .setWeight(180)
+                .setLenght(200)
+                .build();
 
         List<ShelfInfo> shelfInfoList = Arrays.asList(shelfInfo1, shelfInfo5);
 

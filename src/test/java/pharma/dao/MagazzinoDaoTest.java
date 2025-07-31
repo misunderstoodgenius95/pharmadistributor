@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import pharma.Model.FieldData;
+import pharma.Model.Warehouse;
 import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
 import pharma.formula.RecommendSystem;
@@ -44,6 +45,7 @@ class MagazzinoDaoTest {
 
 
 
+
     }
 
     @Test
@@ -59,13 +61,13 @@ class MagazzinoDaoTest {
         when(resultSet.next()).thenReturn(true, false);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
-        FieldData magazzino=magazzinoDao.findById(1);
+     Warehouse magazzino=magazzinoDao.findById(1);
        assertThat(magazzino).satisfies(p-> {
                    assertThat(p.getId()).isEqualTo(1);
                    assertThat(p.getNome()).isEqualTo("a11");
-                   assertThat(p.getStreet()).isEqualTo("Via Corso Cavour 42");
+                   assertThat(p.getAddress()).isEqualTo("Via Corso Cavour 42");
                    assertThat(p.getComune()).isEqualTo("Roma");
-                   assertThat((Point)p.getLocation().getGeometry()).satisfies(point1->{
+                   assertThat((Point)p.getpGgeometry().getGeometry()).satisfies(point1->{
                    assertThat(point1.getX()).isEqualTo(point.getX());
                    assertThat(point1.getY()).isEqualTo(point.getY());
                    });
@@ -78,7 +80,7 @@ class MagazzinoDaoTest {
 
     @Nested
      public class FindALl {
-            private List<FieldData> list;
+            private List<Warehouse> list;
 
             @BeforeEach
             public void setUp() throws SQLException {
@@ -108,7 +110,7 @@ class MagazzinoDaoTest {
 
             @Test
             void ValidStreet() {
-                Assertions.assertEquals("Via Corso Cavour 42", list.getFirst().getStreet());
+                Assertions.assertEquals("Via Corso Cavour 42", list.getFirst().getAddress());
             }
 
             @Test
@@ -118,47 +120,52 @@ class MagazzinoDaoTest {
 
             @Test
             void ValidLat() {
-                Assertions.assertEquals(38.1257128, list.getFirst().getLatitude());
+                Point point=(Point)list.getFirst().getpGgeometry().getGeometry();
+                Assertions.assertEquals(38.1257128,point.getX());
 
             }
 
             @Test
-            void ValidLong() {
-                Assertions.assertEquals(14.7595248, list.getFirst().getLongitude());
+            void ValidLng() {
+                Point point=(Point)list.getFirst().getpGgeometry().getGeometry();
+                Assertions.assertEquals(14.7595248, point.getY());
             }
         }
 
             @Test
             public void ValidInsert() throws SQLException {
-                    FieldData insert = FieldData.FieldDataBuilder.getbuilder().
-                            setId(1).
-                            setNome("A22").
-                            setStreet("Via regina celi").
-                            setComune("Roma").
-                            setLatitude(38.1257128).
-                            setLongitude(14.7595248).build();
-
+        Point point=new Point(38.1257128,14.7595248);
+        PGgeometry pGgeometry=new PGgeometry(point);
+        Warehouse warehouse=new Warehouse();
+                            warehouse.setId(1);
+                            warehouse.setNome("A22");
+                            warehouse.setAddress("Via regina celi");
+                            warehouse.setComune("Roma");
+                            warehouse.setpGgeometry(pGgeometry);
                    when(preparedStatement.executeUpdate()).thenReturn(1);
-                    when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
-                    Assertions.assertTrue(magazzinoDao.insert(insert));
+                   when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
+                   Assertions.assertTrue(magazzinoDao.insert(warehouse));
 
             }
 
             @Test
             public void IntegartionInsert(){
                 Properties properties = null;
-
+                Warehouse warehouse;
                 try {
-                    FieldData insert = FieldData.FieldDataBuilder.getbuilder().
-                            setId(1).
-                            setNome("A22").
-                            setStreet("Via regina celi").
-                            setComune("Roma").
-                            setLatitude(38.1257128).
-                            setLongitude(14.7595248).build();
+                    Point point=new Point(38.1257128,14.7595248);
+                    PGgeometry pGgeometry=new PGgeometry(point);
+               warehouse=new Warehouse();
+                    warehouse.setId(1);
+                    warehouse.setNome("A22");
+                    warehouse.setAddress("Via regina celi");
+                    warehouse.setComune("Roma");
+                    warehouse.setpGgeometry(pGgeometry);
+
+
                     properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
                     magazzinoDao=new MagazzinoDao(Database.getInstance(properties));
-                    Assertions.assertTrue(magazzinoDao.insert(insert));
+                    Assertions.assertTrue(magazzinoDao.insert(warehouse));
 
 
                 } catch (FileNotFoundException e) {

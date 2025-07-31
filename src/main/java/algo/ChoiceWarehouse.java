@@ -2,8 +2,9 @@ package algo;
 
 import net.postgis.jdbc.geometry.Point;
 import org.jetbrains.annotations.TestOnly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pharma.Model.*;
-import pharma.dao.MagazzinoDao;
 import pharma.formula.HarvesinFormula;
 
 import java.util.*;
@@ -15,14 +16,15 @@ private static final int  PHARMACY_LOW_THRESHOLD=600;
 private static final int  PHARMACY_NEIGHTBOUR_THRESHOLD=300;
 private static final double RADIUS_KM_WAREHOUSE_RANGE=40;
 private static final double LATITUDE_DEGREE=111.0;
-private List<Warehouse> warehouses;
-private MagazzinoDao magazzinoDao;
-private final List<ChoiceAssigned> assigneds;
+    private static final Logger log = LoggerFactory.getLogger(ChoiceWarehouse.class);
+    private List<Warehouse> warehouses;
+
+private final List<PharmacyAssigned> assigneds;
 private final  double DISTANCE_KM=70;
-    public ChoiceWarehouse(List<Warehouse> warehouses, List<ChoiceAssigned> assigneds, MagazzinoDao magazzinoDao) {
+    public ChoiceWarehouse(List<Warehouse> warehouses, List<PharmacyAssigned> assigneds) {
         this.warehouses = warehouses;
         this.assigneds = assigneds;
-        this.magazzinoDao=magazzinoDao;
+
     }
 
     public Map<Integer, Integer> max_qty_pharmacy_for_lot(){
@@ -30,7 +32,7 @@ private final  double DISTANCE_KM=70;
 
         return assigneds.stream().collect(Collectors.groupingBy(
            assigneds-> assigneds.getFarmacia().getId(),
-                Collectors.summingInt(ChoiceAssigned::getQuantity))
+                Collectors.summingInt(PharmacyAssigned::getQuantity))
 
         );
 
@@ -39,6 +41,7 @@ private final  double DISTANCE_KM=70;
         Map<Farmacia,Integer> map_by_qty=pharmacy_by_qty();
         List<Map. Entry<Farmacia, Integer>> sorted_values= sorted_by_max(map_by_qty);
         List<PharmacyDistance> pharmacyDistances=distance_pharmacist(sorted_values);
+        calculate_availability(pharmacyDistances,dimension,quantity);
 
 
 
@@ -46,25 +49,31 @@ private final  double DISTANCE_KM=70;
     }
 
 
-    private  void calculate_availability(List<PharmacyDistance> distanceList,LotDimension dimension,int quantity){
+    public   Set<Warehouse> calculate_availability(List<PharmacyDistance> distanceList,LotDimension dimension,int quantity){
+        Set<Warehouse> availability_warehouse=new HashSet<>();
         distanceList.forEach(pharmacy->{
 
             warehouses.forEach(warehouse->{
                 Point point_warehouse=(Point) warehouse.getpGgeometry().getGeometry();
                 if(in_range(pharmacy.getAverage(),point_warehouse)){
+                    warehouse.getShelfInfos().forEach(shelfInfo -> {
+                        Optional<List<ShelvesRemain>> remains =shelfInfo.remaining_levels(dimension);
 
+                       if(remains.isPresent()){
 
+                        int availability=remains.get().stream().mapToInt(ShelvesRemain::getQuantity).sum();
+                        log.info("availability: "+availability);
+                        if(availability>=quantity) {
+
+                            availability_warehouse.add(warehouse);
+                        }
+                       }
+
+                    });
                 }
             });
-
-
-
-
-
-
-
         });
-
+        return availability_warehouse;
 
 
 
@@ -101,8 +110,8 @@ private final  double DISTANCE_KM=70;
 
 
         return assigneds.stream().collect(
-                Collectors.groupingBy(ChoiceAssigned::getFarmacia,
-                        Collectors.summingInt(ChoiceAssigned::getQuantity)));
+                Collectors.groupingBy(PharmacyAssigned::getFarmacia,
+                        Collectors.summingInt(PharmacyAssigned::getQuantity)));
 
 
     }

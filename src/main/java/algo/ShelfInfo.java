@@ -20,115 +20,76 @@ public class ShelfInfo
     private double lenght;
     private double height;
     private double deep;
-    private double weight;
+    private int  weight;
     private int num_rip;
     private double shelf_thickness;
     private  List<ShelvesCapacity>   shelvesCapacities;
     private  Logger logger=Logger.getLogger(ShelfInfo.class.getName());
 
-    public ShelfInfo(String shelf_code, int magazzino_id, double height, double deep, int num_rip, double shelf_thickness, List<ShelvesCapacity> shelvesCapacities, double weight, double lenght) {
-        this.shelf_code = shelf_code;
-        this.magazzino_id = magazzino_id;
-        this.height = height;
-        this.deep = deep;
-        this.num_rip = num_rip;
-        this.shelf_thickness = shelf_thickness;
-        this.shelvesCapacities = shelvesCapacities;
-        this.weight = weight;
-        this.lenght = lenght;
+    private ShelfInfo(){
+
+
+    }
+   private  ShelfInfo(ShelfInfoBuilder builder) {
+       this.shelf_code=builder.shelf_code;
+       this.magazzino_id=builder.magazzino_id;
+       this.height=builder.height;
+       this.deep= builder.deep;
+       this.num_rip=builder.num_rip;
+       this.shelf_thickness=builder.shelf_thickness;
+       this.shelvesCapacities=builder.shelvesCapacities;
+       this.weight=builder.weight;
+       this.lenght=builder.lenght;
     }
 
-    public ShelfInfo(FieldData fd_shelf, List<ShelvesCapacity> shelvesCapacities ) {
-        this.lenght =fd_shelf.getLunghezza();
-        this.height =fd_shelf.getAltezza();
-        this.deep =fd_shelf.getProfondita();
-        this.weight =fd_shelf.getCapacity();
-        this.magazzino_id=fd_shelf.getId();
-        this.shelf_code=fd_shelf.getCode();
-        this.num_rip=fd_shelf.getNum_rip();
-        this.shelf_thickness=fd_shelf.getSpessore();
-        this.shelvesCapacities=shelvesCapacities;
-
+    public void setShelvesCapacities(List<ShelvesCapacity> shelvesCapacities) {
+        this.shelvesCapacities = shelvesCapacities;
     }
 
     public String getShelf_code() {
         return shelf_code;
     }
 
-    public void setShelf_code(String shelf_code) {
-        this.shelf_code = shelf_code;
-    }
-
     public int getMagazzino_id() {
         return magazzino_id;
-    }
-
-    public void setMagazzino_id(int magazzino_id) {
-        this.magazzino_id = magazzino_id;
-    }
-
-    public int getNum_rip() {
-        return num_rip;
-    }
-
-    public void setNum_rip(int num_rip) {
-        this.num_rip = num_rip;
     }
 
     public double getLenght() {
         return lenght;
     }
 
-    public void setLenght(double lenght) {
-        this.lenght = lenght;
+    public double getHeight() {
+        return height;
     }
 
     public double getDeep() {
         return deep;
     }
 
-    public void setDeep(double deep) {
-        this.deep = deep;
-    }
-
-    public double getWeight() {
+    public int getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public double getShelf_thickness() {
-        return shelf_thickness;
-    }
-
-    public void setShelf_thickness(double shelf_thickness) {
-        this.shelf_thickness = shelf_thickness;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
+    public int getNum_rip() {
+        return num_rip;
     }
 
     public List<ShelvesCapacity> getShelvesCapacities() {
         return shelvesCapacities;
     }
 
-    public void setShelvesCapacities(List<ShelvesCapacity> shelvesCapacities) {
-        this.shelvesCapacities = shelvesCapacities;
+    public double getShelf_thickness() {
+        return shelf_thickness;
     }
+
+
+
     @TestOnly
     public boolean canFitProduct(LotDimension lotDimension){
         return lotDimension.getLength()<= lenght &&
                 lotDimension.getHeight()<=(height /num_rip)&&
                 lotDimension.getDeep()<= deep &&
                 lotDimension.getWeight()<= deep;
-
     }
 @TestOnly
  public Optional<List<ShelvesCapacity>> space_shelves_space_exist(LotDimension lotDimension){
@@ -228,7 +189,74 @@ public class ShelfInfo
 
     return remains.stream().sorted(Comparator.comparing(ShelvesRemain::getQuantity).reversed()).toList();
  }
+public static class ShelfInfoBuilder {
+    private String  shelf_code;
+    private int magazzino_id;
+    private double lenght;
+    private double height;
+    private double deep;
+    private int  weight;
+    private int num_rip;
+    private double shelf_thickness;
+    private  List<ShelvesCapacity>   shelvesCapacities;
 
+    private ShelfInfoBuilder() {
+    }
+    public static ShelfInfoBuilder get_builder(){
+
+        return new ShelfInfoBuilder();
+    }
+
+    public ShelfInfoBuilder setShelf_code(String shelf_code) {
+        this.shelf_code = shelf_code;
+        return this;
+    }
+
+    public ShelfInfoBuilder setLenght(double lenght) {
+        this.lenght = lenght;
+        return this;
+    }
+
+    public ShelfInfoBuilder setMagazzino_id(int magazzino_id) {
+        this.magazzino_id = magazzino_id;
+        return this;
+    }
+
+    public ShelfInfoBuilder setHeight(double height) {
+        this.height = height;
+        return this;
+    }
+
+    public ShelfInfoBuilder setWeight(int  weight) {
+        this.weight = weight;
+        return this;
+    }
+
+    public ShelfInfoBuilder setDeep(double deep) {
+        this.deep = deep;
+        return this;
+    }
+
+    public ShelfInfoBuilder setNum_rip(int num_rip) {
+        this.num_rip = num_rip;
+        return this;
+    }
+
+    public ShelfInfoBuilder setShelvesCapacities(List<ShelvesCapacity> shelvesCapacities) {
+        this.shelvesCapacities = shelvesCapacities;
+        return this;
+    }
+
+    public ShelfInfoBuilder setShelf_thickness(double shelf_thickness) {
+        this.shelf_thickness = shelf_thickness;
+        return this;
+    }
+
+    public ShelfInfo build(){
+            return new ShelfInfo(this);
+
+    }
+}
 
 
 
