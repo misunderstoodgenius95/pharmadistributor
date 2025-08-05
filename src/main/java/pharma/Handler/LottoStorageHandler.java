@@ -45,14 +45,14 @@ private MagazzinoDao magazzinoDao;
         lotDimension_dao =(LotDimensionDao) genericJDBCDao.stream().
                 filter(dao->dao instanceof LotDimensionDao).findFirst().orElseThrow(()->new IllegalArgumentException(" LotDimensionModel Not found!"));
         this.lottiDao = (LottiDao) genericJDBCDao.stream().filter(dao -> dao instanceof LottiDao).toList().getFirst();
-       /* s_order_details=(SellerOrderDetails) genericJDBCDao.stream().filter(dao->dao instanceof SellerOrderDetails).findFirst().
+        s_order_details=(SellerOrderDetails) genericJDBCDao.stream().filter(dao->dao instanceof SellerOrderDetails).findFirst().
                 orElseThrow(()->new IllegalArgumentException(" SellerOrderDetails Not found!"));
-        s_order=(SellerOrderDao) genericJDBCDao.stream().filter(dao->dao instanceof SellerOrderDetails).findFirst().
+        s_order=(SellerOrderDao) genericJDBCDao.stream().filter(dao->dao instanceof SellerOrderDao).findFirst().
                 orElseThrow(()->new IllegalArgumentException(" SellerOrderDao Not found!"));
         farmaciaDao=(FarmaciaDao) genericJDBCDao.stream().filter(dao->dao instanceof FarmaciaDao).findFirst().
                 orElseThrow(()->new IllegalArgumentException(" Farmacia Not found!"));
         magazzinoDao=(MagazzinoDao) genericJDBCDao.stream().filter(dao->dao instanceof MagazzinoDao).findFirst().
-                orElseThrow(()->new IllegalArgumentException(" Farmacia Not found!"));*/
+                orElseThrow(()->new IllegalArgumentException(" Magazzino Not found!"));
 
         choiceLogDialog =new LottoTableBase("Scegli lotti");
         listener_choice_lot_dialog();
@@ -63,7 +63,7 @@ private MagazzinoDao magazzinoDao;
 
 
 
-        lotDimensionDialog =new CustomLotsDimension("", List.of(lotDimension_dao),radio_btn_choice_lot.value_radio_property_choiceProperty() );
+        lotDimensionDialog =new CustomLotsDimension("", List.of(lotDimension_dao,s_order_details,s_order,farmaciaDao,magazzinoDao,lottiDao),radio_btn_choice_lot.value_radio_property_choiceProperty() );
 
 
 
@@ -127,27 +127,7 @@ private MagazzinoDao magazzinoDao;
 
 
     }
-/*  private void listener_addedd_table_lot(){
 
-        tableBase.getCheckBoxValue().addListener(new ChangeListener<FieldData>() {
-            @Override
-            public void changed(ObservableValue<? extends FieldData> observable, FieldData oldValue, FieldData newValue) {
-                if(newValue!=null){
-                    select_lot.setText("Lotto Selezionato");
-                    FieldData fieldData=lotDimension.(newValue.getFarmaco_id(),newValue.getCode());
-                    if(fieldData==null){
-                        visibile_label.setVisible(true);
-                        bnt_lot_dimension.setVisible(true);
-
-                    }
-
-
-
-
-                }
-            }
-        });
-    }*/
     private void listener_choice_lot_dialog(){
             choiceLogDialog.getButtonOK().setOnAction(event -> {
                 Object object=radio_btn_choice_lot.getValue_radio_property_choice();
@@ -165,29 +145,7 @@ private MagazzinoDao magazzinoDao;
               }
 
             });
-       /* tableBase.radio_valueProperty().addListener(new ChangeListener<FieldData>() {
-            @Override
-            public void changed(ObservableValue<? extends FieldData> observable, FieldData oldValue, FieldData newValue) {
-                if(newValue!=null){
-                    select_lot.setText("Lotto Selezionato");
-                  Optional<FieldData> optionalFieldData=lotDimension.findByIds(newValue.getFarmaco_id(),newValue.getCode());
 
-                  if(optionalFieldData.isPresent()){
-                       visibile_label.setVisible(true);
-                       bnt_lot_dimension.setVisible(true);
-
-                   }else{
-                      log.info("empty");
-
-
-                  }
-
-
-
-
-                }
-            }
-        });*/
     }
 
 

@@ -102,6 +102,10 @@ public abstract class DialogHandler<F> extends CustomDialog<F> {
 
     }
 
+    /**
+     * using this for verify is insert it is correct.
+     * @return
+     */
     public boolean isCond() {
         return condition_test.get();
     }

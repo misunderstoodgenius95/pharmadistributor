@@ -19,6 +19,7 @@ public class CustomLotsDimension extends  DialogHandler<LotDimensionModel> {
     private Spinner<Integer> weight;
     private SimpleObjectProperty<FieldData> object_lots_id;
     private LotDimensionDao lotDimensionDao;
+
     public CustomLotsDimension(String content, List<GenericJDBCDao> genericJDBCDao, SimpleObjectProperty<FieldData> object_lots_id) {
         super(content, genericJDBCDao);
        lotDimensionDao =(LotDimensionDao) genericJDBCDao.stream().
