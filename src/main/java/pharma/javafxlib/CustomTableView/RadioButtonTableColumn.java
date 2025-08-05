@@ -1,16 +1,26 @@
 package pharma.javafxlib.CustomTableView;
 
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.ToggleGroup;
 import javafx.util.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class RadioButtonTableColumn<S> extends TableColumn<S,Void> {
-
+    private static final Logger log = LoggerFactory.getLogger(RadioButtonTableColumn.class);
+    private final ObservableMap<S,RadioButton> radioMap;
+    private final SimpleObjectProperty<S> value_radio_property_choice;
+    //  ==Constructor===
     public RadioButtonTableColumn() {
+        value_radio_property_choice = new SimpleObjectProperty<>();
+        this.radioMap = FXCollections.observableHashMap();
         setCellFactory(createRadiobuttonCellFactory());
     }
 
@@ -39,6 +49,9 @@ public class RadioButtonTableColumn<S> extends TableColumn<S,Void> {
                             radioButton.setSelected(getTableView().getSelectionModel().isSelected(getIndex()));
 
                              setGraphic(radioButton);
+                             S s=getTableView().getItems().get(getIndex());
+                             radioMap.put(s,radioButton);
+                             value_radio_property_choice.set(s);
 
 
                         }
@@ -59,5 +72,15 @@ public class RadioButtonTableColumn<S> extends TableColumn<S,Void> {
         System.out.println("Button clicked for: " + rowData);
     }
 
+    public ObservableMap<S, RadioButton> getRadioMap() {
+        return radioMap;
+    }
 
+    public Object getValue_radio_property_choice() {
+        return value_radio_property_choice.get();
+    }
+
+    public SimpleObjectProperty<S> value_radio_property_choiceProperty() {
+        return value_radio_property_choice;
+    }
 }

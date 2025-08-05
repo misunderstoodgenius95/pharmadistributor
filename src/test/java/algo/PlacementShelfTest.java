@@ -1,12 +1,10 @@
 package algo;
 
 
-import algo.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import pharma.Model.FieldData;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -75,9 +73,9 @@ class PlacementShelfTest {
                 new ShelvesCapacity(1, "a22", 4, 0, 0, 0));
             shelfInfo2.setShelvesCapacities(list);
 
-        LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
+        LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
         ShelvesRemain shelvesRemain = new ShelvesRemain(new ShelvesCapacity(1, "a22", 1, 0, 0, 0.0), 80);
-        PlacementShelf.calculate_fit(lotDimension, shelvesRemain, 30, shelfInfo2);
+        PlacementShelf.calculate_fit(lotDimensionModel, shelvesRemain, 30, shelfInfo2);
     }
 
 
@@ -323,8 +321,8 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
         shelfInfoList.add(shelfInfo5);
         PlacementShelf placementShelf = new PlacementShelf(shelfInfoList);
 
-        LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
-        LotAssigment assigment = placementShelf.assignmentLots(lotDimension, 50);
+        LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+        LotAssigment assigment = placementShelf.assignmentLots(lotDimensionModel, 50);
         Assertions.assertEquals(1, assigment.getShelvesAssigmentList().size());
 
 
@@ -442,8 +440,8 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
             shelfInfoList.add(shelfInfo4);
             shelfInfoList.add(shelfInfo5);
             PlacementShelf placementShelf = new PlacementShelf(shelfInfoList);
-            LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
-            LotAssigment assigment = placementShelf.assignmentLots(lotDimension, 50);
+            LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+            LotAssigment assigment = placementShelf.assignmentLots(lotDimensionModel, 50);
             shelve = assigment.getShelvesAssigmentList().getFirst();
         }
 
@@ -464,7 +462,7 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
     @Nested
     class TestOneMax {
         PlacementShelf placementShelf;
-        LotDimension lotDimension;
+        LotDimensionModel lotDimensionModel;
         LotAssigment lotAssigment;
 
         @BeforeEach
@@ -574,8 +572,8 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
             shelfInfoList.add(shelfInfo4);
             shelfInfoList.add(shelfInfo5);
             placementShelf = new PlacementShelf(shelfInfoList);
-            lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
-            lotAssigment = placementShelf.assignmentLots(lotDimension, 26);
+            lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+            lotAssigment = placementShelf.assignmentLots(lotDimensionModel, 26);
         }
 
         @Test
@@ -603,7 +601,7 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
     class TestTwoSelfClassSolution {
 
         PlacementShelf placementShelf;
-        LotDimension lotDimension;
+        LotDimensionModel lotDimensionModel;
         LotAssigment lotAssigment;
 
         @BeforeAll // Changed from @BeforeEach - runs once before all tests
@@ -648,8 +646,8 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
             List<ShelfInfo> shelfInfoList = Arrays.asList(shelfInfo1, shelfInfo5);
 
             placementShelf = new PlacementShelf(shelfInfoList);
-            lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
-            lotAssigment = placementShelf.assignmentLots(lotDimension, 82);
+            lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+            lotAssigment = placementShelf.assignmentLots(lotDimensionModel, 82);
         }
 
 
@@ -730,8 +728,8 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
 
 
         PlacementShelf placementShelf = new PlacementShelf(shelfInfoList);
-        LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
-        LotAssigment lotAssigment = placementShelf.assignmentLots(lotDimension, 109);
+        LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+        LotAssigment lotAssigment = placementShelf.assignmentLots(lotDimensionModel, 109);
 
         lotAssigment.getShelvesAssigmentList().forEach(value -> {
             System.out.println("code: " + value.getShelf_code() + " level: " + value.getShelf_level() + " quantity: " + value.getQuantity());

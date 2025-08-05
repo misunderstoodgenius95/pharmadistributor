@@ -21,6 +21,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.controlsfx.control.SearchableComboBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
 
@@ -33,13 +35,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimulateEvents {
 
-    private SimulateEvents(){
+    private static final Logger log = LoggerFactory.getLogger(SimulateEvents.class);
+
+    private SimulateEvents() {
 
 
     }
 
-    public  static  void clickOn(Control control) {
-        Platform.runLater(()->control.fireEvent(new ActionEvent()));
+    public static void clickOn(Control control) {
+        Platform.runLater(() -> control.fireEvent(new ActionEvent()));
 
     }
 
@@ -56,10 +60,10 @@ public class SimulateEvents {
             false,                    // Secondary button down
             false,                    // Is synthesized
             false,                    // Is popup trigger
-            false,null                      // PickResult
+            false, null                      // PickResult
     );
 
-public static  void fireMouseClick(DatePicker datePicker) {
+    public static void fireMouseClick(DatePicker datePicker) {
 
         MouseEvent clickEvent = new MouseEvent(
                 MouseEvent.MOUSE_CLICKED,
@@ -67,8 +71,12 @@ public static  void fireMouseClick(DatePicker datePicker) {
                 MouseButton.PRIMARY, 1,
                 true, true, true, true, true, true, true, true, true, true, null
         );
-        Platform.runLater(()->   Event.fireEvent(datePicker, clickEvent));
+        Platform.runLater(() -> Event.fireEvent(datePicker, clickEvent));
 
+    }
+    public boolean isVisible(Control control){
+
+         return control.isVisible();
     }
 
 
@@ -82,24 +90,24 @@ public static  void fireMouseClick(DatePicker datePicker) {
             System.out.println("nok");
         }
     }
-       public static  void openContextMenu(TableView<FieldData> tableview,int row_number){
+
+    public static void openContextMenu(TableView<FieldData> tableview, int row_number) {
 
 
+        tableview.layout(); // Ensure the TableView has laid out its children
 
-           tableview.layout(); // Ensure the TableView has laid out its children
+        TableRow<FieldData> tableRow = (TableRow<FieldData>) tableview.lookupAll(".table-row-cell")
+                .stream()
+                .filter(node -> node instanceof TableRow)
+                .skip(row_number).
+                findFirst().orElseThrow(() -> new IllegalArgumentException("TableRow is not found!"));
 
-           TableRow<FieldData> tableRow = (TableRow<FieldData>) tableview.lookupAll(".table-row-cell")
-                   .stream()
-                   .filter(node -> node instanceof TableRow)
-                   .skip(row_number).
-                   findFirst().orElseThrow(() -> new IllegalArgumentException("TableRow is not found!"));
-
-           // Obtain the coordinate for point 0,0 of RowTable
-           double point_x = tableRow.localToScene(0, 0).getX();
-           double point_y = tableRow.localToScene(0, 0).getY();
-           SimulateEvents.RightMouseClickMouse(tableRow);
-           WaitForAsyncUtils.waitForFxEvents();
-           tableRow.getContextMenu().show(tableRow, point_x, point_y);
+        // Obtain the coordinate for point 0,0 of RowTable
+        double point_x = tableRow.localToScene(0, 0).getX();
+        double point_y = tableRow.localToScene(0, 0).getY();
+        SimulateEvents.RightMouseClickMouse(tableRow);
+        WaitForAsyncUtils.waitForFxEvents();
+        tableRow.getContextMenu().show(tableRow, point_x, point_y);
 /*
            MenuItem menuItem = tableRow.getContextMenu().getItems().getFirst();
 
@@ -109,99 +117,90 @@ public static  void fireMouseClick(DatePicker datePicker) {
 */
 
 
+    }
+
+    public static void fireItemMenu(TableView<FieldData> tableView, int num_row, int num_voice) {
 
 
+        TableRow<FieldData> tableRow = (TableRow<FieldData>) tableView.lookupAll(".table-row-cell")
+                .stream()
+                .filter(node -> node instanceof TableRow)
+                .skip(num_row).
+                findFirst().orElseThrow(() -> new IllegalArgumentException("TableRow is not found!"));
+        if (tableRow.getContextMenu() != null) {
 
-        }
+            ContextMenu contextMenu = tableRow.getContextMenu();
+            if (contextMenu.getItems().isEmpty()) {
+                throw new IllegalArgumentException("Context Menu Empty");
 
-        public  static  void fireItemMenu(TableView<FieldData> tableView,int num_row,int num_voice){
-
-
-            TableRow<FieldData> tableRow = (TableRow<FieldData>) tableView.lookupAll(".table-row-cell")
-                    .stream()
-                    .filter(node -> node instanceof TableRow)
-                    .skip(num_row).
-                    findFirst().orElseThrow(() -> new IllegalArgumentException("TableRow is not found!"));
-            if(tableRow.getContextMenu()!=null){
-
-                ContextMenu contextMenu=tableRow.getContextMenu();
-                if(contextMenu.getItems().isEmpty()){
-                    throw new IllegalArgumentException("Context Menu Empty");
-
-                } if(num_voice <0 || num_voice>=contextMenu.getItems().size()){
-                    throw new IllegalArgumentException("Index Out bound");
-
-                }else{
-                    contextMenu.getItems().get(num_voice).fire();
-                    tableRow.getContextMenu().hide();
-
-                }
             }
+            if (num_voice < 0 || num_voice >= contextMenu.getItems().size()) {
+                throw new IllegalArgumentException("Index Out bound");
 
+            } else {
+                contextMenu.getItems().get(num_voice).fire();
+                tableRow.getContextMenu().hide();
 
-
-
-
-
-
-
-
+            }
         }
 
 
+    }
 
-    public static <T> void showControl(ComboBoxBase<T> comboBoxBase){
+
+    public static <T> void showControl(ComboBoxBase<T> comboBoxBase) {
         comboBoxBase.show();
 
 
     }
-    public static <T> void showControl(ChoiceBox<T> choiceBox){
+
+    public static <T> void showControl(ChoiceBox<T> choiceBox) {
 
         choiceBox.show();
 
     }
-    public static  void openDatePicker(DatePicker datePicker){
+
+    public static void openDatePicker(DatePicker datePicker) {
         datePicker.show();
     }
-    public static  void writeOn(String query,String text, Scene scene){
-        TextField field= (TextField) scene.lookup(query);
+
+    public static void writeOn(String query, String text, Scene scene) {
+        TextField field = (TextField) scene.lookup(query);
         field.setText(text);
 
     }
-    /**
-     *
-     *
-     * @param choiceBox List that can simulate
-     * @param value  selected value  that it simulate choice of user.
 
+    /**
+     * @param choiceBox List that can simulate
+     * @param value     selected value  that it simulate choice of user.
      */
-    public static <T> void simulate_selected_items(ChoiceBox<T> choiceBox,T value){
-        if(choiceBox==null || value==null)
-        {
+    public static <T> void simulate_selected_items(ChoiceBox<T> choiceBox, T value) {
+        if (choiceBox == null || value == null) {
             throw new IllegalArgumentException("Argument cannot be null");
         }
         choiceBox.getSelectionModel().select(value);
     }
-    public static  void writeOn(TextField textField,String text){
-        if(text.isEmpty() || textField==null){
+
+    public static void writeOn(TextField textField, String text) {
+        if (text.isEmpty() || textField == null) {
             throw new IllegalArgumentException("Argoument cannoot be null");
         }
         textField.setText(text);
 
     }
-    public static  void keyPress( Control control,KeyCode keyCode){
-        KeyEvent keyEvent=new KeyEvent(KeyEvent.KEY_PRESSED,
-                "","",
+
+    public static void keyPress(Control control, KeyCode keyCode) {
+        KeyEvent keyEvent = new KeyEvent(KeyEvent.KEY_PRESSED,
+                "", "",
                 keyCode,
-                false,false,false,false);
-         control.fireEvent(keyEvent);
+                false, false, false, false);
+        control.fireEvent(keyEvent);
 
 
     }
 
 
-
-    public static  void RightMouseClickMouse(Control control){
+    public static void RightMouseClickMouse(Control control) {
         MouseEvent rightClickEvent = new MouseEvent(
                 MouseEvent.MOUSE_CLICKED,    // Event type
                 0, 0,                        // X, Y (local coordinates)
@@ -217,9 +216,10 @@ public static  void fireMouseClick(DatePicker datePicker) {
                 false,                        // Still since press (for drag events)
                 null                          // PickResult (optional)
         );
-       control.fireEvent(rightClickEvent);
+        control.fireEvent(rightClickEvent);
     }
-    public static  void PrimaryMouseClickMouse(Control control){
+
+    public static void PrimaryMouseClickMouse(Control control) {
         MouseEvent primaryMouseClicked = new MouseEvent(
                 MouseEvent.MOUSE_CLICKED,    // Event type
                 0, 0,                        // X, Y (local coordinates)
@@ -237,22 +237,30 @@ public static  void fireMouseClick(DatePicker datePicker) {
         );
         control.fireEvent(primaryMouseClicked);
     }
-    public static  void setSpinner(Spinner<Integer> spinner,int value){
-       Platform.runLater(()-> spinner.getValueFactory().setValue(value));
+
+    public static void setSpinner(Spinner<Integer> spinner, int value) {
+        Platform.runLater(() -> spinner.getValueFactory().setValue(value));
     }
-    public static <T> void setFirstElementSearchableBox(SearchableComboBox<T> searchableBox){
+    public static void setSpinnerDouble(Spinner<Double> spinner, double value) {
+        Platform.runLater(() -> spinner.getValueFactory().setValue(value));
+    }
+
+
+    public static <T> void setFirstElementSearchableBox(SearchableComboBox<T> searchableBox) {
         searchableBox.setValue(searchableBox.getItems().getFirst());
     }
-    public static <T> void  setFirstElementChoiceBox(ChoiceBox<T> choiceBox){
- setNElementChoiceBox(choiceBox,0);
+
+    public static <T> void setFirstElementChoiceBox(ChoiceBox<T> choiceBox) {
+        setNElementChoiceBox(choiceBox, 0);
 
     }
-    public static <T> void  setNElementChoiceBox(ChoiceBox<T> choiceBox, int n){
-        if(choiceBox==null){
+
+    public static <T> void setNElementChoiceBox(ChoiceBox<T> choiceBox, int n) {
+        if (choiceBox == null) {
             throw new IllegalArgumentException("Choicebox is null");
 
         }
-        if(choiceBox.getItems().isEmpty()){
+        if (choiceBox.getItems().isEmpty()) {
 
             throw new IllegalArgumentException("Choicebox empty");
         }
@@ -262,36 +270,50 @@ public static  void fireMouseClick(DatePicker datePicker) {
         }
 
 
-
-
-
-            choiceBox.setValue(choiceBox.getItems().get(n));
-
-
-
+        choiceBox.setValue(choiceBox.getItems().get(n));
 
 
     }
 
-    public static<S>  void setCheckBox(ObservableMap<S,CheckBox> map,  S value){
+    public static <S> void setCheckBox(ObservableMap<S, CheckBox> map, S value) {
 
         if (map.containsKey(value)) {
-           CheckBox checkBox=map.get(value);
-           checkBox.setSelected(true);
-           checkBox.fireEvent(new ActionEvent());
+            CheckBox checkBox = map.get(value);
+            checkBox.setSelected(true);
+            checkBox.fireEvent(new ActionEvent());
             return;
         }
 
-            map.addListener((MapChangeListener<S, CheckBox>) change -> {
-                if (change.wasAdded()) {
-                    if (change.getKey().equals(value)) {
-                        CheckBox checkBox = change.getValueAdded();
-                        checkBox.setSelected(true);
-                        checkBox.fireEvent(new ActionEvent());
-                    }
+        map.addListener((MapChangeListener<S, CheckBox>) change -> {
+            if (change.wasAdded()) {
+                if (change.getKey().equals(value)) {
+                    CheckBox checkBox = change.getValueAdded();
+                    checkBox.setSelected(true);
+                    checkBox.fireEvent(new ActionEvent());
                 }
-            });
+            }
+        });
+    }
+
+    public static <S> void setRadioBox(ObservableMap<S, RadioButton> map, S value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Value is null");
         }
+
+        map.addListener((MapChangeListener<S, RadioButton>) change -> {
+            if (change.wasAdded()) {
+                if (change.getKey().equals(value)) {
+                    RadioButton radioButton = change.getValueAdded();
+                    radioButton.setSelected(true);
+                    radioButton.fireEvent(new ActionEvent());
+
+                }
+            }
+        });
+    }
+
+
+
 
 
     public  static void  WaitAddedItemsTable(TableView tableView){

@@ -1,6 +1,5 @@
 package algo;
 
-import com.sun.javafx.geom.Dimension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -51,22 +50,22 @@ class ShelfInfoTest {
 
                 @Test
                 public void ValidCanFit() {
-                    LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
+                    LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
 
-                    assertTrue(shelfInfo.canFitProduct(lotDimension));
+                    assertTrue(shelfInfo.canFitProduct(lotDimensionModel));
 
 
                 }
 
                 @Test
                 public void spaceExtist() {
-                    LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0.4, 4.0);
-                    assertEquals(4, shelfInfo.space_shelves_space_exist(lotDimension).get().size());
+                    LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0.4, 4.0);
+                    assertEquals(4, shelfInfo.space_shelves_space_exist(lotDimensionModel).get().size());
                 }
 
                 @Test
                 void remaining_levels() {
-                    Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(new LotDimension("axx", 1, 12, 4, 0.4, 4.0));
+                    Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(new LotDimensionModel("axx", 1, 12, 4, 0.4, 4.0));
                     assertEquals(4, remains.get().size());
 
                 }
@@ -98,7 +97,7 @@ class ShelfInfoTest {
                         .setShelf_thickness(20)
                         .setShelvesCapacities(List.of(new ShelvesCapacity(1, "A21", 1, 100.0, 20.0, 0.0)))
                         .build();
-                Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0));
+                Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0));
                 remains.ifPresent(shelvesRemains -> remains_list = shelvesRemains);
 
 
@@ -152,7 +151,7 @@ class ShelfInfoTest {
                     .setShelf_thickness(10)
                     .setShelvesCapacities(shelvesCapacities)
                     .build();
-             remains = shelfInfo.remaining_levels(new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0));
+             remains = shelfInfo.remaining_levels(new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0));
 
 
 
@@ -217,8 +216,8 @@ class ShelfInfoTest {
 
 
         PlacementShelf placementShelf = new PlacementShelf(shelfInfoList);
-         LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
-        LotAssigment lotAssigment = placementShelf.assignmentLots(lotDimension, 30);
+         LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+        LotAssigment lotAssigment = placementShelf.assignmentLots(lotDimensionModel, 30);
         System.out.println(lotAssigment.getShelvesAssigmentList().size());
 
     }

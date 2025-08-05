@@ -9,10 +9,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
-import jdk.jshell.execution.Util;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import pharma.Handler.Table.TableCustom;
 import pharma.HttpExpireItem;
-import pharma.Handler.Table.LotTableCustom;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.TableUtility;
@@ -35,7 +34,7 @@ public class Expireproduct implements Initializable {
     public AnchorPane anchor;
     public Spinner spinner_id_days;
     public Button btn_send;
-    private LotTableCustom tableCustom;
+    private TableCustom tableCustom;
     private ObservableList<FieldData> observableList;
     private LottiDao lottiDao;
     private CheckBoxTableColumn<FieldData> checkBoxTableColumn;
@@ -99,7 +98,7 @@ public class Expireproduct implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Utility.add_iconButton(btn_send, FontAwesomeSolid.PLUS_CIRCLE);
-        tableCustom=new LotTableCustom("Scegli Lotti",lottiDao);
+        tableCustom=new TableCustom("Scegli Lotti",lottiDao);
         obs_table=FXCollections.observableArrayList();
         observableList=FXCollections.observableArrayList();
         spinner_id_days.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,20000,1));

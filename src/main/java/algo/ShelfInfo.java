@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.LoggerFactory;
-import pharma.Model.FieldData;
 
 public class ShelfInfo
 {
@@ -85,23 +84,23 @@ public class ShelfInfo
 
 
     @TestOnly
-    public boolean canFitProduct(LotDimension lotDimension){
-        return lotDimension.getLength()<= lenght &&
-                lotDimension.getHeight()<=(height /num_rip)&&
-                lotDimension.getDeep()<= deep &&
-                lotDimension.getWeight()<= deep;
+    public boolean canFitProduct(LotDimensionModel lotDimensionModel){
+        return lotDimensionModel.getLength()<= lenght &&
+                lotDimensionModel.getHeight()<=(height /num_rip)&&
+                lotDimensionModel.getDeep()<= deep &&
+                lotDimensionModel.getWeight()<= deep;
     }
 @TestOnly
- public Optional<List<ShelvesCapacity>> space_shelves_space_exist(LotDimension lotDimension){
+ public Optional<List<ShelvesCapacity>> space_shelves_space_exist(LotDimensionModel lotDimensionModel){
               List<ShelvesCapacity> current_space_capacity=new ArrayList<>();
-                if(!canFitProduct(lotDimension)){
+                if(!canFitProduct(lotDimensionModel)){
                     return Optional.empty();
                 }
         for(ShelvesCapacity shelvesCapacity:shelvesCapacities){
              double remain_deep=deep-shelvesCapacity.getOccupied_deep();
              double remain_length= lenght-shelvesCapacity.getOccupied_length();
-            if(!(remain_deep<lotDimension.getDeep()) ||
-            !(remain_length<lotDimension.getLength())){
+            if(!(remain_deep< lotDimensionModel.getDeep()) ||
+            !(remain_length< lotDimensionModel.getLength())){
                 current_space_capacity.add(shelvesCapacity);
             }
         }
@@ -117,16 +116,16 @@ public class ShelfInfo
      * that can accommodate the given lot dimensions. Considers available space
      * based on the shelf's dimensions, weight capacity, and current occupancies.
      *
-     * @param lotDimension the dimensions of the product lot to be stored, including its
+     * @param lotDimensionModel the dimensions of the product lot to be stored, including its
      *                     length, depth, and weight.
      * @return an {@code Optional} containing a list of {@code ShelvesRemain} objects
      *         representing the remaining spaces, or an empty {@code Optional} if the
      *         product cannot fit in any available space.
      */
 
- public Optional<List<ShelvesRemain>> remaining_levels(LotDimension lotDimension) {
+ public Optional<List<ShelvesRemain>> remaining_levels(LotDimensionModel lotDimensionModel) {
      List<ShelvesRemain> remain = new ArrayList<>();
-     if (!canFitProduct(lotDimension)) {
+     if (!canFitProduct(lotDimensionModel)) {
          return Optional.empty();
      }
      for (ShelvesCapacity shelvesCapacity : shelvesCapacities) {
@@ -134,8 +133,8 @@ public class ShelfInfo
             logger.info("deep: "+remain_deep);
          double remain_length = lenght - shelvesCapacity.getOccupied_length();
          logger.info(" length: "+remain_length);
-         if ((remain_deep <= lotDimension.getDeep()) ||
-                 (remain_length <= lotDimension.getLength())) {
+         if ((remain_deep <= lotDimensionModel.getDeep()) ||
+                 (remain_length <= lotDimensionModel.getLength())) {
 
 
             continue;
@@ -143,10 +142,10 @@ public class ShelfInfo
          log.info("continue");
 
 
-         int fitbylenght = (int) (remain_length / lotDimension.getLength());
+         int fitbylenght = (int) (remain_length / lotDimensionModel.getLength());
         logger.info("Fit Length "+fitbylenght);
 
-         int fitbydeepth = (int) (remain_deep / lotDimension.getDeep());
+         int fitbydeepth = (int) (remain_deep / lotDimensionModel.getDeep());
         logger.info("fit deep  "+fitbydeepth);
 
          int fit_space = fitbydeepth * fitbylenght;
@@ -164,7 +163,7 @@ public class ShelfInfo
 
 
          // Calculus fitProduct
-         int  fitbyWeight =(int)( remaing_weight / lotDimension.getWeight());
+         int  fitbyWeight =(int)( remaing_weight / lotDimensionModel.getWeight());
          int remaining=Math.min(fit_space,fitbyWeight);
      //    logger.info("remaining: "+remaining);
          if(remaining>0){

@@ -1,22 +1,11 @@
 package pharma.Handler.Table;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
-import javafx.collections.SetChangeListener;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableRow;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import net.bytebuddy.implementation.auxiliary.MethodCallProxy;
-import net.jodah.failsafe.internal.util.Assert;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,21 +16,17 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
 import pharma.config.database.Database;
 import pharma.dao.LottiDao;
 import pharma.javafxlib.test.SimulateEvents;
 
-import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.time.LocalDate;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -50,7 +35,7 @@ import  static  pharma.javafxlib.test.SimulateEvents.*;
 @ExtendWith(ApplicationExtension.class)
 @SuppressWarnings({"unchecked", "deprecation"})
 class LotTableCustomTest {
-    private  LotTableCustom lotTableCustom;
+    private TableCustom lotTableCustom;
     private LottiDao lottiDao;
 
     @Mock
@@ -119,7 +104,7 @@ if(parameter.contains("a")) {
 
 Platform.runLater(()->{
 
-    lotTableCustom = new LotTableCustom("Scegli Lotto", lottiDao);
+    lotTableCustom = new TableCustom("Scegli Lotto", lottiDao);
     lotTableCustom.show();
 
 
@@ -171,7 +156,7 @@ Platform.runLater(()->{
         Platform.runLater(() -> {
             setFirstElementChoiceBox(lotTableCustom.getChoiceBox());
             writeOn(lotTableCustom.getTextField_search(), "a");
-           Assertions.assertEquals(2,lotTableCustom.getTableLot().getItems().size());
+           Assertions.assertEquals(2,lotTableCustom.getTableView().getItems().size());
 
 
 
@@ -188,8 +173,8 @@ Platform.runLater(()->{
             writeOn(lotTableCustom.getTextField_search(), "a");
             ObservableMap<FieldData,CheckBox> map = lotTableCustom.getMapCheckBox();
 
-             SimulateEvents.setCheckBox(map,lotTableCustom.getTableLot().getItems().getFirst());
-             SimulateEvents.setCheckBox(map,lotTableCustom.getTableLot().getItems().get(1));
+             SimulateEvents.setCheckBox(map,lotTableCustom.getTableView().getItems().getFirst());
+             SimulateEvents.setCheckBox(map,lotTableCustom.getTableView().getItems().get(1));
 
             lotTableCustom.getButtonOK().setOnAction(event -> {
                 System.out.println("size"+lotTableCustom.getSelectedRows().size());

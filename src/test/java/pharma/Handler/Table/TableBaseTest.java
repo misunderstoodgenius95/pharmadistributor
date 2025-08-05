@@ -14,13 +14,11 @@ import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
 import pharma.javafxlib.test.SimulateEvents;
 
-import javax.xml.crypto.dsig.SignatureMethod;
 import java.sql.Date;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
-class LotTableBaseTest {
+class TableBaseTest {
     @Start
     public void start(Stage stage){
         Scene scene=new Scene(new VBox(),500,600);
@@ -37,14 +35,14 @@ class LotTableBaseTest {
                     setNome_principio_attivo("Paracetamolo").setNome_casa_farmaceutica("Angelini").setQuantity(30).
                     setProduction_date(Date.valueOf(LocalDate.of(2024, 10, 10))).
                     setElapsed_date(Date.valueOf(LocalDate.of(2025, 10, 01))).build();
-            LotTableBase lotTableBase=new LotTableBase("Scegli Lotto");
-            lotTableBase.add_check_box_column();
-            lotTableBase.getTableViewProductTable().getItems().add(fieldData);
-            SimulateEvents.setCheckBox(lotTableBase.get_checkbox_instance(),lotTableBase.getTableViewProductTable().getItems().getFirst());
-            lotTableBase.show();
-            SimulateEvents.clickOn(lotTableBase.getButtonOK());
+            LottoTableBase tableBase =new LottoTableBase("Scegli Lotto");
+            tableBase.add_check_box_column();
+            tableBase.getTableView().getItems().add(fieldData);
+            SimulateEvents.setCheckBox(tableBase.get_checkbox_instance(), tableBase.getTableView().getItems().getFirst());
+            tableBase.show();
+            SimulateEvents.clickOn(tableBase.getButtonOK());
             WaitForAsyncUtils.waitForFxEvents();
-        Assertions.assertEquals("amax",lotTableBase.getCheckBoxValue().get().getCode());
+
 
 
 

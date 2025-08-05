@@ -1,6 +1,6 @@
 package algo;
 
-public class LotDimension {
+public class LotDimensionModel {
     private String lot_id;
     private  int  farmaco_id;
     private double length;
@@ -8,8 +8,11 @@ public class LotDimension {
     private   double weight;
     private  double deep;
 
+    public LotDimensionModel() {
 
-    public LotDimension(String lot_id, int farmaco_id, double length, double deep, double weight, double height) {
+    }
+
+    public LotDimensionModel(String lot_id, int farmaco_id, double length, double deep, double weight, double height) {
         this.lot_id = lot_id;
         this.farmaco_id = farmaco_id;
         this.length = length;
@@ -56,6 +59,14 @@ public class LotDimension {
 
     public double getWeight() {
         return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setDeep(double deep) {
+        this.deep = deep;
     }
 
     public void setWeight(int weight) {

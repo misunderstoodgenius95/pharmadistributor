@@ -13,15 +13,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import pharma.Model.FieldData;
 import pharma.config.InputValidation;
-import pharma.config.TableUtility;
 import pharma.dao.LottiDao;
 import pharma.javafxlib.CustomTableView.CheckBoxTableColumn;
-import pharma.javafxlib.Dialog.CustomDialog;
-import pharma.javafxlib.Search.FilterSearch;
 
 import java.util.*;
 
-public class LotTableCustom extends LotTableBase {
+public class TableCustom extends LottoTableBase {
     private ChoiceBox<String> choiceBox;
     private TextField textField_search;;
     private  LottiDao lottiDao;
@@ -30,7 +27,7 @@ public class LotTableCustom extends LotTableBase {
     private  CheckBoxTableColumn<FieldData> col_checkbox;
 
 
-    public LotTableCustom(String content, LottiDao lottiDao) {
+    public TableCustom(String content, LottiDao lottiDao) {
         super(content);
         getDialogPane().setPrefHeight(900);
         getDialogPane().setPrefWidth(1200);
@@ -78,9 +75,7 @@ public class LotTableCustom extends LotTableBase {
     }
 
 
-    public TableView<FieldData> getTableLot() {
-        return getTableViewProductTable();
-    }
+
 
     public TextField getTextField_search() {
         return textField_search;
@@ -117,7 +112,7 @@ public class LotTableCustom extends LotTableBase {
                 if(InputValidation.filled_text(newValue)&& (!choiceBox.getValue().isEmpty()) && (!Objects.equals(choiceBox.getValue(), "Seleziona"))){
                     List<FieldData> list=lottiDao.findBySearch(choiceBox.getValue(), newValue);
                     observableList.setAll(list);
-                    getTableViewProductTable().setItems(observableList);
+                    getTableView().setItems(observableList);
 
                 }
             }

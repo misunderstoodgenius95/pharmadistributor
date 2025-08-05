@@ -139,7 +139,7 @@ public class LottiDialogHandler  extends DialogHandler<FieldData> {
     private  void listener_button(List<FieldData> list){
      button.setOnAction(event -> {
          ProductTableCustom productTableCustom=new ProductTableCustom("Scegli Farmaco");
-        TableView<FieldData> tableView=productTableCustom.getTableViewProductTable();
+        TableView<FieldData> tableView=productTableCustom.getTableView();
         TextField textField_search=productTableCustom.add_text_field("Inserisci Prodotto");
         productTableCustom.getControlList().add(textField_search);
 

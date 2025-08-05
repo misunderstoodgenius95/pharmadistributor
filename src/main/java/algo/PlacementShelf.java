@@ -28,17 +28,17 @@ private List<ShelfInfo> list_shelf;
      * It identifies shelves that can accommodate the specified lot dimensions and returns a mapping
      * of shelf information to relevant levels of remaining capacity.
      *
-     * @param dimension the dimensions of the lot to be placed, represented by a LotDimension object.
+     * @param dimension the dimensions of the lot to be placed, represented by a LotDimensionModel object.
      *                  Must not be null; otherwise, an IllegalArgumentException is thrown.
      * @return a HashMap where the key is a ShelfInfo object representing a specific shelf,
      *         and the value is a list of ShelvesRemain objects indicating the remaining capacities
      *         for that shelf based on the input dimensions.
-     * @throws IllegalArgumentException if the provided LotDimension is null.
+     * @throws IllegalArgumentException if the provided LotDimensionModel is null.
      */
     @TestOnly
-    public HashMap<ShelfInfo,List<ShelvesRemain>> calculatePlacement(LotDimension dimension){
+    public HashMap<ShelfInfo,List<ShelvesRemain>> calculatePlacement(LotDimensionModel dimension){
         if(dimension==null){
-            throw  new IllegalArgumentException("Missing LotDimension");
+            throw  new IllegalArgumentException("Missing LotDimensionModel");
         }
         HashMap<ShelfInfo,List<ShelvesRemain>> shelf_remaing=new HashMap<>();
         for(ShelfInfo shelfInfo:list_shelf){
@@ -94,7 +94,7 @@ private List<ShelfInfo> list_shelf;
 
 
 
-    public LotAssigment  assignmentLots(LotDimension dimension,int quantity){
+    public LotAssigment  assignmentLots(LotDimensionModel dimension, int quantity){
         LotAssigment lotAssigment=new LotAssigment(dimension.getFarmaco_id(),dimension.getLot_id(),quantity);
 
         int quantity_remain=quantity;
@@ -139,7 +139,7 @@ private List<ShelfInfo> list_shelf;
 
     }
     @TestOnly
-    public int  placingIntoShelf(LotDimension dimension,ShelfInfo shelfInfo,int quantity,List<ShelvesRemain> remains,LotAssigment assigment){
+    public int  placingIntoShelf(LotDimensionModel dimension, ShelfInfo shelfInfo, int quantity, List<ShelvesRemain> remains, LotAssigment assigment){
         int remainingToPlace = quantity;
 
         for(ShelvesRemain remain:remains) {
@@ -175,20 +175,20 @@ private List<ShelfInfo> list_shelf;
      * Determines if a specified quantity of items can fit onto a shelf based on the given dimensions
      * and the remaining capacities of the shelf. Updates the shelf's occupied dimensions upon success.
      *
-     * @param lotDimension an object representing the dimensions of the product to be placed, including its length and depth.
+     * @param lotDimensionModel an object representing the dimensions of the product to be placed, including its length and depth.
      * @param shelvesRemain an object containing information about the remaining capacity of the shelf and other details.
      * @param quantity the number of items to be placed onto the shelf.
      * @param shelf an object containing the physical dimensions of the shelf, such as length and depth.
      * @return true if the specified quantity of items can fit within the given shelf's remaining capacity, false otherwise.
      */
     @TestOnly
-    public static boolean calculate_fit(LotDimension lotDimension, ShelvesRemain shelvesRemain,
-                              int quantity, ShelfInfo shelf) {
+    public static boolean calculate_fit(LotDimensionModel lotDimensionModel, ShelvesRemain shelvesRemain,
+                                        int quantity, ShelfInfo shelf) {
 
     double shelfLength = shelf.getLenght();
     double shelfDepth = shelf.getDeep(); // Assume this method exists, e.g., 80 cm
-    double productLength = lotDimension.getLength();
-    double productDeep = lotDimension.getDeep();
+    double productLength = lotDimensionModel.getLength();
+    double productDeep = lotDimensionModel.getDeep();
     ShelvesCapacity shelvesCapacity=shelvesRemain.getShelvesCapacity();
 
     // Calculate products per row

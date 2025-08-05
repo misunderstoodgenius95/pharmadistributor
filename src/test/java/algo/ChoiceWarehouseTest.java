@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import pharma.Model.*;
-import pharma.dao.MagazzinoDao;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -504,10 +503,10 @@ class ChoiceWarehouseTest {
         }
         @Test
         public void ValidTest(){
-            LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
+            LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
         List<PharmacyDistance>distances=List.of(new PharmacyDistance(List.of(farmacia1,farmacia2,farmacia3),new Point(38.15,15.02)),
         new PharmacyDistance(List.of(farmacia6,farmacia7,farmacia8),new Point(37.51,13.88)));
-           Set<Warehouse> warehouses= choiceWarehouse.calculate_availability(distances,lotDimension,10);
+           Set<Warehouse> warehouses= choiceWarehouse.calculate_availability(distances, lotDimensionModel,10);
            assertThat(warehouses).hasSize(1);
 
 
@@ -515,10 +514,10 @@ class ChoiceWarehouseTest {
         }
         @Test
         public void InValidTest(){
-            LotDimension lotDimension = new LotDimension("axx", 1, 12.1, 4.1, 0, 4.0);
+            LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
             List<PharmacyDistance>distances=List.of(new PharmacyDistance(List.of(farmacia1,farmacia2,farmacia3),new Point(38.15,15.02)),
                     new PharmacyDistance(List.of(farmacia6,farmacia7,farmacia8),new Point(37.51,13.88)));
-            Set<Warehouse> warehouses= choiceWarehouse.calculate_availability(distances,lotDimension,140);
+            Set<Warehouse> warehouses= choiceWarehouse.calculate_availability(distances, lotDimensionModel,140);
             assertThat(warehouses).hasSize(0);
 
 

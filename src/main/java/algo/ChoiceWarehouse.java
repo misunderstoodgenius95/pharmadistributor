@@ -37,7 +37,7 @@ private final  double DISTANCE_KM=70;
         );
 
     }
-    public void calculate_warehouse(LotDimension dimension,int quantity){
+    public void calculate_warehouse(LotDimensionModel dimension, int quantity){
         Map<Farmacia,Integer> map_by_qty=pharmacy_by_qty();
         List<Map. Entry<Farmacia, Integer>> sorted_values= sorted_by_max(map_by_qty);
         List<PharmacyDistance> pharmacyDistances=distance_pharmacist(sorted_values);
@@ -49,7 +49,7 @@ private final  double DISTANCE_KM=70;
     }
 
 
-    public   Set<Warehouse> calculate_availability(List<PharmacyDistance> distanceList,LotDimension dimension,int quantity){
+    public   Set<Warehouse> calculate_availability(List<PharmacyDistance> distanceList, LotDimensionModel dimension, int quantity){
         Set<Warehouse> availability_warehouse=new HashSet<>();
         distanceList.forEach(pharmacy->{
 

@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import pharma.Model.FieldData;
+import pharma.config.Utility;
 import pharma.javafxlib.Dialog.CustomDialog;
 import pharma.config.PopulateChoice;
 import pharma.dao.GenericJDBCDao;
@@ -161,15 +162,10 @@ public abstract class DialogHandler<F> extends CustomDialog<F> {
     }
 
     public void  create_alert(Alert.AlertType alert_type, String title_header, String body) {
-        System.out.println("execute");
-        Alert alert = new Alert(alert_type);
-        alert.setTitle(title_header);
-        alert.setHeaderText(body);
-        alert.getDialogPane().setId("alert");
-       alert.initModality(Modality.APPLICATION_MODAL);
-        alert.showAndWait();
+        Utility.create_alert(alert_type, title_header, body);
 
 
     }
+
 
 }
