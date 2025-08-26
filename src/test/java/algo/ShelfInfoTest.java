@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import pharma.Model.FieldData;
+import pharma.Model.LotDimensionModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;

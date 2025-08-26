@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.LoggerFactory;
+import pharma.Model.LotDimensionModel;
 
 public class ShelfInfo
 {

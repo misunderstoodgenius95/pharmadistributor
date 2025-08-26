@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pharma.Model.LotDimensionModel;
 
 import java.util.HashMap;
 import java.util.List;
@@ -331,7 +332,7 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
 
     @Nested
     class TestWithOneEmpty {
-        LotAssigment.ShelvesAssigment shelve;
+        ShelvesAssigment shelve;
 
         @BeforeEach
         public void setUp() {

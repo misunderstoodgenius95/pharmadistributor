@@ -1,6 +1,6 @@
 package pharma.Handler;
 
-import algo.LotDimensionModel;
+import pharma.Model.LotDimensionModel;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;

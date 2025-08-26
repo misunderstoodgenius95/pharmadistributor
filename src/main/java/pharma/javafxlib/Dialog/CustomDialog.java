@@ -171,6 +171,13 @@ public class CustomDialog<T> extends Dialog<T> {
 
 
     }
+    public<K> TreeTableView<K> add_tree_table(){
+        TreeTableView<K> treeTableView=new TreeTableView<>();
+        vbox.getChildren().add(treeTableView);
+        controlList.add(treeTableView);
+        return treeTableView;
+
+    }
 
 
     public  ToggleGroup add_group(){

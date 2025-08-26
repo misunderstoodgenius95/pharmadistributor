@@ -1,6 +1,6 @@
 package pharma.Handler;
 
-import algo.LotDimensionModel;
+import pharma.Model.LotDimensionModel;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Spinner;
 import pharma.Model.FieldData;

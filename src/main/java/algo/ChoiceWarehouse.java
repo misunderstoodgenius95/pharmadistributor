@@ -26,7 +26,7 @@ private final  double DISTANCE_KM=70;
         this.assigneds = assigneds;
 
     }
-
+    @TestOnly
     public Map<Integer, Integer> max_qty_pharmacy_for_lot(){
 
 
@@ -37,18 +37,25 @@ private final  double DISTANCE_KM=70;
         );
 
     }
-    public void calculate_warehouse(LotDimensionModel dimension, int quantity){
+    public Set<Warehouse> calculate_warehouse(LotDimensionModel dimension, int quantity){
         Map<Farmacia,Integer> map_by_qty=pharmacy_by_qty();
         List<Map. Entry<Farmacia, Integer>> sorted_values= sorted_by_max(map_by_qty);
         List<PharmacyDistance> pharmacyDistances=distance_pharmacist(sorted_values);
-        calculate_availability(pharmacyDistances,dimension,quantity);
+         return calculate_availability(pharmacyDistances,dimension,quantity);
 
 
 
 
     }
 
-
+    /**
+     * Calulate the availability for this loy
+     * @param distanceList
+     * @param dimension
+     * @param quantity
+     * @return
+     */
+        @TestOnly
     public   Set<Warehouse> calculate_availability(List<PharmacyDistance> distanceList, LotDimensionModel dimension, int quantity){
         Set<Warehouse> availability_warehouse=new HashSet<>();
         distanceList.forEach(pharmacy->{
@@ -56,6 +63,7 @@ private final  double DISTANCE_KM=70;
             warehouses.forEach(warehouse->{
                 Point point_warehouse=(Point) warehouse.getpGgeometry().getGeometry();
                 if(in_range(pharmacy.getAverage(),point_warehouse)){
+
                     warehouse.getShelfInfos().forEach(shelfInfo -> {
                         Optional<List<ShelvesRemain>> remains =shelfInfo.remaining_levels(dimension);
 
@@ -78,6 +86,7 @@ private final  double DISTANCE_KM=70;
 
 
     }
+    @TestOnly
     public static boolean in_range(Point average_point,Point warehouse_point){
 
         double latitude_offset=RADIUS_KM_WAREHOUSE_RANGE/LATITUDE_DEGREE;
@@ -105,7 +114,7 @@ private final  double DISTANCE_KM=70;
 
 
     }*/
-
+    @TestOnly
     public Map<Farmacia, Integer> pharmacy_by_qty(){
 
 
@@ -122,6 +131,7 @@ private final  double DISTANCE_KM=70;
      * @param map a Map where the keys are Farmacia objects and the values are Integer quantities, representing some metric to sort by
      * @return a List of Map.Entry objects sorted in descending order by the Integer values in the map
      */
+    @TestOnly
     public List<Map.Entry<Farmacia,Integer>> sorted_by_max(Map<Farmacia,Integer> map){
         return map.entrySet().stream().sorted(Map.Entry.<Farmacia,Integer>comparingByValue().reversed()).collect(Collectors.toList());
 
@@ -198,16 +208,7 @@ private final  double DISTANCE_KM=70;
 
 
 
-   private static void create_list_neightbour(HashMap<Farmacia,List<Farmacia>> group_pharmacy_map,Farmacia farmacia_point, Farmacia farmacia_neightbour){
-    if(group_pharmacy_map.containsKey(farmacia_point)){
-        List<Farmacia> distances=group_pharmacy_map.get(farmacia_point);
-        distances.add(farmacia_neightbour);
-    }else{
-      List<Farmacia> list_neightbour=new ArrayList<>();
-      list_neightbour.add(farmacia_neightbour);
-      group_pharmacy_map.put(farmacia_point,list_neightbour);
-    }
-   }
+
 
 
     /**

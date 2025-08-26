@@ -4,8 +4,10 @@ package pharma.config;
 import com.sun.jdi.ClassType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.util.StringConverter;
 import pharma.Model.FieldData;
 
@@ -23,9 +25,16 @@ public class TableUtility {
                 new TableColumn<>(header_column);
 
         p_id.setCellValueFactory(new PropertyValueFactory<S,String>(model_data));
+
         return  p_id;
     }
+    public static<S> TreeTableColumn<S,String> generate_tree_column_string(String header_column, String model_data){
+        TreeTableColumn<S, String> p_id =
+                new TreeTableColumn<>(header_column);
 
+        p_id.setCellValueFactory(new TreeItemPropertyValueFactory<S,String>(model_data));
+        return  p_id;
+    }
 
     public static <S> TableColumn<S,Integer> generate_column_int(String header_column, String model_data){
         TableColumn<S, Integer> p_id =
@@ -34,11 +43,27 @@ public class TableUtility {
         p_id.setCellValueFactory(new PropertyValueFactory<S,Integer>(model_data));
         return  p_id;
     }
+    public static <S> TreeTableColumn<S,Integer> generate_tree_column_int(String header_column, String model_data){
+        TreeTableColumn<S, Integer> p_id =
+                new TreeTableColumn<>(header_column);
+
+        p_id.setCellValueFactory(new TreeItemPropertyValueFactory<S,Integer>(model_data));
+        return  p_id;
+    }
+
     public static <S> TableColumn<S,Double> generate_column_double(String header_column, String model_data){
         TableColumn<S, Double> p_id =
                 new TableColumn<>(header_column);
 
         p_id.setCellValueFactory(new PropertyValueFactory<>(model_data));
+        return  p_id;
+
+    }
+    public static <S> TreeTableColumn<S,Double> generate_tree_column_double(String header_column, String model_data){
+        TreeTableColumn<S, Double> p_id =
+                new TreeTableColumn<>(header_column);
+
+        p_id.setCellValueFactory(new TreeItemPropertyValueFactory<>(model_data));
         return  p_id;
 
     }

@@ -1,6 +1,7 @@
 package pharma.Handler;
 
-import algo.LotDimensionModel;
+import algo.*;
+import pharma.Model.LotDimensionModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -14,13 +15,12 @@ import pharma.Model.Farmacia;
 import pharma.Model.FieldData;
 import pharma.Model.Warehouse;
 import pharma.config.PopulateChoice;
+import pharma.config.TableUtility;
 import pharma.config.Utility;
 import pharma.dao.*;
 import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class LottoStorageHandler extends DialogHandler<FieldData> {
     private static final Logger log = LoggerFactory.getLogger(LottoStorageHandler.class);
@@ -34,7 +34,10 @@ public class LottoStorageHandler extends DialogHandler<FieldData> {
     private RadioButtonTableColumn<FieldData> radio_btn_choice_lot;
 private SellerOrderDetails s_order_details;
 private SellerOrderDao s_order;
+private LotDimensionDao lotDimensionDao;
 private MagazzinoDao magazzinoDao;
+private  LotAssigmentDao lotAssigmentDao;
+private  LotAssigmentShelvesDao lotAssigmentShelvesDao;
     private LotDimensionDao lotDimension_dao;
     private Label visibile_label;
     CustomLotsDimension lotDimensionDialog;
@@ -107,11 +110,15 @@ private MagazzinoDao magazzinoDao;
         bnt_lot_dimension.setVisible(false);
         add_label("Seleziona Quantità");
         quantity=add_spinner();
+        TreeTableView<LotDimensionModel> modelTreeTableView=add_tree_table();
+
+
 
       //  add_optional_data();
         listener_text_table();
         listener_button_table();
         listener_lot_dimension();
+        tree_table(modelTreeTableView);
 
 
 
@@ -124,6 +131,11 @@ private MagazzinoDao magazzinoDao;
 
 
 
+
+    }
+    private void tree_table(TreeTableView<LotDimensionModel> modelTreeTableView){
+    /*    modelTreeTableView.getColumns().
+                addAll(TableUtility.generate_tree_column_string("Magazzino",""))*/
 
 
     }
@@ -210,7 +222,28 @@ private MagazzinoDao magazzinoDao;
             pharmacyAssigneds.add(new PharmacyAssigned(farmacia,orderDetail.getQuantity()));
 
         }
-        /*ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouse,pharmacyAssigneds);*/
+        Optional<LotDimensionModel> dimension=lotDimensionDao.findByLots(fieldData.getCode(),fieldData.getFarmaco_id());
+        if(dimension.isPresent()){
+            LotDimensionModel lotDimensionModel=dimension.get();
+            ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouse,pharmacyAssigneds);
+            Set<Warehouse> set=choiceWarehouse.calculate_warehouse(lotDimensionModel,100);
+            List<ShelfInfo> list=set.stream().map(warehouse -> {
+                List<ShelvesAssigment> assigments=lotAssigmentShelvesDao.findByWarehouse(warehouse.getId());
+                List<ShelvesCapacity> shelves =assigments.stream().map(row->new ShelvesCapacity(
+                   row.getId(),
+                   row.getShelf_code(),
+                   row.getShelf_level(),
+                   0,0,0)).toList();
+                    return ShelfInfo.ShelfInfoBuilder.get_builder().setDeep().
+                            setShelvesCapacities(shelves).build();
+            }).toList();
+
+
+            PlacementShelf shelf=new PlacementShelf();
+            shelf.assignmentLots(lotDimensionModel,100);
+
+
+        }
 
 
 

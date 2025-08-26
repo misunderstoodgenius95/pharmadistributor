@@ -1,4 +1,4 @@
-package algo;
+package pharma.Model;
 
 public class LotDimensionModel {
     private String lot_id;

@@ -1,13 +1,11 @@
 package pharma.dao;
 
-import algo.LotDimensionModel;
-import pharma.Model.FieldData;
+import pharma.Model.LotDimensionModel;
 import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 
 public class LotDimensionDao extends GenericJDBCDao<LotDimensionModel,String> {

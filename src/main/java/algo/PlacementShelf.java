@@ -1,6 +1,7 @@
 package algo;
 
 import org.jetbrains.annotations.TestOnly;
+import pharma.Model.LotDimensionModel;
 
 import java.util.HashMap;
 import java.util.List;
@@ -93,15 +94,20 @@ private List<ShelfInfo> list_shelf;
     }
 
 
-
+    /**
+     * Only public method that can be executed.
+     * @param dimension
+     * @param quantity
+     * @return
+     */
     public LotAssigment  assignmentLots(LotDimensionModel dimension, int quantity){
         LotAssigment lotAssigment=new LotAssigment(dimension.getFarmaco_id(),dimension.getLot_id(),quantity);
 
         int quantity_remain=quantity;
-        HashMap<ShelfInfo,List<ShelvesRemain>> capacity_single_shelves=calculatePlacement(dimension);
-        logger.info("number of shelf: "+capacity_single_shelves.size());
+        HashMap<ShelfInfo,List<ShelvesRemain>> map_capacity_single_shelves=calculatePlacement(dimension);
+        logger.info("number of shelf: "+map_capacity_single_shelves.size());
 
-        HashMap<ShelfInfo,Integer> capacity_max_shelf=calculate_max_fit(capacity_single_shelves);
+        HashMap<ShelfInfo,Integer> capacity_max_shelf=calculate_max_fit(map_capacity_single_shelves);
 
         List<Map.Entry<ShelfInfo,Integer>> sorted_shelf_by_max= sorted_max_shelf_with(capacity_max_shelf);
 
@@ -111,7 +117,7 @@ private List<ShelfInfo> list_shelf;
                 if (quantity_remain <= 0) {
                     break;
                 }
-                List<ShelvesRemain> remain = capacity_single_shelves.get(map.getKey());
+                List<ShelvesRemain> remain = map_capacity_single_shelves.get(map.getKey());
 
                 quantity_remain= placingIntoShelf(dimension, map.getKey(), quantity_remain, remain, lotAssigment);
 
@@ -126,7 +132,7 @@ private List<ShelfInfo> list_shelf;
                 if (quantity_remain <= 0) {
                     break;
                 }
-                List<ShelvesRemain> remain = capacity_single_shelves.get(map.getKey());
+                List<ShelvesRemain> remain = map_capacity_single_shelves.get(map.getKey());
 
                 quantity_remain= placingIntoShelf(dimension, map.getKey(), quantity_remain, remain, lotAssigment);
 
@@ -151,9 +157,8 @@ private List<ShelfInfo> list_shelf;
            if(place){
                 remainingToPlace-=level_quantity;
                 logger.info("Assigment value num shelf: "+remain.getShelvesCapacity().getNum_shelf()+"Code: "+shelfInfo.getShelf_code());
-                assigment.add_assigment(shelfInfo.getShelf_code(),remain.getShelvesCapacity().getNum_shelf(),level_quantity,remain.getShelvesCapacity().getCode());
+                assigment.add_assigment(shelfInfo.getShelf_code(),remain.getShelvesCapacity().getNum_shelf(),level_quantity,remain.getShelvesCapacity().getCode(),shelfInfo.getMagazzino_id());
             }
-
       }
 
         return remainingToPlace;

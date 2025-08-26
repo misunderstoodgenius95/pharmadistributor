@@ -212,6 +212,8 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
         return resultList;
     }
 
+
+
     private void switch_type( PreparedStatement p_statement,Object object, int index) throws SQLException {
         index++;
         switch (object){
