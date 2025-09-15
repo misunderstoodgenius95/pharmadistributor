@@ -1,6 +1,8 @@
 package pharma.config.auth;
 
 
+import com.auth0.jwt.interfaces.Payload;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,12 +70,24 @@ public class UserService {
     public UserServiceResponse register(String email, String password, String role, String first_name, String surname) {
 
 
-        HttpResponse<String> response = stytchClient.create_user(email, password, role, first_name, surname);
-        return new UserServiceResponse(response.body(), response.statusCode());
+        HttpResponse<String> response_create = stytchClient.create_user(email, password, first_name, surname);
+        JSONObject jsonObject=new JSONObject(response_create.body());
+        if(jsonObject.has("error_type")) {
+            String error_type = new JSONObject(response_create.body()).get("error_type").toString();
+            if (error_type.equals("duplicate_email")) {
+                return new UserServiceResponse("Unprocessable Entity", 429);
+            }
+            return new UserServiceResponse(response_create.body(), response_create.statusCode());
+        }else if(response_create.statusCode()==200) {
+            String user_id=jsonObject.get("user_id").toString();
+             UserServiceResponse  us_update=user_update_role(user_id,role);
+            return new UserServiceResponse(us_update.getBody(), us_update.getStatus());
+        }
+        return new UserServiceResponse(response_create.body(), response_create.statusCode());
 
     }
 
-    public UserServiceResponse searchUser() {
+    public UserServiceResponse searchUsers() {
         HttpResponse<String> response = stytchClient.get_users();
         return new UserServiceResponse(response.body(), response.statusCode());
 
@@ -134,6 +148,16 @@ public class UserService {
             throw new IllegalArgumentException("User id  is not valid");
         }
         HttpResponse<String> response=stytchClient.update_user(user_id, PayLoadStytch.buildUpdateTustedMetadataIsEnable(status));
+        return new UserServiceResponse(response.body(),response.statusCode());
+
+    }
+
+
+    public UserServiceResponse user_update_role(String user_id, String role) {
+        if (!InputValidation.validate_stytch_user_id(user_id)) {
+            throw new IllegalArgumentException("User id  is not valid");
+        }
+        HttpResponse<String> response=stytchClient.update_user(user_id, PayLoadStytch.buildUpadateRole(role));
         return new UserServiceResponse(response.body(),response.statusCode());
 
     }
@@ -200,6 +224,8 @@ public class UserService {
 
         return new JSONObject(body).getJSONArray("results").toString();
     }
+
+
 
 
 

@@ -11,23 +11,28 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import org.controlsfx.control.SearchableComboBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pharma.Model.FieldData;
 import pharma.config.InputValidation;
 import pharma.javafxlib.Controls.TextFieldComboBox;
 import pharma.config.Utility;
+import pharma.javafxlib.FileChoseOption;
 import pharma.javafxlib.RadioOptions;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static java.util.stream.Collectors.partitioningBy;
-import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.*;
 
 public class CustomDialog<T> extends Dialog<T> {
+    private static final Logger log = LoggerFactory.getLogger(CustomDialog.class);
     private final VBox vbox;
     private  Button button_ok;
     private ButtonType okButtonType;
@@ -51,7 +56,6 @@ public class CustomDialog<T> extends Dialog<T> {
      this.getDialogPane().setPrefWidth(400);
         this.getDialogPane().setContent(vbox);
         this.check_validate=new SimpleBooleanProperty();
-
         okButtonType = new ButtonType("OK",ButtonBar.ButtonData.OK_DONE); // inizializzo il bottone ok
         this.getDialogPane().getButtonTypes().addAll(okButtonType,ButtonType.CANCEL); // Lo aggiungo al Dialog
         button_ok = (Button) getDialogPane().lookupButton(okButtonType);
@@ -101,7 +105,6 @@ public class CustomDialog<T> extends Dialog<T> {
             validate = controlList.stream().anyMatch(couple -> {
                 if (couple instanceof TextField textField) {
                     if (textField.getText().isEmpty()) {
-
                         return true;
                     } else if (textField.getUserData() != null) {
                         FieldData fieldData= (FieldData) textField.getUserData();
@@ -156,6 +159,55 @@ public class CustomDialog<T> extends Dialog<T> {
 
 
 
+
+    }
+
+
+    public FileChoseOption add_file_to_target_path(String target_path, List<FileChooser.ExtensionFilter> supported_extensions){
+        Button button_insert=addButton("Inserisci File");
+        Button button_upload=addButton("Carica File");
+        button_upload.setDisable(true);
+TextField textField=new TextField("");
+getControlList().add(textField);
+
+        AtomicReference<File> selectedFile= new AtomicReference<>();
+        FileChooser fileChooser=new FileChooser();
+        button_insert.setOnAction((event -> {
+
+            fileChooser.setTitle("Inserisci File");
+            button_insert.setText("File selezionato!");
+
+
+            fileChooser.getExtensionFilters().addAll(supported_extensions);
+         selectedFile.set(fileChooser.showOpenDialog(getDialogPane().getScene().getWindow()));
+            button_upload.setDisable(false);
+        }));
+        button_upload.setOnAction(event -> {
+
+            FileOutputStream fileOutputStream = null;
+            BufferedInputStream bufferedInputStream = null;
+            try {
+                fileOutputStream = new FileOutputStream(target_path+selectedFile.get().getName());
+                bufferedInputStream = new BufferedInputStream(new FileInputStream(selectedFile.get()));
+                fileOutputStream.write(bufferedInputStream.readAllBytes());
+
+            } catch (IOException e) {
+                log.info(e.getMessage());
+            } finally {
+                try {
+                    assert fileOutputStream != null;
+                    fileOutputStream.close();
+                    assert bufferedInputStream != null;
+                    bufferedInputStream.close();
+                } catch (IOException e) {
+                   log.info(e.getMessage());
+                }
+            }
+            textField.setText("File Selezionato");
+        });
+
+
+        return new FileChoseOption(button_insert,button_upload,fileChooser);
 
     }
     public  WebView add_web_page(String url){

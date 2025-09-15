@@ -26,14 +26,16 @@ module pharma {
     requires java.management;
     requires kotlin.stdlib;
     requires auth0;
-    requires com.fasterxml.jackson.databind;
-    requires java.sql;
     requires net.postgis.jdbc.geometry;
     requires javafx.web;
     requires okhttp3;
     requires java.net.http;
     requires net.postgis.jdbc;
     requires org.slf4j;
+    requires org.yaml.snakeyaml;
+    requires com.auth0.jwt;
+    requires com.fasterxml.jackson.databind;
+    requires java.sql;
 
 
     opens pharma to javafx.fxml;

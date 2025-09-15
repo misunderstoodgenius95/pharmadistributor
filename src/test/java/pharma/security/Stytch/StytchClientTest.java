@@ -35,6 +35,11 @@ class StytchClientTest {
 
     }
 
+    @Test
+    void reset_password_start() {
+
+
+    }
 
 
     @Nested
@@ -65,14 +70,14 @@ class StytchClientTest {
         public void ValidRegister(){
             when(stringHttpResponse.statusCode()).thenReturn(200);
             when(clientHttp.send(any(HttpRequest.class))).thenReturn(stringHttpResponse);
-            int status=stytchClient.create_user("user@example.com","&6hF%@&yvBE","seller","a","b").statusCode();
+            int status=stytchClient.create_user("user@example.com","&6hF%@&yvBE","a","b").statusCode();
             Assertions.assertEquals(200,status);
         }
         @Test
         public void InValidRegister(){
             when(stringHttpResponse.statusCode()).thenReturn(400);
             when(clientHttp.send(any(HttpRequest.class))).thenReturn(stringHttpResponse);
-            int status=stytchClient.create_user("user@example.com","&6hF%@&yvBE","seller","a","b").statusCode();
+            int status=stytchClient.create_user("user@example.com","&6hF%@&yvBE","a","b").statusCode();
             Assertions.assertEquals(400,status);
         }
         @Test
@@ -82,7 +87,7 @@ class StytchClientTest {
             when(stringHttpResponse.statusCode()).thenReturn(400);
             when(clientHttp.send(any(HttpRequest.class))).thenReturn(stringHttpResponse);
             Assertions.
-                    assertThrows(IllegalArgumentException.class,()->stytchClient.create_user("user@example","&6hF%@&yvBE","seller","a","b").statusCode());
+                    assertThrows(IllegalArgumentException.class,()->stytchClient.create_user("user@example","&6hF%@&yvBE","a","b").statusCode());
         }
 
     }
@@ -132,6 +137,46 @@ class StytchClientTest {
         System.out.println(response.body());
 
     }
+
+
+    @Test
+    void ValidTestReset() throws FileNotFoundException {
+        String project_id="project-test-ead7077c-e25f-4fe1-ba63-3e5972ab34ec";
+        String secret="secret-test-GJ9p83rxjv8pT7WNQnoqLBaPgikz4ZV1UB8=";
+        String endpoint="https://delicious-nose-9298.customers.stytch.dev";
+       StytchClient stytchClient= new StytchClient(project_id,secret,endpoint);
+
+
+       // HashMap<String,String> hashMap_json=
+          //      FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
+        //stytchClient=new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url"));
+         HttpResponse<String> response=stytchClient.reset_password_start("luigi.neri_azienda@proton.me","http://localhost:3000");
+        System.out.println(response.body());
+
+
+
+
+
+
+    }
+
+    @Test
+    void ValidloginIntegration() {
+        String project_id="project-test-ead7077c-e25f-4fe1-ba63-3e5972ab34ec";
+        String secret="secret-test-GJ9p83rxjv8pT7WNQnoqLBaPgikz4ZV1UB8=";
+        String endpoint="https://delicious-nose-9298.customers.stytch.dev";
+        StytchClient stytchClient= new StytchClient(project_id,secret,endpoint);
+
+        int status=stytchClient.login("luigi.neri_azienda@proton.me","&6hF%@&yvBE").statusCode();
+        Assertions.assertEquals(200,status);
+
+
+    }
+
+
+
+
+
 
 
 

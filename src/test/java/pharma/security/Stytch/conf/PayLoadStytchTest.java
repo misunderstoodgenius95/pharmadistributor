@@ -36,6 +36,12 @@ class PayLoadStytchTest {
 
     }
 
+    @Test
+    void create_user_pharmacist() {
+        String actual=PayLoadStytch.create_user_pharmacist("user@example.com","B!jdH6a5N$g1","pharmacist","luca","me",1);
+        System.out.println(actual);
+    }
+
     @Nested
 
     class  GetUser {
@@ -67,7 +73,7 @@ class PayLoadStytchTest {
                     "me")).put("session_duration_minutes",240);
 
 
-            String actual=PayLoadStytch.create_user("user@example.com","B!jdH6a5N$g1","seller","luca","me");
+            String actual=PayLoadStytch.create_user("user@example.com","B!jdH6a5N$g1","luca","me");
             Assertions.assertEquals(jsonObject.toString(),actual);
 
         }
@@ -77,7 +83,7 @@ class PayLoadStytchTest {
 
 
             Assertions.assertThrows(IllegalArgumentException.class,()->
-                    PayLoadStytch.create_user(null,"1234567899","seller","luca","me"));
+                    PayLoadStytch.create_user(null,"1234567899","luca","me"));
 
         }
         @Test
@@ -86,7 +92,7 @@ class PayLoadStytchTest {
 
 
             Assertions.assertThrows(IllegalArgumentException.class,()->
-                    PayLoadStytch.create_user("","1234567899","seller","luca","me"));
+                    PayLoadStytch.create_user("","1234567899","luca","me"));
 
         }
 

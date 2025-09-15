@@ -15,6 +15,7 @@ import pharma.Model.Farmacia;
 import pharma.Model.FieldData;
 import pharma.Model.Warehouse;
 import pharma.config.PopulateChoice;
+import pharma.config.Status;
 import pharma.config.TableUtility;
 import pharma.config.Utility;
 import pharma.dao.*;
@@ -234,13 +235,13 @@ private  LotAssigmentShelvesDao lotAssigmentShelvesDao;
                    row.getShelf_code(),
                    row.getShelf_level(),
                    0,0,0)).toList();
-                    return ShelfInfo.ShelfInfoBuilder.get_builder().setDeep().
+                    return ShelfInfo.ShelfInfoBuilder.get_builder().
                             setShelvesCapacities(shelves).build();
             }).toList();
 
 
-            PlacementShelf shelf=new PlacementShelf();
-            shelf.assignmentLots(lotDimensionModel,100);
+       /*     PlacementShelf shelf=new PlacementShelf();
+            shelf.assignmentLots(lotDimensionModel,100);*/
 
 
         }
@@ -251,6 +252,12 @@ private  LotAssigmentShelvesDao lotAssigmentShelvesDao;
 
         return true;
     }
+
+    @Override
+    protected Status condition_event_status(FieldData type) throws Exception {
+        return null;
+    }
+
     private void listener_button_table(){
         select_lot.setOnAction(event -> {
 

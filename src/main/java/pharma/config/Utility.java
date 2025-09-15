@@ -26,6 +26,10 @@ public  static  final String Principio_attivo="Principio_Attivo";
 public static  final  String Tipologia="Tipologia";
 public static final  String Categoria="Categoria";
 public static final String Misura="Misura";
+public static final  String Acquisti="Acquisti";
+public static  final String Vendita="Vendite";
+public static final String Magazzino="Magazzino";
+public static final String Farmacisti="Farmacisti";
     public static void  create_alert(Alert.AlertType alert_type, String title_header, String body) {
 
         Alert alert = new Alert(alert_type);

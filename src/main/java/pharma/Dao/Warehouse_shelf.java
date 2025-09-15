@@ -14,7 +14,7 @@ public class Warehouse_shelf extends GenericJDBCDao<ShelfInfo,String> {
 
     @Override
     protected ShelfInfo mapRow(ResultSet resultSet) throws Exception {
-        return ShelfInfo.ShelfInfoBuilder.get_builder().
+       return ShelfInfo.ShelfInfoBuilder.get_builder().build();
     }
 
     @Override

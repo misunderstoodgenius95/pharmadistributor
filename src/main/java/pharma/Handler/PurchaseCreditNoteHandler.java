@@ -7,10 +7,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import pharma.Model.FieldData;
-import pharma.config.ListCalculate;
-import pharma.config.PopulateChoice;
-import pharma.config.TableUtility;
-import pharma.config.Utility;
+import pharma.config.*;
 import pharma.config.spinner.SpinnerTableCellOrder;
 import pharma.dao.*;
 
@@ -189,7 +186,10 @@ public class PurchaseCreditNoteHandler extends  DialogHandler<FieldData> {
     return false;
     }
 
-
+    @Override
+    protected Status condition_event_status(FieldData type) throws Exception {
+        return null;
+    }
 
 
     @Override

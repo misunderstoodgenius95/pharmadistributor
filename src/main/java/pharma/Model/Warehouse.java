@@ -44,7 +44,13 @@ private List<ShelfInfo> shelfInfos;
 
     }
 
-
+    public Warehouse(int id, String nome, String address, String comune, String province) {
+        this.id = id;
+        this.nome = nome;
+        this.address = address;
+        this.comune = comune;
+        this.province = province;
+    }
 
     public void setId(int id) {
         this.id = id;

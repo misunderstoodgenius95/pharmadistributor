@@ -44,14 +44,14 @@ public class StytchClient {
 
 
 
-    public HttpResponse<String> create_user(String email, String password,String role,String first_name,String surname) {
-                if(!InputValidation.validate_email(email ) ||! InputValidation.validate_password(password) || role==null || role.isEmpty()
+    public HttpResponse<String> create_user(String email, String password,String first_name,String surname) {
+                if(!InputValidation.validate_email(email ) ||! InputValidation.validate_password(password)
                 || first_name==null ||first_name.isEmpty()|| surname==null || surname.isEmpty()){
                     throw new IllegalArgumentException("field not correct!");
                 }
         try {
                 HttpRequest request=stytchRequest.auth_request(EndPoints.getCreate_user(endpoint),
-                            PayLoadStytch.create_user(email,password,role,first_name,surname));
+                            PayLoadStytch.create_user(email,password,first_name,surname));
 
                 return clientHttp.send(request);
             }
@@ -117,6 +117,11 @@ public class StytchClient {
             throw new IllegalArgumentException("User id not present!");
         }
         return clientHttp.send(stytchRequest.session_user(EndPoints.getUser_session(endpoint),user_id));
+    }
+    public  HttpResponse<String> reset_password_start(String email,String uri){
+
+        return clientHttp.send(stytchRequest.reset_password_start_body(EndPoints.getReset_password_start(endpoint),
+                PayLoadStytch.reset_password(email,EndPoints.getUriReset(uri))));
     }
 
 

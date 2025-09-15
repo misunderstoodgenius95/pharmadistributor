@@ -74,5 +74,6 @@
                </font>
             </Button>
          </children></VBox>
+      <Button fx:id="btn_add_id" layoutX="32.0" layoutY="83.0" mnemonicParsing="false" onAction="#btn_add_action" prefHeight="28.0" prefWidth="76.0" text="Crea" />
    </children>
 </AnchorPane>

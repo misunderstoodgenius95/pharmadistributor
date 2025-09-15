@@ -48,7 +48,7 @@ class TableBaseTest {
 
         });
 
-       // robot.sleep(60000);
+       robot.sleep(60000);
 
 
     }

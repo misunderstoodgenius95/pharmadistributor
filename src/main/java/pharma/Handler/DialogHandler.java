@@ -4,9 +4,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.stage.Modality;
 import pharma.Model.FieldData;
+import pharma.config.Status;
 import pharma.config.Utility;
+import pharma.config.auth.UserService;
 import pharma.javafxlib.Dialog.CustomDialog;
 import pharma.config.PopulateChoice;
 import pharma.dao.GenericJDBCDao;
@@ -17,10 +18,24 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class DialogHandler<F> extends CustomDialog<F> {
     private  ButtonType buttonType;
+
+    public DialogHandler() {
+        super("");
+    }
+
+    protected abstract boolean condition_event(F type) throws Exception;
+    protected abstract Status condition_event_status(F type) throws Exception;
     public enum Mode{Insert,Update}
     private  Mode mode;
     private BooleanProperty condition_test;
     public DialogHandler(String content)  {
+        super(content);
+        initialize();
+        setResult();
+        buttonType=getDialogPane().getButtonTypes().get(1);
+        condition_test=new SimpleBooleanProperty();
+    }
+    public DialogHandler(String content, UserService userService)  {
         super(content);
         initialize();
         setResult();
@@ -149,14 +164,42 @@ public abstract class DialogHandler<F> extends CustomDialog<F> {
             );
         }
     }
+    public   void executeStatus(){
 
+
+        AtomicBoolean  success = new AtomicBoolean(false);
+        while(!success.get()) {
+            showAndWait().ifPresentOrElse(result -> {
+                        try {
+                            Status status = condition_event_status(result);
+                            boolean cond=status.isCondition();
+                            condition_test.set(cond);
+                            showAlert(cond, status.getMessage());
+
+
+                            if (cond) {
+                                success.set(true);// Exit the ifPresent block without marking success
+                            }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    },()->{
+                        System.out.println("Closing");
+                        success.set(true);
+                    }
+            );
+        }
+    }
     /**
      * Method that return condition Dao
      * @param
      * @return
      * @throws Exception
      */
-    protected abstract boolean condition_event(F type) throws  Exception;
+;
 
     public   void  showAlert(boolean success,String error_message) {
         Alert.AlertType alertType = success ? Alert.AlertType.CONFIRMATION : Alert.AlertType.ERROR;

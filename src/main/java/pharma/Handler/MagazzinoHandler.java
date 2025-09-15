@@ -1,11 +1,13 @@
 package pharma.Handler;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
 import net.postgis.jdbc.PGgeometry;
 import net.postgis.jdbc.geometry.Point;
 import pharma.Model.FieldData;
 import pharma.Model.Warehouse;
 import pharma.config.PopulateChoice;
+import pharma.config.Status;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.MagazzinoDao;
 
@@ -21,11 +23,12 @@ public class MagazzinoHandler extends DialogHandler<Warehouse> {
     private TextField textfield_lat;
     private  TextField textField_lng;
     private MagazzinoDao magazzinoDao;
-    public MagazzinoHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
+    private  ObservableList<Warehouse> observableList;
+    public MagazzinoHandler(String content, List<GenericJDBCDao> genericJDBCDao, ObservableList<Warehouse> observableList) {
         super(content, genericJDBCDao);
        this.magazzinoDao = (MagazzinoDao) genericJDBCDao.stream().
                 filter(dao -> dao instanceof MagazzinoDao).findFirst().orElseThrow(() -> new IllegalArgumentException("PharmaDao not found in the list"));
-
+        this.observableList=observableList;
 
     }
 
@@ -67,9 +70,15 @@ public class MagazzinoHandler extends DialogHandler<Warehouse> {
 
     @Override
     protected boolean condition_event(Warehouse type) throws Exception {
+        magazzinoDao.insert(type);
+        observableList.add(type);
         return false;
     }
 
+    @Override
+    protected Status condition_event_status(Warehouse type) throws Exception {
+        return null;
+    }
 
 
 }

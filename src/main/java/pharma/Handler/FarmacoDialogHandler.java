@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import org.controlsfx.control.SearchableComboBox;
 import pharma.Model.FieldData;
 import pharma.config.PopulateChoice;
+import pharma.config.Status;
 import pharma.config.Utility;
 import pharma.config.View.FarmacoLotsConvert;
 import pharma.dao.DetailDao;
@@ -162,6 +163,12 @@ public class FarmacoDialogHandler  extends DialogHandler<FieldData> {
         return  success;
 
     }
+
+    @Override
+    protected Status condition_event_status(FieldData type) throws Exception {
+        return null;
+    }
+
     public void setOperation(Mode mode,FieldData fieldData) throws AccessException {
         if(mode.equals(Mode.Update) && fieldData==null){
             throw  new AccessException("Fieldata is null");

@@ -70,6 +70,7 @@ public class FieldData {
     private int  capacity;
     private PGgeometry location;
     private int foreign_id;
+    private String last_name;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -126,6 +127,7 @@ public class FieldData {
         this.capacity=builder.capacity;
         this.location=builder.location;
         this.foreign_id=builder.foreign_id;
+        this.last_name=builder.last_name;
 
     }
 
@@ -320,6 +322,10 @@ public class FieldData {
         return vat_percent.get();
     }
 
+    public String getLast_name() {
+        return last_name;
+    }
+
     public Timestamp getCreated_at() {
         return created_at;
     }
@@ -507,8 +513,14 @@ public class FieldData {
         private int  capacity;
         private PGgeometry location;
         private  int foreign_id;
+        private String last_name;
         private FieldDataBuilder() {
 
+        }
+
+        public FieldDataBuilder setLast_name(String last_name) {
+            this.last_name = last_name;
+            return this;
         }
 
         public FieldDataBuilder setLocation(PGgeometry location) {

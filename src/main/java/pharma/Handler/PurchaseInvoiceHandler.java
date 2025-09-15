@@ -306,6 +306,11 @@ public class PurchaseInvoiceHandler extends  DialogHandler<FieldData> {
       return false;
     }
 
+    @Override
+    protected Status condition_event_status(FieldData type) throws Exception {
+        return null;
+    }
+
 
     private void  setting_id_radio(){
 

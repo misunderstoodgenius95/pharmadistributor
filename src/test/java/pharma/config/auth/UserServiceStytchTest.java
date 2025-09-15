@@ -26,11 +26,23 @@ public class UserServiceStytchTest {
     }
     @Test
     public void CreateUser(){
-
-        UserServiceResponse userServiceResponse=userService.register("debby@example.com","Xt!NDTIqoAS9","seller","debby","r");
+        UserServiceResponse userServiceResponse=userService.register("luigi.neri@apime.online","r4AWoPBR=_+Q","pharmacist","eleonora_mali","r");
         Assertions.assertEquals(200,userServiceResponse.getStatus());
 
+    }
+    @Test
+    public void CreateUserDuplicate(){
+          UserServiceResponse userServiceResponse=userService.register("debby@example.com","Xt!NDTIqoAS9","seller","debby","r");
+          Assertions.assertEquals(429,userServiceResponse.getStatus());
 
+
+
+    }
+    @Test
+    public void ValidTestIntegration(){
+
+        UserServiceResponse ur=userService.user_update_role("user-test-30041b3c-02d5-46fa-beed-2fcb661b7388","seller");
+        Assertions.assertEquals(200,ur.getStatus());
     }
     @Test
     void user_revocate() throws FileNotFoundException {
@@ -58,6 +70,16 @@ public class UserServiceStytchTest {
 
 
 
+    }
+    @Test
+    public void get(){
+        UserServiceResponse ur=userService.searchUsers();
+        System.out.println(ur.getBody());
+    }
+
+    @Test
+    public void Valid(){
+        userService.authenticate("luigi.neri@apime.online","");
     }
 
 

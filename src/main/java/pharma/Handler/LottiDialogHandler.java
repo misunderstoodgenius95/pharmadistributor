@@ -118,6 +118,12 @@ public class LottiDialogHandler  extends DialogHandler<FieldData> {
         }
         return success;
     }
+
+    @Override
+    protected Status condition_event_status(FieldData type) throws Exception {
+        return null;
+    }
+
     private void change_date(){
 
         elapsed_date.setDayCellFactory(picker->new DateCell() {

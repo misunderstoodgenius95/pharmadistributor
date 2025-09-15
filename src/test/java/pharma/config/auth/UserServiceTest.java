@@ -38,7 +38,7 @@ class UserServiceTest {
         when(httpResponse_user.statusCode()).thenReturn(200);
         when(stytchClient.get_users()).thenReturn(httpResponse_user);
 
-        Assertions.assertEquals(200,userService.searchUser().getStatus());
+        Assertions.assertEquals(200,userService.searchUsers().getStatus());
     }
 
 
@@ -112,7 +112,11 @@ class UserServiceTest {
 
     }
 
+    @Test
+    void user_update_role() {
 
+
+    }
 
 
     @Nested

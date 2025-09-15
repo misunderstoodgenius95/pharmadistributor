@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TextField;
 import pharma.Model.FieldData;
+import pharma.config.Status;
 import pharma.javafxlib.Dialog.CustomDialog;
 import pharma.config.PopulateChoice;
 import pharma.dao.GenericJDBCDao;
@@ -101,6 +102,11 @@ private SimpleObjectProperty<FieldData> fd_property;
         }
         return success;
 
+    }
+
+    @Override
+    protected Status condition_event_status(FieldData type) throws Exception {
+        return null;
     }
 
 

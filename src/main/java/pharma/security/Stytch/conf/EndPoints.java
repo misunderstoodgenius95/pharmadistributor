@@ -13,10 +13,14 @@ public class EndPoints {
     private static final  String user_revoke="/v1/sessions/revoke";
     private  static  final  String user_session="/v1/sessions";
     private static  final  String user_update="/v1/users/";
+    private static  final  String reset_password_start="/v1/passwords/email/reset/start";
+    private static final  String uri_reset="/reset-password";
     public static String getCreate_user(String endpoint){
 
         return endpoint+create_user;
     }
+
+
     public static String get_auth(String endpoint){
 
         return endpoint+auth_email_password;
@@ -36,6 +40,14 @@ public class EndPoints {
         return endpoint+user_update+user_id;
 
     }
+    public static String getReset_password_start(String endpoint){
+        return endpoint+reset_password_start;
+    }
+
+    public static String getUriReset(String endpoint){
+        return endpoint+uri_reset;
+    }
+
 
 
 

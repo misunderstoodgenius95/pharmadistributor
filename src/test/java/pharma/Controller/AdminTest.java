@@ -133,7 +133,38 @@ MockitoAnnotations.openMocks(this);
         });
         WaitForAsyncUtils.waitForFxEvents();
         Assertions.assertFalse(admin.property_esitProperty().get());
+robot.sleep(40000);
+    }
+
+    @Test
+    public void ValidInsert(FxRobot robot){
+        Platform.runLater(()->{
+          SimulateEvents.clickOn( admin.getBtn_add_id());
+
+
+
+        });
+        robot.sleep(4000);
+
+
+
 
     }
+
+    @Test
+    public void test(FxRobot robot){
+        Platform.runLater(()->{
+
+
+
+
+        });
+        robot.sleep(40000000);
+
+
+
+
+    }
+
 
 }

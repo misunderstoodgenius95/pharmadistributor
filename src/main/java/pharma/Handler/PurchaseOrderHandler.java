@@ -174,6 +174,11 @@ private  SimpleBooleanProperty s_update_result;
 
     }
 
+    @Override
+    protected Status condition_event_status(FieldData type) throws Exception {
+        return null;
+    }
+
 
     private  void add_column(){
 

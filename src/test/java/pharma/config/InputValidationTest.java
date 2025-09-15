@@ -68,7 +68,7 @@ class InputValidationTest  {
             //Valid password
 
             //Assertions.assertTrue(InputValidation.validate_password("@5&17Vhm5QGp"));
-            Assertions.assertTrue(InputValidation.validate_password("B!jdH6a5N$g1"));
+            Assertions.assertTrue(InputValidation.validate_password("&6hF%@&yvBE"));
         }
         @Test
         void InvalidEmpty() {

@@ -2,6 +2,7 @@ package pharma.Handler;
 
 import com.networknt.schema.JsonSchemaException;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -63,7 +64,7 @@ class MagazzinoHandlerTest {
     @Test
     public void ValiValidation(FxRobot robot){
         Platform.runLater(()->{
-            magazzinoHandler=new MagazzinoHandler("Aggiungi Magazzino", List.of(magazzinoDao));
+            magazzinoHandler=new MagazzinoHandler("Aggiungi Magazzino", List.of(magazzinoDao), FXCollections.observableList(List.of()));
             List<TextField> list=Utility.extract_value_from_list(magazzinoHandler.getControlList(), TextField.class);
             SimulateEvents.writeOn(list.getFirst(),"M1");
             SimulateEvents.writeOn(list.get(1),"Contrada Crescienzio 24");
@@ -84,7 +85,7 @@ class MagazzinoHandlerTest {
     @Test
     public void inValiValidation(FxRobot robot){
         Platform.runLater(()->{
-            magazzinoHandler=new MagazzinoHandler("Aggiungi Magazzino", List.of(magazzinoDao));
+            magazzinoHandler=new MagazzinoHandler("Aggiungi Magazzino", List.of(magazzinoDao),FXCollections.observableArrayList(List.of()));
             List<TextField> list=Utility.extract_value_from_list(magazzinoHandler.getControlList(), TextField.class);
             SimulateEvents.writeOn(list.getFirst(),"M1");
           //  SimulateEvents.writeOn(list.get(1),"Contrada Crescienzio 24");
@@ -113,7 +114,7 @@ class MagazzinoHandlerTest {
             }
 
             MagazzinoDao magazzino_real=new MagazzinoDao(Database.getInstance(properties));
-            magazzinoHandler=new MagazzinoHandler("Aggiungi Magazzino", List.of(magazzino_real));
+            magazzinoHandler=new MagazzinoHandler("Aggiungi Magazzino", List.of(magazzino_real),FXCollections.observableList(List.of()));
             List<TextField> list=Utility.extract_value_from_list(magazzinoHandler.getControlList(), TextField.class);
             SimulateEvents.writeOn(list.getFirst(),"M1");
             SimulateEvents.writeOn(list.get(1),"Contrada Crescienzio 24");
@@ -138,7 +139,7 @@ class MagazzinoHandlerTest {
     @Test
     public void ValidInsertion(FxRobot robot){
         Platform.runLater(()->{
-            magazzinoHandler=new MagazzinoHandler("Aggiungi Magazzino", List.of(magazzinoDao));
+            magazzinoHandler=new MagazzinoHandler("Aggiungi Magazzino", List.of(magazzinoDao),FXCollections.observableList(List.of()));
             List<TextField> list=Utility.extract_value_from_list(magazzinoHandler.getControlList(), TextField.class);
             SimulateEvents.writeOn(list.getFirst(),"M1");
             SimulateEvents.writeOn(list.get(1),"Contrada Crescienzio 24");

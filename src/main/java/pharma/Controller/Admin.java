@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import pharma.Handler.AdminCreateCredentialsHandler;
 import pharma.Handler.Table.AdminTable;
 import pharma.Model.User;
 import pharma.Storage.FileStorage;
@@ -39,13 +40,15 @@ public class Admin  implements Initializable {
     private RadioButton radio_email;
     @FXML
     private RadioButton radio_role;
-
+    @FXML
+    private Button btn_add_id;
     private ObjectProperty<User> userObjectProperty;
     private UserService userService;
     private AdminTable adminTable;
     private BooleanProperty choice_booleanProperty;
     private ToggleGroup toggleGroup_radio;
     private BooleanProperty property_esit;
+    private AdminCreateCredentialsHandler c_handler;
     public Admin() {
         HashMap<String, String> hashMap_json =null;
         try {
@@ -62,6 +65,10 @@ public class Admin  implements Initializable {
     public Admin(UserService userService){
         this.userService=userService;
         adminTable = new AdminTable("Visualizza Rsiultati");
+    }
+
+    public Button getBtn_add_id() {
+        return btn_add_id;
     }
 
     public void btn_send_filter_action(ActionEvent actionEvent) {
@@ -170,5 +177,12 @@ public class Admin  implements Initializable {
 
     public Button getBtn_send_filter_id() {
         return btn_send_filter_id;
+    }
+    @FXML
+    public void btn_add_action(ActionEvent actionEvent) {
+        c_handler=new AdminCreateCredentialsHandler("Inserisci Utenti",userService);
+        c_handler.executeStatus();
+
+
     }
 }

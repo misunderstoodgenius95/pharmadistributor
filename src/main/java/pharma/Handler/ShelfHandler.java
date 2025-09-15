@@ -8,6 +8,7 @@ import org.controlsfx.control.SearchableComboBox;
 import pharma.Model.FieldData;
 import pharma.Model.Warehouse;
 import pharma.config.PopulateChoice;
+import pharma.config.Status;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.MagazzinoDao;
 import pharma.dao.ShelfDao;
@@ -28,7 +29,6 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
     private Spinner<Integer> capacity;
     public ShelfHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
         super(content, genericJDBCDao);
-
         this.magazzinoDao = (MagazzinoDao) genericJDBCDao.stream().
                 filter(dao -> dao instanceof MagazzinoDao).findFirst().orElseThrow(() -> new IllegalArgumentException("MagazzinoDao not found in the list"));
         this.shelfDao = (ShelfDao) genericJDBCDao.stream().
@@ -93,6 +93,11 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
     @Override
     protected boolean condition_event(ShelfInfo type) throws Exception {
         return shelfDao.insert(type);
+    }
+
+    @Override
+    protected Status condition_event_status(ShelfInfo type) throws Exception {
+        return null;
     }
 
 

@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Spinner;
 import pharma.Model.FieldData;
 import pharma.config.PopulateChoice;
+import pharma.config.Status;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.LotDimensionDao;
 
@@ -59,9 +60,10 @@ public class CustomLotsDimension extends  DialogHandler<LotDimensionModel> {
          return lotDimensionDao.insert(type);
     }
 
-
-
-
+    @Override
+    protected Status condition_event_status(LotDimensionModel type) throws Exception {
+        return null;
+    }
 
 
 }

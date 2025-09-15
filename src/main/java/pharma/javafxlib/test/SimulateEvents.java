@@ -19,12 +19,16 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import org.controlsfx.control.SearchableComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
+import pharma.Stages;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -198,6 +202,16 @@ public class SimulateEvents {
 
 
     }
+    public static void keyPress(Window window, KeyCode keyCode) {
+        KeyEvent keyEvent = new KeyEvent(KeyEvent.KEY_PRESSED,
+                "", "",
+                keyCode,
+                false, false, false, false);
+        window.fireEvent(keyEvent);
+
+
+    }
+
 
 
     public static void RightMouseClickMouse(Control control) {
