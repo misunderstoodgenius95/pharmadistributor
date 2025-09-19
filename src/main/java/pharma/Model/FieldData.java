@@ -71,6 +71,10 @@ public class FieldData {
     private PGgeometry location;
     private int foreign_id;
     private String last_name;
+    private String warehouse_name;
+    private String shelf_code;
+    private int shelves_code;
+
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -312,6 +316,18 @@ public class FieldData {
         this.quantity.set(quantity);
     }
 
+    public String getShelf_code() {
+        return shelf_code;
+    }
+
+    public String getWarehouse_name() {
+        return warehouse_name;
+    }
+
+    public int getShelves_code() {
+        return shelves_code;
+    }
+
     public int getVat_percent() {
 
 
@@ -514,8 +530,26 @@ public class FieldData {
         private PGgeometry location;
         private  int foreign_id;
         private String last_name;
+        private String warehouse_name;
+        private String shelf_code;
+        private int shelves_code;
         private FieldDataBuilder() {
 
+        }
+
+        public FieldDataBuilder setWarehouse_name(String warehouse_name) {
+            this.warehouse_name = warehouse_name;
+            return this;
+        }
+
+        public FieldDataBuilder setShelf_code(String shelf_code) {
+            this.shelf_code = shelf_code;
+            return this;
+        }
+
+        public FieldDataBuilder setShelves_code(int shelves_code) {
+            this.shelves_code = shelves_code;
+            return this;
         }
 
         public FieldDataBuilder setLast_name(String last_name) {
