@@ -5,17 +5,16 @@ import javafx.scene.control.TextField;
 import net.postgis.jdbc.PGgeometry;
 import net.postgis.jdbc.geometry.Point;
 import pharma.Model.FieldData;
-import pharma.Model.Warehouse;
+import pharma.Model.WarehouseModel;
 import pharma.config.PopulateChoice;
 import pharma.config.Status;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.MagazzinoDao;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class MagazzinoHandler extends DialogHandler<Warehouse> {
+public class MagazzinoHandler extends DialogHandler<WarehouseModel> {
     private TextField textField_warehouse;
     private TextField textField_address;
     private TextField textField_comune;
@@ -23,8 +22,8 @@ public class MagazzinoHandler extends DialogHandler<Warehouse> {
     private TextField textfield_lat;
     private  TextField textField_lng;
     private MagazzinoDao magazzinoDao;
-    private  ObservableList<Warehouse> observableList;
-    public MagazzinoHandler(String content, List<GenericJDBCDao> genericJDBCDao, ObservableList<Warehouse> observableList) {
+    private  ObservableList<WarehouseModel> observableList;
+    public MagazzinoHandler(String content, List<GenericJDBCDao> genericJDBCDao, ObservableList<WarehouseModel> observableList) {
         super(content, genericJDBCDao);
        this.magazzinoDao = (MagazzinoDao) genericJDBCDao.stream().
                 filter(dao -> dao instanceof MagazzinoDao).findFirst().orElseThrow(() -> new IllegalArgumentException("PharmaDao not found in the list"));
@@ -55,28 +54,30 @@ public class MagazzinoHandler extends DialogHandler<Warehouse> {
     }
 
     @Override
-    protected Warehouse get_return_data() {
+    protected WarehouseModel get_return_data() {
 
-        Warehouse warehouse=new Warehouse();
+        WarehouseModel warehouseModel =new WarehouseModel();
         Point point=new Point(Double.parseDouble(textfield_lat.getText()),Double.parseDouble(textField_lng.getText()));
-        warehouse.setNome(textField_warehouse.getText());
-        warehouse.setAddress(textField_address.getText());
-        warehouse.setComune(textField_comune.getText());
-        warehouse.setProvince(textField_province.getText());
-        warehouse.setpGgeometry(new PGgeometry(point));
-        return warehouse;
+        warehouseModel.setNome(textField_warehouse.getText());
+        warehouseModel.setAddress(textField_address.getText());
+        warehouseModel.setComune(textField_comune.getText());
+        warehouseModel.setProvince(textField_province.getText());
+        warehouseModel.setpGgeometry(new PGgeometry(point));
+        return warehouseModel;
 
     }
 
     @Override
-    protected boolean condition_event(Warehouse type) throws Exception {
-        magazzinoDao.insert(type);
-        observableList.add(type);
-        return false;
+    protected boolean condition_event(WarehouseModel type) throws Exception {
+        boolean value=magazzinoDao.insert(type);
+        if(value) {
+            observableList.add(type);
+        }
+        return value;
     }
 
     @Override
-    protected Status condition_event_status(Warehouse type) throws Exception {
+    protected Status condition_event_status(WarehouseModel type) throws Exception {
         return null;
     }
 

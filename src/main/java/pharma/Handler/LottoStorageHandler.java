@@ -13,10 +13,9 @@ import pharma.Handler.Table.TableBase;
 import pharma.Model.PharmacyAssigned;
 import pharma.Model.Farmacia;
 import pharma.Model.FieldData;
-import pharma.Model.Warehouse;
+import pharma.Model.WarehouseModel;
 import pharma.config.PopulateChoice;
 import pharma.config.Status;
-import pharma.config.TableUtility;
 import pharma.config.Utility;
 import pharma.dao.*;
 import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
@@ -207,7 +206,7 @@ private  LotAssigmentShelvesDao lotAssigmentShelvesDao;
     protected boolean condition_event(FieldData fieldData) throws Exception {
         //find by farmaco_id and lotto_id
      List<PharmacyAssigned> pharmacyAssigneds =new ArrayList<>();
-        List<Warehouse> fd_warehouse=magazzinoDao.findAll().stream().map(value->new Warehouse(value.getId(),value.getNome(),value.getpGgeometry())).toList();
+        List<WarehouseModel> fd_warehouseModel =magazzinoDao.findAll().stream().map(value->new WarehouseModel(value.getId(),value.getNome(),value.getpGgeometry())).toList();
 
         List<FieldData> order_details=s_order_details.findbyProduct(fieldData.getFarmaco_id(),fieldData.getCode());
         for (FieldData orderDetail : order_details) {
@@ -226,8 +225,8 @@ private  LotAssigmentShelvesDao lotAssigmentShelvesDao;
         Optional<LotDimensionModel> dimension=lotDimensionDao.findByLots(fieldData.getCode(),fieldData.getFarmaco_id());
         if(dimension.isPresent()){
             LotDimensionModel lotDimensionModel=dimension.get();
-            ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouse,pharmacyAssigneds);
-            Set<Warehouse> set=choiceWarehouse.calculate_warehouse(lotDimensionModel,100);
+            ChoiceWarehouse choiceWarehouse=new ChoiceWarehouse(fd_warehouseModel,pharmacyAssigneds);
+            Set<WarehouseModel> set=choiceWarehouse.calculate_warehouse(lotDimensionModel,100);
             List<ShelfInfo> list=set.stream().map(warehouse -> {
                 List<ShelvesAssigment> assigments=lotAssigmentShelvesDao.findByWarehouse(warehouse.getId());
                 List<ShelvesCapacity> shelves =assigments.stream().map(row->new ShelvesCapacity(

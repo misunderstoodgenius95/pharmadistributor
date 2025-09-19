@@ -9,11 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import pharma.Model.FieldData;
-import pharma.Model.Warehouse;
+import pharma.Model.WarehouseModel;
 import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
-import pharma.formula.RecommendSystem;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -27,7 +25,6 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class MagazzinoDaoTest {
@@ -61,7 +58,7 @@ class MagazzinoDaoTest {
         when(resultSet.next()).thenReturn(true, false);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
-     Warehouse magazzino=magazzinoDao.findById(1);
+     WarehouseModel magazzino=magazzinoDao.findById(1);
        assertThat(magazzino).satisfies(p-> {
                    assertThat(p.getId()).isEqualTo(1);
                    assertThat(p.getNome()).isEqualTo("a11");
@@ -80,7 +77,7 @@ class MagazzinoDaoTest {
 
     @Nested
      public class FindALl {
-            private List<Warehouse> list;
+            private List<WarehouseModel> list;
 
             @BeforeEach
             public void setUp() throws SQLException {
@@ -136,36 +133,36 @@ class MagazzinoDaoTest {
             public void ValidInsert() throws SQLException {
         Point point=new Point(38.1257128,14.7595248);
         PGgeometry pGgeometry=new PGgeometry(point);
-        Warehouse warehouse=new Warehouse();
-                            warehouse.setId(1);
-                            warehouse.setNome("A22");
-                            warehouse.setAddress("Via regina celi");
-                            warehouse.setComune("Roma");
-                            warehouse.setpGgeometry(pGgeometry);
+        WarehouseModel warehouseModel =new WarehouseModel();
+                            warehouseModel.setId(1);
+                            warehouseModel.setNome("A22");
+                            warehouseModel.setAddress("Via regina celi");
+                            warehouseModel.setComune("Roma");
+                            warehouseModel.setpGgeometry(pGgeometry);
                    when(preparedStatement.executeUpdate()).thenReturn(1);
                    when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
-                   Assertions.assertTrue(magazzinoDao.insert(warehouse));
+                   Assertions.assertTrue(magazzinoDao.insert(warehouseModel));
 
             }
 
             @Test
             public void IntegartionInsert(){
                 Properties properties = null;
-                Warehouse warehouse;
+                WarehouseModel warehouseModel;
                 try {
                     Point point=new Point(38.1257128,14.7595248);
                     PGgeometry pGgeometry=new PGgeometry(point);
-               warehouse=new Warehouse();
-                    warehouse.setId(1);
-                    warehouse.setNome("A22");
-                    warehouse.setAddress("Via regina celi");
-                    warehouse.setComune("Roma");
-                    warehouse.setpGgeometry(pGgeometry);
+               warehouseModel =new WarehouseModel();
+                    warehouseModel.setId(1);
+                    warehouseModel.setNome("A22");
+                    warehouseModel.setAddress("Via regina celi");
+                    warehouseModel.setComune("Roma");
+                    warehouseModel.setpGgeometry(pGgeometry);
 
 
                     properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
                     magazzinoDao=new MagazzinoDao(Database.getInstance(properties));
-                    Assertions.assertTrue(magazzinoDao.insert(warehouse));
+                    Assertions.assertTrue(magazzinoDao.insert(warehouseModel));
 
 
                 } catch (FileNotFoundException e) {
@@ -176,6 +173,27 @@ class MagazzinoDaoTest {
 
 
             }
+    @Test
+    public void ValidFindAllIntegration(){
+        Properties properties = null;
+        WarehouseModel warehouseModel;
+        try {
+
+
+
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            magazzinoDao=new MagazzinoDao(Database.getInstance(properties));
+            System.out.println(magazzinoDao.findAll());
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
 
 

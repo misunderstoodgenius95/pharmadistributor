@@ -5,19 +5,18 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import pharma.Handler.MagazzinoHandler;
-import pharma.Model.FieldData;
-import pharma.Model.Warehouse;
+import pharma.Model.WarehouseModel;
 import pharma.config.TableUtility;
-import pharma.config.Utility;
 import pharma.dao.MagazzinoDao;
 
 import java.util.List;
 
-public class MagazinoTablebase  extends TableBase<Warehouse> {
+public class MagazinoTablebase  extends TableBase<WarehouseModel> {
     private MagazzinoDao magazzinoDao;
     private  Button button_add_warehouse;
-    MagazzinoHandler magazzinoHandler;
-    private ObservableList<Warehouse> observableList;
+     private MagazzinoHandler magazzinoHandler;
+    private ObservableList<WarehouseModel> observableList;
+    private  Button button_add;
     public MagazinoTablebase(String content, MagazzinoDao magazzinoDao) {
         super(content);
         setTitle("Magazzino");
@@ -28,14 +27,24 @@ public class MagazinoTablebase  extends TableBase<Warehouse> {
          observableList=FXCollections.observableArrayList(magazzinoDao.findAll());
         getTableView().setItems(observableList);
          magazzinoHandler=new MagazzinoHandler("Inserisci Magazzino", List.of(magazzinoDao),observableList);
-         add_warehouse_btn();
+        add_warehouse_btn();
 
     }
 
+    public ObservableList<WarehouseModel> getObservableList() {
+        return observableList;
+    }
 
+    public Button getButton_add_warehouse() {
+        return button_add_warehouse;
+    }
+
+    public MagazzinoHandler getMagazzinoHandler() {
+        return magazzinoHandler;
+    }
 
     @Override
-    protected void setupBaseColumns(TableView<Warehouse> tableView) {
+    protected void setupBaseColumns(TableView<WarehouseModel> tableView) {
       tableView.getColumns().addAll(TableUtility.generate_column_int("id","Id"),
               TableUtility.generate_column_string("Nome","nome"),
               TableUtility.generate_column_string("Indirizzo","address"),

@@ -11,6 +11,7 @@ module pharma {
 
     requires rgxgen;
     requires java.rmi;
+    opens algo to javafx.base;
 
     requires  org.controlsfx.controls;
     requires org.kordamp.ikonli.fontawesome5;
@@ -75,7 +76,7 @@ exports pharma.Storage;
     opens pharma.test2 to javafx.graphics;
     opens pharma.javafxlib.Controls.Notification to javafx.fxml;
     exports algo to javafx.fxml, javafx.graphics;
-    opens algo to javafx.fxml;
+
     opens pharma.Model to com.fasterxml.jackson.databind, javafx.base, javafx.fxml;
 
 }

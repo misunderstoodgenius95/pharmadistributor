@@ -147,7 +147,7 @@ public class LottiDialogHandler  extends DialogHandler<FieldData> {
          ProductTableCustom productTableCustom=new ProductTableCustom("Scegli Farmaco");
         TableView<FieldData> tableView=productTableCustom.getTableView();
         TextField textField_search=productTableCustom.add_text_field("Inserisci Prodotto");
-        productTableCustom.getControlList().add(textField_search);
+        productTableCustom.getControlList().remove(textField_search);
 
          RadioButtonTableColumn<FieldData> action_radio_col = new RadioButtonTableColumn<>() {
              @Override

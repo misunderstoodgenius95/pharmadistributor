@@ -78,7 +78,7 @@ class LottoStorageHandlerTest {
         });
 
     }
- /*   @Test
+    @Test
     public void test(FxRobot robot){
         Platform.runLater(()->{
 
@@ -89,7 +89,7 @@ class LottoStorageHandlerTest {
         robot.sleep(500000);
 
     }
-*/
+
     @Test
     public void ValidSelectedRadio(FxRobot robot) {
         Platform.runLater(() -> {
@@ -121,8 +121,7 @@ class LottoStorageHandlerTest {
 
 
 
-
-      //  robot.sleep(5000);
+            robot.sleep(5000);
 
 
 
@@ -188,7 +187,7 @@ class LottoStorageHandlerTest {
         assertThat(label.isVisible()).isTrue();
 
 
-   //   robot.sleep(50000);
+     robot.sleep(50000);
 
 
 
@@ -270,7 +269,7 @@ class LottoStorageHandlerTest {
 
 
     @Nested
-    class  ChoiceWarehouse{
+    class ChoiceWarehouseModel {
         @BeforeEach
         public void setUp(){
             when(lotDimensionDao.findByLots(anyString(), anyInt())).thenReturn(Optional.empty());

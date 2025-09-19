@@ -95,10 +95,10 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
                         setcode(resultSet.getString(2)).
                         setPrice(resultSet.getDouble("price")).
                         setFarmaco_id(resultSet.getInt("farmaco")).
+                        setNome_farmaco(resultSet.getString("nome")).
                         setOrder_id(resultSet.getInt("purchase_order")).
                         setQuantity(resultSet.getInt("quantity")).
                         setVat_percent(resultSet.getInt("vat_percent")).
-                        setNome_farmaco(resultSet.getString("nome_farmaco")).
                         setNome_tipologia(resultSet.getString("tipologia")).
                         setUnit_misure(resultSet.getString("misura")).
                         build());
@@ -107,7 +107,7 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
 
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return  list;
 

@@ -146,13 +146,9 @@ public abstract class DialogHandler<F> extends CustomDialog<F> {
                     boolean cond = condition_event(result);
                     condition_test.set(cond);
                     showAlert(cond, "Errore Inserimento!");
-
-
                     if (cond) {
                         success.set(true);// Exit the ifPresent block without marking success
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

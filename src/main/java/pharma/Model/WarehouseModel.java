@@ -2,11 +2,10 @@ package pharma.Model;
 
 import algo.ShelfInfo;
 import net.postgis.jdbc.PGgeometry;
-import net.postgis.jdbc.geometry.Point;
 
 import java.util.List;
 
-public class Warehouse {
+public class WarehouseModel {
 private  int id;
 private String nome;
 private PGgeometry pGgeometry;
@@ -17,11 +16,11 @@ private List<ShelfInfo> shelfInfos;
 
 
 
-    public Warehouse() {
+    public WarehouseModel() {
 
     }
 
-    public Warehouse(int id, String nome, PGgeometry pGgeometry, String address, String province, String comune,List<ShelfInfo> shelfInfos) {
+    public WarehouseModel(int id, String nome, PGgeometry pGgeometry, String address, String province, String comune, List<ShelfInfo> shelfInfos) {
         this.id = id;
         this.nome = nome;
         this.pGgeometry = pGgeometry;
@@ -30,21 +29,21 @@ private List<ShelfInfo> shelfInfos;
         this.comune = comune;
         this.shelfInfos=shelfInfos;
     }
-    public Warehouse(int id, String nome, PGgeometry pGgeometry,List<ShelfInfo> shelfInfos) {
+    public WarehouseModel(int id, String nome, PGgeometry pGgeometry, List<ShelfInfo> shelfInfos) {
         this.id = id;
         this.nome = nome;
         this.pGgeometry = pGgeometry;
         this.shelfInfos=shelfInfos;
     }
 
-    public Warehouse(int id, String nome, PGgeometry pGgeometry) {
+    public WarehouseModel(int id, String nome, PGgeometry pGgeometry) {
         this.id = id;
         this.nome = nome;
         this.pGgeometry = pGgeometry;
 
     }
 
-    public Warehouse(int id, String nome, String address, String comune, String province) {
+    public WarehouseModel(int id, String nome, String address, String comune, String province) {
         this.id = id;
         this.nome = nome;
         this.address = address;

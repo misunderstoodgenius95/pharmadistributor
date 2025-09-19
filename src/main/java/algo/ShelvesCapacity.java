@@ -17,6 +17,14 @@ public class ShelvesCapacity {
         this.occupied_deep = occupied_deep;
         this.current_weight=current_weight;
 
+    }   public ShelvesCapacity( String warehouse_shelf, int num_shelf, double occupied_length, double occupied_deep,double current_weight) {
+
+        this.warehouse_shelf = warehouse_shelf;
+        this.num_shelf = num_shelf;
+        this.occupied_length = occupied_length;
+        this.occupied_deep = occupied_deep;
+        this.current_weight=current_weight;
+
     }
 
     public double getCurrent_weight() {

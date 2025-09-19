@@ -72,6 +72,10 @@ public class CustomDialog<T> extends Dialog<T> {
 
     }
 
+    /**
+     * Method that it used for verificate if it filled all controls.
+     * @return
+     */
     public boolean isCheck_validate() {
         return check_validate.get();
     }
@@ -383,8 +387,8 @@ getControlList().add(textField);
         datePicker.getStyleClass().add("datepicker");
         return datePicker;
     }
-    public SearchableComboBox add_SearchComboBox (T value){
-    SearchableComboBox<T> searchableComboBox=new SearchableComboBox<>();
+    public <K> SearchableComboBox add_SearchComboBox (K value){
+    SearchableComboBox<K> searchableComboBox=new SearchableComboBox<>();
         vbox.getChildren().add(searchableComboBox);
        searchableComboBox.setStyle("-fx-font-size: 16px");
         searchableComboBox.setValue(value);

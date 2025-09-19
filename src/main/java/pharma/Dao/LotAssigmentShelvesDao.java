@@ -30,6 +30,25 @@ public class LotAssigmentShelvesDao extends GenericJDBCDao<ShelvesAssigment, Int
         return super.findByParameter(query, warehouse_id);
     }
 
+    public List<ShelvesAssigment> findByLots(String lots){
+       String query=" select * from lot_assigment_shelves\n " +
+               " inner join lot_assignment on lot_assignment.id=lot_assigment_shelves.id\n" +
+               " inner join farmaco_all on lot_assigment "+
+               " where lot_code = ? " +
+               "   ";
+       return  super.findByParameter(query,lots);
+
+
+    }
+    public List<ShelvesAssigment> findByShelf(String shelf_code){
+        String query=" select * from lot_assigment_shelves\n " +
+                " inner join lot_assignment on lot_assignment.id=lot_assigment_shelves.id\n" +
+                " where shelf_code = ? ";
+        return  super.findByParameter(query,shelf_code);
+
+
+    }
+
     @Override
     protected void setFindByIdParameters(PreparedStatement preparedStatement, Integer integer) throws SQLException {
 

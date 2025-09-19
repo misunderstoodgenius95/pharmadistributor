@@ -4,13 +4,15 @@ import javafx.scene.control.TableView;
 import pharma.Model.FieldData;
 import pharma.config.TableUtility;
 
-public class LottoTableBase extends TableBase<FieldData> {
+public class LottoTableBase<T> extends TableBase<T> {
     public LottoTableBase(String content) {
         super(content);
     }
 
+
+
     @Override
-    protected void setupBaseColumns(TableView<FieldData> tableView) {
+    protected void setupBaseColumns(TableView<T> tableView) {
         tableView.getColumns().addAll(
                 TableUtility.generate_column_string("lotto Code", "code"),
                 TableUtility.generate_column_int("Farmaco ID", "farmaco_id"),

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -72,7 +73,7 @@ private Database databaseMock;
 //                setProduction_date(Date.valueOf(LocalDate.of(2025,10,01))).setSubtotal(10.2).setVat_amount(4.1).setTotal(12.1).build();
 //ordini.table_id.getItems().add(fieldData);
 //FieldData f_expand=FieldData.FieldDataBuilder.getbuilder().setLotto_id("aa").setCategoria(1).setPrice(10.0).setQuantity(100).setVat_percent(7).build();
-
+        primaryStage.initStyle(StageStyle.DECORATED);
         // Show the stage
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

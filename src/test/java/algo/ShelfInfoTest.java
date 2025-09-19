@@ -40,10 +40,7 @@ class ShelfInfoTest {
     class InitializingTest {
         @BeforeEach
         public void setUp() {
-            List<ShelvesCapacity> list = List.of(new ShelvesCapacity(1, "a22", 1, 0, 0,0),
-                        new ShelvesCapacity(1, "a22", 2, 0, 0,0),
-                        new ShelvesCapacity(1, "a22", 3, 0, 0,0),
-                        new ShelvesCapacity(1, "a22", 4, 0, 0,0));
+         ;
 
 
             }
@@ -83,9 +80,9 @@ class ShelfInfoTest {
 
                 List<ShelvesCapacity> shelvesCapacities = new ArrayList<>();
                 shelvesCapacities.add(new ShelvesCapacity(5, "a25", 1, 200.0, 40.0, 0.0));
-                shelvesCapacities.add(new ShelvesCapacity(5, "a25", 2, 180.0, 30.0, 0.0));
-                shelvesCapacities.add(new ShelvesCapacity(5, "a25", 3, 120, 20.0, 0.0));
-                shelvesCapacities.add(new ShelvesCapacity(5, "a25", 4, 80, 7.0, 0.0));
+                shelvesCapacities.add(new ShelvesCapacity(6, "a25", 2, 180.0, 30.0, 0.0));
+                shelvesCapacities.add(new ShelvesCapacity(7, "a25", 3, 120, 20.0, 0.0));
+                shelvesCapacities.add(new ShelvesCapacity(8, "a25", 4, 80, 7.0, 0.0));
 
                 ShelfInfo shelfInfo = ShelfInfo.ShelfInfoBuilder.get_builder()
                         .setMagazzino_id(1)

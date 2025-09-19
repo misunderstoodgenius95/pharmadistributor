@@ -22,12 +22,12 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
                 setId(resultSet.getInt(1)).
                 setNome(resultSet.getString(2)).
                 setDescription(resultSet.getString(3)).
-                setNome_categoria((resultSet.getString(4))).
-                setNome_tipologia(resultSet.getString(5)).
-                setUnit_misure(resultSet.getString(6)).
-                setNome_principio_attivo(resultSet.getString(7)).
-                setNome_casa_farmaceutica(resultSet.getString(8)).
-                setQuantity(resultSet.getInt(9)).
+                setNome_categoria((resultSet.getString(5))).
+                setNome_tipologia(resultSet.getString(6)).
+                setUnit_misure(resultSet.getString("misura")).
+                setNome_principio_attivo(resultSet.getString(8)).
+                setNome_casa_farmaceutica(resultSet.getString(9)).
+                setQuantity(resultSet.getInt(10)).
                 build();
 
     }

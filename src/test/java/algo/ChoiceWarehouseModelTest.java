@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 
-class ChoiceWarehouseTest {
+class ChoiceWarehouseModelTest {
     private ChoiceWarehouse choiceWarehouse;
     private Farmacia farmacia1;
     private Farmacia farmacia2;
@@ -29,15 +29,15 @@ class ChoiceWarehouseTest {
     private Farmacia farmacia9;
     private Farmacia farmacia10;
     @Mock
-    private List<Warehouse> list_warehouse;
+    private List<WarehouseModel> list_warehouseModel;
     private List<PharmacyAssigned> assigneds;
     @BeforeEach
     public void setUp() {
-         list_warehouse = List.of(
-                new Warehouse(1, "mag1", new PGgeometry(new Point(-23.5501, -46.6330)),List.of()),
-                new Warehouse(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330)),List.of()),
-                new Warehouse(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)),List.of()),
-                new Warehouse(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330)),List.of()));
+         list_warehouseModel = List.of(
+                new WarehouseModel(1, "mag1", new PGgeometry(new Point(-23.5501, -46.6330)),List.of()),
+                new WarehouseModel(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330)),List.of()),
+                new WarehouseModel(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)),List.of()),
+                new WarehouseModel(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330)),List.of()));
 
         farmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
         farmacia2 = new Farmacia("Farmacia Norte", 2, new PGgeometry(new Point(38.156059, 14.745716)));
@@ -70,7 +70,7 @@ class ChoiceWarehouseTest {
                 new PharmacyAssigned(farmacia9, 10),
                 new PharmacyAssigned(farmacia10, 35));
 
-        choiceWarehouse = new ChoiceWarehouse(list_warehouse, assigneds);
+        choiceWarehouse = new ChoiceWarehouse(list_warehouseModel, assigneds);
 
 
     }
@@ -414,7 +414,7 @@ class ChoiceWarehouseTest {
 
     }
     @Nested
-    class Availability_Warehouse {
+    class Availability_WarehouseModel {
         @BeforeEach
         public void setUp(){
             ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
@@ -489,12 +489,12 @@ class ChoiceWarehouseTest {
                     .build();
 
 
-            List<Warehouse> warehouses= List.of(
-                    new Warehouse(1, "mag1", new PGgeometry(new Point(38.40,15.40)),List.of(shelfInfo1)),
-                    new Warehouse(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330)),List.of(shelfInfo2)),
-                    new Warehouse(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)),List.of(shelfInfo3)),
-                    new Warehouse(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330)),List.of(shelfInfo4)));
-            choiceWarehouse=new ChoiceWarehouse(warehouses,assigneds);
+            List<WarehouseModel> warehouseModels = List.of(
+                    new WarehouseModel(1, "mag1", new PGgeometry(new Point(38.40,15.40)),List.of(shelfInfo1)),
+                    new WarehouseModel(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330)),List.of(shelfInfo2)),
+                    new WarehouseModel(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)),List.of(shelfInfo3)),
+                    new WarehouseModel(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330)),List.of(shelfInfo4)));
+            choiceWarehouse=new ChoiceWarehouse(warehouseModels,assigneds);
 
 
 
@@ -506,8 +506,8 @@ class ChoiceWarehouseTest {
             LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
         List<PharmacyDistance>distances=List.of(new PharmacyDistance(List.of(farmacia1,farmacia2,farmacia3),new Point(38.15,15.02)),
         new PharmacyDistance(List.of(farmacia6,farmacia7,farmacia8),new Point(37.51,13.88)));
-           Set<Warehouse> warehouses= choiceWarehouse.calculate_availability(distances, lotDimensionModel,10);
-           assertThat(warehouses).hasSize(1);
+           Set<WarehouseModel> warehouseModels = choiceWarehouse.calculate_availability(distances, lotDimensionModel,10);
+           assertThat(warehouseModels).hasSize(1);
 
 
 
@@ -518,8 +518,8 @@ class ChoiceWarehouseTest {
             LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
             List<PharmacyDistance>distances=List.of(new PharmacyDistance(List.of(farmacia1,farmacia2,farmacia3),new Point(38.15,15.02)),
                     new PharmacyDistance(List.of(farmacia6,farmacia7,farmacia8),new Point(37.51,13.88)));
-            Set<Warehouse> warehouses= choiceWarehouse.calculate_availability(distances, lotDimensionModel,140);
-            assertThat(warehouses).hasSize(0);
+            Set<WarehouseModel> warehouseModels = choiceWarehouse.calculate_availability(distances, lotDimensionModel,140);
+            assertThat(warehouseModels).hasSize(0);
 
 
 

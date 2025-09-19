@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
@@ -22,7 +23,7 @@ class FarmacoTest {
     public void start(Stage primaryStage) throws IOException {
         Stages stage = new Stages();
         Parent parent = stage.load_fxml("/subpanel/farmaco.fxml");
-
+        primaryStage.initStyle(StageStyle.DECORATED);
         scene = new Scene(parent);
 
         primaryStage.setScene(scene);
@@ -37,7 +38,7 @@ class FarmacoTest {
 
 
         });
-        robot.sleep(400000);
+        robot.sleep(400000000);
     }
 
 

@@ -1,6 +1,5 @@
 package pharma.Handler;
 
-import com.networknt.schema.JsonSchemaException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -12,14 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.util.WaitForAsyncUtils;
-import pharma.Model.FieldData;
-import pharma.Model.Warehouse;
+import pharma.Model.WarehouseModel;
 import pharma.Storage.FileStorage;
 import pharma.config.Utility;
 import pharma.config.database.Database;
@@ -28,13 +25,11 @@ import pharma.javafxlib.test.SimulateEvents;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.foreign.PaddingLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -148,7 +143,7 @@ class MagazzinoHandlerTest {
             SimulateEvents.writeOn(list.get(4),"-18.818886984");
             SimulateEvents.writeOn(list.get(5),"-39.09529473");
             SimulateEvents.clickOn(magazzinoHandler.getButtonOK());
-            when(magazzinoDao.insert(any(Warehouse.class))).thenReturn(true);
+            when(magazzinoDao.insert(any(WarehouseModel.class))).thenReturn(true);
             magazzinoHandler.execute();
 
 

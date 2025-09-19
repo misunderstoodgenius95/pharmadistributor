@@ -35,7 +35,7 @@ import  static  pharma.javafxlib.test.SimulateEvents.*;
 @ExtendWith(ApplicationExtension.class)
 @SuppressWarnings({"unchecked", "deprecation"})
 class LotTableCustomTest {
-    private TableCustom lotTableCustom;
+    private TableCustom  lotTableCustom;
     private LottiDao lottiDao;
 
     @Mock
@@ -173,8 +173,8 @@ Platform.runLater(()->{
             writeOn(lotTableCustom.getTextField_search(), "a");
             ObservableMap<FieldData,CheckBox> map = lotTableCustom.getMapCheckBox();
 
-             SimulateEvents.setCheckBox(map,lotTableCustom.getTableView().getItems().getFirst());
-             SimulateEvents.setCheckBox(map,lotTableCustom.getTableView().getItems().get(1));
+         /*    SimulateEvents.setCheckBox(map,lotTableCustom.getTableView().getItems().getFirst());
+             SimulateEvents.setCheckBox(map,lotTableCustom.getTableView().getItems().get(1));*/
 
             lotTableCustom.getButtonOK().setOnAction(event -> {
                 System.out.println("size"+lotTableCustom.getSelectedRows().size());

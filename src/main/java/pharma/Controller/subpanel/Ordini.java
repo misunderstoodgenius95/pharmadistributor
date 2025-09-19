@@ -86,7 +86,7 @@ public class Ordini implements Initializable {
         TableView<FieldData> t_expanded=new TableView<>();
         FieldData fd_order=param.getValue();
         t_expanded.getColumns().addAll(
-                TableUtility.generate_column_string("Lotto","lotto_id"),
+                TableUtility.generate_column_string("Lotto","code"),
                 TableUtility.generate_column_string("Farmaco","nome_farmaco"),
                 TableUtility.generate_column_string("Tipologia","nome_tipologia"),
                 TableUtility.generate_column_string("Misura","unit_misure"),
@@ -138,7 +138,6 @@ public class Ordini implements Initializable {
     }
 
     private  void setvalue(){
-
 
         obs_table.setAll( purchaseOrderDao.findAll().stream().
                 peek( fieldData -> fieldData.setNome_casa_farmaceutica(pharmaDao.findById(fieldData.getCasa_farmaceutica()).getNome_casa_farmaceutica())).toList());

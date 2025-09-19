@@ -17,12 +17,12 @@ private static final int  PHARMACY_NEIGHTBOUR_THRESHOLD=300;
 private static final double RADIUS_KM_WAREHOUSE_RANGE=40;
 private static final double LATITUDE_DEGREE=111.0;
     private static final Logger log = LoggerFactory.getLogger(ChoiceWarehouse.class);
-    private List<Warehouse> warehouses;
+    private List<WarehouseModel> warehouseModels;
 
 private final List<PharmacyAssigned> assigneds;
 private final  double DISTANCE_KM=70;
-    public ChoiceWarehouse(List<Warehouse> warehouses, List<PharmacyAssigned> assigneds) {
-        this.warehouses = warehouses;
+    public ChoiceWarehouse(List<WarehouseModel> warehouseModels, List<PharmacyAssigned> assigneds) {
+        this.warehouseModels = warehouseModels;
         this.assigneds = assigneds;
 
     }
@@ -37,7 +37,7 @@ private final  double DISTANCE_KM=70;
         );
 
     }
-    public Set<Warehouse> calculate_warehouse(LotDimensionModel dimension, int quantity){
+    public Set<WarehouseModel> calculate_warehouse(LotDimensionModel dimension, int quantity){
         Map<Farmacia,Integer> map_by_qty=pharmacy_by_qty();
         List<Map. Entry<Farmacia, Integer>> sorted_values= sorted_by_max(map_by_qty);
         List<PharmacyDistance> pharmacyDistances=distance_pharmacist(sorted_values);
@@ -56,11 +56,11 @@ private final  double DISTANCE_KM=70;
      * @return
      */
         @TestOnly
-    public   Set<Warehouse> calculate_availability(List<PharmacyDistance> distanceList, LotDimensionModel dimension, int quantity){
-        Set<Warehouse> availability_warehouse=new HashSet<>();
+    public   Set<WarehouseModel> calculate_availability(List<PharmacyDistance> distanceList, LotDimensionModel dimension, int quantity){
+        Set<WarehouseModel> availability_warehouseModel =new HashSet<>();
         distanceList.forEach(pharmacy->{
 
-            warehouses.forEach(warehouse->{
+            warehouseModels.forEach(warehouse->{
                 Point point_warehouse=(Point) warehouse.getpGgeometry().getGeometry();
                 if(in_range(pharmacy.getAverage(),point_warehouse)){
 
@@ -73,7 +73,7 @@ private final  double DISTANCE_KM=70;
                         log.info("availability: "+availability);
                         if(availability>=quantity) {
 
-                            availability_warehouse.add(warehouse);
+                            availability_warehouseModel.add(warehouse);
                         }
                        }
 
@@ -81,7 +81,7 @@ private final  double DISTANCE_KM=70;
                 }
             });
         });
-        return availability_warehouse;
+        return availability_warehouseModel;
 
 
 

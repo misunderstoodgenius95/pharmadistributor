@@ -30,7 +30,7 @@ public class PurchaseOrderHandler extends DialogHandler<FieldData> {
     private DatePicker date_order;
     private ObservableList<FieldData> table_obs;
     private ObservableList<FieldData> list_populate;
-private  SimpleBooleanProperty s_update_result;
+    private  SimpleBooleanProperty s_update_result;
     private  TextFieldComboBox<FieldData> combotextfield_lot;
     private  TableView<FieldData> tableView;
     private TableColumn<FieldData,Double> price;
@@ -75,19 +75,22 @@ private  SimpleBooleanProperty s_update_result;
                 textField_ordini = add_text_field("Inserisci ID Ordini Fornitore");
                 add_label("Cerca o Seleziona Casa Farmaceutica");
                 combox_pharma = add_combox_search_with_textfield(FXCollections.observableArrayList(pharmaDao.findAllName()));
+
                 combox_pharma.setConvert(new InvoicexConvert(InvoicexConvert.Type.combo_id
                 ));
 
-                group = add_radios(Arrays.asList(new RadioOptions("","Lotto"), new RadioOptions("","Farmaco")), CustomDialog.Mode.Horizontal);
+                group = add_radios(Arrays.asList(new RadioOptions("lot","Lotto"), new RadioOptions("farmaco","Farmaco")), CustomDialog.Mode.Horizontal);
                 group.getToggles().getFirst().setSelected(true);
 
-                combotextfield_farmaco = add_combox_search_with_textfield(FXCollections.observableArrayList());
+                combotextfield_farmaco = add_combox_search_with_textfield(FXCollections.observableArrayList(FieldData.FieldDataBuilder.getbuilder().setNome("Inserisci farmaco").build()));
                 combotextfield_farmaco.setVisible(false);
                 combotextfield_farmaco.setConvert(new ComboxLotsConvert("Farmaco"));
+                combotextfield_farmaco.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setNome("Seleziona Farmaco").build());
 
-
+                add_label("Seleziona Lotto");
                 combotextfield_lot = add_combox_search_with_textfield(FXCollections.observableArrayList());
                 combotextfield_lot.setUserData("lots");
+                combotextfield_lot.setDisable(true);
                 combotextfield_lot.setConvert(new ComboxLotsConvert("Lotto"));
                 getControlList().removeAll( combotextfield_lot,combotextfield_farmaco);
                 tableView = add_table();
@@ -182,7 +185,7 @@ private  SimpleBooleanProperty s_update_result;
 
     private  void add_column(){
 
-       TableColumn<FieldData,String> column_lots=TableUtility.generate_column_string("Lotto Code","lotto_id");
+       TableColumn<FieldData,String> column_lots=TableUtility.generate_column_string("Lotto Code","code");
         TableColumn<FieldData,String> nome= TableUtility.generate_column_string("Nome Farmaco","nome");
         TableColumn<FieldData,Date> date_elapsed= TableUtility.generate_column_date("Data Produzione ","production_date");
         TableColumn<FieldData,Date> date_production=  TableUtility.generate_column_date("Data Scadenza ","elapsed_date");
@@ -245,7 +248,6 @@ private  void listener_boolean_change(){
     private void listen_combo(){
  combotextfield_lot.getChoiceBox().valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) return;
-
      if(newValue instanceof  FieldData fieldData) {
          Platform.runLater(() -> {
     if(tableView.getItems().isEmpty()){
@@ -254,12 +256,13 @@ private  void listener_boolean_change(){
     if(tableView.getUserData().equals(fieldData.getCasa_farmaceutica())) {
 
 
-
         table_obs.add(fieldData);
         tableView.setItems(table_obs);
+        tableView.refresh();
+        calculus_attribute();
         //  combotextfield_lot.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setNome("").build());
         list_populate.remove(fieldData);
-        calculus_attribute();
+
         if (menuItem.isDisable()) {
             menuItem.setDisable(false);
         }
@@ -286,12 +289,13 @@ private  void listener_boolean_change(){
         combox_pharma.getChoiceBox().valueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue!=null) {
                 if(newValue instanceof FieldData fieldData) {
-
-
                 if(tableView.getItems().isEmpty()){
-
                   List<FieldData> fd_list = lottiDao.findLotsbyPharma(fieldData.getId());
-
+                    if(group.getSelectedToggle() instanceof  RadioButton radioButton){
+                        if(radioButton.getId().equals("lot")){
+                            combotextfield_lot.setDisable(false);
+                        }
+                    }
                     list_populate.setAll(fd_list);
                     combotextfield_lot.getChoiceBox().setItems(list_populate);
                     Set<String> seenDuplicates = new HashSet<>();
@@ -303,9 +307,6 @@ private  void listener_boolean_change(){
 
                 }
                 }
-
-
-
             }
 
 
@@ -341,6 +342,7 @@ private  void listener_boolean_change(){
             FieldData fieldData=(FieldData) newValue;
             current_lot_farmaco.setAll(list_populate.stream().filter(fd->fd.getNome().equals(fieldData.getNome())).toList());
             combotextfield_lot.getChoiceBox().setItems(current_lot_farmaco);
+            combotextfield_lot.setDisable(false);
 
 
 
@@ -364,8 +366,9 @@ private  void listener_boolean_change(){
                 RadioButton radioButton= (RadioButton) newValue;
                 if(radioButton.getText()!=null){
 
-                    if(radioButton.getText().equals("Farmaco")){
+                    if(radioButton.getId().equals("farmaco")){
                         combotextfield_farmaco.setVisible(true);
+                        combotextfield_lot.setDisable(true);
                     }else{
                         combotextfield_farmaco.setVisible(false);
                         combotextfield_lot.getChoiceBox().setItems(list_populate);

@@ -12,7 +12,7 @@ public class TextFieldComboBox<T> extends  Control {
 
 
 
-    private ChoiceBox choiceBox;
+    private ChoiceBox<T> choiceBox;
     private TextField textField;
     private VBox vBox;
     private  ObservableList<T> observable;

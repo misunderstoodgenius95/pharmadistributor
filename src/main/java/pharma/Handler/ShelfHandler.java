@@ -1,23 +1,30 @@
 package pharma.Handler;
 
 import algo.ShelfInfo;
+import algo.ShelvesAssigment;
+import algo.ShelvesCapacity;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pharma.Model.FieldData;
-import pharma.Model.Warehouse;
+import pharma.Model.WarehouseModel;
 import pharma.config.PopulateChoice;
 import pharma.config.Status;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.MagazzinoDao;
 import pharma.dao.ShelfDao;
+import pharma.dao.ShelvesDao;
 
 import java.util.List;
 import java.util.Optional;
 
 public class ShelfHandler  extends DialogHandler<ShelfInfo> {
-    private SearchableComboBox<Warehouse> s_choice_warehouse;
+    private static final Logger log = LoggerFactory.getLogger(ShelfHandler.class);
+    private SearchableComboBox<WarehouseModel> s_choice_warehouse;
     private MagazzinoDao magazzinoDao;
     private ShelfDao shelfDao;
     private Spinner<Double> lunghezza;
@@ -27,13 +34,17 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
     private Spinner<Integer> num_rip;
     private TextField codice;
     private Spinner<Integer> capacity;
-    public ShelfHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
+    private  ObservableList<ShelfInfo> shelfInfos;
+    private ShelvesDao shelvesDao;
+    public ShelfHandler(String content, List<GenericJDBCDao> genericJDBCDao, ObservableList<ShelfInfo> shelfInfos) {
         super(content, genericJDBCDao);
         this.magazzinoDao = (MagazzinoDao) genericJDBCDao.stream().
                 filter(dao -> dao instanceof MagazzinoDao).findFirst().orElseThrow(() -> new IllegalArgumentException("MagazzinoDao not found in the list"));
         this.shelfDao = (ShelfDao) genericJDBCDao.stream().
                 filter(dao -> dao instanceof ShelfDao).findFirst().orElseThrow(() -> new IllegalArgumentException("ShelfDao not found in the list"));
-
+        this.shelvesDao = (ShelvesDao) genericJDBCDao.stream().
+                filter(dao -> dao instanceof ShelvesDao).findFirst().orElseThrow(() -> new IllegalArgumentException("ShelvesDao not found in the list"));
+        this.shelfInfos=shelfInfos;
     }
 
     @Override
@@ -46,19 +57,23 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
 
         this.magazzinoDao = (MagazzinoDao) optionalgenericJDBCDao.get().stream().
                 filter(dao -> dao instanceof MagazzinoDao).findFirst().orElseThrow(() -> new IllegalArgumentException("MagazzinoDao not found in the list"));
-        List<Warehouse> list_warehouse=magazzinoDao.findAll();
-        Warehouse warehouse=new Warehouse();
-        warehouse.setNome("Seleziona Magazzino");
-        s_choice_warehouse = add_SearchComboBoxs(warehouse);
-        s_choice_warehouse.getItems().addAll(list_warehouse);
-        s_choice_warehouse.setConverter(new StringConverter<Warehouse>() {
+        List<WarehouseModel> list_warehouseModel =magazzinoDao.findAll();
+        WarehouseModel warehouseModel =new WarehouseModel();
+        warehouseModel.setNome("Seleziona Magazzino");
+        s_choice_warehouse = add_SearchComboBoxs(warehouseModel);
+        s_choice_warehouse.getItems().addAll(list_warehouseModel);
+        s_choice_warehouse.setConverter(new StringConverter<WarehouseModel>() {
             @Override
-            public String toString(Warehouse object) {
-                return ""+object.getId();
+            public String toString(WarehouseModel object) {
+                if(object!=null) {
+                    return "" + object.getNome();
+                }else{
+                    return "";
+                }
             }
 
             @Override
-            public Warehouse fromString(String string) {
+            public WarehouseModel fromString(String string) {
                 return null;
             }
         });
@@ -92,7 +107,34 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
 
     @Override
     protected boolean condition_event(ShelfInfo type) throws Exception {
-        return shelfDao.insert(type);
+        try {
+            shelfDao.setTransaction(true);
+            boolean result = shelfDao.insert(type);
+            if (result) {
+
+                System.out.println(num_rip.getValue());
+                for (int i = 0; i <num_rip.getValue() ; i++) {
+                    int num_rip = i;
+                    ShelvesCapacity shelvesCapacity = new ShelvesCapacity(codice.getText(), ++num_rip, 0, 0, 0);
+                    boolean result_shelves = shelvesDao.insert(shelvesCapacity);
+                    if (!result_shelves) {
+                        shelfDao.rollback();
+                        return false;
+                    }
+                }
+                shelfDao.commit();
+                shelfInfos.add(type);
+                return result;
+
+            } else {
+                shelfDao.rollback();
+                return false;
+            }
+        } catch (Exception e) {
+            shelfDao.rollback();
+            return false;
+        }
+
     }
 
     @Override

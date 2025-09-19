@@ -62,7 +62,7 @@ public class Lotti implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         table_id.getColumns().addAll(
-                TableUtility.generate_column_string("lotto Code","lotto_id"),
+                TableUtility.generate_column_string("lotto Code","code"),
         TableUtility.generate_column_string("Nome","nome"),
         TableUtility.generate_column_string("Tipologia","nome_tipologia"),
         TableUtility.generate_column_string("Casa Farmaceutica","nome_casa_farmaceutica"),

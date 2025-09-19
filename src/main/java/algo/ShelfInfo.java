@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.LoggerFactory;
+import pharma.Controller.subpanel.Magazzino;
 import pharma.Model.LotDimensionModel;
 
 public class ShelfInfo
@@ -25,7 +26,7 @@ public class ShelfInfo
     private double shelf_thickness;
     private  List<ShelvesCapacity>   shelvesCapacities;
     private  Logger logger=Logger.getLogger(ShelfInfo.class.getName());
-
+    private String nome_magazzino;
     private ShelfInfo(){
 
 
@@ -40,10 +41,19 @@ public class ShelfInfo
        this.shelvesCapacities=builder.shelvesCapacities;
        this.weight=builder.weight;
        this.lenght=builder.lenght;
+       this.nome_magazzino=builder.nome_magazzino;
+    }
+
+    public void setNome_magazzino(String nome_magazzino) {
+        this.nome_magazzino = nome_magazzino;
     }
 
     public void setShelvesCapacities(List<ShelvesCapacity> shelvesCapacities) {
         this.shelvesCapacities = shelvesCapacities;
+    }
+
+    public String getNome_magazzino() {
+        return nome_magazzino;
     }
 
     public String getShelf_code() {
@@ -198,6 +208,7 @@ public static class ShelfInfoBuilder {
     private int  weight;
     private int num_rip;
     private double shelf_thickness;
+    private String nome_magazzino;
     private  List<ShelvesCapacity>   shelvesCapacities;
 
     private ShelfInfoBuilder() {
@@ -205,6 +216,11 @@ public static class ShelfInfoBuilder {
     public static ShelfInfoBuilder get_builder(){
 
         return new ShelfInfoBuilder();
+    }
+
+    public ShelfInfoBuilder setNome_magazzino(String nome_magazzino) {
+        this.nome_magazzino = nome_magazzino;
+        return this;
     }
 
     public ShelfInfoBuilder setShelf_code(String shelf_code) {

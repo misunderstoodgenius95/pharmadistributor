@@ -1,33 +1,32 @@
 package pharma.dao;
 
 import net.postgis.jdbc.PGgeometry;
-import net.postgis.jdbc.geometry.Point;
-import pharma.Model.FieldData;
-import pharma.Model.Warehouse;
+import org.postgresql.util.PGobject;
+import pharma.Model.WarehouseModel;
 import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
-public class MagazzinoDao extends GenericJDBCDao<Warehouse,Integer> {
+public class MagazzinoDao extends GenericJDBCDao<WarehouseModel,Integer> {
     private String table="warehouse";
     public MagazzinoDao( Database database) {
         super("warehouse", database);
     }
 
     @Override
-    protected Warehouse mapRow(ResultSet resultSet) throws Exception {
+    protected WarehouseModel mapRow(ResultSet resultSet) throws Exception {
 
 
-        Warehouse warehouse=new Warehouse();
-        warehouse.setId(resultSet.getInt(1));
-        warehouse.setNome(resultSet.getString("nome"));
-        warehouse.setAddress(resultSet.getString("address"));
-        warehouse.setComune(resultSet.getString("comune"));
-        warehouse.setpGgeometry((PGgeometry) resultSet.getObject("location"));
-        return warehouse;
+        WarehouseModel warehouseModel =new WarehouseModel();
+        warehouseModel.setId(resultSet.getInt(1));
+        warehouseModel.setNome(resultSet.getString("nome"));
+        warehouseModel.setAddress(resultSet.getString("address"));
+         PGobject pGobject=(PGobject) resultSet.getObject("location");
+         warehouseModel.setpGgeometry(new PGgeometry(pGobject.getValue()));
+        warehouseModel.setComune(resultSet.getString("comune"));
+        return warehouseModel;
     }
 
     @Override
@@ -57,7 +56,7 @@ public class MagazzinoDao extends GenericJDBCDao<Warehouse,Integer> {
     }
 
     @Override
-    protected void setInsertParameter(PreparedStatement statement, Warehouse entity) throws Exception {
+    protected void setInsertParameter(PreparedStatement statement, WarehouseModel entity) throws Exception {
 
 
         statement.setString(1,entity.getNome());
@@ -70,12 +69,12 @@ public class MagazzinoDao extends GenericJDBCDao<Warehouse,Integer> {
     }
 
     @Override
-    protected void setUpdateParameter(PreparedStatement statement, Warehouse entity) {
+    protected void setUpdateParameter(PreparedStatement statement, WarehouseModel entity) {
 
     }
 
     @Override
-    protected void setDeleteParameter(PreparedStatement statement, Warehouse entity) {
+    protected void setDeleteParameter(PreparedStatement statement, WarehouseModel entity) {
 
     }
 }
