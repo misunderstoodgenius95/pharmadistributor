@@ -18,15 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ShelfInfoTest {
     private  ShelfInfo shelfInfo;
     FieldData fieldData_shelf;
-    @BeforeEach
-    public void setUp() {
-
-
-
-
-
-
-    }
 
 
 
@@ -40,7 +31,7 @@ class ShelfInfoTest {
     class InitializingTest {
         @BeforeEach
         public void setUp() {
-         ;
+
 
 
             }
@@ -72,6 +63,7 @@ class ShelfInfoTest {
             @Nested
             class RemainTwoSHelves{
             List<ShelvesRemain> remains_list;
+
             @BeforeEach
             public void  ValidRemaingLevels() {
 
@@ -79,42 +71,42 @@ class ShelfInfoTest {
 
 
                 List<ShelvesCapacity> shelvesCapacities = new ArrayList<>();
-                shelvesCapacities.add(new ShelvesCapacity(5, "a25", 1, 200.0, 40.0, 0.0));
-                shelvesCapacities.add(new ShelvesCapacity(6, "a25", 2, 180.0, 30.0, 0.0));
-                shelvesCapacities.add(new ShelvesCapacity(7, "a25", 3, 120, 20.0, 0.0));
-                shelvesCapacities.add(new ShelvesCapacity(8, "a25", 4, 80, 7.0, 0.0));
-
-                ShelfInfo shelfInfo = ShelfInfo.ShelfInfoBuilder.get_builder()
+                shelvesCapacities.add(new ShelvesCapacity(5, "A21", 1, 200.0, 40.0, 0.0));
+                shelvesCapacities.add(new ShelvesCapacity(6, "A21", 2, 180.0, 30.0, 0.0));
+                shelvesCapacities.add(new ShelvesCapacity(7, "A21", 3, 120, 20.0, 0.0));
+                shelvesCapacities.add(new ShelvesCapacity(8, "A21", 4, 80, 7.0, 0.0));
+               ShelfInfo shelfInfo = ShelfInfo.ShelfInfoBuilder.get_builder()
                         .setMagazzino_id(1)
                         .setShelf_code("A21")
-                        .setLenght(102)
-                        .setHeight(100)
+                        .setLenght(200)
+                        .setHeight(50)
                         .setDeep(50)
                         .setWeight(200)
                         .setNum_rip(4)
-                        .setShelf_thickness(20)
-                        .setShelvesCapacities(List.of(new ShelvesCapacity(1, "A21", 1, 100.0, 20.0, 0.0)))
-                        .build();
+                        .setShelf_thickness(20).setShelvesCapacities(shelvesCapacities).
+                        build();
+                //  Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0));
                 Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0));
-                remains.ifPresent(shelvesRemains -> remains_list = shelvesRemains);
-
-
+                remains_list=remains.get();
 
 
             }
             @Test
-                public void ValidShelves2(){
+                public void ValidShelves6(){
 
-                Assertions.assertEquals(2,remains_list.getFirst().getQuantity());
+           ShelvesRemain remain=remains_list.stream().filter(value->value.getShelvesCapacity().getCode()==6).findFirst().get();
+                Assertions.assertEquals(4,remain.getQuantity());
             }
 
             @Test
-            public void ValidShelvesThree(){
-                    Assertions.assertEquals(24,remains_list.get(1).getQuantity());
+            public void ValidShelves7(){
+                ShelvesRemain remain=remains_list.stream().filter(value->value.getShelvesCapacity().getCode()==7).findFirst().get();
+                    Assertions.assertEquals(42,remain.getQuantity());
                 }
                 @Test
                 public void ValidDhelvesFor(){
-                    Assertions.assertEquals(72,remains_list.get(2).getQuantity());
+                    ShelvesRemain remain=remains_list.stream().filter(value->value.getShelvesCapacity().getCode()==8).findFirst().get();
+                    Assertions.assertEquals(90,remain.getQuantity());
                 }
 
 

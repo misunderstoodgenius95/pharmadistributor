@@ -148,7 +148,7 @@ public class ShelfInfo
                  (remain_length <= lotDimensionModel.getLength())) {
 
 
-            continue;
+         continue;
          }
          log.info("continue");
 
@@ -171,11 +171,13 @@ public class ShelfInfo
         if(remaing_weight<0 || fitbylenght<0){
             continue;
         }
+        log.info("Continue");
 
 
          // Calculus fitProduct
          int  fitbyWeight =(int)( remaing_weight / lotDimensionModel.getWeight());
          int remaining=Math.min(fit_space,fitbyWeight);
+         logger.info("remaining:  "+remain);
      //    logger.info("remaining: "+remaining);
          if(remaining>0){
              remain.add(new ShelvesRemain(shelvesCapacity, remaining));
