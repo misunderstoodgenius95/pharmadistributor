@@ -3,10 +3,7 @@ package algo;
 import org.jetbrains.annotations.TestOnly;
 import pharma.Model.LotDimensionModel;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
@@ -104,6 +101,7 @@ private List<ShelfInfo> list_shelf;
         LotAssigment lotAssigment=new LotAssigment(dimension.getFarmaco_id(),dimension.getLot_id(),quantity);
 
         int quantity_remain=quantity;
+
         HashMap<ShelfInfo,List<ShelvesRemain>> map_capacity_single_shelves=calculatePlacement(dimension);
         logger.info("number of shelf: "+map_capacity_single_shelves.size());
 
@@ -140,6 +138,60 @@ private List<ShelfInfo> list_shelf;
             }
         }
         return lotAssigment;
+
+
+
+    }
+
+    public List<LotAssigment>  assignmentLotsChoice(LotDimensionModel dimension, int quantity){
+        LotAssigment lotAssigment=new LotAssigment(dimension.getFarmaco_id(),dimension.getLot_id(),quantity);
+        List<LotAssigment> lotAssigments=new ArrayList<>();
+        int quantity_remain=quantity;
+
+        HashMap<ShelfInfo,List<ShelvesRemain>> map_capacity_single_shelves=calculatePlacement(dimension);
+        logger.info("number of shelf: "+map_capacity_single_shelves.size());
+
+        HashMap<ShelfInfo,Integer> capacity_max_shelf=calculate_max_fit(map_capacity_single_shelves);
+
+        List<Map.Entry<ShelfInfo,Integer>> sorted_shelf_by_max= sorted_max_shelf_with(capacity_max_shelf);
+
+        List<Map.Entry<ShelfInfo,Integer>>  sorted_filter=filter_value(sorted_shelf_by_max,quantity_remain);
+        if(sorted_filter.isEmpty()){
+            for (Map.Entry<ShelfInfo, Integer> map : sorted_shelf_by_max) {
+                if (quantity_remain <= 0) {
+                    lotAssigments.add(lotAssigment);
+                    lotAssigment=null;
+                    lotAssigment=new LotAssigment(dimension.getFarmaco_id(),dimension.getLot_id(),quantity);
+                }
+                List<ShelvesRemain> remain = map_capacity_single_shelves.get(map.getKey());
+
+                quantity_remain= placingIntoShelf(dimension, map.getKey(), quantity_remain, remain, lotAssigment);
+
+            }
+
+
+
+        }else {
+
+            for (Map.Entry<ShelfInfo, Integer> map : sorted_filter) {
+                if (quantity_remain <= 0) {
+                 lotAssigments.add(lotAssigment);
+
+                 lotAssigment=new LotAssigment(dimension.getFarmaco_id(),dimension.getLot_id(),quantity);
+                 quantity_remain=quantity;
+                }
+                List<ShelvesRemain> remain = map_capacity_single_shelves.get(map.getKey());
+
+                quantity_remain= placingIntoShelf(dimension, map.getKey(), quantity_remain, remain, lotAssigment);
+                lotAssigments.add(lotAssigment);
+
+
+                lotAssigment=new LotAssigment(dimension.getFarmaco_id(),dimension.getLot_id(),quantity);
+                quantity_remain=quantity;
+
+            }
+        }
+        return lotAssigments;
 
 
 

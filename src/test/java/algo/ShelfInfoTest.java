@@ -19,12 +19,34 @@ class ShelfInfoTest {
     private  ShelfInfo shelfInfo;
     FieldData fieldData_shelf;
 
+    @Test
+    void canFitProduct() {
 
+        List<ShelvesCapacity> shelvesCapacities = new ArrayList<>();
+        shelvesCapacities.add(new ShelvesCapacity(5, "A21", 1, 200.0, 40.0, 0.0));
+        shelvesCapacities.add(new ShelvesCapacity(6, "A21", 2, 180.0, 30.0, 0.0));
+        shelvesCapacities.add(new ShelvesCapacity(7, "A21", 3, 120, 20.0, 0.0));
+        shelvesCapacities.add(new ShelvesCapacity(8, "A21", 4, 80, 7.0, 0.0));
+        ShelfInfo shelfInfo = ShelfInfo.ShelfInfoBuilder.get_builder()
+                .setMagazzino_id(1)
+                .setShelf_code("A21")
+                .setLenght(200)
+                .setHeight(50)
+                .setDeep(50)
+                .setWeight(200)
+                .setNum_rip(4)
+                .setShelf_thickness(20).setShelvesCapacities(shelvesCapacities).
+                build();
+        LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+        Assertions.assertTrue(shelfInfo.canFitProduct(lotDimensionModel));
 
+    }
 
-
-
-
+    @Test
+    void getHeight() {
+        ShelfInfo shelfInfo1=ShelfInfo.ShelfInfoBuilder.get_builder().setHeight(1000).build();
+        Assertions.assertEquals(1000,shelfInfo1.getHeight());
+    }
 
 
     @Nested

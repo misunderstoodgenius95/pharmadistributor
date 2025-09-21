@@ -27,7 +27,7 @@ public class ShelfInfo
     private  List<ShelvesCapacity>   shelvesCapacities;
     private  Logger logger=Logger.getLogger(ShelfInfo.class.getName());
     private String nome_magazzino;
-    private ShelfInfo(){
+    ShelfInfo(){
 
 
     }
