@@ -722,7 +722,7 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
         }
 
 
-        Stream<Arguments> value_assignment() {  // No 'static' needed
+        Stream<Arguments> value_assignment() {
             return Stream.of(
                     Arguments.of(
                             lotAssigment.getShelvesAssigmentList().getFirst().getShelf_code(),
@@ -756,60 +756,96 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
     }
 
 
-    @Test
-    public void multiple_shelf() {
+    @Nested
+    public class MultipleShelf {
+        private LotAssigment lotAssigment;
+        @BeforeEach
+        void setUp() {
+            List<ShelvesCapacity> shelvesCapacities1 = new ArrayList<>(); //68 totali
+            shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 1, 100, 20.0, 0.0)); //32
+            shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 2, 80.0, 20.0, 0.0)); //36
+            shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 3, 200.0, 40.0, 0.0));
+            shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 4, 200.0, 40.0, 0.0));
 
-        List<ShelvesCapacity> shelvesCapacities1 = new ArrayList<>(); //68 totali
-        shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 1, 100, 20.0, 0.0)); //32
-        shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 2, 80.0, 20.0, 0.0)); //36
-        shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 3, 200.0, 40.0, 0.0));
-        shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 4, 200.0, 40.0, 0.0));
+            List<ShelvesCapacity> shelvesCapacities5 = new ArrayList<>(); // 98 totali
+            shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 1, 200.0, 40.0, 0.0)); //0
+            shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 2, 180.0, 30.0, 0.0));// 2
+            shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 120, 20.0, 0.0));//24
+            shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 80, 7.0, 0.0));//72*/
 
-        List<ShelvesCapacity> shelvesCapacities5 = new ArrayList<>(); // 98 totali
-        shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 1, 200.0, 40.0, 0.0)); //0
-        shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 2, 180.0, 30.0, 0.0));// 2
-        shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 120, 20.0, 0.0));//24
-        shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 80, 7.0, 0.0));//72*/
+            ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a21")
+                    .setMagazzino_id(1)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities1)
+                    .setWeight(180)
+                    .setHeight(50)
+                    .build();
 
-        ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
-                .setShelf_code("a21")
-                .setMagazzino_id(1)
-                .setLenght(200)
-                .setDeep(40)
-                .setNum_rip(4)
-                .setShelf_thickness(10)
-                .setShelvesCapacities(shelvesCapacities1)
-                .setWeight(180)
-                .setHeight(50)
-                .build();
+            ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a25")
+                    .setMagazzino_id(5)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities5)
+                    .setWeight(180)
+                    .setHeight(50)
+                    .build();
 
-        ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
-                .setShelf_code("a25")
-                .setMagazzino_id(5)
-                .setLenght(200)
-                .setDeep(40)
-                .setNum_rip(4)
-                .setShelf_thickness(10)
-                .setShelvesCapacities(shelvesCapacities5)
-                .setWeight(180)
-                .setHeight(50)
-                .build();
-
-        List<ShelfInfo> shelfInfoList = Arrays.asList(shelfInfo1, shelfInfo5);
-
-
-        PlacementShelf placementShelf = new PlacementShelf(shelfInfoList);
-        LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
-        LotAssigment lotAssigment = placementShelf.assignmentLots(lotDimensionModel, 100);
-
-        lotAssigment.getShelvesAssigmentList().forEach(value -> {
-            System.out.println("code: " + value.getShelf_code() + " level: " + value.getShelf_level() + " quantity: " + value.getQuantity());
-        });
-        //   System.out.println("size: "+lotAssigment.getShelvesAssigmentList().size());
+            List<ShelfInfo> shelfInfoList = Arrays.asList(shelfInfo1, shelfInfo5);
 
 
+            PlacementShelf placementShelf = new PlacementShelf(shelfInfoList);
+            LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+            lotAssigment = placementShelf.assignmentLots(lotDimensionModel, 100);
+
+        }
+        @Test
+        public void FistPart() {
+
+            Assertions.assertEquals(72,lotAssigment.getShelvesAssigmentList().getFirst().getQuantity());
+
+
+        }
+        @Test
+        public void SecondPart() {
+
+            Assertions.assertEquals(24,lotAssigment.getShelvesAssigmentList().get(1).getQuantity());
+
+
+
+        }
+        @Test
+        public void ThreePart() {
+
+            Assertions.assertEquals(2,lotAssigment.getShelvesAssigmentList().get(2).getQuantity());
+
+
+
+        }
+        @Test
+        public void FourPart() {
+
+            Assertions.assertEquals(2,lotAssigment.getShelvesAssigmentList().get(3).getQuantity());
+
+
+
+
+        }
     }
-    @Test
+
+
+
+
+
+
+
+   /* @Test
     public void One_shelf() {
 
         List<ShelvesCapacity> shelvesCapacities1 = new ArrayList<>(); //68 totali
@@ -845,7 +881,7 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
         //   System.out.println("size: "+lotAssigment.getShelvesAssigmentList().size());
 
 
-    }
+    }*/
     @Test
     public void One_shelfChoice() {
 
@@ -900,67 +936,81 @@ ShelfInfo.ShelfInfoBuilder.get_builder().build();
 
 
     }
-    @Test
-    public void One_shelfChoiceTwo() {
+    @Nested
+    class OneShelfChoice {
+        private  List<LotAssigment> lotAssigments;
+        private      LotAssigment lotAssigment_first;
+        @BeforeEach
+        public void setUp() {
 
-        List<ShelvesCapacity> shelvesCapacities1 = new ArrayList<>(); //68 totali
-        shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 1, 0.0, 0.0, 0.0));
-        shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 2, 0.0, 0.0, 0.0));
-        shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 3, 0.0, 0.0, 0.0));
-        shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 4, 0.0, 0.0, 0.0));
-
-
-        List<ShelvesCapacity> shelvesCapacities5 = new ArrayList<>(); // 98 totali
-        shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 1, 200.0, 200.0, 200.0));
-        shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 2, 0.0, 0.0, 0.0));
-        shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 0, 0.0, 0.0));
-        shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 0, 0.0, 0.0));
-
-        ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
-                .setShelf_code("a25")
-                .setMagazzino_id(5)
-                .setLenght(200)
-                .setDeep(40)
-                .setNum_rip(4)
-                .setShelf_thickness(10)
-                .setShelvesCapacities(shelvesCapacities5)
-                .setWeight(180)
-                .setHeight(50)
-                .build();
-        ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
-                .setShelf_code("a21")
-                .setMagazzino_id(1)
-                .setLenght(200)
-                .setDeep(40)
-                .setNum_rip(4)
-                .setShelf_thickness(10)
-                .setShelvesCapacities(shelvesCapacities1)
-                .setWeight(180)
-                .setHeight(50)
-                .build();
-
-        LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+            List<ShelvesCapacity> shelvesCapacities1 = new ArrayList<>(); //68 totali
+            shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 1, 0.0, 0.0, 0.0));
+            shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 2, 0.0, 0.0, 0.0));
+            shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 3, 0.0, 0.0, 0.0));
+            shelvesCapacities1.add(new ShelvesCapacity(1, "a21", 4, 0.0, 0.0, 0.0));
 
 
+            List<ShelvesCapacity> shelvesCapacities5 = new ArrayList<>(); // 98 totali
+            shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 1, 200.0, 200.0, 200.0));
+            shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 2, 0.0, 0.0, 0.0));
+            shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 3, 0, 0.0, 0.0));
+            shelvesCapacities5.add(new ShelvesCapacity(5, "a25", 4, 0, 0.0, 0.0));
+
+            ShelfInfo shelfInfo5 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a25")
+                    .setMagazzino_id(5)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities5)
+                    .setWeight(180)
+                    .setHeight(50)
+                    .build();
+            ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setShelf_code("a21")
+                    .setMagazzino_id(1)
+                    .setLenght(200)
+                    .setDeep(40)
+                    .setNum_rip(4)
+                    .setShelf_thickness(10)
+                    .setShelvesCapacities(shelvesCapacities1)
+                    .setWeight(180)
+                    .setHeight(50)
+                    .build();
+
+            LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
 
 
-        PlacementShelf placementShelf = new PlacementShelf(List.of(shelfInfo1,shelfInfo5));
-        List<LotAssigment> lotAssigment = placementShelf.assignmentLotsChoice(lotDimensionModel, 150);
-        System.out.println(lotAssigment.getFirst().getShelvesAssigmentList().size());
-        lotAssigment.forEach(assignment->{assignment.getShelvesAssigmentList().forEach(
-                assignment_inner -> {
-                    System.out.println(assignment_inner.getShelf_code() + " " + assignment_inner.getShelf_level() + " " + assignment_inner.getQuantity());
+       PlacementShelf  placementShelf = new PlacementShelf(List.of(shelfInfo1, shelfInfo5));
+
+         lotAssigments = placementShelf.assignmentLotsChoice(lotDimensionModel, 150);
+           lotAssigment_first=lotAssigments.getFirst();
+        }
+            @Test
+            public void TestFistPartQUantity() {
+               Assertions.assertEquals(144,lotAssigment_first.getShelvesAssigmentList().getFirst().getQuantity());
 
 
-                });
-                System.out.println();
-                });
+            }
+        @Test
+        public void TestFistPartLevel() {
+            Assertions.assertEquals(1,lotAssigment_first.getShelvesAssigmentList().getFirst().getShelf_level());
 
-        //lotAssigment.forEach(assigment-> System.out.println(assigment.getShelvesAssigmentList().getFirst().getShelf_level()));
-    /*    lotAssigment.getShelvesAssigmentList().forEach(value -> {
-            System.out.println("code: " + value.getShelf_code() + " level: " + value.getShelf_level() + " quantity: " + value.getQuantity());
-        });*/
-        //   System.out.println("size: "+lotAssigment.getShelvesAssigmentList().size());
+
+        }
+            @Test
+        public void TestSecondPart() {
+            Assertions.assertEquals(6,lotAssigment_first.getShelvesAssigmentList().get(1).getQuantity());
+
+
+        }
+        @Test
+        public void TestSecondPartNumLevel() {
+            Assertions.assertEquals(2,lotAssigment_first.getShelvesAssigmentList().get(1).getShelf_level());
+
+
+        }
 
 
     }
