@@ -2,17 +2,9 @@ package pharma.chat.Client;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pharma.Storage.FileStorage;
-import pharma.chat.Command;
-import pharma.chat.Server.ChatMsg;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 class ChachaClientTest {
