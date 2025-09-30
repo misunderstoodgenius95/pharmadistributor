@@ -32,11 +32,11 @@ module pharma {
     requires okhttp3;
     requires java.net.http;
     requires net.postgis.jdbc;
-    requires org.slf4j;
     requires org.yaml.snakeyaml;
     requires com.auth0.jwt;
     requires com.fasterxml.jackson.databind;
     requires java.sql;
+    requires org.java_websocket;
 
 
     opens pharma to javafx.fxml;

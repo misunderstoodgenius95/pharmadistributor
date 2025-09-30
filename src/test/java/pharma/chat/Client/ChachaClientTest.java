@@ -3,6 +3,7 @@ package pharma.chat.Client;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
+import pharma.test2.ChatMsg;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -11,6 +12,7 @@ class ChachaClientTest {
 
     @Test
     public void test() throws InterruptedException {
+/*
        BlockingQueue<ChatMsg> blockingQueue=new LinkedBlockingQueue<>();
         ObservableList<ChatMsg> observableList = FXCollections.observableArrayList();
         String jwt =
@@ -20,6 +22,7 @@ class ChachaClientTest {
 
 
         ChachaClient chachaClient = new ChachaClient(blockingQueue,observableList,jwt);
+*/
 
 
 

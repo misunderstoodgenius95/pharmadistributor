@@ -70,25 +70,7 @@ public class ChatServer {
         return sslContext;
     }
 
-    /*public static void registerClient(String clientId, ThreadServerManager manager) {
-        activeClients.put(clientId, manager);
-        logger.info("Client registered: " + clientId);
-    }
 
-    public static void removeClient(String clientId) {
-        activeClients.remove(clientId);
-        logger.info("Client removed: " + clientId);
-    }
-
-    public static void broadcastMessage(ChatMsg message, String senderId) {
-        logger.info("Broadcasting message from " + senderId + ": " + message.getPayload());
-        for (Map.Entry<String, ThreadServerManager> entry : activeClients.entrySet()) {
-            // Don't send the message back to the original sender
-            if (!entry.getKey().equals(senderId)) {
-                entry.getValue().sendMessage(message);
-            }
-        }
-    }*/
 }
 
 
