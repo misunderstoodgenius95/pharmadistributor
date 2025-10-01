@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="777.0" prefWidth="1151.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.subpanel.Chat"  >
+<AnchorPane prefHeight="777.0" prefWidth="1151.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.subpanel.Chat">
    <children>
       <HBox layoutY="4.0" prefHeight="67.0" prefWidth="573.0">
          <children>
@@ -53,7 +53,7 @@
                   <Font size="20.0" />
                </font>
             </TextField>
-            <Button fx:id="btn_id" mnemonicParsing="false" onAction="#btn_action" prefHeight="49.0" prefWidth="88.0" text="Invia">
+            <Button fx:id="btn_send_id" disable="true" mnemonicParsing="false" onAction="#btn_action" prefHeight="49.0" prefWidth="88.0" text="Invia">
                <HBox.margin>
                   <Insets left="70.0" top="30.0" />
                </HBox.margin>
@@ -64,7 +64,7 @@
                   <Font size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btn_disconnect_id" mnemonicParsing="false" onAction="#btn_disconnect_action" prefHeight="49.0" prefWidth="88.0" text="Disconnetti">
+            <Button fx:id="btn_disconnect_id" disable="true" mnemonicParsing="false" onAction="#btn_disconnect_action" prefHeight="49.0" prefWidth="88.0" text="Disconnetti">
                <HBox.margin>
                   <Insets left="80.0" right="10.0" top="30.0" />
                </HBox.margin>

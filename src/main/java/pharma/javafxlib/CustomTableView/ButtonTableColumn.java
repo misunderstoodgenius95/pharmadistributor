@@ -11,7 +11,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import pharma.Model.User;
 import pharma.config.Utility;
+import pharma.config.auth.UserService;
 
 import java.lang.foreign.PaddingLayout;
 import java.nio.file.LinkOption;
@@ -71,11 +73,12 @@ public class ButtonTableColumn<S> extends TableColumn<S, Boolean> {
 
 */
 public class ButtonTableColumn<S> extends TableColumn<S,Void> {
+    private  UserService userService;
     private BooleanProperty property;
     private Function<S,BooleanProperty> function_get;
     private  BiConsumer<S,BooleanProperty> biConsumer_get;
     private Logger logger= Logger.getLogger(ButtonTableColumn.class.getName());
-    public  ButtonTableColumn(String header,Function<S,BooleanProperty> function_get,BiConsumer<S,BooleanProperty> biConsumer_update){
+    public  ButtonTableColumn(String header, Function<S,BooleanProperty> function_get, BiConsumer<S,BooleanProperty> biConsumer_update){
         setText(header);
         setCellFactory(createButton());
         this.function_get=function_get;
@@ -108,6 +111,11 @@ public class ButtonTableColumn<S> extends TableColumn<S,Void> {
 
                                     if (optional.get().equals(ButtonType.OK)) {
                                         logger.info("Accept");
+                                         User.Results result=(User.Results) item;
+                                        System.out.println("user_id"+result.getUser_id());
+                                       // userService.user_revocate("",)
+
+
 
                                         BooleanProperty current_value = function_get.apply(item);
                                         BooleanProperty new_value = new SimpleBooleanProperty(!current_value.get());

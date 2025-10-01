@@ -1,1 +1,6 @@
 --module-path /Volumes/asenno/ingsw/progetto/javafx-sdk-19/lib --add-modules javafx.fxml,javafx.controls,javafx.graphics
+
+
+project_id=project-live-8e2ff511-3ae8-4dbc-aaea-d23453174262
+secret=secret-live-XIRJLKsfK0rhhk-6Yu7nbEvCn6AG3mkLNsw=
+url=https://login.apime.online

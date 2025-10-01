@@ -57,20 +57,20 @@ public class Admin  implements Initializable {
             throw new RuntimeException(e);
         }
         userService = new UserService(new StytchClient(hashMap_json.get("project_id"), hashMap_json.get("secret"), hashMap_json.get("url")));
-
+        adminTable=new AdminTable("Visualizza Risultati");
 
 
     }
     // Only Test Only
     public Admin(UserService userService){
         this.userService=userService;
-        adminTable = new AdminTable("Visualizza Rsiultati");
+        adminTable = new AdminTable("Visualizza Risultati");
     }
 
     public Button getBtn_add_id() {
         return btn_add_id;
     }
-
+    @FXML
     public void btn_send_filter_action(ActionEvent actionEvent) {
 
 

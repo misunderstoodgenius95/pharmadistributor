@@ -50,10 +50,13 @@ public class AdminTable  extends CustomDialog<User.Results> {
 
     }
 
+
+
     public void setUser_property(User user_property) {
         this.user_property.set(user_property);
     }
 
+// add item table
     private void listener_property(){
 
         user_property.addListener((observable, oldValue, newValue)
@@ -78,8 +81,13 @@ public class AdminTable  extends CustomDialog<User.Results> {
         TableColumn<User.Results, String> role_column = new TableColumn<>("Ruolo");
         role_column.setCellValueFactory(celldata->{
             User.Results re=celldata.getValue();
-            String role=re.getTrustedMetadata().getRole();
-            return new SimpleStringProperty(role);
+
+            if(re.getRoles().size()>1){
+            String role=re.getRoles().get(1);
+                return new SimpleStringProperty(role);
+            }
+            return new SimpleStringProperty("");
+
         });
         return role_column;
 

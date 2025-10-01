@@ -5,9 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -19,6 +22,9 @@ import pharma.security.crypto.Chacha20;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,10 +33,15 @@ public class Chat implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(Chat.class);
     public TextField text_field_id;
     public TextArea textarea_id;
+    @FXML
+    public Button btn_send_id;
+    @FXML
+    public Button btn_disconnect_id;
+    public VBox aside_user;
     ClientWebserver clientWebserver;
-
-    public Chat() throws InterruptedException {
-
+    private List<String> pharmacists;
+    public Chat() {
+        pharmacists=new ArrayList<>();
 
 
     }
@@ -47,20 +58,33 @@ public class Chat implements Initializable {
 
 
 
-    public static String extracted_message(String message){
-        log.info("Extracted: "+message);
+    public  String extracted_message(String message){
+        System.out.println("Extracted: "+message);
         JSONObject jsonObject=new JSONObject(message);
         String type=jsonObject.getString("type");
           if(type.equals("Chat")){
-              String from=jsonObject.getString("from");
-          JSONObject message_cipher=new JSONObject(jsonObject.getString("messages"));
-          String nonce=message_cipher.getString("nonce");
-          String cipherText=message_cipher.getString("cipherText");
-          String decypted_message=Chacha20.decryptedString(Chacha20.decrypt(Chacha20.hexToByte(cipherText),Chacha20.hexToByte(nonce)).get());
-
-            return from+" "+decypted_message;
+                String from=jsonObject.getString("from");
+                JSONObject message_cipher=new JSONObject(jsonObject.getString("messages"));
+                String nonce=message_cipher.getString("nonce");
+                String cipherText=message_cipher.getString("cipherText");
+                String decryptedMessage =Chacha20.decryptedString(Chacha20.decrypt(Chacha20.hexToByte(cipherText),Chacha20.hexToByte(nonce)).get());
+            return from+" "+decryptedMessage;
         }else if(type.equals("Join")){
-               return  jsonObject.getString("message");
+              btn_send_id.setDisable(false);
+              btn_disconnect_id.setDisable(false);
+              String from=jsonObject.getString("from");
+              if(!pharmacists.contains(from)) {
+                  pharmacists.add(from);
+                  aside_user.getChildren().add(new Button(from));
+              }
+
+
+
+
+
+              return  jsonObject.getString("message");
+
+
 
 
           }

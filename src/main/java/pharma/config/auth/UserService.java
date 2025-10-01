@@ -81,7 +81,9 @@ public class UserService {
         }else if(response_create.statusCode()==200) {
             String user_id=jsonObject.get("user_id").toString();
              UserServiceResponse  us_update=user_update_role(user_id,role);
+             stytchClient.reset_password_start(email,"http://localhost:3000");
             return new UserServiceResponse(us_update.getBody(), us_update.getStatus());
+
         }
         return new UserServiceResponse(response_create.body(), response_create.statusCode());
 
@@ -97,19 +99,11 @@ public class UserService {
         HttpResponse<String> json_user_by_search = stytchClient.get_user_by_email(email);
         if (json_user_by_search.statusCode() == 200) {
             User user = deserialization_object(json_user_by_search.body(), User.class).get();
-            if(!user.getResults().isEmpty()) {
-                HttpResponse<String> response = stytchClient.get_session(user.getResults().getFirst().getUser_id());
-                if (response.statusCode() == 200) {
-                    String json_session = response.body();
-                    Session session = deserialization_object(json_session, Session.class).get();
-                    Instant instant = recent_last_access(session);
-                    user.getResults().getFirst().setLast_access(instant);
-                }
-            }
-            return user;
-        }
-        return null;
+            return add_latest_access(user);
 
+
+        }
+        return  null;
     }
 
 
@@ -136,6 +130,7 @@ public class UserService {
             throw new IllegalArgumentException("role is null or empty");
         }
         HttpResponse<String> response = stytchClient.get_users();
+        logger.info(response.body());
         User user = deserialization_object(response.body(), User.class).get();
         return  extract_Session_role(user,role);
 
@@ -163,10 +158,27 @@ public class UserService {
     }
 
 
-    public static User extract_Session_role(User user,String role){
-            user.getResults().removeIf(results -> results.getTrustedMetadata().getRole()==null);
-            user.getResults().removeIf(result -> !result.getTrustedMetadata().getRole().equals(role));
-            return user;
+    public User add_latest_access( User user){
+
+        if(!user.getResults().isEmpty()) {
+
+
+            HttpResponse<String> response = stytchClient.get_session(user.getResults().getFirst().getUser_id());
+            if (response.statusCode() == 200) {
+                String json_session = response.body();
+                Session session = deserialization_object(json_session, Session.class).get();
+                Instant instant = recent_last_access(session);
+                user.getResults().getFirst().setLast_access(instant);
+            }
+        }
+        return  user;
+
+    }
+
+    public  User extract_Session_role(User user,String role){
+        user.getResults().getFirst().getRoles().forEach(System.out::println);
+            user.getResults().removeIf(result -> !(result.getRoles().contains(role)));
+            return add_latest_access(user);
 
 
 

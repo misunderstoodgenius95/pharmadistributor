@@ -11,6 +11,7 @@ public class User {
     @JsonIgnore
     private int status;
 
+
     public int getStatus() {
         return status;
     }
@@ -57,6 +58,7 @@ public class User {
         }
 
     }
+
     public static  class TrustedMetadata{
             private String role;
             private boolean is_enable;
@@ -92,7 +94,16 @@ public class User {
         private Instant last_access;
         @JsonProperty("trusted_metadata")
         private  TrustedMetadata trustedMetadata;
+        private List<String> roles;
 
+        public List<String> getRoles() {
+            return roles;
+        }
+
+
+        public void setRoles(List<String> roles) {
+            this.roles = roles;
+        }
         public Results() {
         }
 
