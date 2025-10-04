@@ -1,8 +1,7 @@
 package pharma.Handler;
 
-import algo.ShelfInfo;
-import algo.ShelvesAssigment;
-import algo.ShelvesCapacity;
+import algoWarehouse.ShelfInfo;
+import algoWarehouse.ShelvesCapacity;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
@@ -58,6 +57,7 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
         this.magazzinoDao = (MagazzinoDao) optionalgenericJDBCDao.get().stream().
                 filter(dao -> dao instanceof MagazzinoDao).findFirst().orElseThrow(() -> new IllegalArgumentException("MagazzinoDao not found in the list"));
         List<WarehouseModel> list_warehouseModel =magazzinoDao.findAll();
+        System.out.println(list_warehouseModel.size());
         WarehouseModel warehouseModel =new WarehouseModel();
         warehouseModel.setNome("Seleziona Magazzino");
         s_choice_warehouse = add_SearchComboBoxs(warehouseModel);
@@ -82,7 +82,7 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
         lunghezza = add_spinner_double();
         add_label("Insersici altezza");
         altezza = add_spinner_double();
-        add_label("Inserisci Altezza");
+        add_label("Inserisci Profondità");
         profondita = add_spinner_double();
         add_label("Inserisci Spessore");
         spessore = add_spinner_double();

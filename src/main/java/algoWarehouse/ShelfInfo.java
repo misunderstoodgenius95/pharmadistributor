@@ -1,4 +1,4 @@
-package algo;
+package algoWarehouse;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.LoggerFactory;
-import pharma.Controller.subpanel.Magazzino;
 import pharma.Model.LotDimensionModel;
 
 public class ShelfInfo
@@ -27,7 +26,7 @@ public class ShelfInfo
     private  List<ShelvesCapacity>   shelvesCapacities;
     private  Logger logger=Logger.getLogger(ShelfInfo.class.getName());
     private String nome_magazzino;
-    ShelfInfo(){
+     private  ShelfInfo(){
 
 
     }

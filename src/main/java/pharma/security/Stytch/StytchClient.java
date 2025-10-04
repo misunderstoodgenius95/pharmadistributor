@@ -45,7 +45,11 @@ public class StytchClient {
 
 
     public HttpResponse<String> create_user(String email, String password,String first_name,String surname) {
-                if(!InputValidation.validate_email(email ) ||! InputValidation.validate_password(password)
+        System.out.println(email);
+        System.out.println(password);
+        System.out.println(first_name);
+        System.out.println(surname);
+        if(!InputValidation.validate_email(email ) ||! InputValidation.validate_password(password)
                 || first_name==null ||first_name.isEmpty()|| surname==null || surname.isEmpty()){
                     throw new IllegalArgumentException("field not correct!");
                 }

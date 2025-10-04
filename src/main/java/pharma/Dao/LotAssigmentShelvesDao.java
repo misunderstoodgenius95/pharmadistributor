@@ -1,6 +1,6 @@
 package pharma.dao;
 
-import algo.ShelvesAssigment;
+import algoWarehouse.ShelvesAssigment;
 import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;

@@ -1,6 +1,6 @@
 package pharma.Model;
 
-import algo.ShelfInfo;
+import algoWarehouse.ShelfInfo;
 import net.postgis.jdbc.PGgeometry;
 
 import java.util.List;

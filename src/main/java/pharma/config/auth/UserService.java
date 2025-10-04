@@ -80,9 +80,10 @@ public class UserService {
             return new UserServiceResponse(response_create.body(), response_create.statusCode());
         }else if(response_create.statusCode()==200) {
             String user_id=jsonObject.get("user_id").toString();
-             UserServiceResponse  us_update=user_update_role(user_id,role);
-             stytchClient.reset_password_start(email,"http://localhost:3000");
-            return new UserServiceResponse(us_update.getBody(), us_update.getStatus());
+                user_update_role(user_id,role);
+             HttpResponse<String> response_reset=stytchClient.reset_password_start(email,"http://localhost:3000");
+
+            return new UserServiceResponse(response_reset.body(), response_reset.statusCode());
 
         }
         return new UserServiceResponse(response_create.body(), response_create.statusCode());

@@ -20,18 +20,19 @@ public class AdminTable  extends CustomDialog<User.Results> {
     private ButtonTableColumn<User.Results> buttonTableColumn;
     private TableView<User.Results> table_view;
     private ObjectProperty<User> user_property;
-    public AdminTable(String content) {
+    public AdminTable(String content,UserService userService) {
         super(content);
         getDialogPane().setPrefHeight(900);
         getDialogPane().setPrefWidth(1200);
         this.user_property=new SimpleObjectProperty<>();
         listener_property();
+        this.userService=userService;
         // it can be passing object and product a objetcprorperty
         buttonTableColumn=new ButtonTableColumn<>("Stato",results ->
                 new SimpleBooleanProperty(results.getTrustedMetadata().isIs_enable()),
             (result,new_value)->{
             result.getTrustedMetadata().setIs_enable(new_value.get());
-        });
+        },userService);
         create_table();
 
 
@@ -50,7 +51,9 @@ public class AdminTable  extends CustomDialog<User.Results> {
 
     }
 
-
+    public AdminTable(String content) {
+        super(content);
+    }
 
     public void setUser_property(User user_property) {
         this.user_property.set(user_property);

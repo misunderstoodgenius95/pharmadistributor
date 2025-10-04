@@ -10,9 +10,7 @@ import pharma.Handler.Table.MagazinoTablebase;
 import pharma.Handler.Table.ShelfTableBased;
 import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
-import pharma.dao.MagazzinoDao;
-import pharma.dao.ShelfDao;
-import pharma.dao.ShelvesDao;
+import pharma.dao.*;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -31,6 +29,11 @@ public class Warehouse {
     private ShelfTableBased shelfTableBased;
     private ShelvesDao shelvesDao;
     private LottoStorageHandler storageHandler;
+    private FarmaciaDao farmaciaDao;
+    private SellerOrderDao sellerOrderDao;
+    private SellerOrderDetails s_details;
+    private LotDimensionDao lotDimensionDao;
+    private LottiDao lottiDao;
     public Warehouse() {
         Properties properties;
         try {
@@ -40,10 +43,17 @@ public class Warehouse {
         }
         shelfDao=new ShelfDao(Database.getInstance(properties));
         magazzinoDao=new MagazzinoDao(Database.getInstance(properties));
+        shelvesDao=new ShelvesDao(Database.getInstance(properties));
         magazzinoHandler=new MagazzinoHandler("Inserisci Magazzino", List.of(magazzinoDao), FXCollections.observableList(List.of()));
         shelfHandler=new ShelfHandler("Inserisci Scaffali",List.of(magazzinoDao,shelfDao,shelvesDao),FXCollections.observableArrayList());
         magazinoTablebase=new MagazinoTablebase("Visualizza Magazzini",magazzinoDao);
         shelfTableBased=new ShelfTableBased("Visualizza Scaffali",magazzinoDao,shelfDao,shelvesDao);
+        farmaciaDao=new FarmaciaDao(Database.getInstance(properties));
+        sellerOrderDao=new SellerOrderDao(Database.getInstance(properties));
+        s_details=new SellerOrderDetails(Database.getInstance(properties));
+        lottiDao=new LottiDao(Database.getInstance(properties),"lotto");
+        lotDimensionDao=new LotDimensionDao(Database.getInstance(properties));
+        storageHandler=new LottoStorageHandler("Inserisci Lotti",List.of(farmaciaDao,sellerOrderDao,s_details,lotDimensionDao,magazzinoDao,lottiDao));
     }
     @TestOnly
     public Warehouse(MagazzinoDao magazzinoDao, ShelfDao shelfDao,ShelvesDao shelvesDao) {
@@ -66,7 +76,7 @@ public class Warehouse {
 
     }
      public void lots_action(ActionEvent event){
-
+        storageHandler.show();
 
      }
 

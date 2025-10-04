@@ -37,8 +37,7 @@ public class CustomLotsDimension extends  DialogHandler<LotDimensionModel> {
         height = add_spinner_double();
         add_label("Inserisci Profondità");
         deep = this.add_spinner_double();
-        this.add_label("Inserisci Peso");
-        weight = this.add_spinner();
+
 
     }
 
@@ -51,7 +50,7 @@ public class CustomLotsDimension extends  DialogHandler<LotDimensionModel> {
     protected LotDimensionModel get_return_data() {
         int farmaco_id = object_lots_id.get().getFarmaco_id();
         String lotto_id =object_lots_id.get().getCode();
-        return  new LotDimensionModel(lotto_id,farmaco_id,lenght.getValue(),height.getValue(),deep.getValue(),weight.getValue());
+        return  new LotDimensionModel(lotto_id,farmaco_id,lenght.getValue(),height.getValue(),0,deep.getValue());
 
     }
 

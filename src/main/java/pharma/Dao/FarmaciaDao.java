@@ -2,6 +2,7 @@ package pharma.dao;
 
 import net.postgis.jdbc.PGgeometry;
 import net.postgis.jdbc.geometry.Point;
+import org.postgresql.util.PGobject;
 import pharma.Model.FieldData;
 import pharma.config.database.Database;
 
@@ -14,9 +15,13 @@ public class FarmaciaDao  extends  GenericJDBCDao<FieldData,Integer> {
     public FarmaciaDao( Database database) {
         super("farmacia", database);
     }
-
+/*
+       PGobject pGobject=(PGobject) resultSet.getObject("location");
+         warehouseModel.setpGgeometry(new PGgeometry(pGobject.getValue()));
+ */
     @Override
     protected FieldData mapRow(ResultSet resultSet) throws Exception {
+        PGobject pGobject=(PGobject) resultSet.getObject("location");
        return FieldData.FieldDataBuilder.getbuilder().
                setId(resultSet.getInt(1))
                .setAnagrafica_cliente(resultSet.getString(2))
@@ -25,7 +30,7 @@ public class FarmaciaDao  extends  GenericJDBCDao<FieldData,Integer> {
                .setCap(resultSet.getInt(5))
                .setComune(resultSet.getString(6))
                .setProvince(resultSet.getString(7)).
-               setLocation((PGgeometry) resultSet.getObject("location")).
+               setLocation(new PGgeometry(pGobject.getValue())).
                build();
 
     }

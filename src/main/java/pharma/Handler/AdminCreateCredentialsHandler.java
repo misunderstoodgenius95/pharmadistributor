@@ -1,6 +1,6 @@
 package pharma.Handler;
 
-import algo.password.SecurePasswordGenerator;
+import algoWarehouse.password.SecurePasswordGenerator;
 import javafx.scene.control.TextField;
 import org.controlsfx.control.SearchableComboBox;
 import pharma.Model.FieldData;
@@ -37,6 +37,7 @@ public class AdminCreateCredentialsHandler extends DialogHandler<FieldData>  {
         String password=SecurePasswordGenerator.generatePassword(12);
         System.out.println(password);
         UserServiceResponse ur=userService.register(type.getEmail(),password,type.getRole(),type.getNome(),type.getLast_name());
+        System.out.println("status"+ur.getStatus());
         return switch (ur.getStatus()) {
             case 200 -> new Status("Registrazione con Successso!", true);
             case 429 -> new Status("Email già presente!", false);
@@ -65,6 +66,7 @@ public class AdminCreateCredentialsHandler extends DialogHandler<FieldData>  {
 
     @Override
     protected FieldData get_return_data() {
+
          return FieldData.FieldDataBuilder.getbuilder().setEmail(textField_email.getText())
                 .setNome(textField_first_name.getText()).setLast_name(textField_last_name.getText()).setRole(choice_role.getValue().getRole())
                  .build();

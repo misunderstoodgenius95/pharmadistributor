@@ -1,4 +1,4 @@
-package algo;
+package algoWarehouse;
 
 import org.jetbrains.annotations.TestOnly;
 import pharma.Model.LotDimensionModel;

@@ -1,9 +1,8 @@
 package pharma.dao;
 
-import algo.LotAssigment;
+import algoWarehouse.LotAssigment;
 import pharma.config.database.Database;
 
-import java.net.InetAddress;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

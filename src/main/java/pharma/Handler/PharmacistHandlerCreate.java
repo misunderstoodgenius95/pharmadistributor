@@ -1,6 +1,6 @@
 package pharma.Handler;
 
-import algo.password.SecurePasswordGenerator;
+import algoWarehouse.password.SecurePasswordGenerator;
 import javafx.collections.FXCollections;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
@@ -12,9 +12,7 @@ import pharma.config.auth.UserService;
 import pharma.config.auth.UserServiceResponse;
 import pharma.dao.FarmaciaDao;
 import pharma.dao.GenericJDBCDao;
-import pharma.dao.PurchaseOrderDetailDao;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

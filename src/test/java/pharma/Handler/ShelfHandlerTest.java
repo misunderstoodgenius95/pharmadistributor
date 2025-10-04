@@ -1,7 +1,7 @@
 package pharma.Handler;
 
-import algo.ShelfInfo;
-import algo.ShelvesCapacity;
+import algoWarehouse.ShelfInfo;
+import algoWarehouse.ShelvesCapacity;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;

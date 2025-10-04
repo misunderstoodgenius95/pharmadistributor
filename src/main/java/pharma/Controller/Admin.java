@@ -57,14 +57,14 @@ public class Admin  implements Initializable {
             throw new RuntimeException(e);
         }
         userService = new UserService(new StytchClient(hashMap_json.get("project_id"), hashMap_json.get("secret"), hashMap_json.get("url")));
-        adminTable=new AdminTable("Visualizza Risultati");
+        adminTable=new AdminTable("Visualizza Risultati",userService);
 
 
     }
     // Only Test Only
     public Admin(UserService userService){
         this.userService=userService;
-        adminTable = new AdminTable("Visualizza Risultati");
+        adminTable = new AdminTable("Visualizza Risultati",userService);
     }
 
     public Button getBtn_add_id() {
@@ -137,7 +137,7 @@ public class Admin  implements Initializable {
         property_esit=new SimpleBooleanProperty();
         choice_booleanProperty =new SimpleBooleanProperty(false);
         choice_role_id.setValue("Seleziona Ruolo");
-        choice_role_id.getItems().addAll("purchase","seller","warehouser","pharmacist","Nessuna se");
+        choice_role_id.getItems().addAll("purchase","seller","warehouse","pharmacist","");
         choice_role_id.setVisible(false);
         textfield_emai_id.setVisible(false);
        choice_role_id.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {

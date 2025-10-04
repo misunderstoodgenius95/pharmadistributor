@@ -1,6 +1,6 @@
 package pharma.Handler.Table;
 
-import algo.ShelfInfo;
+import algoWarehouse.ShelfInfo;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;

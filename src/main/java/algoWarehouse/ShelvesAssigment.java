@@ -1,4 +1,4 @@
-package algo;
+package algoWarehouse;
 
 public  class ShelvesAssigment{
     private int magazzino_id;

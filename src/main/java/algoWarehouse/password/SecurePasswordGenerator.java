@@ -1,4 +1,4 @@
-package algo.password;
+package algoWarehouse.password;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -41,7 +41,9 @@ public class SecurePasswordGenerator {
 
         // Ensure at least one character from each required category
         passwordChars.add(getRandomCharacter(UPPERCASE));     // At least 1 uppercase
-        passwordChars.add(getRandomCharacter(SPECIAL_CHARS)); // At least 1 special character
+        passwordChars.add(getRandomCharacter(SPECIAL_CHARS));
+        passwordChars.add(getRandomCharacter(DIGITS));
+        // At least 1 special character
 
         // Fill the rest with random characters from all available sets
         for (int i = 2; i < minLength; i++) {

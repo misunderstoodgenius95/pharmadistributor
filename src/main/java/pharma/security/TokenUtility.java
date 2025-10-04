@@ -22,12 +22,16 @@ public class TokenUtility {
 
    public static String extractRole(String json) {
        JSONObject jsonObject= extactObjectFromJsonArray(json);
-       if(jsonObject.has("user")){
-           return jsonObject.getJSONObject("user").getJSONObject("trusted_metadata").getString("role");
-       }else{
-           return jsonObject.getJSONObject("trusted_metadata").getString("role");
-       }
+       System.out.println(jsonObject.toString());
+       if(jsonObject.has("user")) {
+           JSONArray jsonArray = jsonObject.getJSONObject("user").getJSONArray("roles");
+           if (jsonArray.length() > 1) {
+               return jsonArray.get(1).toString();
+           }
 
+
+       }
+       return  "";
     }
 /*    public static String extract_enabled(String json){
 

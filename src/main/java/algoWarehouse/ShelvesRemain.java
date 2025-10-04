@@ -1,4 +1,4 @@
-package algo;
+package algoWarehouse;
 
 public class ShelvesRemain {
    private ShelvesCapacity shelvesCapacity;

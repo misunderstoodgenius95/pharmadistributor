@@ -44,7 +44,7 @@ public class Purchase {
     private SimpleObjectProperty<Pane> simpleObjectProperty;
     private Button last_clicked;
 
-    private AutorizationService authorizationService;
+
     public Purchase() {
         stages = new Stages();
         simpleObjectProperty = new SimpleObjectProperty<>();
@@ -52,8 +52,7 @@ public class Purchase {
         HashMap<String,String> hashMap_json=null;
         try {
             hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
-            authorizationService=
-                    new AutorizationService( new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -121,13 +120,13 @@ public class Purchase {
     @FXML
     void pharma_action(ActionEvent event) throws IOException {
      String jwt=FileStorage.getProperty("jwt",new FileReader("config.properties"));
-    if(authorizationService.authorization(jwt,"read","pharma")) {
+
         Parent parent = stages.load_fxml("/subpanel/pharma.fxml");
         parent.getStyleClass().add("subpanel");
         change_stages(parent, -20.00);
         Button button = (Button) event.getSource();
         handleButton(button);
-    }
+
     }
 
     @FXML

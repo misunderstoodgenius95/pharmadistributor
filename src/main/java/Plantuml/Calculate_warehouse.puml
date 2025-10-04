@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+if( qtuantity pharmacy that purchase product>0) then(yes)
+:Order pharmacy that purchase product;
+:Calculate distance between warehouse;
+:Create group choice one pharmacist with musch value;
+
+else (no)
+:Pick a random warehouse;
+@enduml

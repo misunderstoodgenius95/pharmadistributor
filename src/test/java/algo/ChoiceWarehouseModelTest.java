@@ -1,5 +1,9 @@
 package algo;
 
+import algoWarehouse.ChoiceWarehouse;
+import algoWarehouse.ShelfInfo;
+import algoWarehouse.ShelvesCapacity;
+import com.github.curiousoddman.rgxgen.nodes.Choice;
 import net.postgis.jdbc.PGgeometry;
 import net.postgis.jdbc.geometry.Point;
 import org.assertj.core.data.Offset;
@@ -9,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
+import pharma.Controller.Warehouse;
 import pharma.Model.*;
 
 import java.util.*;
@@ -75,29 +80,26 @@ class ChoiceWarehouseModelTest {
 
     }
 
-/*
+
+    /*
+     * Valid test for Grouping by pharmacist quantity
+     */
     @Test
-    public void ValidMaxPharmacyPharmacy1(){
-        Map<Integer, Integer> map=choiceWarehouse.max_qty_pharmacy_for_lot();
-        map.entrySet().forEach(values->{
-            System.out.println("id farmacia "+values.getKey()+" sum of lot "+values.getValue());
-
-        });
-
-
-        //Assertions.assertEquals(30,map.get(1).getSum());
+    void pharmacy_by_qty() {
+                                        //              SUT
+        Map<Farmacia, Integer> map = choiceWarehouse.pharmacy_by_qty();
+        Assertions.assertEquals(300, map.get(farmacia1));
 
 
     }
-*/
-
-
     @Test
-    void pharmacy_by_qty() {
+    void InvalidEmptypharmacy_by_qty() {
 
-        Map<Farmacia, Integer> map = choiceWarehouse.pharmacy_by_qty();
-        Assertions.assertEquals(30, map.get(farmacia1));
 
+        ChoiceWarehouse choiceWarehouse_empty=new ChoiceWarehouse(list_warehouseModel,List.of());
+         //SUT
+
+       Assertions.assertThrows(IllegalArgumentException.class, choiceWarehouse_empty::pharmacy_by_qty);
 
     }
 
@@ -119,6 +121,16 @@ class ChoiceWarehouseModelTest {
 
 
         Assertions.assertEquals(1000, list.getFirst().getValue());
+
+
+    }
+    @Test
+    void Invalidsorted_by_max() {
+        Map<Farmacia, Integer> map = new HashMap<>();
+
+
+
+        Assertions.assertThrows(IllegalArgumentException.class,()->choiceWarehouse.sorted_by_max(map));
 
 
     }
@@ -328,7 +340,7 @@ class ChoiceWarehouseModelTest {
             entries.add(Map.entry(farmacia2, 200));
             entries.add(Map.entry(farmacia3, 400));
             entries.add(Map.entry(farmacia4, 400));
-
+//SUT
             List<PharmacyDistance> list = choiceWarehouse.distance_pharmacist(entries);
 
             assertThat(list).allSatisfy(p -> {
@@ -366,6 +378,7 @@ class ChoiceWarehouseModelTest {
             entries.add(Map.entry(farmacia2, 500));
             entries.add(Map.entry(farmacia3, 400));
             entries.add(Map.entry(farmacia4, 400));
+            //SUT
             List<PharmacyDistance> list = choiceWarehouse.distance_pharmacist(entries);
             assertThat(list).allSatisfy(p -> {
                 assertThat(list).hasSize(1);
@@ -387,6 +400,7 @@ class ChoiceWarehouseModelTest {
             entries.add(Map.entry(farmacia6, 600));
             entries.add(Map.entry(farmacia7, 400));
             entries.add(Map.entry(farmacia8, 300));
+            //SUT
             List<PharmacyDistance> list = choiceWarehouse.distance_pharmacist(entries);
 
             Assertions.assertAll(
@@ -415,8 +429,12 @@ class ChoiceWarehouseModelTest {
     }
     @Nested
     class Availability_WarehouseModel {
+
+
         @BeforeEach
-        public void setUp(){
+        public void setUp() {
+
+
             ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
                     .setMagazzino_id(1)
                     .setShelf_code("A21")
@@ -490,11 +508,56 @@ class ChoiceWarehouseModelTest {
 
 
             List<WarehouseModel> warehouseModels = List.of(
-                    new WarehouseModel(1, "mag1", new PGgeometry(new Point(38.40,15.40)),List.of(shelfInfo1)),
-                    new WarehouseModel(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330)),List.of(shelfInfo2)),
-                    new WarehouseModel(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)),List.of(shelfInfo3)),
-                    new WarehouseModel(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330)),List.of(shelfInfo4)));
-            choiceWarehouse=new ChoiceWarehouse(warehouseModels,assigneds);
+                    new WarehouseModel(1, "mag1", new PGgeometry(new Point(38.40, 15.40)), List.of(shelfInfo1)),
+                    new WarehouseModel(2, "mag2", new PGgeometry(new Point(-23.4501, -45.5330)), List.of(shelfInfo2)),
+                    new WarehouseModel(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)), List.of(shelfInfo3)),
+                    new WarehouseModel(4, "mag4", new PGgeometry(new Point(-22.4501, -45.6330)), List.of(shelfInfo4)));
+
+            farmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
+            farmacia2 = new Farmacia("Farmacia Norte", 2, new PGgeometry(new Point(38.156059, 14.745716)));
+            farmacia3 = new Farmacia("Farmacia Sul", 3, new PGgeometry(new Point(38.056718, 14.830686)));
+            farmacia4 = new Farmacia("Farmacia Nord", 4, new PGgeometry(new Point(38.194237, 13.211291)));
+            farmacia5 = new Farmacia("Farmacia Est", 5, new PGgeometry(new Point(37.071914, 15.256249)));
+
+            farmacia6 = new Farmacia("Farmacia Central2 ", 1, new PGgeometry(new Point(37.700417, 14.04684)));
+            farmacia7 = new Farmacia("Farmacia Norte 2", 2, new PGgeometry(new Point(37.587327, 13.398657)));
+
+            farmacia8 = new Farmacia("Farmacia Sul 2", 3, new PGgeometry(new Point(37.247026, 14.223032)));
+            farmacia9 = new Farmacia("Farmacia Nord 3", 4, new PGgeometry(new Point(39.310732, 16.285324)));
+            farmacia10 = new Farmacia("Farmacia Est 4 ", 5, new PGgeometry(new Point(38, 843597, 16.520237)));
+            assigneds = Arrays.asList(
+
+                    // Using Point constructor
+                    new PharmacyAssigned(farmacia1, 100),// Near São Paulo
+                    new PharmacyAssigned(farmacia2, 25), // Near Rio
+                    new PharmacyAssigned(farmacia1, 150), // Same as farmacia
+                    new PharmacyAssigned(farmacia3, 30), // Near Curitiba
+                    new PharmacyAssigned(farmacia2, 20), // Near Rio
+                    new PharmacyAssigned(farmacia1, 50),
+                    new PharmacyAssigned(farmacia4, 20),
+                    new PharmacyAssigned(farmacia4, 100),
+                    new PharmacyAssigned(farmacia5, 10),
+                    new PharmacyAssigned(farmacia5, 35),
+                    new PharmacyAssigned(farmacia6, 50),
+                    new PharmacyAssigned(farmacia7, 20),
+                    new PharmacyAssigned(farmacia8, 100),
+                    new PharmacyAssigned(farmacia9, 10),
+                    new PharmacyAssigned(farmacia10, 35));
+
+            choiceWarehouse = new ChoiceWarehouse(warehouseModels, assigneds);
+        }
+
+        @Test
+        public void ValidTestWithSameLocation() {
+                LotDimensionModel dimensionModel= new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+            Farmacia farmacia1=new Farmacia("Farmacia1",1, new PGgeometry(new Point(28.40, 15.40)));
+                PharmacyDistance pharmacyDistance=new PharmacyDistance(List.of(farmacia1));
+            pharmacyDistance.setAverage(new Point(38.40, 15.40));
+
+
+            System.out.println(choiceWarehouse.calculate_availability(List.of(pharmacyDistance),dimensionModel,10).size());
+
+
 
 
 
@@ -502,38 +565,178 @@ class ChoiceWarehouseModelTest {
 
         }
         @Test
-        public void ValidTest(){
-            LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
-        List<PharmacyDistance>distances=List.of(new PharmacyDistance(List.of(farmacia1,farmacia2,farmacia3),new Point(38.15,15.02)),
-        new PharmacyDistance(List.of(farmacia6,farmacia7,farmacia8),new Point(37.51,13.88)));
-           Set<WarehouseModel> warehouseModels = choiceWarehouse.calculate_availability(distances, lotDimensionModel,10);
-           assertThat(warehouseModels).hasSize(1);
+        public void CalculateDistance() {
+            LotDimensionModel dimensionModel= new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
+            PharmacyDistance pharmacyDistance=new PharmacyDistance(List.of(new Farmacia("Farmacia1",1,
+                    new PGgeometry(new Point(30.40, 10.40)))));
+            pharmacyDistance.setAverage(new Point(20.20,10.10));
+         List<WarehouseDistances> list=choiceWarehouse.calculate_availability(List.of(pharmacyDistance),dimensionModel,100);
+  List<WarehouseDistances> distances=ChoiceWarehouse.sorted_warehouse(list);
+            System.out.println(distances.getFirst().getDistance());
 
 
 
 
         }
-        @Test
-        public void InValidTest(){
-            LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
-            List<PharmacyDistance>distances=List.of(new PharmacyDistance(List.of(farmacia1,farmacia2,farmacia3),new Point(38.15,15.02)),
-                    new PharmacyDistance(List.of(farmacia6,farmacia7,farmacia8),new Point(37.51,13.88)));
-            Set<WarehouseModel> warehouseModels = choiceWarehouse.calculate_availability(distances, lotDimensionModel,140);
-            assertThat(warehouseModels).hasSize(0);
+    }
 
-
-
-        }
-
-
-
-
-
-
-
+    @Test
+    public void sorted_warehouse(){
+        List<WarehouseDistances> distances=new ArrayList<>();
+        WarehouseDistances distance1=new WarehouseDistances(  new WarehouseModel(1, "mag1", new PGgeometry(new Point(38.40, 15.40))),List.of(),28.10);
+        WarehouseDistances distance2=new WarehouseDistances(  new WarehouseModel(1, "mag2", new PGgeometry(new Point(38.40, 15.40))),List.of(),18.10);
+        distances.add(distance1);
+        distances.add(distance2);
+        List<WarehouseDistances> distances_actual=ChoiceWarehouse.sorted_warehouse(distances);
+        Assertions.assertEquals(18.10,distances_actual.getFirst().getDistance());
 
 
     }
+
+
+
+
+
+        @Nested
+        class CalculateWarehouse {
+            ChoiceWarehouse  choiceWarehouse_calculate;
+            private List<PharmacyAssigned> farmacias;
+        @BeforeEach
+        public void setUp(){
+            ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A21")
+                    .setLenght(102)
+                    .setHeight(100)
+                    .setDeep(50)
+                    .setWeight(200)
+                    .setNum_rip(4)
+                    .setShelf_thickness(20)
+                    .setShelvesCapacities(List.of(
+                            new ShelvesCapacity(1, "A21", 1, 102.0, 50.0, 85.5),  // Full - max capacity
+                            new ShelvesCapacity(2, "A21", 2, 80.0, 35.0, 58.8),   // 78% occupied
+                            new ShelvesCapacity(3, "A21", 3, 45.0, 20.0, 22.5),   // 44% occupied
+                            new ShelvesCapacity(4, "A21", 4, 0.0, 0.0, 0.0)       // Empty
+                    ))
+                    .build();
+
+// Shelf 2 - Length: 150, Depth: 70 (4 levels with different occupancy)
+            ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A22")
+                    .setLenght(150)
+                    .setHeight(100)
+                    .setDeep(70)
+                    .setWeight(250)
+                    .setNum_rip(4)
+                    .setShelf_thickness(20)
+                    .setShelvesCapacities(List.of(
+                            new ShelvesCapacity(5, "A22", 1, 0.0, 0.0, 0.0), // Full - max capacity
+                            new ShelvesCapacity(6, "A22", 2, 0.0, 5.0, 0.0),   // 80% occupied
+                            new ShelvesCapacity(7, "A22", 3, 0.0, 0.0, 0.0),    // 50% occupied
+                            new ShelvesCapacity(8, "A22", 4, 0.0, 0.0, 0.0)      // 20% occupied
+                    ))
+                    .build();
+
+// Shelf 3 - Length: 80, Depth: 35 (4 levels with different occupancy)
+            ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A23")
+                    .setLenght(80)
+                    .setHeight(100)
+                    .setDeep(35)
+                    .setWeight(150)
+                    .setNum_rip(4)
+                    .setShelf_thickness(20)
+                    .setShelvesCapacities(List.of(
+                            new ShelvesCapacity(9, "A23", 1, 0.0, 0.0, 0.0),
+                            new ShelvesCapacity(10, "A23", 2, 0.0, 0.0, 0.0),
+                            new ShelvesCapacity(11, "A23", 3, 0.0, 0.0, 0.0),
+                            new ShelvesCapacity(12, "A23", 4, 0.0, 0.0, 0.0)
+                    ))
+                    .build();
+
+// Shelf 4 - Length: 200, Depth: 30 (4 levels with different occupancy)
+            ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                    .setMagazzino_id(1)
+                    .setShelf_code("A24")
+                    .setLenght(200)
+                    .setHeight(100)
+                    .setDeep(30)
+                    .setWeight(180)
+                    .setNum_rip(4)
+                    .setShelf_thickness(20)
+                    .setShelvesCapacities(List.of(
+                            new ShelvesCapacity(13, "A24", 1, 0.0, 0.0, 0.0),
+                            new ShelvesCapacity(14, "A24", 2, 0.0, 0.0, 0.0),
+                            new ShelvesCapacity(15, "A24", 3, 0.0, 0.0, 0.0),
+                            new ShelvesCapacity(16, "A24", 4, 0.0, 0.0, 0.0)
+                    ))
+                    .build();
+
+
+            List<WarehouseModel> warehouseModels = List.of(
+                    new WarehouseModel(1, "mag1", new PGgeometry(new Point(78.40, 85.40)), List.of(shelfInfo1)),
+                    new WarehouseModel(2, "mag2", new PGgeometry(new Point(23.4501, 45.5330)), List.of(shelfInfo2)),
+                    new WarehouseModel(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)), List.of(shelfInfo3)),
+                    new WarehouseModel(4, "mag4", new PGgeometry(new Point(22.4501, 45.6330)), List.of(shelfInfo4)));
+
+            farmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
+            farmacia2 = new Farmacia("Farmacia Norte", 2, new PGgeometry(new Point(38.156059, 14.745716)));
+            farmacia3 = new Farmacia("Farmacia Sul", 3, new PGgeometry(new Point(38.056718, 14.830686)));
+            farmacia4 = new Farmacia("Farmacia Nord", 4, new PGgeometry(new Point(38.194237, 13.211291)));
+            farmacia5 = new Farmacia("Farmacia Est", 5, new PGgeometry(new Point(37.071914, 15.256249)));
+
+            farmacia6 = new Farmacia("Farmacia Central2 ", 1, new PGgeometry(new Point(37.700417, 14.04684)));
+            farmacia7 = new Farmacia("Farmacia Norte 2", 2, new PGgeometry(new Point(37.587327, 13.398657)));
+
+            farmacia8 = new Farmacia("Farmacia Sul 2", 3, new PGgeometry(new Point(37.247026, 14.223032)));
+            farmacia9 = new Farmacia("Farmacia Nord 3", 4, new PGgeometry(new Point(39.310732, 16.285324)));
+            farmacia10 = new Farmacia("Farmacia Est 4 ", 5, new PGgeometry(new Point(38.843597, 16.520237)));
+            farmacias = Arrays.asList(
+
+                    // Using Point constructor
+                    new PharmacyAssigned(farmacia1, 100),// Near São Paulo
+                    new PharmacyAssigned(farmacia2, 25), // Near Rio
+                    new PharmacyAssigned(farmacia1, 150), // Same as farmacia
+                    new PharmacyAssigned(farmacia3, 30), // Near Curitiba
+                    new PharmacyAssigned(farmacia2, 20), // Near Rio
+                    new PharmacyAssigned(farmacia1, 50),
+                    new PharmacyAssigned(farmacia4, 20),
+                    new PharmacyAssigned(farmacia4, 100),
+                    new PharmacyAssigned(farmacia5, 10),
+                    new PharmacyAssigned(farmacia5, 35),
+                    new PharmacyAssigned(farmacia6, 50),
+                    new PharmacyAssigned(farmacia7, 20),
+                    new PharmacyAssigned(farmacia8, 100),
+                    new PharmacyAssigned(farmacia9, 10),
+                    new PharmacyAssigned(farmacia10, 35));
+
+            choiceWarehouse_calculate = new ChoiceWarehouse(warehouseModels, farmacias);
+
+
+
+        }
+            @Test
+            public void calculate_warehouseWithZeroQTy() {
+
+                List<WarehouseDistances> models = choiceWarehouse_calculate.calculate_warehouse(new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0), 12);
+                Assertions.assertEquals("mag3",models.getFirst().getWarehouseModel().getNome());
+
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,9 +1,10 @@
-package algo;
+package algoWarehouse;
 
 import net.postgis.jdbc.geometry.Point;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pharma.Controller.Warehouse;
 import pharma.Model.*;
 import pharma.formula.HarvesinFormula;
 
@@ -37,11 +38,21 @@ private final  double DISTANCE_KM=70;
         );
 
     }
-    public Set<WarehouseModel> calculate_warehouse(LotDimensionModel dimension, int quantity){
+
+    /**
+     * Calculate warehouse choice an set of warehouse that are near a group of pharmacists.
+     *
+     * @param dimension
+     * @param quantity
+     * @return
+     */
+    public List<WarehouseDistances> calculate_warehouse(LotDimensionModel dimension, int quantity){
+
         Map<Farmacia,Integer> map_by_qty=pharmacy_by_qty();
+
         List<Map. Entry<Farmacia, Integer>> sorted_values= sorted_by_max(map_by_qty);
         List<PharmacyDistance> pharmacyDistances=distance_pharmacist(sorted_values);
-         return calculate_availability(pharmacyDistances,dimension,quantity);
+        return sorted_warehouse(calculate_availability(pharmacyDistances,dimension,quantity));
 
 
 
@@ -49,44 +60,72 @@ private final  double DISTANCE_KM=70;
     }
 
     /**
-     * Calulate the availability for this loy
+     * Order by increase distance
+     * @param distances
+     * @return
+     */
+    @TestOnly
+    public static List<WarehouseDistances> sorted_warehouse(List<WarehouseDistances> distances){
+         return distances.stream().sorted(Comparator.comparing(WarehouseDistances::getDistance)).toList();
+
+    }
+
+    /**
+     * Calulate the availability for this lot
      * @param distanceList
      * @param dimension
      * @param quantity
      * @return
      */
         @TestOnly
-    public   Set<WarehouseModel> calculate_availability(List<PharmacyDistance> distanceList, LotDimensionModel dimension, int quantity){
-        Set<WarehouseModel> availability_warehouseModel =new HashSet<>();
-        distanceList.forEach(pharmacy->{
-
-            warehouseModels.forEach(warehouse->{
+    public List<WarehouseDistances> calculate_availability(List<PharmacyDistance> distanceList, LotDimensionModel dimension, int quantity){
+            List<WarehouseDistances> distances=new ArrayList<>();
+            for (PharmacyDistance pharmacy : distanceList) {
+                for (WarehouseModel warehouse : warehouseModels) {
                 Point point_warehouse=(Point) warehouse.getpGgeometry().getGeometry();
-                if(in_range(pharmacy.getAverage(),point_warehouse)){
+                Point pharmacy_avg=pharmacy.getAverage();
+
+
+
+
 
                     warehouse.getShelfInfos().forEach(shelfInfo -> {
-                        Optional<List<ShelvesRemain>> remains =shelfInfo.remaining_levels(dimension);
+                        Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(dimension);
 
-                       if(remains.isPresent()){
+                        if (remains.isPresent()) {
 
-                        int availability=remains.get().stream().mapToInt(ShelvesRemain::getQuantity).sum();
-                        log.info("availability: "+availability);
-                        if(availability>=quantity) {
-
-                            availability_warehouseModel.add(warehouse);
+                            int availability = remains.get().stream().mapToInt(ShelvesRemain::getQuantity).sum();
+                            log.info("availability: " + availability);
+                            if (availability >= quantity) {
+                                double  harvesinDistance=HarvesinFormula.calculate_harvesinDistance(point_warehouse.getX(),point_warehouse.getY(),pharmacy_avg.getX(),pharmacy_avg.getY());
+                                distances.add(new WarehouseDistances(warehouse,pharmacy.getFarmaciaList(),harvesinDistance));
+                            }
                         }
-                       }
-
                     });
-                }
-            });
-        });
-        return availability_warehouseModel;
 
 
 
+                //}
+
+
+
+
+
+            }
+
+        }
+
+
+        //return availability_warehouseModel;
+
+        return distances;
     }
+
     @TestOnly
+    /**
+     * Calculate the range between
+     *
+     */
     public static boolean in_range(Point average_point,Point warehouse_point){
 
         double latitude_offset=RADIUS_KM_WAREHOUSE_RANGE/LATITUDE_DEGREE;
@@ -97,6 +136,42 @@ private final  double DISTANCE_KM=70;
         double max_lng=average_point.getY()+lng_offset;
 
         return (warehouse_point.getX()>min_lat &&   warehouse_point.getX()<max_lat) && ( warehouse_point.getY() >min_lng  &&   warehouse_point.getY()<max_lng);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+    public static boolean calculate_distance(Point average_point,Point warehouse_point){
+
+        double latitude_offset=RADIUS_KM_WAREHOUSE_RANGE/LATITUDE_DEGREE;
+        double min_lat=average_point.getX()-latitude_offset;
+        double max_lat=average_point.getX()+latitude_offset;
+        double lng_offset=RADIUS_KM_WAREHOUSE_RANGE/ (LATITUDE_DEGREE *Math.cos(Math.toRadians(average_point.getX())));
+        double min_lng=average_point.getY()-lng_offset;
+        double max_lng=average_point.getY()+lng_offset;
+
+        return (warehouse_point.getX()>min_lat &&   warehouse_point.getX()<max_lat) && ( warehouse_point.getY() >min_lng  &&   warehouse_point.getY()<max_lng);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -116,6 +191,9 @@ private final  double DISTANCE_KM=70;
     }*/
     @TestOnly
     public Map<Farmacia, Integer> pharmacy_by_qty(){
+        if(assigneds.isEmpty()){
+            throw new IllegalArgumentException("Pharmacy list it is empty");
+        }
 
 
         return assigneds.stream().collect(
@@ -133,6 +211,9 @@ private final  double DISTANCE_KM=70;
      */
     @TestOnly
     public List<Map.Entry<Farmacia,Integer>> sorted_by_max(Map<Farmacia,Integer> map){
+        if(map.isEmpty()){
+            throw  new IllegalArgumentException("Map it is empty");
+        }
         return map.entrySet().stream().sorted(Map.Entry.<Farmacia,Integer>comparingByValue().reversed()).collect(Collectors.toList());
 
     }
@@ -221,7 +302,6 @@ private final  double DISTANCE_KM=70;
    @TestOnly
    public  static List<Farmacia> limit_entries(List<Map.Entry<Farmacia,Integer>> list){
         return list.stream().limit(20).map(Map.Entry::getKey).toList();
-
    }
 
         @TestOnly

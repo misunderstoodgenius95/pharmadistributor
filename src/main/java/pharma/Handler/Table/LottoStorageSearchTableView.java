@@ -1,6 +1,5 @@
 package pharma.Handler.Table;
 
-import algo.ShelvesAssigment;
 import javafx.scene.control.TableView;
 import pharma.Model.FieldData;
 import pharma.config.TableUtility;

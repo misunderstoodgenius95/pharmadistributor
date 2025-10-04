@@ -1,7 +1,6 @@
 package pharma.dao;
 
-import algo.ShelfInfo;
-import com.auth0.json.mgmt.users.ProfileData;
+import algoWarehouse.ShelfInfo;
 
 import pharma.config.database.Database;
 

@@ -1,5 +1,6 @@
 package algo;
 
+import algoWarehouse.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShelfInfoTest {
-    private  ShelfInfo shelfInfo;
+    private ShelfInfo shelfInfo;
     FieldData fieldData_shelf;
 
     @Test

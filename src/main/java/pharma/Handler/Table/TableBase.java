@@ -7,7 +7,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import org.jetbrains.annotations.TestOnly;
 
-import pharma.config.TableUtility;
 import pharma.javafxlib.CustomTableView.CheckBoxTableColumn;
 import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
 import pharma.javafxlib.Dialog.CustomDialog;
@@ -49,7 +48,6 @@ public abstract   class TableBase<T> extends CustomDialog<T> {
             @Override
             protected void onButtonClick(T rowData) {
                 radio_value.set(rowData);
-
             }
 
         };

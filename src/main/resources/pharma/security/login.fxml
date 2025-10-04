@@ -5,13 +5,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="pharma.Controller.Login">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="pharma.Controller.Login">
    <children>
-      <TextField fx:id="user_field" layoutX="173.0" layoutY="111.0" prefHeight="39.0" prefWidth="267.0" text="luigi.bianchi@azienda.com"> <!--promptText="lucagcalio95@live.com" text="lucagcalio95@live.com"--> >
+      <TextField fx:id="user_field" layoutX="173.0" layoutY="100.0" prefHeight="50.0" prefWidth="365.0"> <!--promptText="lucagcalio95@live.com" text="lucagcalio95@live.com"--> >
          <font>
             <Font size="20.0" />
          </font></TextField>
-      <TextField fx:id="password_field" layoutX="173.0" layoutY="187.0" prefHeight="39.0" prefWidth="261.0" > <!--promptText="Password" text="ULnWFkRh2w$QB&amp;QQ7nrD"-->>
+      <TextField fx:id="password_field" layoutX="173.0" layoutY="176.0" prefHeight="50.0" prefWidth="365.0"> <!--promptText="Password" text="ULnWFkRh2w$QB&amp;QQ7nrD"-->>
          <font>
             <Font size="20.0" />
          </font></TextField>

@@ -1,7 +1,5 @@
 package pharma.Handler;
 
-import algo.PlacementShelf;
-import com.github.tomakehurst.wiremock.common.TextFile;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.exceptions.base.MockitoAssertionError;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -23,9 +20,6 @@ import pharma.dao.InfoSocietyDao;
 import pharma.javafxlib.test.SimulateEvents;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static pharma.config.Utility.extract_value_from_list;
 
 @ExtendWith(ApplicationExtension.class)
 class Info_SocietyHandlerTest {

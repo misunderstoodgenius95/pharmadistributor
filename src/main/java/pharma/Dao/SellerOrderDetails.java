@@ -52,7 +52,7 @@ private String table_name="seller_order_detail";
      * @return
      */
     public List<FieldData> findbyProduct(int farmaco_id, String lotto_id){
-         return findByParameters("SELECT * FROM "+table_name+" WHERE farmaco_id =? and lotto_id =?  ",farmaco_id,lotto_id);
+         return findByParameters("SELECT * FROM "+table_name+" WHERE farmaco = ? and lotto =?  ",farmaco_id,lotto_id);
 
     }
 

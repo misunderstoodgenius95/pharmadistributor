@@ -1,6 +1,6 @@
 package pharma.dao;
 
-import algo.ShelvesCapacity;
+import algoWarehouse.ShelvesCapacity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ShelvesDaoTest {
     private ShelvesDao shelvesDao;

@@ -1,4 +1,4 @@
-package algo;
+package algoWarehouse;
 
 public class ShelvesCapacity {
     private int code;
