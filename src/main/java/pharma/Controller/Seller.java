@@ -3,19 +3,25 @@ package pharma.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.controlsfx.control.NotificationPane;
+import org.jetbrains.annotations.TestOnly;
 import org.json.JSONObject;
 import pharma.Handler.PharmacistHandlerCreate;
+import pharma.Stages;
 import pharma.Storage.FileStorage;
 import pharma.config.auth.UserService;
 import pharma.config.database.Database;
 import pharma.config.net.ClientHttp;
 import pharma.config.net.PollingClient;
 import pharma.dao.FarmaciaDao;
+import pharma.formula.KMeans;
+import pharma.formula.PriceSuggestion;
 import pharma.javafxlib.Controls.NotificationPanelLib;
 import pharma.security.Stytch.StytchClient;
 
@@ -32,13 +38,16 @@ public class Seller implements Initializable {
     public StackPane stack_id;
     @FXML
     public Button pharmacist_id;
+    public Button farmacia_id;
     private ClientHttp clientHttp;
     private  PollingClient pollingClient;
     private FarmaciaDao farmaciaDao;
     private UserService userService;
+    Stages stages;
     private PharmacistHandlerCreate pharmacistHandlerCreate;
-    public Seller() {
 
+    public Seller() {
+        stages=new Stages();
        clientHttp=new ClientHttp();
        Properties properties;
         try {
@@ -56,8 +65,15 @@ public class Seller implements Initializable {
        farmaciaDao=new FarmaciaDao(Database.getInstance(properties));
         userService = new UserService(new StytchClient(hashMap_json.get("project_id"), hashMap_json.get("secret"), hashMap_json.get("url")));
          pharmacistHandlerCreate=new PharmacistHandlerCreate(farmaciaDao,userService);
+
+
     }
 
+
+
+
+
+        @TestOnly
     public Seller(FarmaciaDao farmaciaDao, UserService userService) {
         this.farmaciaDao = farmaciaDao;
         this.userService = userService;
@@ -78,14 +94,41 @@ public class Seller implements Initializable {
         stack_id.getChildren().add( notificationPanelLib.getPane());
 
 
-        notificationPanelLib.show("LOg me!");
+        notificationPanelLib.show("Log me!");
 
 
 
     }
+
+
     @FXML
     public void pharmacist_action(ActionEvent actionEvent) {
         pharmacistHandlerCreate.executeStatus();
 
+    }
+
+    public void btn_action_price(ActionEvent event) throws IOException {
+        Parent parent = stages.load_fxml("/subpanel/price.fxml");
+        change_stages(parent,50.0);
+    }
+
+
+
+
+
+
+
+
+
+    private void change_stages(Parent parent, double value) throws IOException {
+        anchor_id.getChildren().removeIf(node -> node.getStyleClass().contains("subpanel"));
+        AnchorPane.setRightAnchor(parent, value);
+        anchor_id.getChildren().add(parent);
+
+    }
+
+    public void farmacia_action(ActionEvent event) throws IOException {
+        Parent parent = stages.load_fxml("/subpanel/farmacia.fxml");
+        change_stages(parent,50.0);
     }
 }

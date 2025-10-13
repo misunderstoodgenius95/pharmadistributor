@@ -2,9 +2,6 @@ package pharma.Handler;
 
 
 import algoWarehouse.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import net.postgis.jdbc.PGgeometry;
 import pharma.Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,10 +13,12 @@ import pharma.Handler.Table.LottoTableBase;
 import pharma.Handler.Table.TableBase;
 import pharma.config.PopulateChoice;
 import pharma.config.Status;
+import pharma.config.TableUtility;
 import pharma.config.Utility;
 import pharma.dao.*;
 import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class LottoStorageHandler extends DialogHandler<FieldData> {
@@ -39,12 +38,17 @@ private LotDimensionDao lotDimensionDao;
 private MagazzinoDao magazzinoDao;
 private  LotAssigmentDao lotAssigmentDao;
 private  LotAssigmentShelvesDao lotAssigmentShelvesDao;
+private LotAssigment choice_assigment;
+ private    TableView<ShelvesAssigment> table_choice;
+private ShelfDao shelfDao;
+private ShelvesDao shelvesDao;
 private  Button btn_calculate_warehouse;
     private LotDimensionDao lotDimension_dao;
     private Label visibile_label;
     CustomLotsDimension lotDimensionDialog;
     FarmaciaDao farmaciaDao;
     private ObservableList<Control> optional_value;
+;
     public LottoStorageHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
         super(content, genericJDBCDao);
         lotDimension_dao =(LotDimensionDao) genericJDBCDao.stream().
@@ -59,6 +63,14 @@ private  Button btn_calculate_warehouse;
         lotDimensionDao=(LotDimensionDao) genericJDBCDao.stream().filter(dao->dao instanceof LotDimensionDao).findFirst().
                 orElseThrow(()->new IllegalArgumentException(" Magazzino Not found!"));
         magazzinoDao=(MagazzinoDao) genericJDBCDao.stream().filter(dao->dao instanceof MagazzinoDao).findFirst().
+                orElseThrow(()->new IllegalArgumentException(" Magazzino Not found!"));
+        shelfDao=(ShelfDao) genericJDBCDao.stream().filter(dao->dao instanceof ShelfDao).findFirst().
+                orElseThrow(()->new IllegalArgumentException(" Magazzino Not found!"));
+        shelvesDao=(ShelvesDao) genericJDBCDao.stream().filter(dao->dao instanceof ShelvesDao).findFirst().
+                orElseThrow(()->new IllegalArgumentException(" Magazzino Not found!"));
+        lotAssigmentDao=(LotAssigmentDao) genericJDBCDao.stream().filter(dao->dao instanceof LotAssigmentDao).findFirst().
+                orElseThrow(()->new IllegalArgumentException(" Magazzino Not found!"));
+        lotAssigmentShelvesDao=(LotAssigmentShelvesDao) genericJDBCDao.stream().filter(dao->dao instanceof LotAssigmentShelvesDao).findFirst().
                 orElseThrow(()->new IllegalArgumentException(" Magazzino Not found!"));
 
         choiceLogDialog =new LottoTableBase("Scegli lotti");
@@ -104,7 +116,8 @@ private  Button btn_calculate_warehouse;
 
     @Override
     protected void initialize() {
-
+        getDialogPane().setPrefWidth(700);
+        getDialogPane().setPrefHeight(800);
         optional_value= FXCollections.observableArrayList();
         textField_lot_code=add_text_field("Inserisci Lotto");
         select_lot=addButton("Seleziona Lotto");
@@ -117,7 +130,7 @@ private  Button btn_calculate_warehouse;
         quantity=add_spinner();
         btn_calculate_warehouse=addButton("Calcola Scaffali");
         calculate_warehouse();
-        TreeTableView<LotDimensionModel> modelTreeTableView=add_tree_table();
+        table_choice=add_tableCustom();
 
 
 
@@ -125,7 +138,7 @@ private  Button btn_calculate_warehouse;
         listener_text_table();
         listener_button_table();
         listener_lot_dimension();
-        tree_table(modelTreeTableView);
+        table_config();
 
 
 
@@ -147,16 +160,22 @@ private  Button btn_calculate_warehouse;
             if(optionalRowChoice.isPresent()) {
                     FieldData fieldData_choice=optionalRowChoice.get();
                 List<PharmacyAssigned> pharmacyAssigneds = new ArrayList<>();
-                List<WarehouseModel> fd_warehouseModel = magazzinoDao.findAll().stream().map(value -> new WarehouseModel(value.getId(), value.getNome(), value.getpGgeometry())).toList();
+                MagazzinoModelDao magazzinoModelDao =new MagazzinoModelDao(shelfDao,shelvesDao, magazzinoDao);
+                List<WarehouseModel> modelList=magazzinoModelDao.getFullWarehouseModel();
+
+
+
+
+
 
                 List<FieldData> order_details = s_order_details.findbyProduct(fieldData_choice.getFarmaco_id(),fieldData_choice.getCode());
                 for (FieldData orderDetail : order_details) {
                     //obtein  the order id
                     int order_id = orderDetail.getOrder_id();
                     log.info("order_id" + order_id);
-                    //obtein the  order
+                    //obtain the  order
                     FieldData fd_order = s_order.findById(order_id);
-                    // obtein the farmacia
+                    // obtain the farmacia
                     int farmacia_id = fd_order.getForeign_id();
 
                     FieldData fd_farmacia = farmaciaDao.findById(farmacia_id);
@@ -167,15 +186,25 @@ private  Button btn_calculate_warehouse;
                 if(pharmacyAssigneds.isEmpty()){
                    pharmacyAssigneds.addAll(farmaciaDao.findAll().stream().map
                            (farmacia_fd->new PharmacyAssigned(new Farmacia(farmacia_fd.getAnagrafica_cliente(),farmacia_fd.getId(),  farmacia_fd.getLocation()),0)).toList());
-
                 }
-
+// find lot dimension
                 Optional<LotDimensionModel> dimension = lotDimensionDao.findByLots(fieldData_choice.getCode(),fieldData_choice.getFarmaco_id());
                 if (dimension.isPresent()) {
                     LotDimensionModel lotDimensionModel = dimension.get();
-                    ChoiceWarehouse choiceWarehouse = new ChoiceWarehouse(fd_warehouseModel, pharmacyAssigneds);
+                   ChoiceWarehouse choiceWarehouse = new ChoiceWarehouse(modelList, pharmacyAssigneds);
                 List<WarehouseDistances> distances= choiceWarehouse.calculate_warehouse(lotDimensionModel, quantity.getValue());
-                    System.out.println("size: "+distances.size());
+                  if(!table_choice.getItems().isEmpty()){
+                      table_choice.getItems().clear();
+                  }
+                   distances.forEach(ws->{
+                    PlacementShelf shelf=new PlacementShelf(ws.getWarehouseModel().getShelfInfos());
+                    choice_assigment=shelf.assignmentLots(lotDimensionModel,quantity.getValue());
+                    table_choice.getItems().addAll(choice_assigment.getShelvesAssigmentList());
+
+
+                });
+
+
 
                 }
             }
@@ -184,9 +213,13 @@ private  Button btn_calculate_warehouse;
 
 
     }
-    private void tree_table(TreeTableView<LotDimensionModel> modelTreeTableView){
-    /*    modelTreeTableView.getColumns().
-                addAll(TableUtility.generate_tree_column_string("Magazzino",""))*/
+    private void table_config(){
+        table_choice.setPrefHeight(400);
+        table_choice.getColumns().addAll(
+                TableUtility.generate_column_string("Magazzino Id","magazzino_id"),
+                TableUtility.generate_column_string("Scaffale","shelf_code"),
+                TableUtility.generate_column_int("Ripiano","shelf_level"),
+                TableUtility.generate_column_int("Qty","quantity"));
 
 
     }
@@ -256,25 +289,42 @@ private  Button btn_calculate_warehouse;
 
     @Override
     protected boolean condition_event(FieldData fieldData) throws Exception {
-        //find by farmaco_id and lotto_id
+
+        if (choice_assigment == null) {
+            log.error("choice_assigment is null - user must click 'Calcola Scaffali' button first");
+            return false;
+        }
+        if(choice_assigment.getShelvesAssigmentList()==null){
+            log.error("shelves are null");
+
+        }
+
+        int id=lotAssigmentDao.findExistAndReturnId(choice_assigment.getFarmaco_id(),choice_assigment.getLot_code());
+        if(id==-1) {
+            id = lotAssigmentDao.insertAndReturnID(choice_assigment);
+        }else{
+            lotAssigmentDao.update(choice_assigment);
+        }
+         final int finalId = id;
+        return table_choice.getItems().stream().peek(
+               value->value.setLot_assigment(finalId)
+        ).allMatch(assigment-> lotAssigmentShelvesDao.insert(assigment));
 
 
 
 
-
-
-        return true;
     }
 
     @Override
     protected Status condition_event_status(FieldData type) throws Exception {
         return null;
     }
-
+// button table dialog
     private void listener_button_table(){
         select_lot.setOnAction(event -> {
 
 
+            System.out.println("size"+choiceLogDialog.getTableView().getItems().size());
             if(!choiceLogDialog.getTableView().getItems().isEmpty()){
                 choiceLogDialog.getTableView().getItems().clear();
             }
@@ -284,7 +334,6 @@ private  Button btn_calculate_warehouse;
                 choiceLogDialog.getTableView().getItems().addAll(list);
 
                 choiceLogDialog.show();
-
 
             }else{
                 Utility.create_alert(Alert.AlertType.WARNING,"","No Lottocode found");

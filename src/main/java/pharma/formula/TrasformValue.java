@@ -66,6 +66,13 @@ public class TrasformValue {
 
         return cost;
     }
+
+    /**
+     * The algorithm can be
+     * @param cost
+     * @param normalize_factor  it is between 0 and 1
+     * @return
+     */
     public static double adjust_factor(double cost,double normalize_factor){
         if(normalize_factor<0 || normalize_factor>1){
             throw new IllegalArgumentException("Factor cannot in range between 0 to  1");
@@ -91,8 +98,14 @@ public class TrasformValue {
     }
 
 
-
-
+    /**
+     * When stock == ref: result = 0.5
+     * When stock < ref: result > 0.5 (approaches 1.0)
+     * When stock > ref: result < 0.5 (approaches 0.0)
+     * @param stock
+     * @param ref
+     * @return
+     */
     protected static double normalizeValue(double stock, double ref) {
         double raw = 0.5 - (stock - ref) / (2.0 * ref);
         double clamped = Math.max(0.0, Math.min(1.0, raw));

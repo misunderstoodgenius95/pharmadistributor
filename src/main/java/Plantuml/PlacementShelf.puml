@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Otteni i magazzini;
+while (magazzino)
+  :Otteni Scaffale;
+  :Ottengo Ripiani;
+
+endwhile
+:Calcolo il numero di elementi si possono adattare per ogni ripiano;
+:Sommo il numero di elementi inseribili per Scaffale;
+if(Scaffale contiene tutti gli elementi)then (yes)
+:Uso  quello scaffale;
+else
+:Uso più scaffali;
+end if;
+
+stop
+
+@enduml

@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class LotAssigmentShelvesDao extends GenericJDBCDao<ShelvesAssigment, Integer> {
-    public LotAssigmentShelvesDao(String table_name, Database database) {
-        super(table_name, database);
+    public LotAssigmentShelvesDao( Database database) {
+        super("lot_assigment_shelves", database);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class LotAssigmentShelvesDao extends GenericJDBCDao<ShelvesAssigment, Int
 
     @Override
     protected String getInsertQuery() throws Exception {
-        return "INSERT INTO lot_assigment_shelves (shelf_code,shelves_level,warehouse_id,quantity)" +
-                " VALUES( ?,?,?,?)";
+        return "INSERT INTO lot_assigment_shelves (lot_assigment_id,shelf_code,shelves_level,warehouse_id,quantity)" +
+                " VALUES( ?,?,?,?,?)";
     }
 
     @Override
@@ -72,7 +72,11 @@ public class LotAssigmentShelvesDao extends GenericJDBCDao<ShelvesAssigment, Int
 
     @Override
     protected void setInsertParameter(PreparedStatement statement, ShelvesAssigment entity) throws Exception {
-
+        statement.setInt(1,entity.getLot_assigment());
+        statement.setString(2,entity.getShelf_code());
+        statement.setInt(3,entity.getShelf_level());
+        statement.setInt(4,entity.getMagazzino_id());
+        statement.setInt(5,entity.getQuantity());
     }
 
     @Override

@@ -6,6 +6,7 @@ import pharma.config.database.Database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ShelvesDao extends GenericJDBCDao<ShelvesCapacity,Integer> {
 
@@ -16,7 +17,21 @@ public class ShelvesDao extends GenericJDBCDao<ShelvesCapacity,Integer> {
 
     @Override
     protected ShelvesCapacity mapRow(ResultSet resultSet) throws Exception {
-        return null;
+        /*
+        int code,
+    String warehouse_shelf,
+    int num_shelf,
+    double occupied_length,
+    double occupied_deep,
+    double current_weight
+         */
+      ShelvesCapacity shelvesCapacity=new ShelvesCapacity();
+      shelvesCapacity.setCode(resultSet.getInt(1));
+      shelvesCapacity.setWarehouse_shelf(resultSet.getString(2));
+      shelvesCapacity.setNum_shelf(resultSet.getInt(3));
+      shelvesCapacity.setOccupied_length(resultSet.getInt(4));
+      shelvesCapacity.setOccupied_deep(resultSet.getInt(5));
+      return  shelvesCapacity;
     }
 
     @Override
@@ -27,6 +42,14 @@ public class ShelvesDao extends GenericJDBCDao<ShelvesCapacity,Integer> {
     @Override
     protected String getInsertQuery() throws Exception {
         return " INSERT INTO "+table+" (warehouse_shelf,num_shelve,length_occupied,deep_occupied) VALUES( ?,?,?,?) ";
+    }
+
+
+
+    public List<ShelvesCapacity> findByShelvesByShelf( String parameter) {
+        String query="select * from warehouse_shelves\n" +
+                "where warehouse_shelf= ? ";
+        return super.findByParameter(query, parameter);
     }
 
     @Override

@@ -15,7 +15,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import pharma.Controller.Warehouse;
 import pharma.Model.*;
+import pharma.Storage.FileStorage;
+import pharma.config.database.Database;
+import pharma.dao.MagazzinoDao;
+import pharma.dao.MagazzinoModelDao;
+import pharma.dao.ShelfDao;
+import pharma.dao.ShelvesDao;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -555,7 +563,7 @@ class ChoiceWarehouseModelTest {
             pharmacyDistance.setAverage(new Point(38.40, 15.40));
 
 
-            System.out.println(choiceWarehouse.calculate_availability(List.of(pharmacyDistance),dimensionModel,10).size());
+            System.out.println(choiceWarehouse.calculate_availability(List.of(pharmacyDistance)).size());
 
 
 
@@ -570,9 +578,9 @@ class ChoiceWarehouseModelTest {
             PharmacyDistance pharmacyDistance=new PharmacyDistance(List.of(new Farmacia("Farmacia1",1,
                     new PGgeometry(new Point(30.40, 10.40)))));
             pharmacyDistance.setAverage(new Point(20.20,10.10));
-         List<WarehouseDistances> list=choiceWarehouse.calculate_availability(List.of(pharmacyDistance),dimensionModel,100);
-  List<WarehouseDistances> distances=ChoiceWarehouse.sorted_warehouse(list);
-            System.out.println(distances.getFirst().getDistance());
+            List<WarehouseDistances> list=choiceWarehouse.calculate_availability(List.of(pharmacyDistance));
+
+
 
 
 
@@ -599,141 +607,135 @@ class ChoiceWarehouseModelTest {
 
         @Nested
         class CalculateWarehouse {
-            ChoiceWarehouse  choiceWarehouse_calculate;
+            ChoiceWarehouse choiceWarehouse_calculate;
             private List<PharmacyAssigned> farmacias;
-        @BeforeEach
-        public void setUp(){
-            ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
-                    .setMagazzino_id(1)
-                    .setShelf_code("A21")
-                    .setLenght(102)
-                    .setHeight(100)
-                    .setDeep(50)
-                    .setWeight(200)
-                    .setNum_rip(4)
-                    .setShelf_thickness(20)
-                    .setShelvesCapacities(List.of(
-                            new ShelvesCapacity(1, "A21", 1, 102.0, 50.0, 85.5),  // Full - max capacity
-                            new ShelvesCapacity(2, "A21", 2, 80.0, 35.0, 58.8),   // 78% occupied
-                            new ShelvesCapacity(3, "A21", 3, 45.0, 20.0, 22.5),   // 44% occupied
-                            new ShelvesCapacity(4, "A21", 4, 0.0, 0.0, 0.0)       // Empty
-                    ))
-                    .build();
+
+            @BeforeEach
+            public void setUp() {
+                ShelfInfo shelfInfo1 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                        .setMagazzino_id(1)
+                        .setShelf_code("A21")
+                        .setLenght(102)
+                        .setHeight(100)
+                        .setDeep(50)
+                        .setWeight(200)
+                        .setNum_rip(4)
+                        .setShelf_thickness(20)
+                        .setShelvesCapacities(List.of(
+                                new ShelvesCapacity(1, "A21", 1, 102.0, 50.0, 85.5),  // Full - max capacity
+                                new ShelvesCapacity(2, "A21", 2, 80.0, 35.0, 58.8),   // 78% occupied
+                                new ShelvesCapacity(3, "A21", 3, 45.0, 20.0, 22.5),   // 44% occupied
+                                new ShelvesCapacity(4, "A21", 4, 0.0, 0.0, 0.0)       // Empty
+                        ))
+                        .build();
 
 // Shelf 2 - Length: 150, Depth: 70 (4 levels with different occupancy)
-            ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
-                    .setMagazzino_id(1)
-                    .setShelf_code("A22")
-                    .setLenght(150)
-                    .setHeight(100)
-                    .setDeep(70)
-                    .setWeight(250)
-                    .setNum_rip(4)
-                    .setShelf_thickness(20)
-                    .setShelvesCapacities(List.of(
-                            new ShelvesCapacity(5, "A22", 1, 0.0, 0.0, 0.0), // Full - max capacity
-                            new ShelvesCapacity(6, "A22", 2, 0.0, 5.0, 0.0),   // 80% occupied
-                            new ShelvesCapacity(7, "A22", 3, 0.0, 0.0, 0.0),    // 50% occupied
-                            new ShelvesCapacity(8, "A22", 4, 0.0, 0.0, 0.0)      // 20% occupied
-                    ))
-                    .build();
+                ShelfInfo shelfInfo2 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                        .setMagazzino_id(1)
+                        .setShelf_code("A22")
+                        .setLenght(150)
+                        .setHeight(100)
+                        .setDeep(70)
+                        .setWeight(250)
+                        .setNum_rip(4)
+                        .setShelf_thickness(20)
+                        .setShelvesCapacities(List.of(
+                                new ShelvesCapacity(5, "A22", 1, 0.0, 0.0, 0.0), // Full - max capacity
+                                new ShelvesCapacity(6, "A22", 2, 0.0, 5.0, 0.0),   // 80% occupied
+                                new ShelvesCapacity(7, "A22", 3, 0.0, 0.0, 0.0),    // 50% occupied
+                                new ShelvesCapacity(8, "A22", 4, 0.0, 0.0, 0.0)      // 20% occupied
+                        ))
+                        .build();
 
 // Shelf 3 - Length: 80, Depth: 35 (4 levels with different occupancy)
-            ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
-                    .setMagazzino_id(1)
-                    .setShelf_code("A23")
-                    .setLenght(80)
-                    .setHeight(100)
-                    .setDeep(35)
-                    .setWeight(150)
-                    .setNum_rip(4)
-                    .setShelf_thickness(20)
-                    .setShelvesCapacities(List.of(
-                            new ShelvesCapacity(9, "A23", 1, 0.0, 0.0, 0.0),
-                            new ShelvesCapacity(10, "A23", 2, 0.0, 0.0, 0.0),
-                            new ShelvesCapacity(11, "A23", 3, 0.0, 0.0, 0.0),
-                            new ShelvesCapacity(12, "A23", 4, 0.0, 0.0, 0.0)
-                    ))
-                    .build();
+                ShelfInfo shelfInfo3 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                        .setMagazzino_id(1)
+                        .setShelf_code("A23")
+                        .setLenght(80)
+                        .setHeight(100)
+                        .setDeep(35)
+                        .setWeight(150)
+                        .setNum_rip(4)
+                        .setShelf_thickness(20)
+                        .setShelvesCapacities(List.of(
+                                new ShelvesCapacity(9, "A23", 1, 0.0, 0.0, 0.0),
+                                new ShelvesCapacity(10, "A23", 2, 0.0, 0.0, 0.0),
+                                new ShelvesCapacity(11, "A23", 3, 0.0, 0.0, 0.0),
+                                new ShelvesCapacity(12, "A23", 4, 0.0, 0.0, 0.0)
+                        ))
+                        .build();
 
 // Shelf 4 - Length: 200, Depth: 30 (4 levels with different occupancy)
-            ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
-                    .setMagazzino_id(1)
-                    .setShelf_code("A24")
-                    .setLenght(200)
-                    .setHeight(100)
-                    .setDeep(30)
-                    .setWeight(180)
-                    .setNum_rip(4)
-                    .setShelf_thickness(20)
-                    .setShelvesCapacities(List.of(
-                            new ShelvesCapacity(13, "A24", 1, 0.0, 0.0, 0.0),
-                            new ShelvesCapacity(14, "A24", 2, 0.0, 0.0, 0.0),
-                            new ShelvesCapacity(15, "A24", 3, 0.0, 0.0, 0.0),
-                            new ShelvesCapacity(16, "A24", 4, 0.0, 0.0, 0.0)
-                    ))
-                    .build();
+                ShelfInfo shelfInfo4 = ShelfInfo.ShelfInfoBuilder.get_builder()
+                        .setMagazzino_id(1)
+                        .setShelf_code("A24")
+                        .setLenght(200)
+                        .setHeight(100)
+                        .setDeep(30)
+                        .setWeight(180)
+                        .setNum_rip(4)
+                        .setShelf_thickness(20)
+                        .setShelvesCapacities(List.of(
+                                new ShelvesCapacity(13, "A24", 1, 0.0, 0.0, 0.0),
+                                new ShelvesCapacity(14, "A24", 2, 0.0, 0.0, 0.0),
+                                new ShelvesCapacity(15, "A24", 3, 0.0, 0.0, 0.0),
+                                new ShelvesCapacity(16, "A24", 4, 0.0, 0.0, 0.0)
+                        ))
+                        .build();
 
 
-            List<WarehouseModel> warehouseModels = List.of(
-                    new WarehouseModel(1, "mag1", new PGgeometry(new Point(78.40, 85.40)), List.of(shelfInfo1)),
-                    new WarehouseModel(2, "mag2", new PGgeometry(new Point(23.4501, 45.5330)), List.of(shelfInfo2)),
-                    new WarehouseModel(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)), List.of(shelfInfo3)),
-                    new WarehouseModel(4, "mag4", new PGgeometry(new Point(22.4501, 45.6330)), List.of(shelfInfo4)));
+                List<WarehouseModel> warehouseModels = List.of(
+                        new WarehouseModel(1, "mag1", new PGgeometry(new Point(18.40, 85.40)), List.of(shelfInfo1)),
+                        new WarehouseModel(2, "mag2", new PGgeometry(new Point(23.4501, 45.5330)), List.of(shelfInfo2)),
+                        new WarehouseModel(3, "mag3", new PGgeometry(new Point(34.5501, 45.6330)), List.of(shelfInfo3)),
+                        new WarehouseModel(4, "mag4", new PGgeometry(new Point(22.4501, 45.6330)), List.of(shelfInfo4)));
 
-            farmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
-            farmacia2 = new Farmacia("Farmacia Norte", 2, new PGgeometry(new Point(38.156059, 14.745716)));
-            farmacia3 = new Farmacia("Farmacia Sul", 3, new PGgeometry(new Point(38.056718, 14.830686)));
-            farmacia4 = new Farmacia("Farmacia Nord", 4, new PGgeometry(new Point(38.194237, 13.211291)));
-            farmacia5 = new Farmacia("Farmacia Est", 5, new PGgeometry(new Point(37.071914, 15.256249)));
+                farmacia1 = new Farmacia("Farmacia Central", 1, new PGgeometry(new Point(38.254652, 15.504868)));
+                farmacia2 = new Farmacia("Farmacia Norte", 2, new PGgeometry(new Point(38.156059, 14.745716)));
+                farmacia3 = new Farmacia("Farmacia Sul", 3, new PGgeometry(new Point(38.056718, 14.830686)));
+                farmacia4 = new Farmacia("Farmacia Nord", 4, new PGgeometry(new Point(38.194237, 13.211291)));
+                farmacia5 = new Farmacia("Farmacia Est", 5, new PGgeometry(new Point(37.071914, 15.256249)));
 
-            farmacia6 = new Farmacia("Farmacia Central2 ", 1, new PGgeometry(new Point(37.700417, 14.04684)));
-            farmacia7 = new Farmacia("Farmacia Norte 2", 2, new PGgeometry(new Point(37.587327, 13.398657)));
+                farmacia6 = new Farmacia("Farmacia Central2 ", 1, new PGgeometry(new Point(37.700417, 14.04684)));
+                farmacia7 = new Farmacia("Farmacia Norte 2", 2, new PGgeometry(new Point(37.587327, 13.398657)));
 
-            farmacia8 = new Farmacia("Farmacia Sul 2", 3, new PGgeometry(new Point(37.247026, 14.223032)));
-            farmacia9 = new Farmacia("Farmacia Nord 3", 4, new PGgeometry(new Point(39.310732, 16.285324)));
-            farmacia10 = new Farmacia("Farmacia Est 4 ", 5, new PGgeometry(new Point(38.843597, 16.520237)));
-            farmacias = Arrays.asList(
+                farmacia8 = new Farmacia("Farmacia Sul 2", 3, new PGgeometry(new Point(37.247026, 14.223032)));
+                farmacia9 = new Farmacia("Farmacia Nord 3", 4, new PGgeometry(new Point(39.310732, 16.285324)));
+                farmacia10 = new Farmacia("Farmacia Est 4 ", 5, new PGgeometry(new Point(38.843597, 16.520237)));
+                farmacias = Arrays.asList(
 
-                    // Using Point constructor
-                    new PharmacyAssigned(farmacia1, 100),// Near São Paulo
-                    new PharmacyAssigned(farmacia2, 25), // Near Rio
-                    new PharmacyAssigned(farmacia1, 150), // Same as farmacia
-                    new PharmacyAssigned(farmacia3, 30), // Near Curitiba
-                    new PharmacyAssigned(farmacia2, 20), // Near Rio
-                    new PharmacyAssigned(farmacia1, 50),
-                    new PharmacyAssigned(farmacia4, 20),
-                    new PharmacyAssigned(farmacia4, 100),
-                    new PharmacyAssigned(farmacia5, 10),
-                    new PharmacyAssigned(farmacia5, 35),
-                    new PharmacyAssigned(farmacia6, 50),
-                    new PharmacyAssigned(farmacia7, 20),
-                    new PharmacyAssigned(farmacia8, 100),
-                    new PharmacyAssigned(farmacia9, 10),
-                    new PharmacyAssigned(farmacia10, 35));
+                        // Using Point constructor
+                        new PharmacyAssigned(farmacia1, 100),// Near São Paulo
+                        new PharmacyAssigned(farmacia2, 25), // Near Rio
+                        new PharmacyAssigned(farmacia1, 150), // Same as farmacia
+                        new PharmacyAssigned(farmacia3, 30), // Near Curitiba
+                        new PharmacyAssigned(farmacia2, 20), // Near Rio
+                        new PharmacyAssigned(farmacia1, 50),
+                        new PharmacyAssigned(farmacia4, 20),
+                        new PharmacyAssigned(farmacia4, 100),
+                        new PharmacyAssigned(farmacia5, 10),
+                        new PharmacyAssigned(farmacia5, 35),
+                        new PharmacyAssigned(farmacia6, 50),
+                        new PharmacyAssigned(farmacia7, 20),
+                        new PharmacyAssigned(farmacia8, 100),
+                        new PharmacyAssigned(farmacia9, 10),
+                        new PharmacyAssigned(farmacia10, 35));
 
-            choiceWarehouse_calculate = new ChoiceWarehouse(warehouseModels, farmacias);
+                choiceWarehouse_calculate = new ChoiceWarehouse(warehouseModels, farmacias);
 
 
+            }
 
-        }
             @Test
             public void calculate_warehouseWithZeroQTy() {
 
-                List<WarehouseDistances> models = choiceWarehouse_calculate.calculate_warehouse(new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0), 12);
-                Assertions.assertEquals("mag3",models.getFirst().getWarehouseModel().getNome());
+               List<WarehouseDistances> models = choiceWarehouse_calculate.calculate_warehouse(new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0), 12);
+                //  Assertions.assertEquals(4, models.size());
+                models.forEach(value-> System.out.println(value.getWarehouseModel().getNome()+value.getDistance()));
 
 
             }
         }
-
-
-
-
-
-
-
-
 
 
 

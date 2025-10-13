@@ -189,6 +189,29 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
 
         return resultList;
     }
+    public boolean findByParametersExists(String query,Object... objects ){
+
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query(query );
+            for(int i=0;i<objects.length;i++) {
+                switch_type(preparedStatement, objects[i], i);
+            }
+            ResultSet resultSet=preparedStatement.executeQuery();
+            if(resultSet.next()){
+                  return resultSet.getBoolean(1);
+            }
+
+
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
     public List<T> findByParameters(String query,Object... objects ){
         List<T> resultList=new ArrayList<>();
         try {

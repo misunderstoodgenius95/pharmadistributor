@@ -8,8 +8,10 @@ public class ShelvesCapacity {
     private  double occupied_deep;
     private  double  current_weight;
 
+    public ShelvesCapacity() {
+    }
 
-    public ShelvesCapacity(int code, String warehouse_shelf, int num_shelf, double occupied_length, double occupied_deep,double current_weight) {
+    public ShelvesCapacity(int code, String warehouse_shelf, int num_shelf, double occupied_length, double occupied_deep, double current_weight) {
         this.code = code;
         this.warehouse_shelf = warehouse_shelf;
         this.num_shelf = num_shelf;

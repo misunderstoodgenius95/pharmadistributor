@@ -74,7 +74,8 @@ public class FieldData {
     private String warehouse_name;
     private String shelf_code;
     private int shelves_code;
-
+    private  double medium_day;
+    private  double medium_lots;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -132,7 +133,18 @@ public class FieldData {
         this.location=builder.location;
         this.foreign_id=builder.foreign_id;
         this.last_name=builder.last_name;
+        this.medium_day=builder.medium_day;
+        this.medium_lots=builder.medium_lots;
 
+    }
+
+
+    public double getMedium_day() {
+        return medium_day;
+    }
+
+    public double getMedium_lots() {
+        return medium_lots;
     }
 
     public PGgeometry getLocation() {
@@ -425,9 +437,7 @@ public class FieldData {
     }
 
     public String getUnit_misure() {
-        if ( unit_misure == null ) {
-            throw new NullPointerException("Unit miusure nulla!");
-        }
+
         return unit_misure;
     }
 
@@ -533,12 +543,24 @@ public class FieldData {
         private String warehouse_name;
         private String shelf_code;
         private int shelves_code;
+        private  double medium_day;
+        private  double medium_lots;
         private FieldDataBuilder() {
 
         }
 
         public FieldDataBuilder setWarehouse_name(String warehouse_name) {
             this.warehouse_name = warehouse_name;
+            return this;
+        }
+
+        public FieldDataBuilder setMedium_lots(double medium_lots) {
+            this.medium_lots = medium_lots;
+            return this;
+        }
+
+        public FieldDataBuilder setMedium_day(double medium_day) {
+            this.medium_day = medium_day;
             return this;
         }
 

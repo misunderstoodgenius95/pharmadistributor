@@ -5,6 +5,7 @@ import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,12 +73,35 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
 
     }
 
+
+
     @Override
     protected void setDeleteParameter(PreparedStatement statement, FieldData entity) {
 
     }
 
 
+    public List<FieldData> findByProductPrice( int farmaco_id) {
+        String query="SELECT price FROM purchase_order_detail where farmaco = ?";
+        List<FieldData> resultList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query(query );
+            preparedStatement.setInt(1,farmaco_id);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                  FieldData fd=FieldData.FieldDataBuilder.getbuilder().setPrice(resultSet.getDouble(1)).build();
+                  resultList.add(fd);
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return resultList;
+    }
 
     public List<FieldData> findDetailbyPurchaseOrderId(int id){
         List<FieldData> list=new ArrayList<>();

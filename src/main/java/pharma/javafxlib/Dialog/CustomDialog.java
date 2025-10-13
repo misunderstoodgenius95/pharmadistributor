@@ -296,6 +296,16 @@ getControlList().add(textField);
         return  tableView;
 
     }
+    public<K> TableView<K> add_tableCustom(){
+        TableView<K> tableView=new TableView<>();
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
+        vbox.getChildren().add(tableView);
+
+        controlList.add(tableView);
+        return  tableView;
+
+    }
     public ChoiceBox<T> add_choiceBox(T value){
         ChoiceBox<T> choiceBox=new ChoiceBox<>();
         vbox.getChildren().add(choiceBox);

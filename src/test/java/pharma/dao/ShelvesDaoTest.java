@@ -1,5 +1,6 @@
 package pharma.dao;
 
+import algoWarehouse.ShelfInfo;
 import algoWarehouse.ShelvesCapacity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 class ShelvesDaoTest {
@@ -35,5 +37,14 @@ class ShelvesDaoTest {
         Assertions.assertTrue(result);
 
     }
+
+    @Test
+    void ValidfindByShelvesByShelf() {
+        List<ShelvesCapacity> list=shelvesDao.findByShelvesByShelf("mx100");
+        Assertions.assertEquals(0,list.getFirst().getOccupied_deep());
+    }
+
+
+
 
 }

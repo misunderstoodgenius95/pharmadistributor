@@ -19,23 +19,25 @@ public class TrendMarket {
         this.json_uri=json_uri;
     }
 
-    public  double extract_trend_market(String pharma_name){
-        if(pharma_name==null){
+    public  double extract_trend_market(int pharma_id){
 
-            throw  new IllegalArgumentException("Argument cannot be null!");
-        }
 
         HttpRequest httpRequest= HttpRequest.newBuilder(json_uri).build();
         HttpResponse<String>  response = clientHttp.send(httpRequest);
         if(response.statusCode()!=200){
             throw new HttpStatusException(String.valueOf(response.statusCode()));
         }
-        JSONObject jsonObject=ExtractJson.extract_first(response.body(), Query.Like("name",pharma_name));
-        if(jsonObject.isEmpty() || !jsonObject.has("trend_market_percentage")){
+
+        JSONObject jsonObject=ExtractJson.extract_first(response.body(), Query.equal("id", String.valueOf(pharma_id)));
+        if(jsonObject.isEmpty()){
+            throw  new RuntimeException("Malfunction etxract Json");
+        }
+
+        if(jsonObject.isEmpty() || !jsonObject.has("market_trend_value")){
 
             return -1.1;
         }
-       return  jsonObject.getDouble("trend_market_percentage");
+       return  jsonObject.getDouble("market_trend_value");
 
 
 

@@ -161,6 +161,20 @@ class PurchaseOrderDetailDaoTest {
     }
 
 
+    @Test
+    void IntegrationfindByProductPrice() {
+        Properties properties;
+
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            purchaseOrderDetailDao=new PurchaseOrderDetailDao(Database.getInstance(properties));
+            List<FieldData>list=purchaseOrderDetailDao.findByProductPrice(340);
+            System.out.println(list.getFirst().getPrice());
+       Assertions.assertEquals(2.7,list.getFirst().getPrice());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 
+    }
 }

@@ -1,0 +1,164 @@
+@startchen
+
+
+entity Pharma{
+    id
+    Anagrafia_Cliente
+    Sigla
+    Partita_Iva
+ }
+entity Categoria{
+
+   nome
+
+}
+entity Tipologia{
+
+  nome
+
+}
+entity Misura{
+   unit
+  quantity
+
+}
+entity Principio_Attivo{
+ nome
+
+}
+entity Prodotto{
+ nome
+ descrizione
+ categoria
+ tipo
+ misura
+ princio_attivo
+ casa_farmaceutica
+}
+entity Lotto{
+  Prodotto
+  Data di Produzione
+  Data Di scadenza
+  quantità
+}
+entity DettagliLotto{
+   Lotto
+    price
+   PurchaseOrder
+   quantità
+}
+entity PurchaseOrder{
+Data
+Subtotale
+Iva
+Totale
+}
+
+entity PInvoice{
+
+ invoice_number
+ p_order
+ payment_type
+ created_at
+ subtotal
+ Iva
+ Totale
+}
+ entity PurchaseCreditNote{
+ credit_note_number
+ fattura_id
+ data
+ motivo
+ created_at
+ }
+
+  entity PurchaseCreditNoteDeatails{
+  purchase_order_detail
+  price
+  quantity
+  vat_percent
+ }
+ entity Farmacia{
+  intestazione
+   vat
+   via
+   cap
+   comune
+   provincia/'(sigla)'/
+ }
+
+ entity Warehouse{
+   id
+   Nome
+   Location
+   Comune
+   Provincia
+ }
+ entity  Warehouse_shelf{
+  code
+  warehouse_id
+  length
+  height
+  deep
+  shelf_thickness
+  num_level
+  capacity
+
+ }
+ entity Wareshouse_shelves {
+   id
+   warehouse_shelf
+   num_shelves
+   length_occupied
+   deep_occupied
+ }
+ entity lotAssigment{
+   farmacia
+   lotto
+   quantity
+ }
+
+relationship Contiene{
+
+}
+relationship Composto{
+
+}
+relationship Parte{
+
+}
+relationship Insieme{
+
+
+}
+relationship ParteDI{
+
+
+}
+
+Prodotto-1-Contiene
+Contiene-N-Tipologia
+Contiene-N-Misura
+Contiene-N-Misura
+Contiene-N-Categoria
+Contiene-N-Principio_Attivo
+Contiene-N-Pharma
+Lotto-1-Composto
+Composto-N-Prodotto
+Lotto-1-Parte
+Parte-N-DettagliLotto
+PurchaseOrder-1-Insieme
+Insieme-N-Lotto
+PInvoice-N-ParteDI
+ParteDI-1-PurchaseOrder
+Warehouse-1-Contiene
+/'
+
+
+PurchaseOrder "N" --*  "N"Lotto :"composto"
+PurchaseOrder "N" --"1"  DettagliLotto
+Lotto "N"--"1"  DettagliLotto
+'/
+@endchen
+
+duml

@@ -41,6 +41,7 @@ public class ShelfInfo
        this.weight=builder.weight;
        this.lenght=builder.lenght;
        this.nome_magazzino=builder.nome_magazzino;
+
     }
 
     public void setNome_magazzino(String nome_magazzino) {
@@ -92,7 +93,11 @@ public class ShelfInfo
     }
 
 
-
+    /**
+     * Hoe can be fit with a particulary LotDimension
+     * @param lotDimensionModel
+     * @return
+     */
     @TestOnly
     public boolean canFitProduct(LotDimensionModel lotDimensionModel){
         return lotDimensionModel.getLength()<= lenght &&
@@ -176,7 +181,7 @@ public class ShelfInfo
          // Calculus fitProduct
          int  fitbyWeight =(int)( remaing_weight / lotDimensionModel.getWeight());
          int remaining=Math.min(fit_space,fitbyWeight);
-         logger.info("remaining:  "+remain);
+         logger.info("remaining:  "+remaining);
      //    logger.info("remaining: "+remaining);
          if(remaining>0){
              remain.add(new ShelvesRemain(shelvesCapacity, remaining));

@@ -6,22 +6,28 @@ import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ShelfDao extends GenericJDBCDao<ShelfInfo,String> {
     private final  String table="warehouse_shelf";
+    private Database database;
     public ShelfDao( Database database) {
         super("warehouse_shelf", database);
+        this.database=database;
     }
 
     @Override
     protected ShelfInfo mapRow(ResultSet resultSet) throws Exception {
-        return ShelfInfo.ShelfInfoBuilder.get_builder().setShelf_code(resultSet.getString(1)).
+        return ShelfInfo.ShelfInfoBuilder.get_builder().
+                setShelf_code(resultSet.getString(1)).
                 setMagazzino_id(resultSet.getInt(2)).
                 setLenght(resultSet.getDouble(3)).
                 setHeight(resultSet.getDouble(4)).
                 setDeep(resultSet.getDouble(5)).
-                setShelf_thickness(resultSet.getDouble(5)).
-                setNum_rip(resultSet.getInt(6)).build();
+                setShelf_thickness(resultSet.getDouble(6)).
+                setNum_rip(resultSet.getInt(7)).setWeight(resultSet.getInt(8))
+                .build();
     }
 
     @Override

@@ -34,6 +34,8 @@ public class Warehouse {
     private SellerOrderDetails s_details;
     private LotDimensionDao lotDimensionDao;
     private LottiDao lottiDao;
+    private  LotAssigmentDao assigmentDao;
+    private  LotAssigmentShelvesDao assigmentShelvesDao;
     public Warehouse() {
         Properties properties;
         try {
@@ -53,7 +55,11 @@ public class Warehouse {
         s_details=new SellerOrderDetails(Database.getInstance(properties));
         lottiDao=new LottiDao(Database.getInstance(properties),"lotto");
         lotDimensionDao=new LotDimensionDao(Database.getInstance(properties));
-        storageHandler=new LottoStorageHandler("Inserisci Lotti",List.of(farmaciaDao,sellerOrderDao,s_details,lotDimensionDao,magazzinoDao,lottiDao));
+
+        assigmentDao=new LotAssigmentDao(Database.getInstance(properties));
+        assigmentShelvesDao=new LotAssigmentShelvesDao(Database.getInstance(properties));
+        storageHandler=new LottoStorageHandler("Inserisci Lotti",List.of(farmaciaDao,lottiDao,sellerOrderDao,s_details,lotDimensionDao,magazzinoDao,
+                shelfDao,shelvesDao,assigmentDao,assigmentShelvesDao));
     }
     @TestOnly
     public Warehouse(MagazzinoDao magazzinoDao, ShelfDao shelfDao,ShelvesDao shelvesDao) {
@@ -76,7 +82,7 @@ public class Warehouse {
 
     }
      public void lots_action(ActionEvent event){
-        storageHandler.show();
+        storageHandler.execute();
 
      }
 

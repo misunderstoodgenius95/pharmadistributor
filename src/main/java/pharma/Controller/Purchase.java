@@ -71,7 +71,6 @@ public class Purchase {
 
     @FXML
     void dettagli_action(ActionEvent event) throws IOException {
-
         Parent parent = stages.load_fxml("/subpanel/dettagli.fxml");
         parent.getStyleClass().add("subpanel");
         change_stages(parent, 200.00);

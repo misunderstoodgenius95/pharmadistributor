@@ -1,5 +1,6 @@
 package pharma.config.Json;
 
+import JPath.Query;
 import com.github.jknack.handlebars.helper.StringHelpers;
 import com.github.tomakehurst.wiremock.common.Json;
 import net.bytebuddy.asm.Advice;
@@ -32,6 +33,7 @@ class ExtractJsonTest {
 
         xanax.put("category", "Ansiolitici");
         xanax.put("typology", "Compresse");
+        xanax.put("id",340);
         xanax.put("dosage", "5mg");
         xanax.put("name", "Xanax");
         xanax.put("trend_market_percentage", 8.5);
@@ -99,6 +101,20 @@ class ExtractJsonTest {
         System.out.println(ExtractJson.extract_first(json_string,"$[?(@.name==Alice )]"));
 
     }
+    @Test
+    public  void TestID(){
+
+        System.out.println(ExtractJson.extract_first(json_string,"$[?(@.id==340 )]"));
+
+    }
+    @Test
+    public  void TestIDQuery(){
+
+        System.out.println(ExtractJson.extract_first(json_string, Query.equal("id","340")));
+
+    }
+
+
 
 
 

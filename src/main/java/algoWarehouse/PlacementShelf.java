@@ -110,6 +110,7 @@ private List<ShelfInfo> list_shelf;
         List<Map.Entry<ShelfInfo,Integer>> sorted_shelf_by_max= sorted_max_shelf_with(capacity_max_shelf);
 
         List<Map.Entry<ShelfInfo,Integer>>  sorted_filter=filter_value(sorted_shelf_by_max,quantity_remain);
+        //  if no
         if(sorted_filter.isEmpty()){
             for (Map.Entry<ShelfInfo, Integer> map : sorted_shelf_by_max) {
                 if (quantity_remain <= 0) {
@@ -126,16 +127,16 @@ private List<ShelfInfo> list_shelf;
 
         }else {
 
-            for (Map.Entry<ShelfInfo, Integer> map : sorted_filter) {
-                if (quantity_remain <= 0) {
-                    break;
-                }
+            // give the first
+
+            Map.Entry<ShelfInfo,Integer> map=sorted_filter.getFirst();
+
                 List<ShelvesRemain> remain = map_capacity_single_shelves.get(map.getKey());
 
-                quantity_remain= placingIntoShelf(dimension, map.getKey(), quantity_remain, remain, lotAssigment);
+                 placingIntoShelf(dimension, map.getKey(), quantity_remain, remain, lotAssigment);
 
 
-            }
+
         }
         return lotAssigment;
 

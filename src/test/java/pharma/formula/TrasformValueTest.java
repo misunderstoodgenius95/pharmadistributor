@@ -37,7 +37,7 @@ class TrasformValueTest {
 
     }
     @ParameterizedTest
-    @CsvSource({"0.45,10.0","0.4,20.0","0.55,-10"})
+    @CsvSource({"0.45,10.0" ,"0.4,20.0", "0.55,-10"})
     void ValidNormalize_percentuages(double expected,double input) {
         assertEquals(expected,TrasformValue.normalize_percentuages(input));
 
@@ -49,11 +49,6 @@ class TrasformValueTest {
     @ValueSource(doubles = {-100.01,100.1})
     public  void Invalid_percentages(double value){
         Assertions.assertThrows(IllegalArgumentException.class,()->TrasformValue.normalize_percentuages(value));
-
-    }
-    @Test
-    public void NormalizePercentuages(){
-
 
     }
 

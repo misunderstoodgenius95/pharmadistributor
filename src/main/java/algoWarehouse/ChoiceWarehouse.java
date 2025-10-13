@@ -47,12 +47,12 @@ private final  double DISTANCE_KM=70;
      * @return
      */
     public List<WarehouseDistances> calculate_warehouse(LotDimensionModel dimension, int quantity){
-
+// Grouping pharmacist
         Map<Farmacia,Integer> map_by_qty=pharmacy_by_qty();
 
         List<Map. Entry<Farmacia, Integer>> sorted_values= sorted_by_max(map_by_qty);
         List<PharmacyDistance> pharmacyDistances=distance_pharmacist(sorted_values);
-        return sorted_warehouse(calculate_availability(pharmacyDistances,dimension,quantity));
+             return  sorted_warehouse(calculate_availability(pharmacyDistances));
 
 
 
@@ -66,17 +66,63 @@ private final  double DISTANCE_KM=70;
      */
     @TestOnly
     public static List<WarehouseDistances> sorted_warehouse(List<WarehouseDistances> distances){
-         return distances.stream().sorted(Comparator.comparing(WarehouseDistances::getDistance)).toList();
+        Set<Integer> seenIds = new HashSet<>();
+
+        return distances.stream()
+                .filter(ws -> seenIds.add(ws.getWarehouseModel().getId()))
+                .sorted(Comparator.comparing(WarehouseDistances::getDistance))
+                .toList();
 
     }
 
-    /**
-     * Calulate the availability for this lot
-     * @param distanceList
-     * @param dimension
-     * @param quantity
-     * @return
-     */
+
+
+        @TestOnly
+    public List<WarehouseDistances> calculate_availability(List<PharmacyDistance> distanceList){
+            List<WarehouseDistances> distances=new ArrayList<>();
+            for (PharmacyDistance pharmacy : distanceList) {
+                for (WarehouseModel warehouse : warehouseModels) {
+                Point point_warehouse=(Point) warehouse.getpGgeometry().getGeometry();
+                Point pharmacy_avg=pharmacy.getAverage();
+                    warehouse.getShelfInfos().forEach(shelfInfo -> {
+                        System.out.println(warehouse.getNome());
+                        double  harvesinDistance=HarvesinFormula.calculate_harvesinDistance(point_warehouse.getX(),point_warehouse.getY(),pharmacy_avg.getX(),pharmacy_avg.getY());
+                                distances.add(new WarehouseDistances(warehouse,pharmacy.getFarmaciaList(),harvesinDistance));
+
+
+                    });
+
+
+
+                //}
+
+
+
+
+
+            }
+
+        }
+
+
+        //return availability_warehouseModel;
+
+        return distances;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /*
         @TestOnly
     public List<WarehouseDistances> calculate_availability(List<PharmacyDistance> distanceList, LotDimensionModel dimension, int quantity){
             List<WarehouseDistances> distances=new ArrayList<>();
@@ -84,16 +130,10 @@ private final  double DISTANCE_KM=70;
                 for (WarehouseModel warehouse : warehouseModels) {
                 Point point_warehouse=(Point) warehouse.getpGgeometry().getGeometry();
                 Point pharmacy_avg=pharmacy.getAverage();
-
-
-
-
-
                     warehouse.getShelfInfos().forEach(shelfInfo -> {
+                        System.out.println(warehouse.getNome());
                         Optional<List<ShelvesRemain>> remains = shelfInfo.remaining_levels(dimension);
-
                         if (remains.isPresent()) {
-
                             int availability = remains.get().stream().mapToInt(ShelvesRemain::getQuantity).sum();
                             log.info("availability: " + availability);
                             if (availability >= quantity) {
@@ -119,7 +159,7 @@ private final  double DISTANCE_KM=70;
         //return availability_warehouseModel;
 
         return distances;
-    }
+    }*/
 
     @TestOnly
     /**
@@ -266,9 +306,10 @@ private final  double DISTANCE_KM=70;
                 }
             });
         }
+        // if no point it can be average of n point
         if( pharmacyDistanceList.isEmpty()){
               return  List.of(average_entries(limit_entries(pharmacy_points)));
-
+        // average of point neighbor of the main point choice.
         }else{
             pharmacyDistanceList.forEach(list-> list.setAverage( average_point(list.getFarmaciaList())));
             return pharmacyDistanceList;

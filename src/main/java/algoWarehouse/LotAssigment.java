@@ -10,7 +10,7 @@ public class LotAssigment {
     private int quantity_request;
     private List<ShelvesAssigment> shelvesAssigmentList;
     private int quantity_occupied;
-
+    private int id;
     public LotAssigment( int farmaco_id, String lot_code, int quantity_request) {
         this.farmaco_id = farmaco_id;
         this.lot_code = lot_code;
@@ -18,7 +18,19 @@ public class LotAssigment {
         this.quantity_occupied=0;
         shelvesAssigmentList=new ArrayList<>();
     }
-    public void add_assigment(String shelf_code,int level,int quantity,int shelves_id,int magazzino_id){
+
+    public LotAssigment() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void add_assigment(String shelf_code, int level, int quantity, int shelves_id, int magazzino_id){
         shelvesAssigmentList.add(new ShelvesAssigment(shelves_id,shelf_code,quantity,level,magazzino_id));
 
     }

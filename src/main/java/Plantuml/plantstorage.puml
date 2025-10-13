@@ -1,0 +1,212 @@
+@startuml Pharmacy Warehouse System - Simplified
+
+skinparam linetype ortho
+skinparam entity {
+    BackgroundColor #E3F2FD
+    BorderColor #1976D2
+}
+
+entity Pharma {
+    * id
+    --
+    Anagrafia_Cliente
+    Sigla
+    Partita_Iva
+}
+entity SellerPrice{
+id
+price
+timestamp
+
+}
+entity Promotion{
+id
+starting_qty
+end_quantity
+starting_date
+end_date
+}
+
+entity Categoria {
+    * id
+    --
+    nome
+}
+
+entity Tipologia {
+    * id
+    --
+    nome
+}
+
+entity Misura {
+    * id
+    --
+    unit
+    quantity
+}
+
+entity Principio_Attivo {
+    * id
+    --
+    nome
+}
+
+entity Prodotto {
+    * id
+    --
+    nome
+    descrizione
+}
+
+entity Lotto {
+    * id
+    --
+    data_produzione
+    data_scadenza
+    quantità
+}
+
+entity DettagliLotto {
+    * id
+    --
+    price
+    quantità
+}
+
+entity PurchaseOrder {
+    * id
+    --
+    data
+    subtotale
+    iva
+    totale
+}
+
+entity PInvoice {
+    * id
+    --
+    invoice_number
+    payment_type
+    created_at
+    subtotal
+    iva
+    totale
+}
+
+entity PurchaseCreditNote {
+    * id
+    --
+    credit_note_number
+    data
+    motivo
+    created_at
+}
+
+entity PurchaseCreditNoteDetails {
+    * id
+    --
+    price
+    quantity
+    vat_percent
+}
+
+entity Farmacia {
+    * id
+    --
+    intestazione
+    vat
+    via
+    cap
+    comune
+    provincia
+}
+
+entity Warehouse {
+    * id
+    --
+    nome
+    location
+    comune
+    provincia
+}
+
+entity Warehouse_shelf {
+    * code
+    --
+    length
+    height
+    deep
+    shelf_thickness
+    num_level
+    capacity
+}
+
+entity Warehouse_shelves {
+    * id
+    --
+    num_shelves
+    length_occupied
+    deep_occupied
+}
+
+entity LotAssignment {
+    * id
+    --
+    quantity
+}
+
+entity LotAssignmentShelves {
+    * id
+    --
+    lot_assignment_id (FK)
+    shelf_code (FK)
+    shelves_level (NOT NULL)
+    warehouse_id (FK)
+    quantity
+    created_at
+    updated_at
+}
+
+' Prodotto relationships
+Prodotto }o--|| Tipologia : "(1,N)\nContiene"
+Prodotto }o--|| Misura : "(1,N)\nContiene"
+Prodotto }o--|| Categoria : "(1,N)\nContiene"
+Prodotto }o--|| Principio_Attivo : "(1,N)\nContiene"
+Prodotto }o--|| Pharma : "(1,N)\nContiene"
+Prodotto "(1.N)"-- SellerPrice : "(1,1)\nContiene"
+Prodotto "(1.N)"-- Promotion : "(1,1)\nContiene"
+' Lotto relationships
+Lotto }o--|| Prodotto : "(1,N)\nComposto"
+Lotto ||--o{ DettagliLotto : "(1,N)\nParte"
+
+' PurchaseOrder relationships
+PurchaseOrder ||--o{ DettagliLotto : "(1,N)\nInsieme"
+PurchaseOrder ||--o{ PInvoice : "(1,N)\nParteDI"
+
+' Invoice and Credit Note
+PInvoice ||--o{ PurchaseCreditNote : "(1,N)\nHa_Nota"
+PurchaseCreditNote ||--o{ PurchaseCreditNoteDetails : "(1,N)\nDettagli"
+DettagliLotto ||--o{ PurchaseCreditNoteDetails : "(1,N)\nRiferisce"
+
+' Warehouse relationships
+Warehouse ||--o{ Warehouse_shelf : "(1,N)\nContiene"
+Warehouse_shelf ||--o{ Warehouse_shelves : "(1,N)\nHa_Livelli"
+
+' LotAssignment relationships
+Farmacia ||--o{ LotAssignment : "(1,N)\nAssegnato"
+Lotto ||--o{ LotAssignment : "(1,N)\nAssegnato"
+
+' LotAssignmentShelves relationships (NEW)
+LotAssignment ||--o{ LotAssignmentShelves : "(1,N)\nCollocato_In"
+Warehouse_shelf ||--o{ LotAssignmentShelves : "(1,N)\nMemorizzato"
+Warehouse ||--o{ LotAssignmentShelves : "(1,N)\nIn_Warehouse"
+
+note bottom of LotAssignmentShelves
+  **Junction Table**
+  Connects lot assignments with
+  warehouse shelf locations
+  Including level and quantity
+end note
+
+@enduml
