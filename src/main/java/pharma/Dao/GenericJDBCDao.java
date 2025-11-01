@@ -77,7 +77,7 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
             return  preparedStatement.executeUpdate()>0;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return  false;
 
@@ -269,7 +269,7 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return  -1;
     }

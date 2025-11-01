@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+:Calcolo media date;
+:Calcolo media disponibilità;
+:Calcolo valore massimo;
+if(expiration_date < theshold) then (return false);
+if(availability<threshold) then(return false)
+if(seller_order>threshold)  then(return true) )
+endif
+endif
+endif
+if(two false one true) then( return true);
+@enduml

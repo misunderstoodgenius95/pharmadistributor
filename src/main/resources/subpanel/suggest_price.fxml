@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Button?>
+<AnchorPane fx:id="anchor_id" prefHeight="536.0" prefWidth="1007.0" xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"> <!--fx:controller="pharma.Controller.subpanel.SuggestPrice">-->
+    <RadioButton  fx:id="single" layoutX="210.0" layoutY="67.0" mnemonicParsing="false" text="Singolo Prodotto">
+        <toggleGroup>
+            <ToggleGroup  fx:id="choice"></ToggleGroup>
+        </toggleGroup>
+    </RadioButton>
+    <RadioButton  fx:id="category" layoutX="374.0" layoutY="67.0" mnemonicParsing="false" toggleGroup="$choice"
+                 text="Categoria Prodotti"/>
+    <TextField fx:id="single_product" layoutX="197.0"  layoutY="126.0"/>
+    <Button   layoutX="500" layoutY="200" fx:id="send_btn_id"  onAction="#on_action_send" text="Mostra"  />
+</AnchorPane>

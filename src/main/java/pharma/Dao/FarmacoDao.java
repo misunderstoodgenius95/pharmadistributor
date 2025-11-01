@@ -6,6 +6,7 @@ import pharma.config.database.Database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
     private final  String table;
@@ -51,6 +52,11 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
     protected String getInsertQuery() throws Exception {
         return " INSERT INTO "+table+" (nome,descrizione,categoria,tipologia,misura,principio_attivo,casa_farmaceutica,qty) " +
                 " VALUES( ?,?,?,?,?,?,?,?) ; ";
+    }
+
+
+    public List<FieldData> findByName( String parameter) {
+        return super.findByParameter(" SELECT * FROM farmaco_all where nome=? ", parameter);
     }
 
     @Override

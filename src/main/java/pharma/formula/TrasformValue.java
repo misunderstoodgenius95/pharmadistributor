@@ -35,13 +35,16 @@ public class TrasformValue {
       if(input<-100.0 || input>100.0){
           throw  new IllegalArgumentException("value is not between -100.0 to 100.0");
       }
-      return (100-input)/200.0;
+      return (100-input)/100.0;
 
 
     }
     public  static  double  gain(double cost, double gain){
         return  TrasformValue.trim_two(cost*(1+(gain/100.0)));
 
+    }
+    public static double round_percentuages(double value){
+        return value/100;
     }
 
     /**
@@ -106,7 +109,7 @@ public class TrasformValue {
      * @param ref
      * @return
      */
-    protected static double normalizeValue(double stock, double ref) {
+    public static double normalizeValue(double stock, double ref) {
         double raw = 0.5 - (stock - ref) / (2.0 * ref);
         double clamped = Math.max(0.0, Math.min(1.0, raw));
         return Math.round(clamped * 10) / 10.0;
@@ -140,28 +143,47 @@ public class TrasformValue {
     }
 
 
+    /**
+     *
+     * @param sellerPriceHistory
+     * @param currentPurchasePrices
+     * @param purchasePriceHistory
+     * @param currentPrice
+     * @return
+     * 0.0 no Profict
+     * 0.5 Very Low Profict
+     * 0.7-0.9 Acceptable
+     * 0.9-1.0 Good
 
+     */
     public static double calculate_percent_gain(double[] sellerPriceHistory,
                                                 double[] currentPurchasePrices,
                                                 double[] purchasePriceHistory,
                                                 double currentPrice) {
         double avgSellerPriceHistory = average(sellerPriceHistory);
-
         double avgCurrentPurchasePrice = average(currentPurchasePrices);
-
         double avgPurchasePriceHistory = average(purchasePriceHistory);
-
-        double priceDifference = (avgSellerPriceHistory - avgPurchasePriceHistory) / 2.0;
+        // if it gain with this product
+        double priceDifferenceHistory = (avgSellerPriceHistory - avgPurchasePriceHistory) / 2.0;
         // Only calculate gain if there's a positive price difference
-        if (priceDifference > 0) {
-            // Calculate current price difference
-            double currentPriceDifference = (currentPrice - avgCurrentPurchasePrice) / 2.0;
-            // Calculate global difference
-            double global_difference = priceDifference - (currentPriceDifference / 2.0);
-            // Calculate percentage gain
-            double percentGain = (global_difference / priceDifference) * 100.0;
-            // Return the percentage gain rounded to two decimal places
+        if (priceDifferenceHistory > 0) {
+            // Current potential profit margin
+            double currentMargin=currentPrice-avgCurrentPurchasePrice;
+            // Calculate the gain between current margin and history difference
+            double percentGain=(currentMargin/priceDifferenceHistory);
+         if(percentGain>1){
+             return 1;
+         } if(percentGain<0){
+             return 0;
+            }
+
             return TrasformValue.trim_two(percentGain);
+
+
+
+
+
+            //return TrasformValue.trim_two(percentGain);
         }
 
         return 0.0;
@@ -169,12 +191,19 @@ public class TrasformValue {
     public static double average(double[] array) {
 
         if (array == null || array.length == 0) {
-            throw new IllegalArgumentException("Array can be with length 0 or null");
+           return 0;
         }
         return Arrays.stream(array).sum() / array.length;
 
 
     }
+
+
+    /**
+     * Middle of  int value
+     * @param array
+     * @return
+     */
     public static int   average(int[] array) {
 
         if (array == null || array.length == 0) {
@@ -187,7 +216,7 @@ public class TrasformValue {
 
     public static long calculateAverageEpoch(List<Date> dates) {
         if (dates == null || dates.isEmpty()) {
-            throw new IllegalArgumentException("Date list cannot be null or empty");
+           return LocalDate.now().toEpochDay();
         }
 
          return dates.stream().mapToLong(java.util.Date::getTime).sum()/dates.size();
@@ -220,32 +249,6 @@ public class TrasformValue {
        return  TrasformValue.round_one(urgency);
     }
 
-    public static double calculateStockandExpireUrgency(int stockQuantity, long daysUntilExpiration, double avgDailySales) {
-        // Calculate how many days it would take to sell all stock at current velocity
-        double daysToSellStock = stockQuantity / avgDailySales;
-
-        // Calculate the ratio: how much time we need vs how much time we have
-        double timeRatio = daysToSellStock / Math.max(1, daysUntilExpiration);
-
-        // Convert ratio to 0-1 urgency scale
-        double stockUrgency;
-
-        if (timeRatio <= 0.5) {
-            // We can sell stock in half the available time - very low urgency
-            stockUrgency = 0.0;
-        } else if (timeRatio <= 1.0) {
-            // We can just barely sell stock in time - linear increase from 0 to 0.4
-            stockUrgency = (timeRatio - 0.5) * 0.8; // Maps 0.5-1.0 to 0.0-0.4
-        } else if (timeRatio <= 2.0) {
-            // We need up to 2x the available time - moderate to high urgency
-            stockUrgency = 0.4 + (timeRatio - 1.0) * 0.4; // Maps 1.0-2.0 to 0.4-0.8
-        } else {
-            // We need more than 2x the available time - very high urgency
-            stockUrgency = 0.8 + Math.min(0.2, (timeRatio - 2.0) * 0.1); // Approaches 1.0
-        }
-
-        return Math.round(stockUrgency * 100.0) / 100.0; // Round to 2 decimal places
-    }
 
 
 

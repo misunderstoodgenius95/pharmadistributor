@@ -3,6 +3,7 @@ package pharma.dao;
 import algoWarehouse.LotAssigment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
 
@@ -10,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -115,4 +117,28 @@ class LotAssigmentDaoTest {
 
 
     }
+
+    @Test
+    void findQuantitybyFarmacoId() {
+
+
+        Properties properties;
+
+        {
+            try {
+                properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+                LotAssigmentDao lotAssigmentDao = new LotAssigmentDao(Database.getInstance(properties));
+                List<FieldData> list= lotAssigmentDao.findQuantitybyFarmacoId(347);
+                Assertions.assertEquals(11,list.getFirst().getQuantity());
+
+
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+
+
 }

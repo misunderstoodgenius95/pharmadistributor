@@ -181,16 +181,11 @@ class LottoStorageHandlerTest {
         });
 
 
-            SimulateEvents.clickOn(lt.getButtonOK());
+        SimulateEvents.clickOn(lt.getButtonOK());
         WaitForAsyncUtils.waitForFxEvents();
-            Label label=lottoStorageHandler.getVisibile_label();
+        Label label=lottoStorageHandler.getVisibile_label();
         assertThat(label.isVisible()).isTrue();
-
-
-     robot.sleep(50000);
-
-
-
+        robot.sleep(50000);
     }
 
 

@@ -115,7 +115,7 @@ public class PurchaseCreditNoteHandler extends  DialogHandler<FieldData> {
 
 
 
-    private  void calculus_attribute() {
+    private void calculus_attribute() {
 
         s_update.addListener((observable, oldValue, newValue) -> {
             if(!newValue.equals(-1)){
@@ -158,8 +158,8 @@ public class PurchaseCreditNoteHandler extends  DialogHandler<FieldData> {
     }
 
     @Override
-    protected boolean condition_event(FieldData fieldData) throws Exception {
 
+    protected boolean condition_event(FieldData fieldData) throws Exception {
         purchaseCreditNoteDao.setTransaction(true);
     int index_credit_note=purchaseCreditNoteDao.insertAndReturnID(fieldData);
     if((index_credit_note!=-1) && (index_credit_note!=0)){
@@ -172,7 +172,6 @@ public class PurchaseCreditNoteHandler extends  DialogHandler<FieldData> {
                             setVat_percent(fieldata_detail.getVat_percent()).
                             setPrice(fieldata_detail.getPrice()).build();
                     return  p_credit_dao.insert(fieldData_insert_details);
-
                 });
         if(result){
           purchaseCreditNoteDao.commit();

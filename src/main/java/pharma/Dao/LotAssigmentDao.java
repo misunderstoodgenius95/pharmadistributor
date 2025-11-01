@@ -1,22 +1,24 @@
 package pharma.dao;
 
 import algoWarehouse.LotAssigment;
+import pharma.Model.FieldData;
 import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LotAssigmentDao extends GenericJDBCDao<LotAssigment,Integer>{
     private String table="lot_assignment";
+    private Database database;
     public LotAssigmentDao( Database database) {
         super("lot_assignment", database);
+        this.database=database;
     }
 
-    public LotAssigmentDao(String table_name, Database database) {
-        super(table_name, database);
-    }
+
 
     @Override
     protected LotAssigment mapRow(ResultSet resultSet) throws Exception {
@@ -58,6 +60,33 @@ public class LotAssigmentDao extends GenericJDBCDao<LotAssigment,Integer>{
 
          return super.findByParametersExists(query,lot_code,farmaco_id);
     }
+    public List<FieldData> findQuantitybyFarmacoId(int farmaco_id){
+        List<FieldData> resultList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query("select request_quantity from lot_assigment_shelves\n " +
+                    "inner join lot_assignment la on la.id = lot_assigment_shelves.lot_assigment_id\n " +
+                    "where farmaco_id=? ");
+            preparedStatement.setInt(1,farmaco_id);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                resultList.add(FieldData.FieldDataBuilder.getbuilder().setQuantity(resultSet.getInt(1)).build());
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return resultList;
+
+    }
+
+
+
+
+
 
     @Override
     protected String getUpdatequery() {

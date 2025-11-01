@@ -5,6 +5,7 @@ import org.assertj.core.api.AssertJProxySetup;
 import org.assertj.core.util.Streams;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -23,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pharma.formula.TrasformValue.remaining_day;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -115,6 +118,48 @@ class TrasformValueTest {
 
 
     }
+
+    @Test
+    void ProfitCalculate_percent_gain() {
+        double[] sellerPriceHistory = {110, 130.0};
+        double[] currentPurchasePrices = {40.0,50.0, 60.0};
+        double[] purchasePriceHistory = {30.0,40.0};
+        double currentPriceSeller = 82.0;
+        double value=TrasformValue.calculate_percent_gain(sellerPriceHistory,currentPurchasePrices,purchasePriceHistory,currentPriceSeller);
+       Assertions.assertEquals(0.75,value);
+    }
+    @Test
+    void NoProfictcalculate_percent_gain() {
+        double[] sellerPriceHistory = {110, 130.0};
+        double[] currentPurchasePrices = {40.0,50.0, 60.0};
+        double[] purchasePriceHistory = {150,160};
+        double currentPriceSeller = 82.0;
+        double value=TrasformValue.calculate_percent_gain(sellerPriceHistory,currentPurchasePrices,purchasePriceHistory,currentPriceSeller);
+        Assertions.assertEquals(0.0,value);
+    }
+
+    static  Stream<Arguments> lessTest() {
+        return Stream.of(
+                Arguments.of(500,1 ),
+                Arguments.of(50,0 ),
+                Arguments.arguments(700,1)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("lessTest")
+    void LessProfictcalculate_percent_gain(int current_seller, double excepted_value) {
+        double[] sellerPriceHistory = {151, 161.0};
+        double[] currentPurchasePrices = {152,147};
+        double[] purchasePriceHistory = {150,160};
+
+        double value=TrasformValue.calculate_percent_gain(sellerPriceHistory,currentPurchasePrices,purchasePriceHistory,current_seller);
+        Assertions.assertEquals(excepted_value,value);
+    }
+
+
+
+
 
     @Nested
  class TestNormalize {

@@ -4,6 +4,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
 import pharma.Model.FieldData;
 import pharma.config.Status;
 import pharma.config.Utility;
@@ -21,6 +22,12 @@ public abstract class DialogHandler<F> extends CustomDialog<F> {
 
     public DialogHandler() {
         super("");
+    }
+    public void addControls(Control controls){
+        getControlList().add(controls);
+    }
+    public void removeControls(Control controls){
+        getControlList().remove(controls);
     }
 
     protected abstract boolean condition_event(F type) throws Exception;

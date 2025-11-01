@@ -167,8 +167,42 @@ class FarmacoDaoTest {
     }
 
 
+    @Test
+    void ValidfindByName() {
+
+        Properties properties = null;
+        FarmacoDao farmacoDao = null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            farmacoDao=new FarmacoDao(Database.getInstance(properties));
+            List<FieldData> list=farmacoDao.findByName("Tachipirina");
+            Assertions.assertFalse(list.isEmpty());
 
 
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    @Test
+    void InValidfindByName() {
+
+        Properties properties = null;
+        FarmacoDao farmacoDao = null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            farmacoDao=new FarmacoDao(Database.getInstance(properties));
+            List<FieldData> list=farmacoDao.findByName("Tachipirino");
+            Assertions.assertTrue(list.isEmpty());
 
 
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

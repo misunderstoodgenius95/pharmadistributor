@@ -11,7 +11,6 @@ import pharma.config.Utility;
 import pharma.config.View.FarmaciaLotConvert;
 import pharma.dao.FarmaciaDao;
 import pharma.dao.GenericJDBCDao;
-import pharma.dao.PharmaDao;
 
 import java.io.IOException;
 import java.nio.file.Files;

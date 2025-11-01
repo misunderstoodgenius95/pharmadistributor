@@ -2,6 +2,11 @@ package pharma.config.database;
 
 
 
+import io.zonky.test.db.postgres.embedded.EmbeddedPostgres;
+import org.jetbrains.annotations.TestOnly;
+
+import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
@@ -9,20 +14,38 @@ public class Database {
 
     private Connection conn;
     private static Database instance;
-
-
-    private Database(Properties properties) {
-    try{
-
-
-     conn = DriverManager.getConnection(properties.getProperty("host"),
+    private EmbeddedPostgres embeddedPostgres;
+    /**
+     * Real Database
+     * @param properties
+     */
+    public Database(Properties properties) {
+        try{
+            conn = DriverManager.getConnection(properties.getProperty("host"),
              properties.getProperty("username"), properties.getProperty("password"));
-
-    }catch (SQLException e) {
-
-        throw  new RuntimeException(e);
+            }
+                catch (SQLException e) {
+                    throw  new RuntimeException(e);
+                 }
     }
+
+    /**
+     * Embedded Database
+     */
+    @TestOnly
+    public Database(){
+        try {
+           this.embeddedPostgres= EmbeddedPostgres.start();
+             DataSource dataSource=embeddedPostgres.getPostgresDatabase();
+             conn=dataSource.getConnection();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
+
 
      public static synchronized  Database getInstance(Properties properties) {
         if(properties==null){

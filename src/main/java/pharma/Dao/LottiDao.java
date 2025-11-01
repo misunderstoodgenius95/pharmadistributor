@@ -22,6 +22,8 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected FieldData mapRow(ResultSet resultSet) throws Exception {
+
+
        return FieldData.FieldDataBuilder.getbuilder().
                setcode(resultSet.getString("id")).
                setProduction_date(resultSet.getDate("production_date")).
@@ -54,6 +56,9 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
     }
 
 
+    public List<FieldData> findByFarmaco(int farmaco_id) {
+        return super.findByParameter("SELECT * FROM lotto WHERE farmaco = ?",farmaco_id);
+    }
 
     @Override
     protected String getUpdatequery() {
@@ -123,6 +128,30 @@ public class LottiDao extends GenericJDBCDao<FieldData,Integer> {
 
     }
 
+
+
+    public List<FieldData> findbyDate( int id) {
+        List<FieldData> resultList=new ArrayList<>();
+
+        try {
+            PreparedStatement preparedStatement=postegresql.execute_prepared_query("SELECT elapsed_date FROM lotto where farmaco = ?");
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                resultList.add(
+                  FieldData.FieldDataBuilder.getbuilder().
+                          setElapsed_date(resultSet.getDate(1)).build());
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return resultList;
+    }
 
     public Optional<FieldData> findByIds(int farmaco_id, String id_code) {
 

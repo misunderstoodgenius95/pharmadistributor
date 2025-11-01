@@ -1,4 +1,4 @@
-@startuml Pharmacy Warehouse System - Simplified
+ @startuml Pharmacy Warehouse System - Simplified
 
 skinparam linetype ortho
 skinparam entity {
@@ -159,14 +159,49 @@ entity LotAssignment {
 entity LotAssignmentShelves {
     * id
     --
-    lot_assignment_id (FK)
-    shelf_code (FK)
-    shelves_level (NOT NULL)
-    warehouse_id (FK)
+    lot_assignment_id
+    shelf_code
+    shelves_level
+    warehouse_id
     quantity
     created_at
     updated_at
 }
+entity SellerOrder{
+id
+farmacia_id
+subtotal
+vat
+total
+order_date
+}
+entity SellerInvoice{
+id
+pharma_house
+order_id
+payment_mode,
+subtotal
+vat_amount
+total
+created_at
+}
+entity seller_order_detail{
+id
+seller_order
+price
+quantity
+vat_percent
+farmaco
+}
+entity SellerCreditNote{
+Id
+invoice_number
+vat
+subtotal
+total
+created_at
+}
+
 
 ' Prodotto relationships
 Prodotto }o--|| Tipologia : "(1,N)\nContiene"
@@ -179,11 +214,13 @@ Prodotto "(1.N)"-- Promotion : "(1,1)\nContiene"
 ' Lotto relationships
 Lotto }o--|| Prodotto : "(1,N)\nComposto"
 Lotto ||--o{ DettagliLotto : "(1,N)\nParte"
-
+SellerOrder}o--||Pharma
+SellerInvoice}--||SellerOrder
+seller_order_detail}--||SellerOrder
 ' PurchaseOrder relationships
 PurchaseOrder ||--o{ DettagliLotto : "(1,N)\nInsieme"
 PurchaseOrder ||--o{ PInvoice : "(1,N)\nParteDI"
-
+SellerCreditNote  ||--o SellerInvoice
 ' Invoice and Credit Note
 PInvoice ||--o{ PurchaseCreditNote : "(1,N)\nHa_Nota"
 PurchaseCreditNote ||--o{ PurchaseCreditNoteDetails : "(1,N)\nDettagli"

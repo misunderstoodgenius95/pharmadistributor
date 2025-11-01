@@ -18,7 +18,6 @@ import pharma.config.Utility;
 import pharma.dao.*;
 import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
 
-import java.sql.SQLException;
 import java.util.*;
 
 public class LottoStorageHandler extends DialogHandler<FieldData> {
@@ -163,12 +162,7 @@ private  Button btn_calculate_warehouse;
                 MagazzinoModelDao magazzinoModelDao =new MagazzinoModelDao(shelfDao,shelvesDao, magazzinoDao);
                 List<WarehouseModel> modelList=magazzinoModelDao.getFullWarehouseModel();
 
-
-
-
-
-
-                List<FieldData> order_details = s_order_details.findbyProduct(fieldData_choice.getFarmaco_id(),fieldData_choice.getCode());
+             List<FieldData> order_details = s_order_details.findbyProduct(fieldData_choice.getFarmaco_id());
                 for (FieldData orderDetail : order_details) {
                     //obtein  the order id
                     int order_id = orderDetail.getOrder_id();

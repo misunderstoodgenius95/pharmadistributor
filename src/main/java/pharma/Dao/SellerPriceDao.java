@@ -9,10 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuggestPriceDao extends GenericJDBCDao<FieldData,Integer> {
+public class SellerPriceDao extends GenericJDBCDao<FieldData,Integer> {
     private Database database;
     private String table_name;
-    public SuggestPriceDao( Database database) {
+    public SellerPriceDao(Database database) {
         super("seller_price", database);
         this.database=database;
         table_name="seller_price";
@@ -40,6 +40,50 @@ public class SuggestPriceDao extends GenericJDBCDao<FieldData,Integer> {
         return "select * from seller_price\n" +
                 "inner join farmaco_all on farmaco=farmaco_all.id;";
     }
+
+    public double findCurrentPricebyFarmaco(int farmaco_id){
+        String query="select price from seller_price\n" +
+                "where farmaco= ? ";
+        ResultSet resultSet= null;
+        try {
+            PreparedStatement preparedStatement = database.execute_prepared_query(query);
+            preparedStatement.setInt(1,farmaco_id);
+            resultSet=preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            if(resultSet.next()) {
+            return resultSet.getDouble(1);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+            return -1;
+
+    }
+    public double findCurrentPricebyFarmaco(int farmaco_id,String query){
+
+        ResultSet resultSet= null;
+        try {
+            PreparedStatement preparedStatement = database.execute_prepared_query(query);
+            preparedStatement.setInt(1,farmaco_id);
+            resultSet=preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            if(resultSet.next()) {
+                return resultSet.getDouble(1);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return -1;
+
+    }
+
+
 
     @Override
     protected void setFindByIdParameters(PreparedStatement preparedStatement, Integer integer) throws SQLException {

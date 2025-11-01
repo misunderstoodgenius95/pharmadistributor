@@ -7,23 +7,19 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import pharma.Controller.subpanel.SuggestPurchase;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
 import pharma.config.net.ClientHttp;
 import pharma.dao.PurchaseOrderDetailDao;
 import pharma.dao.SuggestPriceConfigDao;
-import pharma.dao.SuggestPriceDao;
 
-import javax.print.DocFlavor;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 

@@ -88,4 +88,8 @@ public class Warehouse {
 
     public void sposta_lotto_action(ActionEvent actionEvent) {
     }
+
+    public void lot_view(ActionEvent event) {
+
+    }
 }

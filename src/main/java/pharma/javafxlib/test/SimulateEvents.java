@@ -309,6 +309,32 @@ public class SimulateEvents {
         });
     }
 
+    /**
+     * SImulate latest RadioBox
+     * @param radiomap
+     * @param <S>
+     */
+    public static <S> void setLastRadioBox(ObservableMap<S, RadioButton> radiomap){
+
+        radiomap.addListener(new MapChangeListener<S, RadioButton>() {
+            @Override
+            public void onChanged(Change<? extends S, ? extends RadioButton> change) {
+                if(change.wasAdded()){
+
+                    RadioButton radioButton=change.getValueAdded();
+                    radioButton.fire();
+
+                }
+
+
+            }
+        });
+
+
+
+
+    }
+
     public static <S> void setRadioBox(ObservableMap<S, RadioButton> map, S value) {
         if (value == null) {
             throw new IllegalArgumentException("Value is null");
@@ -316,6 +342,7 @@ public class SimulateEvents {
 
         map.addListener((MapChangeListener<S, RadioButton>) change -> {
             if (change.wasAdded()) {
+
                 if (change.getKey().equals(value)) {
                     RadioButton radioButton = change.getValueAdded();
                     radioButton.setSelected(true);

@@ -18,7 +18,7 @@ import pharma.config.database.Database;
 import pharma.config.net.ClientHttp;
 import pharma.dao.PurchaseOrderDetailDao;
 import pharma.dao.SuggestPriceConfigDao;
-import pharma.dao.SuggestPriceDao;
+import pharma.dao.SellerPriceDao;
 import pharma.formula.PriceSuggestion;
 import pharma.formula.TrendMarket;
 
@@ -35,7 +35,7 @@ public class Price implements Initializable {
     @FXML
     public Button btn_id_add;
 
-    private SuggestPriceDao suggestPriceDao;
+    private SellerPriceDao sellerPriceDao;
     private ObservableList<FieldData> observable_table_id;
     private SuggestPriceHandler suggestPriceHandler;
     private PriceSuggestion suggestion;
@@ -56,18 +56,18 @@ public class Price implements Initializable {
         }
         //   suggestion=new PriceSuggestion();
         SuggestPriceConfigDao s_conf=new SuggestPriceConfigDao(Database.getInstance(properties));
-        suggestPriceDao=new SuggestPriceDao(Database.getInstance(properties));
+        sellerPriceDao =new SellerPriceDao(Database.getInstance(properties));
         TrendMarket trendMarket=new TrendMarket(new ClientHttp(),uri);
         PurchaseOrderDetailDao p_dao=new PurchaseOrderDetailDao(Database.getInstance(properties));
         suggestion=new PriceSuggestion(properties_suggestion,trendMarket,s_conf,p_dao);
-        suggestPriceHandler=new SuggestPriceHandler("Inserisci Prezzi",suggestPriceDao,suggestion,s_boolean);
+        suggestPriceHandler=new SuggestPriceHandler("Inserisci Prezzi", sellerPriceDao,suggestion,s_boolean);
     }
     @FXML
     public void btn_action_add(ActionEvent event) {
         suggestPriceHandler.execute();
         if(s_boolean.get()){
             observable_table_id.clear();
-            observable_table_id.addAll(suggestPriceDao.findAll());
+            observable_table_id.addAll(sellerPriceDao.findAll());
             table_id.refresh();
         }
     }
@@ -82,7 +82,7 @@ public class Price implements Initializable {
                 TableUtility.generate_column_int("Quantity","quantity"),
                 TableUtility.generate_column_int("Prezzo","price")
         );
-        observable_table_id.addAll(suggestPriceDao.findAll());
+        observable_table_id.addAll(sellerPriceDao.findAll());
         table_id.setItems(observable_table_id);
 
 

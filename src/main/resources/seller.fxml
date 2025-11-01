@@ -12,11 +12,11 @@
       <VBox layoutX="1.0" layoutY="5.0" prefHeight="688.0" prefWidth="185.0" spacing="50.0">
          <children>
             <Button fx:id="btn_id_price" mnemonicParsing="false" onAction="#btn_action_price" prefHeight="40.0" prefWidth="201.0" text="Prezzi" />
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Crea Promozioni" />
-            <Button  fx:id="farmacia_id" mnemonicParsing="false" prefHeight="40.0"  onAction="#farmacia_action" prefWidth="201.0" text="Farmacia" />
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Ordine Vendita" />
-            <Button layoutX="10.0" layoutY="190.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Fattura Vendita" />
-            <Button layoutX="10.0" layoutY="250.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="201.0" text="Avvisi di Scadenza" />
+            <Button mnemonicParsing="false" onAction="#btnPromotion" prefHeight="40.0" prefWidth="201.0" text="Crea Promozioni" />
+            <Button fx:id="farmacia_id" mnemonicParsing="false" onAction="#farmacia_action" prefHeight="40.0" prefWidth="201.0" text="Farmacia" />
+            <Button mnemonicParsing="false" onAction="#order_action" prefHeight="40.0" prefWidth="201.0" text="Ordine Vendita" />
+            <Button layoutX="10.0" layoutY="190.0" mnemonicParsing="false" onAction="#invoice_action" prefHeight="40.0" prefWidth="201.0" text="Fattura Vendita" />
+            <Button layoutX="10.0" layoutY="250.0" mnemonicParsing="false" onAction="#expire_action" prefHeight="40.0" prefWidth="201.0" text="Avvisi di Scadenza" />
             <Button fx:id="pharmacist_id" layoutX="10.0" layoutY="460.0" mnemonicParsing="false" onAction="#pharmacist_action" prefHeight="40.0" prefWidth="201.0" text="Crea Farmacista" />
          </children>
       </VBox>
@@ -25,6 +25,7 @@
             <Font size="16.0" />
          </font>
       </Text>
-      <StackPane fx:id="stack_id" layoutX="572.0" layoutY="555.0" prefHeight="150.0" prefWidth="200.0" />
+      <AnchorPane fx:id="body_seller" layoutX="297.0" layoutY="7.0" prefHeight="715.0" prefWidth="646.0" />
+      <StackPane fx:id="stack_id" layoutX="504.0" layoutY="742.0" prefHeight="68.0" prefWidth="414.0" />
    </children>
 </AnchorPane>

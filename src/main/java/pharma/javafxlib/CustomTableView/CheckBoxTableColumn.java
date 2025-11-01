@@ -6,12 +6,16 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import org.jetbrains.annotations.TestOnly;
 
 
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Abstract class that can be choice multiple field
+ * @param <S>
+ */
 public abstract class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
 // using a list for isnert checkbox
     private final ObservableMap<S, CheckBox> checkBoxMap;
@@ -62,7 +66,7 @@ public abstract class CheckBoxTableColumn<S> extends TableColumn<S,Void> {
     protected void  selectedRow(S data){
         System.out.println("Button clicked for: " + data);
     }
-
+    @TestOnly
     public ObservableMap<S, CheckBox> getCheckBoxMap() {
         return checkBoxMap;
     }

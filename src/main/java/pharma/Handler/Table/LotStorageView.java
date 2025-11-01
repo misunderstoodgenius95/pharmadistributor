@@ -1,12 +1,9 @@
 package pharma.Handler.Table;
 
-import javafx.scene.control.TableView;
 import pharma.Handler.DialogHandler;
 import pharma.Model.FieldData;
-import pharma.Model.WarehouseModel;
 import pharma.config.PopulateChoice;
 import pharma.config.Status;
-import pharma.config.TableUtility;
 import pharma.dao.GenericJDBCDao;
 import pharma.javafxlib.Dialog.CustomDialog;
 import pharma.javafxlib.RadioOptions;

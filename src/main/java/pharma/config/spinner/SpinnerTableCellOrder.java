@@ -83,7 +83,9 @@ public class SpinnerTableCellOrder<K> extends SpinnerTableCells<FieldData,K> {
                                 }
                             }
                             if(s_update!=null) {
+                                System.out.println(fd.getOrder_id());
                                 s_update.set(fd.getOrder_id());
+                                System.out.println("updated");
                             }else{
                                 s_update_result.set(true);
                             }

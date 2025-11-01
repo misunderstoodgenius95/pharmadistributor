@@ -333,7 +333,23 @@ class LottiDaoTest {
     }
 
 
+    @Test
+    void findbyProduction() {
+        Properties properties = null;
+        LottiDao lottiDao = null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            lottiDao = new LottiDao(Database.getInstance(properties), "lotto");
+            List<FieldData> list=lottiDao.findbyDate(347);
+            Assertions.assertEquals(list.getFirst().getElapsed_date(),Date.valueOf(LocalDate.of(2029,9,14)));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+
+    }
 }
 
 

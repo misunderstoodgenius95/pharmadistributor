@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="555.0" prefWidth="1016.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.subpanel.Promotion">
+    <children>
+        <TableView fx:id="table_id" layoutX="167.0" layoutY="214.0" prefHeight="325.0" prefWidth="813.0" />
+        <Button fx:id="btn_id_add" layoutX="932.0" layoutY="29.0" mnemonicParsing="false" onAction="#btn_action_add" text="Plus" />
+    </children>
+</AnchorPane>
+

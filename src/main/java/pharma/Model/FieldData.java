@@ -76,6 +76,9 @@ public class FieldData {
     private int shelves_code;
     private  double medium_day;
     private  double medium_lots;
+    private int medium_stock_item;
+    private int min_day_expire;
+    private int discount_value;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -135,9 +138,23 @@ public class FieldData {
         this.last_name=builder.last_name;
         this.medium_day=builder.medium_day;
         this.medium_lots=builder.medium_lots;
+        this.medium_stock_item=builder.medium_stock_item;
+        this.min_day_expire=builder.min_day_expire;
+        this.discount_value=builder.discount_value;
 
     }
 
+    public int getDiscount_value() {
+        return discount_value;
+    }
+
+    public int getMedium_stock_item() {
+        return medium_stock_item;
+    }
+
+    public int getMin_day_expire() {
+        return min_day_expire;
+    }
 
     public double getMedium_day() {
         return medium_day;
@@ -545,8 +562,26 @@ public class FieldData {
         private int shelves_code;
         private  double medium_day;
         private  double medium_lots;
+        private int medium_stock_item;
+        private int min_day_expire;
+        private int discount_value;
         private FieldDataBuilder() {
 
+        }
+
+        public FieldDataBuilder setDiscount_value(int discount_value) {
+            this.discount_value = discount_value;
+            return  this;
+        }
+
+        public FieldDataBuilder setMin_day_expire(int min_day_expire) {
+            this.min_day_expire = min_day_expire;
+            return this;
+        }
+
+        public FieldDataBuilder setMedium_stock_item(int medium_stock_item) {
+            this.medium_stock_item = medium_stock_item;
+            return this;
         }
 
         public FieldDataBuilder setWarehouse_name(String warehouse_name) {

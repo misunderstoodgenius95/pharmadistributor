@@ -8,7 +8,7 @@ module pharma {
     requires org.hamcrest;
     requires org.postgresql.jdbc;
     requires jdk.unsupported;
-
+    requires embedded.postgres;
     requires rgxgen;
     requires java.rmi;
     opens algoWarehouse to javafx.base;

@@ -12,7 +12,10 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * Abstract class that can be choice one field.
+ * @param <S>
+ */
 public class RadioButtonTableColumn<S> extends TableColumn<S,Void> {
     private static final Logger log = LoggerFactory.getLogger(RadioButtonTableColumn.class);
     private final ObservableMap<S,RadioButton> radioMap;

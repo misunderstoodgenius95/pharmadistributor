@@ -336,6 +336,15 @@ getControlList().add(textField);
         hBox.getChildren().add(label);
         return label;
     }
+
+    /**
+     * This method can create an horizontal label
+     * @param labelText
+     * @param result
+     * @param container_label
+     * @param container_text
+     * @return
+     */
     public TextField createLabeledTextField(String labelText, String result, HBox container_label,HBox container_text) {
         add_label(labelText, container_label);
         TextField textField = add_text_field(container_text);
@@ -347,7 +356,7 @@ getControlList().add(textField);
         Label label=add_label(labelText);
         TextField textField = add_text_field("");
         textField.setText(result);
-        textField.setDisable(true);
+        textField.setEditable(false);
         gridPane.add(label,label_point_x,label_point_y);
         gridPane.add(textField,text_point_x,text_point_y);
         return textField;

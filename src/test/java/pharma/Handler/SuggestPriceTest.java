@@ -2,8 +2,6 @@ package pharma.Handler;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -15,12 +13,10 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
-import pharma.dao.SuggestPriceDao;
-import pharma.formula.KMeans;
+import pharma.dao.SellerPriceDao;
 import pharma.formula.PriceSuggestion;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -28,7 +24,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(ApplicationExtension.class)
 class SuggestPriceTest {
     @Mock
-    private SuggestPriceDao s_dao;
+    private SellerPriceDao s_dao;
     @Mock
     private PriceSuggestion suggestion;
     @Start
