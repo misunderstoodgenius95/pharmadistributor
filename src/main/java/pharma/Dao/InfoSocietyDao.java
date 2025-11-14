@@ -22,7 +22,9 @@ public class InfoSocietyDao  extends GenericJDBCDao<FieldData,Integer> {
                setCap(resultSet.getInt(5)).
                setComune(resultSet.getString(6)).
                setProvince(resultSet.getString(7)).
-               setUnit_misure(resultSet.getString(8)).
+               setPicture(resultSet.getString(8)).
+                setWebsite(resultSet.getString(9)).
+                setEmail(resultSet.getString(10)).
                build();
     }
 
@@ -33,7 +35,7 @@ public class InfoSocietyDao  extends GenericJDBCDao<FieldData,Integer> {
 
     @Override
     protected String getInsertQuery() throws Exception {
-        return "INSERT INTO info_society(anagrafia_cliente,p_iva,street,cap,comune,province,image_path) VALUES(?,?,?,?,?,?,?)";
+        return "INSERT INTO info_society(anagrafia_cliente,p_iva,street,cap,comune,province,image_url, website_url,email) VALUES(?,?,?,?,?,?,?,?,?)";
     }
 
     @Override
@@ -52,9 +54,11 @@ public class InfoSocietyDao  extends GenericJDBCDao<FieldData,Integer> {
         statement.setString(2,entity.getPartita_iva());
         statement.setString(3,entity.getStreet());
         statement.setInt(4,entity.getCap());
-        statement.setString(5,entity.getProvince());
-        statement.setString(6, entity.getUnit_misure());
-
+        statement.setString(5,entity.getComune());
+        statement.setString(6,entity.getProvince());
+        statement.setString(7,entity.getPicture());
+        statement.setString(8,entity.getWebsite());
+        statement.setString(9,entity.getEmail());
     }
 
     @Override

@@ -3,6 +3,7 @@ package pharma.security.Stytch.conf;
 import com.auth0.net.client.HttpRequestBody;
 import org.json.HTTP;
 import org.json.JSONObject;
+import org.yaml.snakeyaml.util.UriEncoder;
 
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -92,6 +93,12 @@ public class StytchRequest {
 
         return basic_request_post(uri).POST(HttpRequest.BodyPublishers.ofString(jsonObject.toString())).build();
 
+    }
+    public HttpRequest search_by_user_id(String uri,String user_id){
+        String url=uri+""+user_id;
+        System.out.println(url);
+        return HttpRequest.newBuilder(URI.create(url)).GET().
+                setHeader("Authorization", "Basic " + encodedAuth).build();
     }
 
 }

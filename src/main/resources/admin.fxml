@@ -2,78 +2,24 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="598.0" prefWidth="797.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.Admin">
+<AnchorPane fx:id="anchor_id" prefHeight="572.0" prefWidth="1255.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.Admin">
    <children>
-      <Text layoutX="258.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="       Admin Area" wrappingWidth="204.78857421875">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <VBox fx:id="vbox_filter_choice" layoutX="191.0" layoutY="160.0" prefHeight="407.0" prefWidth="444.0">
+      <VBox layoutX="-3.0" prefHeight="567.0" prefWidth="211.0" spacing="10.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Scegli Ruolo oppure inserisci email" wrappingWidth="316.37353515625">
+            <Button mnemonicParsing="false" onAction="#users" prefHeight="51.0" prefWidth="159.0" text="Utenti">
                <VBox.margin>
-                  <Insets bottom="20.0" left="10.0" top="40.0" />
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </VBox.margin>
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Text>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-               <children>
-                  <RadioButton fx:id="radio_role" mnemonicParsing="false" text="Ruolo">
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </RadioButton>
-                  <RadioButton fx:id="radio_email" mnemonicParsing="false" text="Email">
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </RadioButton>
-               </children>
-            </HBox>
-
-         <!--   <RadioButton fx:id="email" text="Ricerca per Email" selected="true">
-               <toggleGroup>
-                  <ToggleGroup fx:id="optionGroup" />
-               </toggleGroup>
-
-            </RadioButton>
-            <RadioButton fx:id="role" text="Ricerca per ruolo" toggleGroup="#optionGroup"/>-->
-
-
-            <ChoiceBox fx:id="choice_role_id" prefWidth="150.0">
-               <VBox.margin>
-                  <Insets left="80.0" right="10.0" top="50.0" />
-               </VBox.margin>
-            </ChoiceBox>
-            <TextField fx:id="textfield_emai_id" prefHeight="38.0" prefWidth="296.0" promptText="Inserisci email">
-               <VBox.margin>
-                  <Insets left="10.0" right="30.0" top="60.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </TextField>
-            <Button fx:id="btn_send_filter_id" mnemonicParsing="false" onAction="#btn_send_filter_action" prefHeight="35.0" prefWidth="68.0" text="Invia">
-               <VBox.margin>
-                  <Insets bottom="20.0" left="350.0" right="10.0" top="60.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="18.0" />
-               </font>
             </Button>
-         </children></VBox>
-      <Button fx:id="btn_add_id" layoutX="32.0" layoutY="83.0" mnemonicParsing="false" onAction="#btn_add_action" prefHeight="28.0" prefWidth="76.0" text="Crea" />
+            <Button mnemonicParsing="false" onAction="#info_society_action" prefHeight="51.0" prefWidth="159.0" text="Info Society">
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

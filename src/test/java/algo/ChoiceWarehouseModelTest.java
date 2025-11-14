@@ -144,30 +144,7 @@ class ChoiceWarehouseModelTest {
     }
 
 
-    /*public static List<PharmacyDistance> list_distance() {
 
-        List<PharmacyDistance> list_distance = new ArrayList<>();
-
-        // Create and add each PharmacyDistance
-        list_distance.add(new PharmacyDistance(
-                new Farmacia("Farmacia Centro", 2, new PGgeometry(new Point(41.9028, 12.4964))),
-                67.2319726790798));
-
-        list_distance.add(new PharmacyDistance(
-                new Farmacia("Farmacia Nord", 5, new PGgeometry(new Point(41.9128, 12.5064))),
-                133.32265814507414));
-
-        list_distance.add(new PharmacyDistance(
-                new Farmacia("Farmacia Sud", 4, new PGgeometry(new Point(41.8928, 12.4864))),
-                200.46046826180887));
-
-        list_distance.add(new PharmacyDistance(
-                new Farmacia("Farmacia Est", 3, new PGgeometry(new Point(41.9228, 12.5164))),
-                62.92264382001019));
-        return list_distance;
-
-
-    }*/
 
 
     private static Stream<Arguments> provideTestData() {
@@ -729,7 +706,7 @@ class ChoiceWarehouseModelTest {
             @Test
             public void calculate_warehouseWithZeroQTy() {
 
-               List<WarehouseDistances> models = choiceWarehouse_calculate.calculate_warehouse(new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0), 12);
+               List<WarehouseDistances> models = choiceWarehouse_calculate.calculate_warehouse();
                 //  Assertions.assertEquals(4, models.size());
                 models.forEach(value-> System.out.println(value.getWarehouseModel().getNome()+value.getDistance()));
 

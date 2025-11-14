@@ -1,8 +1,13 @@
 package pharma.security;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pharma.javafxlib.Controls.Notification.JsonNotify;
+
+import java.util.Base64;
 
 
 public class TokenUtility {
@@ -54,6 +59,29 @@ public class TokenUtility {
         }
 
 
+
+    }
+    public static String extract_sub(String jwt )  {
+        String[] parts = jwt.split("\\.");
+        byte[] decodedBytes = Base64.getUrlDecoder().decode(parts[1]);
+        String payload = new String(decodedBytes);
+
+        // Parse with Jackson
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode node = null;
+        try {
+            node = mapper.readTree(payload);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Extract values
+        return node.get("sub").asText();
+    }
+    public  static  String extractEmailByUserId(String body){
+
+        JSONObject jsonObject=new JSONObject(body);
+        return jsonObject.getJSONArray("emails").getJSONObject(0).getString("email");
 
     }
 

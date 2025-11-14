@@ -46,7 +46,7 @@ private final  double DISTANCE_KM=70;
      * @param quantity
      * @return
      */
-    public List<WarehouseDistances> calculate_warehouse(LotDimensionModel dimension, int quantity){
+    public List<WarehouseDistances> calculate_warehouse(){
 // Grouping pharmacist
         Map<Farmacia,Integer> map_by_qty=pharmacy_by_qty();
 

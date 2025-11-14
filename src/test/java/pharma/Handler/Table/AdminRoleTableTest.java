@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
-class AdminTableTest {
+class AdminRoleTableTest {
     private Button button;
     AdminTable adminTable;
     @Start

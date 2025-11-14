@@ -68,6 +68,12 @@ public static final String Farmacisti="Farmacisti";
                 create_alert(Alert.AlertType.WARNING,"Alert Status","Elemento già presente!");
 
             }
+            case 401->{
+                create_alert(Alert.AlertType.WARNING,"Alert Status","Credenziali Non Valide");
+            }
+            case 403->{
+                create_alert(Alert.AlertType.WARNING,"Alert Status","Utente Non attivo");
+            }
             case  400->{
                 create_alert(Alert.AlertType.WARNING,"Alert Status","Bad request!");
             }

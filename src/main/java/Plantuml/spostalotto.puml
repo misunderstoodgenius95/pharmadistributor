@@ -1,0 +1,44 @@
+@startuml
+actor  Magazziniere as M
+boundary UI as UI
+control Controller as S
+entity Database as D
+activate D
+S->D:Richiedi magazzini
+D-->S:Restituisci magazzini
+S-->UI:Mostra magazzini
+M->UI:Inserisci lotto
+M->UI:Seleziona Lotto
+
+M->UI:Conferma i dati
+UI->S:Invia dati
+S->D:Richiedi LotStorage
+alt Esito Positivo
+D-->S: Recupera LotStorage
+
+S->UI:Mostra risultato
+S->UI:Mostra gli scaffali contenti i lotti
+
+M->UI:Modifico quantità scafale
+alt Aggiunge Scaffale
+M->UI:Aggiungo Scaffale
+M->UI:Aggiungo quantità
+else
+M->UI:Modifica scaffale esistente
+end
+
+M->UI:Conferma quantità
+UI->S:Invia scelta
+
+opt conferma
+S->D:Riduco le dimensioni dei ripiani
+D-->S:Conferma riduzione
+S->D:Salvo i dati
+end
+
+
+else Eisto negativo
+S->UI:Mostra messaggio di errore
+end
+@enduml
+'/

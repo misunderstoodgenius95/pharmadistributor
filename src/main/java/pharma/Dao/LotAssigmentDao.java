@@ -22,7 +22,6 @@ public class LotAssigmentDao extends GenericJDBCDao<LotAssigment,Integer>{
 
     @Override
     protected LotAssigment mapRow(ResultSet resultSet) throws Exception {
-
         LotAssigment lotAssigment=new LotAssigment();
         lotAssigment.setId(resultSet.getInt(1));
         lotAssigment.setFarmaco_id(resultSet.getInt(2));
@@ -40,7 +39,7 @@ public class LotAssigmentDao extends GenericJDBCDao<LotAssigment,Integer>{
     @Override
     protected String getInsertQuery() throws Exception {
         return "INSERT INTO " + table + " (farmaco_id,lot_code,request_quantity) VALUES(?,?,?) " +
-                "  RETURNING id; ";
+                "  RETURNING id ; ";
     }
     @Override
     protected void setInsertParameter(PreparedStatement statement, LotAssigment entity) throws Exception {
@@ -60,13 +59,114 @@ public class LotAssigmentDao extends GenericJDBCDao<LotAssigment,Integer>{
 
          return super.findByParametersExists(query,lot_code,farmaco_id);
     }
+
+    public List<FieldData> findPharmaHousebyLotCode(String lot_code){
+        List<FieldData> resultList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query(" select lot_code,casa_farmaceutica  from lot_assignment \n" +
+                            " inner join farmaco_all on farmaco_id=farmaco_all.id where lot_code= ? ; ");
+            preparedStatement.setString(1, lot_code);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                resultList.add(FieldData.FieldDataBuilder.getbuilder().
+
+                        setcode(resultSet.getString("lot_code")).
+                        setNome_casa_farmaceutica(resultSet.getString("casa_farmaceutica")).build());
+
+
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return resultList;
+
+    }
+    public List<FieldData> findByFarmacoAll(){
+        List<FieldData> resultList=new ArrayList<>();
+        try {
+            ResultSet resultSet=database.executeQuery("select * from lot_assignment\n" +
+                    "inner join  lotto on lot_assignment.lot_code=lotto.id\n" +
+                    "inner join  farmaco_all on farmaco_all.id=lotto.farmaco; ");
+
+            while(resultSet.next()){
+                resultList.add(FieldData.FieldDataBuilder.getbuilder().
+                        setFarmaco_id(resultSet.getInt("farmaco_id")).
+                        setNome(resultSet.getString("nome")).
+                        setDescription(resultSet.getString("descrizione")).
+                        setNome_categoria(resultSet.getString("categoria")).
+                        setNome_tipologia(resultSet.getString("tipologia")).
+                        setElapsed_date(resultSet.getDate("elapsed_date")).
+                        setUnit_misure(resultSet.getString("misura")).
+                        setNome_principio_attivo(resultSet.getString("principio_attivo")).
+                        setcode(resultSet.getString("lot_code")).
+                        setNome_casa_farmaceutica(resultSet.getString("casa_farmaceutica")).
+                        setQuantity(resultSet.getInt("qty"))
+                        .build());
+
+
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return resultList;
+
+    }
+
+
+
+
+
+
+
+
+
+
+
     public List<FieldData> findQuantitybyFarmacoId(int farmaco_id){
+        List<FieldData> resultList=new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query("select * from lot_assignment\n" +
+                    "inner join farmaco_all on lot_assignment.farmaco_id=farmaco_all.id\n" +
+                    "inner join lotto on lot_assignment.lot_code=lotto.id\n" +
+                    " where farmaco_id= ? ");
+            preparedStatement.setInt(1,farmaco_id);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while(resultSet.next()){
+                resultList.add(FieldData.FieldDataBuilder.getbuilder().
+                                setFarmaco_id(resultSet.getInt("farmaco_id")).
+                                setcode(resultSet.getString("lot_code")).
+                                setElapsed_date(resultSet.getDate("elapsed_date")).
+                        setAvailability(resultSet.getInt("request_quantity")).build());
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return resultList;
+
+    }
+    public List<FieldData> findFarmacoQuantity(int farmaco_id){
         List<FieldData> resultList=new ArrayList<>();
         try {
             PreparedStatement preparedStatement=database.execute_prepared_query("select request_quantity from lot_assigment_shelves\n " +
                     "inner join lot_assignment la on la.id = lot_assigment_shelves.lot_assigment_id\n " +
                     "where farmaco_id=? ");
             preparedStatement.setInt(1,farmaco_id);
+
             ResultSet resultSet=preparedStatement.executeQuery();
             while(resultSet.next()){
                 resultList.add(FieldData.FieldDataBuilder.getbuilder().setQuantity(resultSet.getInt(1)).build());

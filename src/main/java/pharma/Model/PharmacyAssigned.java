@@ -1,10 +1,9 @@
 package pharma.Model;
 
-
+/**
+ * Used for represented the quantity of product that a pharmacy has purchased.
+ */
 public class PharmacyAssigned {
-    /**
-     * Used for represented the quantity of product that a pharmacy has purchased.
-     */
     private Farmacia farmacia;
     private int quantity;
 

@@ -23,6 +23,16 @@ public class PayLoadStytch {
             return new JSONObject(get_user(email,password)).put("trusted_metadata",new JSONObject().put("is_enable",true))
                     .put("name",new JSONObject().put("first_name",first_name).put("last_name",surname)).toString();
         }
+    public static String create_user_pharmacist(String email, String password,String first_name, String surname,int pharmacy_id ) {
+        if(!InputValidation.validate_email(email) || !InputValidation.validate_password(password)  ){
+            throw new IllegalArgumentException("Email or password are not valid");
+        }
+        return new JSONObject(get_user(email,password)).put("trusted_metadata",new JSONObject().put("is_enable",true).put("pharmacy_id",pharmacy_id))
+                .put("name",new JSONObject().put("first_name",first_name).put("last_name",surname)).toString();
+    }
+
+
+
     public static String create_user_pharmacist(String email, String password,String role,String first_name, String surname,int pharma_id ) {
         if(!InputValidation.validate_email(email) || !InputValidation.validate_password(password)  ){
             throw new IllegalArgumentException("Email or password are not valid");
@@ -78,6 +88,7 @@ public class PayLoadStytch {
              return new JSONObject().put("email",email).put("reset_password_redirect_url",url_reset);
 
     }
+
 
 
 

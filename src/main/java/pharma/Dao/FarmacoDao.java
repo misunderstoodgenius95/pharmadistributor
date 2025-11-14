@@ -58,6 +58,9 @@ public class FarmacoDao  extends GenericJDBCDao<FieldData,Integer> {
     public List<FieldData> findByName( String parameter) {
         return super.findByParameter(" SELECT * FROM farmaco_all where nome=? ", parameter);
     }
+    public List<FieldData> findByLikeName( String parameter) {
+        return super.findByParameter(" SELECT * FROM farmaco_all where nome LIKE ? ", parameter+"%");
+    }
 
     @Override
     protected String getUpdatequery() {

@@ -41,7 +41,7 @@ Stage primaryStage = new Stage();
     public  void change_stage(String fxml, Stage stage)  {
         try {
 
-                Scene scene=new Scene(this.load_fxml(fxml+".fxml"));
+                Scene scene=new Scene(this.load_fxml(fxml+".fxml"),1200,1000);
                 scene.getStylesheets().add(fxml+".css");
                 stage.setScene(scene);
 

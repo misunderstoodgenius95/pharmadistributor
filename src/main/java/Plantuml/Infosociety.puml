@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Inserisce Indirizzo;
+:Inserisce Email;
+:Inserisce P.IVA;
+:Inserisce Sito Internet;
+:Inserisce Logo;
+:Trasmetto Informazioni Database;
+if(Successo) then (yes)
+:Mostro messaggio di successo;
+
+else(no)
+:Mostro messaggio di errore;
+endif
+end
+@enduml

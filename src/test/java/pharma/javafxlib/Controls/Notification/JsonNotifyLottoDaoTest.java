@@ -1,10 +1,12 @@
 package pharma.javafxlib.Controls.Notification;
 
+import com.google.gson.JsonArray;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,7 @@ class JsonNotifyLottoDaoTest {
 
 
     @Test
-    public  void ValidTest(FxRobot robot){
+    public  void ValidTestSingle(FxRobot robot){
         JSONObject json1 = new JSONObject();
         json1.put("lot_id", "11a");
         json1.put("product_id", 60);
@@ -57,7 +59,7 @@ class JsonNotifyLottoDaoTest {
         json_dao=new JsonNotifyLottoDao(json1.toString(), List.of("lot_id"),"Lotti Scaduto","Avviso Scadenza Lotti",lottiDao);
         Platform.runLater(()->{
             FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setcode("11a").setNome("Tachipirina").setUnit_misure("100mg").
-                    setNome_tipologia("Capsule").build();
+                    setNome_tipologia("Compresse").build();
 
             Mockito.when(lottiDao.findByIds(Mockito.anyInt(),Mockito.anyString())).thenReturn(Optional.ofNullable(fieldData));
             json_dao.execute();
@@ -66,6 +68,31 @@ class JsonNotifyLottoDaoTest {
 
         });
         robot.sleep(4000);
+
+
+    }
+    @Test
+    public  void ValidTestMulti(FxRobot robot){
+
+        JSONObject json1 = new JSONObject();
+        json1.put("lot_id", "11a");
+        json1.put("product_id", 60);
+        json1.put("expiration_date", "10/10/2028");
+        JSONObject jsonObject_2=new JSONObject().put("lot_id","21a").put("product_id",10).put("expiration_date", "12/10/2028");
+        JSONArray jsonArray=new JSONArray();
+        jsonArray.put(json1);
+        jsonArray.put(jsonObject_2);
+        json_dao=new JsonNotifyLottoDao(jsonArray.toString(), List.of("lot_id"),"Lotti Scaduto","Avviso Scadenza Lotti",lottiDao);
+        Platform.runLater(()->{
+            FieldData fieldData=FieldData.FieldDataBuilder.getbuilder().setcode("11a").setNome("Tachipirina").setUnit_misure("100mg").
+                    setNome_tipologia("Compresse").build();
+            Mockito.when(lottiDao.findByIds(Mockito.anyInt(),Mockito.anyString())).thenReturn(Optional.ofNullable(fieldData));
+            json_dao.execute();
+
+
+
+        });
+        robot.sleep(400000);
 
 
     }

@@ -1,6 +1,8 @@
 package pharma.javafxlib.Controls.Notification;
 
 import javafx.animation.PauseTransition;
+import javafx.scene.Node;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,12 +18,13 @@ public class JsonNotify {
     private  List<String> selected_filed;
     private  String message;
     private  String title;
-
+    private Window window;
     public JsonNotify(String json, List<String> selected_field, String message,String title) {
         this.json = json;
         this.selected_filed=selected_field;
         this.message=message;
         this.title=title;
+        this.window=window;
 
 
 
@@ -64,23 +67,17 @@ public class JsonNotify {
 
 
         for(int  i=0;i<jsonArray.length(); i++){
-            int delaySeconds = i * 3;
+            int delaySeconds = i * 10;
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             PauseTransition delay = new PauseTransition(Duration.seconds(delaySeconds));
 
-                delay.setOnFinished(event -> {
-                    Notify.createWithButtonClick(title, create_body(jsonObject));
+                delay.setOnFinished(event -> {;
+                    Notify.createWithButtonClick(title, create_body(jsonObject),window);
 
                 });
                 delay.play();
 
-
-
         }
-
-
-
-
 
     }
 

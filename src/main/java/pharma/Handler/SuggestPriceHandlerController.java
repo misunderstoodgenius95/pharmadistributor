@@ -18,16 +18,13 @@ public class SuggestPriceHandlerController extends HandlerController {
     private SearchableComboBox<FieldData> search_category;
     private ProductTableCustom productTableCustom;
     private FarmacoDao farmacoDao;
-    private DetailDao detailDao;
     public SuggestPriceHandlerController(TextField textFieldSingle, SearchableComboBox<FieldData> searchCategory,FarmacoDao farmacoDao,DetailDao detailDao) {
         textField_single = textFieldSingle;
         search_category = searchCategory;
         productTableCustom=new ProductTableCustom("Scegli Prodotto");
         productTableCustom.add_radio();
         this.farmacoDao=farmacoDao;
-        this.detailDao=detailDao;
 
-        this.detailDao.setTable_name(Utility.Categoria);
         List<FieldData> list=detailDao.findAll();
         System.out.println(list.size());
         searchCategory.setItems(FXCollections.observableArrayList(list));

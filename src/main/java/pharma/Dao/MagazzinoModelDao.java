@@ -21,6 +21,11 @@ public class MagazzinoModelDao {
 
     }
 
+    /**
+     *
+     *Get full warehouse and the correlated shelf values.
+     * @return
+     */
     public List<WarehouseModel> getFullWarehouseModel(){
 
         List<ShelfInfo> list_shelf_info=shelfDao.findAll();
@@ -29,7 +34,6 @@ public class MagazzinoModelDao {
         }
             for(ShelfInfo shelfInfo: list_shelf_info){
                  List<ShelvesCapacity> list=shelvesDao.findByShelvesByShelf(shelfInfo.getShelf_code());
-                System.out.println(list.size());
                 shelfInfo.setShelvesCapacities(list);
             }
          List<WarehouseModel> warehouseModels=magazzinoDao.findAll();

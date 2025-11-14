@@ -27,8 +27,7 @@ public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
                 .setSubtotal(resultSet.getDouble(3)).
                  setVat_amount(resultSet.getDouble(4))
                 .setTotal(resultSet.getDouble(5)).
-                 setNome_casa_farmaceutica(resultSet.getString(6)).
-                 setElapsed_date(resultSet.getDate(7)).build();
+                 setElapsed_date(resultSet.getDate(6)).build();
     }
 
     @Override
@@ -57,7 +56,7 @@ public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
             setFindByIdParameters(preparedStatement,integer);
             ResultSet resultSet=preparedStatement.executeQuery();
             if(resultSet.next()){
-                return addRowSearch(resultSet);
+                return mapRow(resultSet);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -69,7 +68,6 @@ public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
     protected String getInsertQuery() throws Exception {
         return " INSERT INTO "+table+" (farmacia_id,subtotal,vat,total) VALUES(?,?,?,?); ";
     }
-
 
     public FieldData addRowSearch(ResultSet resultSet){
         try {
@@ -84,8 +82,29 @@ public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
 
     }
 
+    public FieldData addOrderSearch(ResultSet resultSet) throws SQLException {
+        return  FieldData.FieldDataBuilder.getbuilder().setFarmaco_id(resultSet.getInt(1)).setQuantity(resultSet.getInt(2)).setElapsed_date(resultSet.getDate(3)).build();
+
+    }
 
 
+    public List<FieldData> findByOrders(int id) {
+        List<FieldData> list=new ArrayList<>();
+        String query="select farmaco as id,quantity,order_date from seller_order\n" +
+                "inner join  seller_order_detail sod on seller_order.id = sod.seller_order where farmaco= ? ";
+
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query(query);
+                preparedStatement.setInt(1,id);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while (resultSet.next()){
+                list.add(addOrderSearch(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
 
 
     public List<FieldData> findByRangeBetweenAndRagioneSociale(Date  range_start, Date range_end, String ragione_sociale) {

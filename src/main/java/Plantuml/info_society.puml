@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+actor Admin as A
+
+participant Hander as C
+entity Database as D
+A->C:Inserisce Indirizzo
+A->C:Inserisce Email
+A->C:Inserisce Partita IVA
+A->C:Inserisce Sito Internet
+A->C:Inserisce Logo
+C->D:Invia Richiesta Inserimento
+D-->C:Risposta
+alt Sucessso
+C->C:Mostra messaggio di successo
+else
+C->C:Mostra messaggio di errore
+end
+@enduml

@@ -118,7 +118,6 @@ public class Purchase {
 
     @FXML
     void pharma_action(ActionEvent event) throws IOException {
-     String jwt=FileStorage.getProperty("jwt",new FileReader("config.properties"));
 
         Parent parent = stages.load_fxml("/subpanel/pharma.fxml");
         parent.getStyleClass().add("subpanel");
@@ -129,8 +128,10 @@ public class Purchase {
     }
 
     @FXML
-    void raccomandazioni_action(ActionEvent event) {
-
+    void raccomandazioni_action(ActionEvent event) throws IOException {
+        Parent parent = stages.load_fxml("/subpanel/suggest_purchase.fxml");
+        parent.getStyleClass().add("subpanel");
+        change_stages(parent, -20.00);
     }
 
     public void handleButton(Button button) {

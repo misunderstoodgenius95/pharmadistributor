@@ -1,5 +1,6 @@
 package pharma.Handler;
 
+import algoWarehouse.LotAssigment;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,6 +19,7 @@ import pharma.config.Status;
 import pharma.config.net.ClientHttp;
 import pharma.dao.FarmacoDao;
 import pharma.dao.GenericJDBCDao;
+import pharma.dao.LotAssigmentDao;
 import pharma.dao.LottiDao;
 import pharma.javafxlib.CustomTableView.CheckBoxTableColumn;
 
@@ -40,13 +42,14 @@ public class EXpireProductNotifyHandler extends  DialogHandler<FieldData> {
     private ClientHttp clientHttp;
     ProductTableCustom productTableCustom;
     CheckBoxTableColumn<FieldData> checkBoxTableColumn;
-    public EXpireProductNotifyHandler(String content, FarmacoDao farmacoDao,LottiDao lottiDao) {
-        super(content, List.of(farmacoDao,lottiDao));
+    public EXpireProductNotifyHandler(String content, LotAssigmentDao lotAssigmentDao) {
+        super(content, List.of(lotAssigmentDao));
         checkbox_choice=FXCollections.observableArrayList();
         this.lottiDao=lottiDao;
         jsonArrayExpire=new JSONArray();
         clientHttp=new ClientHttp();
       productTableCustom=new ProductTableCustom("Scegli Prodotti");
+        checkBoxTableColumn= productTableCustom.add_check_box_column();
 
     }
 
@@ -59,22 +62,17 @@ public class EXpireProductNotifyHandler extends  DialogHandler<FieldData> {
      */
     @Override
     protected boolean condition_event(FieldData type) throws Exception {
-        System.out.println("esegui");
         if(!checkbox_choice.isEmpty()){
             checkbox_choice.forEach(fd->{
-                int farmaco_id=fd.getFarmaco_id();
-               List<FieldData> fd_lots=lottiDao.findByFarmaco(farmaco_id);
-               fd_lots.forEach(fd_lot->{
                    JSONObject jsonObject=new JSONObject();
-                   jsonObject.put("lot_id",fd_lot.getCode());
-                   jsonObject.put("product_id",farmaco_id);
+                   jsonObject.put("lot_id",fd.getCode());
+                   jsonObject.put("product_id",fd.getFarmaco_id());
                    jsonObject.put("time_of_day",spinner_time.getValue());
-                   jsonObject.put("expiration_date",fd_lot.getElapsed_date());
+                   jsonObject.put("expiration_date",fd.getElapsed_date());
                    jsonArrayExpire.put(jsonObject);
-               });
             });
             System.out.println(jsonArrayExpire.toString());
-            HttpResponse<String> response = clientHttp.send(HttpRequest.newBuilder(URI.create("http://localhost:3000/expire_items")).setHeader("Content-Type","application/json").
+            HttpResponse<String> response = clientHttp.send(HttpRequest.newBuilder(URI.create("http://localhost:3001/expire_items")).setHeader("Content-Type","application/json").
                     POST(HttpRequest.BodyPublishers.ofString(jsonArrayExpire.toString())).build());
             System.out.println(response.statusCode());
             return response.statusCode() == 201;
@@ -104,11 +102,12 @@ public class EXpireProductNotifyHandler extends  DialogHandler<FieldData> {
     @Override
     protected <K> void initialize(Optional<PopulateChoice<K>> PopulateChoice, Optional<List<GenericJDBCDao>> optionalgenericJDBCDao, Optional<FieldData> optionalfieldData) {
         if(optionalgenericJDBCDao.isPresent()){
-            FarmacoDao  farmacoDao=(FarmacoDao) optionalgenericJDBCDao.get().stream().filter(farmaco->farmaco instanceof FarmacoDao).findFirst().get();
+            LotAssigmentDao lotAssigment=(LotAssigmentDao) optionalgenericJDBCDao.get().stream().filter(assignment->assignment instanceof  LotAssigmentDao).findFirst().get();
+
             btn_products=addButton("Scegli i Prodotti");
             add_label("Inserisci Giorni di Anticipo");
             spinner_time=add_spinner();
-            choice_btn(farmacoDao);
+            choice_btn(lotAssigment);
 
 
 
@@ -122,12 +121,11 @@ public class EXpireProductNotifyHandler extends  DialogHandler<FieldData> {
         return checkBoxTableColumn;
     }
 
-    private void choice_btn(FarmacoDao dao){
+    private void choice_btn(LotAssigmentDao dao){
         btn_products.setOnAction(event -> {
-           checkBoxTableColumn= productTableCustom.add_check_box_column();
-            List<FieldData> list_farmaco=dao.findAll();
-            System.out.println(list_farmaco.size());
-            productTableCustom.getTableView().getItems().addAll(list_farmaco);
+
+            List<FieldData> list_farmaco=dao.findByFarmacoAll();
+            productTableCustom.getTableView().getItems().setAll(list_farmaco);
             productTableCustom.show();
             productTableCustom.getCheckBoxValue().addListener(new ChangeListener<FieldData>() {
                 @Override

@@ -49,7 +49,7 @@ public class PromotionDao  extends GenericJDBCDao<FieldData,Integer> {
 
         String query="select * from seller_price " +
                 "inner join  farmaco_all on seller_price.farmaco=farmaco_all.id " +
-                "where not exists(select 1 from promotion where seller_price.farmaco=promotion.farmaco);";
+                "where not exists(select 1 from promotion where seller_price.farmaco=promotion.farmaco and  range_time_end > CURRENT_DATE );";
 
         ResultSet resultSet=database.executeQuery(query);
         List<FieldData> resultList=new ArrayList<>();

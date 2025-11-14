@@ -15,17 +15,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pharma.Storage.FileStorage;
 import pharma.chat.Client.ClientWebserver;
+import pharma.config.auth.UserService;
 import pharma.javafxlib.Controls.Notification.JsonNotify;
+import pharma.security.Stytch.StytchClient;
+import pharma.security.TokenUtility;
 import pharma.security.crypto.Chacha20;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -38,8 +41,10 @@ public class Chat implements Initializable {
     @FXML
     public Button btn_disconnect_id;
     public VBox aside_user;
-    ClientWebserver clientWebserver;
+    private ClientWebserver clientWebserver;
+    private UserService userService;
     private List<String> pharmacists;
+    private String email;
     public Chat() {
         pharmacists=new ArrayList<>();
 
@@ -48,8 +53,22 @@ public class Chat implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        HashMap<String,String> hashMap_json= null;
+        String user_id="";
+        try {
+            hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
+            String jwt= FileStorage.getProperty("jwt",new FileReader("config.properties"));
+            user_id=TokenUtility.extract_sub(jwt);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        userService=new UserService(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
+
+        String body=userService.GettingUserInfoByUserId(user_id).getBody();
+         email=TokenUtility.extractEmailByUserId(body);
+
         ConcurrentLinkedQueue<String> concurrentLinkedQueue=new ConcurrentLinkedQueue<>();
-        clientWebserver=new ClientWebserver(URI.create("ws://localhost:8081"),"seller1@example.com",concurrentLinkedQueue);
+        clientWebserver=new ClientWebserver(URI.create("ws://localhost:8081"),email,concurrentLinkedQueue);
         clientWebserver.connect();
 
         startQueueProcessor(concurrentLinkedQueue);
@@ -131,25 +150,46 @@ public class Chat implements Initializable {
 
 
     public void btn_action(ActionEvent event) {
-        textarea_id.appendText("Me: "+text_field_id.getText()+"\n");
-        JSONObject jsonObject=new JSONObject();
-        jsonObject.put("from","seller1@example.com");
-        jsonObject.put("to","pharmacist@example.com");
-        jsonObject.put("type","Chat");
+        String messageText = text_field_id.getText();
+        if (messageText == null || messageText.trim().isEmpty()) {
+            return;
+        }
 
-        byte[] nonce=Chacha20.generateNonce();
-        byte[] plaintext=text_field_id.getText().getBytes(StandardCharsets.UTF_8);
-        byte[] cypherTex=Chacha20.encrypt(plaintext,nonce).get();
-        String cipherText_hex=Chacha20.byteToHex(cypherTex);
-        JSONObject jsonObject_message=new JSONObject();
-        jsonObject_message.put("cipherText",cipherText_hex);
-        jsonObject_message.put("nonce",Chacha20.byteToHex(nonce));
-        jsonObject.put("Message",jsonObject_message);
+        textarea_id.appendText("Me: " + messageText + "\n");
 
-        clientWebserver.send(jsonObject.toString());
+        // Encrypt message
+        byte[] nonce = Chacha20.generateNonce();
+        byte[] plaintext = messageText.getBytes(StandardCharsets.UTF_8);
+        byte[] cipherText = Chacha20.encrypt(plaintext, nonce).get();
+        String cipherTextHex = Chacha20.byteToHex(cipherText);
+
+        // Create encrypted message object
+        JSONObject encryptedMessage = new JSONObject();
+        encryptedMessage.put("cipherText", cipherTextHex);
+        encryptedMessage.put("nonce", Chacha20.byteToHex(nonce));
+
+        // Create main message object
+        JSONObject message = new JSONObject();
+        message.put("from",email);  // Should use actual email from session
+        message.put("to", pharmacists.getFirst());  // Should be dynamic based on selected user
+        message.put("type", "Chat");
+        message.put("message", encryptedMessage);  // Match what JavaScript expects
+
+        // Send message
+        if (clientWebserver.isOpen()) {
+            clientWebserver.send(message.toString());
+            System.out.println("Message sent: " + message.toString());
+            text_field_id.clear();
+        } else {
+            System.err.println("WebSocket is not open!");
+            textarea_id.appendText("ERROR: Not connected to server\n");
+        }
 
     }
 
     public void btn_disconnect_action(ActionEvent event) {
+
+        clientWebserver.close();
+
     }
 }

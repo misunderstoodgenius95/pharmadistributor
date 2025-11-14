@@ -54,9 +54,12 @@ public class AdminCreateCredentialsHandler extends DialogHandler<FieldData>  {
         textField_last_name=add_text_field("Inserisci Cognome");
         choice_role=add_SearchComboBox(FieldData.FieldDataBuilder.getbuilder().setNome("Seleziona Addetto").build());
         choice_role.setConverter(new FarmacoLotsConvert());
-        choice_role.getItems().addAll(List.of(FieldData.FieldDataBuilder.getbuilder().setNome("Acquisti").setRole("purchase").build(),
-                FieldData.FieldDataBuilder.getbuilder().setNome("Vendita").setRole("seller").build(),FieldData.FieldDataBuilder.getbuilder().
-                        setNome("Magazziniere").setRole("warehouse").build()));
+        choice_role.getItems().addAll(List.of(
+                FieldData.FieldDataBuilder.getbuilder().setNome("Acquisti").setRole("purchase").build(),
+                FieldData.FieldDataBuilder.getbuilder().setNome("Vendita").setRole("seller").build(),
+                FieldData.FieldDataBuilder.getbuilder().setNome("Magazziniere").setRole("warehouse").build(),
+                FieldData.FieldDataBuilder.getbuilder().setNome("Amministratore").setRole("admin").build()
+        ));
     }
 
     @Override

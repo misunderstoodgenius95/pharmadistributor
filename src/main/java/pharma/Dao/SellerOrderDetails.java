@@ -28,8 +28,8 @@ private Database database;
                 .setFarmaco_id(resultSet.getInt(6)).build();
     }
     @Override
-    protected void setFindByIdParameters(PreparedStatement preparedStatement, Integer integer) {
-
+    protected void setFindByIdParameters(PreparedStatement preparedStatement, Integer integer) throws SQLException {
+        preparedStatement.setInt(1,integer);
     }
 
 

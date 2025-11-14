@@ -62,6 +62,11 @@ public abstract   class TableBase<T> extends CustomDialog<T> {
         }
          return checkboxColumn.getCheckBoxMap();
     }
+
+    /**
+     * Getting ObservableMap<T,RadioButton> Radio Button Value
+     * @return
+     */
     public  ObservableMap<T, RadioButton> get_radioButton(){
         if(radioButtonTableColumn.getRadioMap()==null){
             throw new IllegalArgumentException("RadioMap is null!");
@@ -80,6 +85,10 @@ public abstract   class TableBase<T> extends CustomDialog<T> {
         return tableView;
     }
 
+    /**
+     * Getting Radio Value
+     * @return
+     */
     public SimpleObjectProperty<T> getRadio_value() {
         return radio_value;
     }

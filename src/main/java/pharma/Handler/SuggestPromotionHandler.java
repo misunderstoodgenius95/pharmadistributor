@@ -94,7 +94,7 @@ private void listener_choice() {
         @Override
         public void changed(ObservableValue<? extends FieldData> observable, FieldData oldValue, FieldData newValue) {
             if (newValue != null) {
-                String query="select price from seller_price\n" +
+                String query="select price from seller_price \n" +
                         "where farmaco= ? ";
                 double price = sellerPriceDao.findCurrentPricebyFarmaco(newValue.getForeign_id(),query);
                 price_value.setText(String.valueOf(price));

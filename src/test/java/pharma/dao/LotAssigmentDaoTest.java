@@ -7,6 +7,7 @@ import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,10 +38,10 @@ class LotAssigmentDaoTest {
         }
 
 
-
     }
+
     @Test
-    public void ValidateExists(){
+    public void ValidateExists() {
         Properties properties;
 
         {
@@ -58,8 +59,9 @@ class LotAssigmentDaoTest {
 
 
     }
+
     @Test
-    public void ValidateExistsAndReturnID(){
+    public void ValidateExistsAndReturnID() {
         Properties properties;
 
         {
@@ -79,7 +81,7 @@ class LotAssigmentDaoTest {
     }
 
     @Test
-    public void InValidateExistsAndReturnID(){
+    public void InValidateExistsAndReturnID() {
         Properties properties;
 
         {
@@ -97,8 +99,9 @@ class LotAssigmentDaoTest {
 
 
     }
+
     @Test
-    public void NotValidateExists(){
+    public void NotValidateExists() {
         Properties properties;
 
         {
@@ -128,9 +131,8 @@ class LotAssigmentDaoTest {
             try {
                 properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
                 LotAssigmentDao lotAssigmentDao = new LotAssigmentDao(Database.getInstance(properties));
-                List<FieldData> list= lotAssigmentDao.findQuantitybyFarmacoId(347);
-                Assertions.assertEquals(11,list.getFirst().getQuantity());
-
+                List<FieldData> list = lotAssigmentDao.findQuantitybyFarmacoId(347);
+                Assertions.assertEquals(11, list.getFirst().getQuantity());
 
 
             } catch (IOException e) {
@@ -141,4 +143,42 @@ class LotAssigmentDaoTest {
     }
 
 
+    @Test
+    void testFindQuantitybyFarmacoId() {
+        Properties properties;
+
+        {
+            try {
+                properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+                LotAssigmentDao lotAssigmentDao = new LotAssigmentDao(Database.getInstance(properties));
+                List<FieldData> list = lotAssigmentDao.findQuantitybyFarmacoId(340);
+                //System.out.println(list.getFirst().getFarmaco_id());
+                Assertions.assertEquals("ax22", list.getFirst().getCode());
+
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Test
+    void findByFarmacoAll() {
+
+        Properties properties;
+
+        {
+            try {
+                properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+                LotAssigmentDao lotAssigmentDao = new LotAssigmentDao(Database.getInstance(properties));
+                List<FieldData> list = lotAssigmentDao.findByFarmacoAll();
+                Assertions.assertFalse(list.isEmpty());
+
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

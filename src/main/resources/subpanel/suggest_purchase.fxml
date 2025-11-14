@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchor_id" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.subpanel.SuggestPurchase">
+<AnchorPane fx:id="anchor_id" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.subpanel.SuggestPurchase">
    <children>
       <Text layoutX="136.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Suggerimento Acquisto Prodotti" wrappingWidth="302.21630859375">
          <font>
             <Font size="21.0" />
          </font>
       </Text>
-       
-      <RadioButton fx:id="radio_single" layoutX="145.0" layoutY="102.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="136.0" text="Singolo Prodotto" />
-      <RadioButton fx:id="radio_category" layoutX="323.0" layoutY="99.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="151.0" text="   Categoria Prodotti" />
-      <TextField fx:id="text_single" layoutX="153.0" layoutY="175.0" />
-      <ButtonBar layoutX="200.0" layoutY="276.0" prefHeight="40.0" prefWidth="200.0">
-        <buttons>
-          <Button fx:id="btn_send_id"  onAction="#send_action_btn" mnemonicParsing="false" text="Invia" />
-        </buttons>
-      </ButtonBar>
+      <Label layoutX="153.0" layoutY="129.0" prefHeight="25.0" prefWidth="178.0">Inserisci Nome Prodotto</Label>
+      <TextField fx:id="text_single" layoutX="153.0" layoutY="175.0" promptText="Inserisci Nome Prodotto" />
+       <Button fx:id="send_btn_id" onAction="#send_action_btn" layoutX="500" layoutY="300" text="Mostra" />
+      <Label fx:id="label_response" layoutX="153.0" layoutY="235.0" prefHeight="31.0" prefWidth="215.0" text="" />
    </children>
 </AnchorPane>

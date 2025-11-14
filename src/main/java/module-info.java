@@ -37,6 +37,7 @@ module pharma {
     requires com.fasterxml.jackson.databind;
     requires java.sql;
     requires org.java_websocket;
+    requires configcat.java.client;
 
     exports pharma.real to javafx.graphics, javafx.fxml;
     opens pharma to javafx.fxml;
@@ -44,7 +45,6 @@ module pharma {
 opens pharma.Controller to javafx.fxml;
 opens pharma.Controller.subpanel to javafx.fxml;
 exports  pharma.config;
-exports pharma.Controller.subpanel to javafx.fxml;
     exports pharma.Controller to javafx.controls, javafx.fxml, javafx.graphics;
 exports pharma.Storage;
     opens pharma.config to javafx.fxml;
@@ -78,5 +78,6 @@ exports pharma.Storage;
     exports algoWarehouse to javafx.fxml, javafx.graphics;
 
     opens pharma.Model to com.fasterxml.jackson.databind, javafx.base, javafx.fxml;
+    exports pharma.Controller.subpanel to javafx.controls, javafx.fxml, javafx.graphics;
 
 }

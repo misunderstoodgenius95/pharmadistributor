@@ -15,7 +15,7 @@
         </toggleGroup>
     </RadioButton>
     <RadioButton  fx:id="category" layoutX="374.0" layoutY="67.0" mnemonicParsing="false" toggleGroup="$choice"
-                 text="Categoria Prodotti"/>
+                  text="Categoria Prodotti"/>
     <TextField fx:id="single_product" layoutX="197.0"  layoutY="126.0"/>
     <Button   layoutX="500" layoutY="200" fx:id="send_btn_id"  onAction="#on_action_send" text="Mostra"  />
 </AnchorPane>

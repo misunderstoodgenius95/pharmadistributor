@@ -10,10 +10,19 @@ public class User {
     private List<Results> results;
     @JsonIgnore
     private int status;
-
+    @JsonProperty("trusted_metadata")
+    private TrustedMetadata trustedMetadata;
 
     public int getStatus() {
         return status;
+    }
+
+    public TrustedMetadata getTrustedMetadata() {
+        return trustedMetadata;
+    }
+
+    public void setTrustedMetadata(TrustedMetadata trustedMetadata) {
+        this.trustedMetadata = trustedMetadata;
     }
 
     public void setStatus(int status) {

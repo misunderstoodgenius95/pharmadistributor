@@ -64,6 +64,27 @@ public class StytchClient {
                 return null;
         }
     }
+    public HttpResponse<String> create_user_pharmacist(String email, String password,String first_name,String surname,int pharmacy_id) {
+        System.out.println(email);
+        System.out.println(password);
+        System.out.println(first_name);
+        System.out.println(surname);
+        if(!InputValidation.validate_email(email ) ||! InputValidation.validate_password(password)
+                || first_name==null ||first_name.isEmpty()|| surname==null || surname.isEmpty()){
+            throw new IllegalArgumentException("field not correct!");
+        }
+        try {
+            HttpRequest request=stytchRequest.auth_request(EndPoints.getCreate_user(endpoint),
+                    PayLoadStytch.create_user_pharmacist(email,password,first_name,surname,pharmacy_id));
+
+            return clientHttp.send(request);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     public HttpResponse<String> login(String email,String password){
         if(!InputValidation.validate_email(email ) ||! InputValidation.validate_password(password)){
@@ -126,6 +147,10 @@ public class StytchClient {
 
         return clientHttp.send(stytchRequest.reset_password_start_body(EndPoints.getReset_password_start(endpoint),
                 PayLoadStytch.reset_password(email,EndPoints.getUriReset(uri))));
+    }
+    public HttpResponse<String> get_user(String user_id){
+
+             return clientHttp.send(stytchRequest.search_by_user_id(EndPoints.getSearch_userById(endpoint),user_id));
     }
 
 

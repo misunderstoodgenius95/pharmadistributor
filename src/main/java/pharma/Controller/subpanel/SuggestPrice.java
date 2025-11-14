@@ -1,3 +1,4 @@
+
 package pharma.Controller.subpanel;
 
 import javafx.beans.value.ChangeListener;
@@ -46,7 +47,6 @@ public class SuggestPrice implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         searchableComboBox=new SearchableComboBox<>();
-
         anchor_id.getChildren().add(searchableComboBox);
         AnchorPane.setTopAnchor(searchableComboBox,180.0);
         AnchorPane.setLeftAnchor(searchableComboBox,180.0);
@@ -62,7 +62,7 @@ public class SuggestPrice implements Initializable {
 
             }
         });
-         s_handler=new SuggestPriceHandlerController(single_product,searchableComboBox,farmacoDao,detailDao);
+        s_handler=new SuggestPriceHandlerController(single_product,searchableComboBox,farmacoDao,detailDao);
 
 
     }

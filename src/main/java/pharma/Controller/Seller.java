@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.controlsfx.control.NotificationPane;
 import org.jetbrains.annotations.TestOnly;
 import org.json.JSONObject;
@@ -27,6 +28,7 @@ import pharma.config.net.PollingClient;
 import pharma.dao.*;
 import pharma.formula.KMeans;
 import pharma.formula.PriceSuggestion;
+import pharma.javafxlib.Controls.Notification.JsonNotifyLottoDao;
 import pharma.javafxlib.Controls.NotificationPanelLib;
 import pharma.security.Stytch.StytchClient;
 
@@ -35,6 +37,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 
 public class Seller implements Initializable {
@@ -50,6 +53,7 @@ public class Seller implements Initializable {
     private FarmaciaDao farmaciaDao;
     private FarmacoDao farmacoDao;
     private LottiDao lottiDao;
+    private LotAssigmentDao assigmentDao;
     private UserService userService;
     private SellerOrderDao s_dao;
     private SellerOrderDetails s_detail;
@@ -83,18 +87,25 @@ public class Seller implements Initializable {
          pharmacistHandlerCreate=new PharmacistHandlerCreate(farmaciaDao,userService);
          farmacoDao=new FarmacoDao(Database.getInstance(properties));
          lottiDao=new LottiDao(Database.getInstance(properties),"lotto");
+         assigmentDao=new LotAssigmentDao(Database.getInstance(properties));
         s_dao = new SellerOrderDao(Database.getInstance(properties));
         s_detail = new SellerOrderDetails(Database.getInstance(properties));
         s_invoice = new SellerInvoiceDao(Database.getInstance(properties));
         s_credit_detail = new SellerCreditNoteDetailDao(Database.getInstance(properties));
-         notify=new EXpireProductNotifyHandler("Imposta Notifica",farmacoDao,lottiDao);
+         notify=new EXpireProductNotifyHandler("Imposta Notifica",assigmentDao);
         sellerOrderHandler=new SellerOrderHandler("Modifica Ordine", s_dao, s_detail, s_invoice, s_credit, s_credit_detail);
         s_invoice_dao=new SellerInvoiceDao(Database.getInstance(properties));
         sellerInvoice=new SellerInvoice(s_invoice_dao);
+
+
+
     }
 
 
+    private Window getWindow() {
+        return farmacia_id.getScene().getWindow();
 
+    }
 
 
         @TestOnly
@@ -106,23 +117,37 @@ public class Seller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-/*        String uri="";
-        try {
-            uri= FileStorage.getProperty("expire_post",new FileReader("expire_item.properties"));
-        } catch (FileNotFoundException e) {
+
+
+                pollingClient = new PollingClient(clientHttp);
+                ScheduledFuture<String> scheduledFuture = pollingClient.send("http://localhost:3001/notify");
+                String response;
+                try {
+                    response = scheduledFuture.get();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+                if (!response.isEmpty()) {
+                    System.out.println(response);
+
+                    JsonNotifyLottoDao notifyLottoDao = new JsonNotifyLottoDao(response, List.of("lot_id", "expiration_date"), "Scadenza", "Avviso Scadenze ", lottiDao);
+                    notifyLottoDao.execute();
+                }
+ /*       try {
+            JsonNotifyLottoDao notifyLottoDao=new JsonNotifyLottoDao(response.get(),List.of("lot_id","expiration_date"),"Scadenza","Avviso Scadenze ",lottiDao);
+            notifyLottoDao.execute();
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        }
-
-       // ScheduledFuture<String>result_json=pollingClient.send(uri);*/
-        NotificationPanelLib notificationPanelLib=new NotificationPanelLib(text_notify);
-        stack_id.getChildren().add( notificationPanelLib.getPane());
-
-
-        notificationPanelLib.show("Log me!");
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }*/
+            }
 
 
 
-    }
+
 
 
     @FXML
@@ -174,6 +199,14 @@ public class Seller implements Initializable {
     public void invoice_action(ActionEvent event) throws IOException {
         FXMLLoader loader = new  FXMLLoader(getClass().getResource("/subpanel/sellerInvoice.fxml"));
         loader.setController(sellerInvoice);
+        change_stages(loader.load(),50.0);
+
+    }
+
+    public void btn_chat_action(ActionEvent event) throws IOException {
+
+        System.out.println("action");
+        FXMLLoader loader = new  FXMLLoader(getClass().getResource("/subpanel/chat.fxml"));
         change_stages(loader.load(),50.0);
 
     }

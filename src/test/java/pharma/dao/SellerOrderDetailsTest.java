@@ -39,7 +39,13 @@ class SellerOrderDetailsTest {
     @Test
     void findbyOrderId() {
         List<FieldData> list=sellerOrderDetails.findbyOrderId(26);
-        System.out.println( list.getFirst().getFarmaco_id());
+        System.out.println(list.getFirst().getForeign_id());
+       // System.out.println( list.getFirst().getFarmaco_id());
        // Assertions.assertFalse(list.isEmpty());
+    }
+    @Test
+    void findbyId() {
+      FieldData fieldData=sellerOrderDetails.findById(26);
+        System.out.println(fieldData.getForeign_id());
     }
 }

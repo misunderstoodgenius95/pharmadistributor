@@ -3,6 +3,7 @@ package pharma.config.net;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,4 +64,26 @@ class PollingClientTest {
 
 
     }
+
+    @AfterEach
+    void tearDown() {
+        clientHttp=null;
+        pollingClient=null;
+    }
+
+    @Test
+    void ValidSendINtegration() {
+      clientHttp=new ClientHttp();
+        pollingClient=new PollingClient(clientHttp);
+        ScheduledFuture<String> result=pollingClient.send("http://localhost:3001/notify");
+        try {
+            String  expected=result.get(2, TimeUnit.SECONDS);
+            System.out.println(expected);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
 }

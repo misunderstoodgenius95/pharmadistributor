@@ -2,6 +2,11 @@ package pharma.Handler;
 
 
 import algoWarehouse.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
+import javafx.scene.layout.VBox;
+import org.controlsfx.control.table.TableRowExpanderColumn;
 import pharma.Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,16 +43,17 @@ private MagazzinoDao magazzinoDao;
 private  LotAssigmentDao lotAssigmentDao;
 private  LotAssigmentShelvesDao lotAssigmentShelvesDao;
 private LotAssigment choice_assigment;
- private    TableView<ShelvesAssigment> table_choice;
+ private    TableView<LotAssigment> table_choice;
 private ShelfDao shelfDao;
 private ShelvesDao shelvesDao;
 private  Button btn_calculate_warehouse;
+private OrdersPharmacist ordersPharmacist;
     private LotDimensionDao lotDimension_dao;
     private Label visibile_label;
     CustomLotsDimension lotDimensionDialog;
     FarmaciaDao farmaciaDao;
     private ObservableList<Control> optional_value;
-;
+private ObjectProperty<LotAssigment> assigment_property;
     public LottoStorageHandler(String content, List<GenericJDBCDao> genericJDBCDao) {
         super(content, genericJDBCDao);
         lotDimension_dao =(LotDimensionDao) genericJDBCDao.stream().
@@ -83,8 +89,8 @@ private  Button btn_calculate_warehouse;
 
 
         lotDimensionDialog =new CustomLotsDimension("", List.of(lotDimension_dao,s_order_details,s_order,farmaciaDao,magazzinoDao,lottiDao),radio_btn_choice_lot.value_radio_property_choiceProperty() );
-
-
+        ordersPharmacist=new OrdersPharmacist(s_order_details,farmaciaDao,s_order);
+        assigment_property=new SimpleObjectProperty<>();
 
 
     }
@@ -152,53 +158,38 @@ private  Button btn_calculate_warehouse;
 
 
     }
+
+
+
+
     // Calculate the shelf and warehouse.
     private void  calculate_warehouse() {
 
        btn_calculate_warehouse.setOnAction(event -> {
             if(optionalRowChoice.isPresent()) {
-                    FieldData fieldData_choice=optionalRowChoice.get();
-                List<PharmacyAssigned> pharmacyAssigneds = new ArrayList<>();
+                FieldData fieldData_choice=optionalRowChoice.get();
+               // List<PharmacyAssigned> pharmacyAssigneds = new ArrayList<>();
                 MagazzinoModelDao magazzinoModelDao =new MagazzinoModelDao(shelfDao,shelvesDao, magazzinoDao);
                 List<WarehouseModel> modelList=magazzinoModelDao.getFullWarehouseModel();
+            List<PharmacyAssigned> pharmacyAssigneds=ordersPharmacist.calculatePharmacyByOrder(fieldData_choice.getFarmaco_id());
 
-             List<FieldData> order_details = s_order_details.findbyProduct(fieldData_choice.getFarmaco_id());
-                for (FieldData orderDetail : order_details) {
-                    //obtein  the order id
-                    int order_id = orderDetail.getOrder_id();
-                    log.info("order_id" + order_id);
-                    //obtain the  order
-                    FieldData fd_order = s_order.findById(order_id);
-                    // obtain the farmacia
-                    int farmacia_id = fd_order.getForeign_id();
-
-                    FieldData fd_farmacia = farmaciaDao.findById(farmacia_id);
-                    Farmacia farmacia = new Farmacia(fd_farmacia.getNome(), fd_farmacia.getId(), fd_farmacia.getLocation());
-                    pharmacyAssigneds.add(new PharmacyAssigned(farmacia, orderDetail.getQuantity()));
-
-                }
-                if(pharmacyAssigneds.isEmpty()){
-                   pharmacyAssigneds.addAll(farmaciaDao.findAll().stream().map
-                           (farmacia_fd->new PharmacyAssigned(new Farmacia(farmacia_fd.getAnagrafica_cliente(),farmacia_fd.getId(),  farmacia_fd.getLocation()),0)).toList());
-                }
-// find lot dimension
                 Optional<LotDimensionModel> dimension = lotDimensionDao.findByLots(fieldData_choice.getCode(),fieldData_choice.getFarmaco_id());
                 if (dimension.isPresent()) {
                     LotDimensionModel lotDimensionModel = dimension.get();
                    ChoiceWarehouse choiceWarehouse = new ChoiceWarehouse(modelList, pharmacyAssigneds);
-                List<WarehouseDistances> distances= choiceWarehouse.calculate_warehouse(lotDimensionModel, quantity.getValue());
-                  if(!table_choice.getItems().isEmpty()){
+                    List<WarehouseDistances> distances= choiceWarehouse.calculate_warehouse();
+                    log.debug("number of warehouse"+distances.size());
+                    if(!table_choice.getItems().isEmpty()){
                       table_choice.getItems().clear();
-                  }
-                   distances.forEach(ws->{
+                    }
+
+                    distances.forEach(ws->{
                     PlacementShelf shelf=new PlacementShelf(ws.getWarehouseModel().getShelfInfos());
                     choice_assigment=shelf.assignmentLots(lotDimensionModel,quantity.getValue());
-                    table_choice.getItems().addAll(choice_assigment.getShelvesAssigmentList());
+                    table_choice.getItems().add(choice_assigment);
 
 
                 });
-
-
 
                 }
             }
@@ -207,17 +198,45 @@ private  Button btn_calculate_warehouse;
 
 
     }
+
+
+
+
+
+
+
+
+
     private void table_config(){
         table_choice.setPrefHeight(400);
-        table_choice.getColumns().addAll(
-                TableUtility.generate_column_string("Magazzino Id","magazzino_id"),
-                TableUtility.generate_column_string("Scaffale","shelf_code"),
-                TableUtility.generate_column_int("Ripiano","shelf_level"),
-                TableUtility.generate_column_int("Qty","quantity"));
+        TableRowExpanderColumn<LotAssigment> rowExpanderColumn=new TableRowExpanderColumn<>(this::createRowExpander);
+        RadioButtonTableColumn<LotAssigment> assigmentRadioButtonTableColumn=new RadioButtonTableColumn<>(){
+            @Override
+            protected void onButtonClick(LotAssigment rowData) {
+                assigment_property.setValue(rowData);
+            }
+        };
+        table_choice.getColumns().addAll(TableUtility.generate_column_int("Seleziona Magazzino","lot_code"),
+                rowExpanderColumn,assigmentRadioButtonTableColumn
+                );
 
 
     }
-// LotDimension Action Button if the dimensions it is not setting, settings
+
+    private Node createRowExpander(TableRowExpanderColumn.TableRowDataFeatures<LotAssigment> fieldDataTableRowDataFeatures) {
+        VBox vBox=new VBox();
+TableView<ShelvesAssigment> shelvesAssigmentTableView=new TableView<>();
+shelvesAssigmentTableView.getColumns().addAll(TableUtility.generate_column_string("Magazzino Id","magazzino_id"),
+        TableUtility.generate_column_string("Scaffale","shelf_code"),
+        TableUtility.generate_column_int("Ripiano","shelf_level"),
+        TableUtility.generate_column_int("Quantità","quantity"));
+
+        vBox.getChildren().add(shelvesAssigmentTableView);
+        shelvesAssigmentTableView.getItems().addAll(fieldDataTableRowDataFeatures.getValue().getShelvesAssigmentList());
+        return  vBox;
+    }
+
+    // LotDimension Action Button if the dimensions it is not setting, settings
     private void listener_choice_lot_dialog() {
         choiceLogDialog.getButtonOK().setOnAction(event -> {
             Object object = radio_btn_choice_lot.getValue_radio_property_choice();
@@ -288,26 +307,34 @@ private  Button btn_calculate_warehouse;
             log.error("choice_assigment is null - user must click 'Calcola Scaffali' button first");
             return false;
         }
-        if(choice_assigment.getShelvesAssigmentList()==null){
+        if (choice_assigment.getShelvesAssigmentList() == null) {
             log.error("shelves are null");
 
         }
 
-        int id=lotAssigmentDao.findExistAndReturnId(choice_assigment.getFarmaco_id(),choice_assigment.getLot_code());
-        if(id==-1) {
+        int id = lotAssigmentDao.findExistAndReturnId(choice_assigment.getFarmaco_id(), choice_assigment.getLot_code());
+        if (id == -1) {
             id = lotAssigmentDao.insertAndReturnID(choice_assigment);
-        }else{
+        } else {
             lotAssigmentDao.update(choice_assigment);
         }
-         final int finalId = id;
-        return table_choice.getItems().stream().peek(
-               value->value.setLot_assigment(finalId)
-        ).allMatch(assigment-> lotAssigmentShelvesDao.insert(assigment));
+        final int finalId = id;
 
+        if(assigment_property.get()!=null){
 
+            LotAssigment assigment=assigment_property.get();
+             return assigment.getShelvesAssigmentList().stream().
+                    peek(v -> v.setLot_assigment(finalId)).allMatch(ass -> lotAssigmentShelvesDao.insert(ass));
+        }
+            return  false;
 
 
     }
+
+
+
+
+
 
     @Override
     protected Status condition_event_status(FieldData type) throws Exception {

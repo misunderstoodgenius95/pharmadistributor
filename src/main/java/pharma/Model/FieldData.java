@@ -79,6 +79,9 @@ public class FieldData {
     private int medium_stock_item;
     private int min_day_expire;
     private int discount_value;
+    private String picture;
+    private String website;
+    private SimpleIntegerProperty s_quantity;
     private FieldData(FieldDataBuilder builder) {
         this.anagrafica_cliente = builder.anagrafica_cliente;
         this.partita_iva = builder.partita_iva;
@@ -141,11 +144,35 @@ public class FieldData {
         this.medium_stock_item=builder.medium_stock_item;
         this.min_day_expire=builder.min_day_expire;
         this.discount_value=builder.discount_value;
+        this.website=builder.website;
+        this.picture=builder.picture;
+        this.shelf_code=builder.shelf_code;
+        this.shelves_code=builder.shelves_code;
+        s_quantity=new SimpleIntegerProperty();
+    }
 
+    public String getPicture() {
+        return picture;
+    }
+
+    public String getWebsite() {
+        return website;
     }
 
     public int getDiscount_value() {
         return discount_value;
+    }
+
+    public int getS_quantity() {
+        return s_quantity.get();
+    }
+
+    public SimpleIntegerProperty s_quantityProperty() {
+        return s_quantity;
+    }
+
+    public void setS_quantity(int s_quantity) {
+        this.s_quantity.set(s_quantity);
     }
 
     public int getMedium_stock_item() {
@@ -565,6 +592,8 @@ public class FieldData {
         private int medium_stock_item;
         private int min_day_expire;
         private int discount_value;
+        private String picture;
+        private String website;
         private FieldDataBuilder() {
 
         }
@@ -907,6 +936,15 @@ public class FieldData {
             return this;
         }
 
+        public FieldDataBuilder  setPicture(String picture) {
+            this.picture = picture;
+            return  this;
+        }
+
+        public FieldDataBuilder setWebsite(String website) {
+            this.website = website;
+            return this;
+        }
 
         public FieldData build() {
             return new FieldData(this);

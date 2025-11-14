@@ -50,6 +50,11 @@ private List<ShelfInfo> shelfInfos;
         this.comune = comune;
         this.province = province;
     }
+    public WarehouseModel( String nome) {
+
+        this.nome = nome;
+
+    }
 
     public void setId(int id) {
         this.id = id;

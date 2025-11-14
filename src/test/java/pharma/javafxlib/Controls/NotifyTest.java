@@ -16,6 +16,8 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
+import java.lang.foreign.PaddingLayout;
+
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class NotifyTest {
@@ -45,23 +47,16 @@ class NotifyTest {
 
 
     }
+
+
     @Test
-    public void notifyPanel(FxRobot robot) {
-
-            NotificationPane notificationPane = new NotificationPane(vBox);
-            notificationPane.setShowFromTop(false);
-
-
-        robot.interact(() -> {
-            notificationPane.setText("This is a test notification!");
-            notificationPane.show();
+    void createWithButtonClick(FxRobot robot) {
+        Platform.runLater(()-> {
+            Notify.createWithButtonClick("prova", "Hello",robot.targetWindow());
         });
+        robot.sleep(40000);
 
 
-        robot.sleep(3000); // Allow time for visual confirmation (optional in headless)
+
     }
-
-
-
-
 }

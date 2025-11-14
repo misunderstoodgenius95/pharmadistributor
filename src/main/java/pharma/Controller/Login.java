@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import pharma.RolesStage;
@@ -31,7 +32,7 @@ public class Login implements Initializable {
     @FXML
     public TextField user_field;
     @FXML
-    public TextField password_field;
+    public PasswordField password_field;
 
     @FXML
     public void buttonOnAction(ActionEvent event) throws FileNotFoundException {
@@ -53,7 +54,7 @@ public class Login implements Initializable {
                 FileStorage.setProperty("jwt",token,new FileWriter("config.properties"));
                 RolesStage.change_stage(TokenUtility.extractRole(json),stage);
             }else{
-                System.out.println(response.getBody());
+                Utility.network_status(response.getStatus());
 
             }
         } catch (IOException e) {
@@ -69,10 +70,7 @@ public class Login implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //password_field.setText("1+;IeXU,f@j!");
 
-       // user_field.setText("luigi.bianchi@azienda.com");
-        user_field.setText("flaviana.buccho@azienda.com");
-        password_field.setText("&6hF%@&yvBE");
+
     }
 }

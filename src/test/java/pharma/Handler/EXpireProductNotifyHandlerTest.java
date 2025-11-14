@@ -1,5 +1,6 @@
 package pharma.Handler;
 
+import algoWarehouse.LotAssigment;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
 import pharma.config.Utility;
 import pharma.dao.FarmacoDao;
+import pharma.dao.LotAssigmentDao;
 import pharma.dao.LottiDao;
 import pharma.javafxlib.test.SimulateEvents;
 
@@ -29,9 +31,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(ApplicationExtension.class)
 class EXpireProductNotifyHandlerTest {
     @Mock
-    private FarmacoDao farmacoDao;
-    @Mock
-    private LottiDao lottiDao;
+    private LotAssigmentDao assigmentDao;
+
     @Start
     public void start(Stage stage){
         Scene scene=new Scene(new VBox(),600,700);
@@ -42,18 +43,17 @@ class EXpireProductNotifyHandlerTest {
     }
     @Test
     public void test(FxRobot robot){
-        when(farmacoDao.findAll()).thenReturn(List.of(
-                FieldData.FieldDataBuilder.getbuilder().setFarmaco_id(100).setNome("Tachipirina").setNome_tipologia("Supposta").setUnit_misure("1000mg").setQuantity(100).setId(340).build(),
-                FieldData.FieldDataBuilder.getbuilder().setFarmaco_id(50).setNome("Aspirina").setNome_tipologia("Compressa").setUnit_misure("100mg").setQuantity(100).setId(340).build()));
- FieldData fd_lots1=FieldData.FieldDataBuilder.getbuilder().setcode("ax26").setNome_farmaco("Tachiprina").
+        when(assigmentDao.findByFarmacoAll()).thenReturn(List.of(
+                FieldData.FieldDataBuilder.getbuilder().setFarmaco_id(100).setcode("ax11").setNome("Tachipirina").setNome_tipologia("Supposta").setUnit_misure("1000mg").setQuantity(100).setId(340).build(),
+                FieldData.FieldDataBuilder.getbuilder().setFarmaco_id(50).setcode("ax22").setNome("Aspirina").setNome_tipologia("Compressa").setUnit_misure("100mg").setQuantity(100).setId(340).build()));
+        FieldData fd_lots1=FieldData.FieldDataBuilder.getbuilder().setcode("ax26").setNome_farmaco("Tachiprina").
          setElapsed_date(Date.valueOf(LocalDate.of(2026,1,1))).build();
         FieldData fd_lots2=FieldData.FieldDataBuilder.getbuilder().setcode("ax24").setNome_farmaco("Debridat").setElapsed_date(Date.valueOf(LocalDate.of(2026,1,1))).
                 build();
-   when(lottiDao.findByFarmaco(anyInt())).thenReturn(List.of(fd_lots1),List.of(fd_lots2));
 
         Platform.runLater(()->{
 
-            EXpireProductNotifyHandler expire_dao=new EXpireProductNotifyHandler("", farmacoDao,lottiDao);
+           EXpireProductNotifyHandler expire_dao=new EXpireProductNotifyHandler("", assigmentDao);
             SimulateEvents.clickOn(expire_dao.getBtn_products());
             WaitForAsyncUtils.waitForFxEvents();
 

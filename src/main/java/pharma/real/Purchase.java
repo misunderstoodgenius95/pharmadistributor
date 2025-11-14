@@ -8,7 +8,6 @@ public class Purchase extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader=new FXMLLoader(getClass().getResource("/purchase.fxml"));
-
         Scene scene=new Scene(loader.load(),700,600);
         primaryStage.setScene(scene);
         primaryStage.show();

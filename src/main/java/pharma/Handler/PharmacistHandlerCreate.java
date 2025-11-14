@@ -41,7 +41,7 @@ public class PharmacistHandlerCreate extends DialogHandler<FieldData> {
     protected Status condition_event_status(FieldData type) throws Exception {
         String password= SecurePasswordGenerator.generatePassword(12);
         System.out.println(password);
-        UserServiceResponse ur=userService.register(type.getEmail(),password,"pharmacist",type.getNome(),type.getLast_name());
+        UserServiceResponse ur=userService.register_pharmacist(type.getEmail(),password,"pharmacist",type.getNome(),type.getLast_name(),type.getId());
         return switch (ur.getStatus()) {
             case 200 -> new Status("Registrazione con Successso!", true);
             case 429 -> new Status("Email già presente!", false);
@@ -76,7 +76,7 @@ public class PharmacistHandlerCreate extends DialogHandler<FieldData> {
     @Override
     protected FieldData get_return_data() {
         return FieldData.FieldDataBuilder.getbuilder().setEmail(textField_email.getText())
-                .setNome(textField_first_name.getText()).setLast_name(textField_last_name.getText())
+                .setNome(textField_first_name.getText()).setLast_name(textField_last_name.getText()).setId(searchable_farmacia.getValue().getId())
                 .build();
     }
 

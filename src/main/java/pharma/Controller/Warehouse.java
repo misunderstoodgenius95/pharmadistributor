@@ -6,6 +6,9 @@ import org.jetbrains.annotations.TestOnly;
 import pharma.Handler.LottoStorageHandler;
 import pharma.Handler.MagazzinoHandler;
 import pharma.Handler.ShelfHandler;
+import pharma.Handler.SpostaLottoHandler;
+import pharma.Handler.Table.LotStorageView;
+import pharma.Handler.Table.LottoStorageTableView;
 import pharma.Handler.Table.MagazinoTablebase;
 import pharma.Handler.Table.ShelfTableBased;
 import pharma.Storage.FileStorage;
@@ -36,6 +39,9 @@ public class Warehouse {
     private LottiDao lottiDao;
     private  LotAssigmentDao assigmentDao;
     private  LotAssigmentShelvesDao assigmentShelvesDao;
+    private LottoStorageTableView storageTableView;
+    private LotStorageView storageView;
+    private SpostaLottoHandler spostaLottoHandler;
     public Warehouse() {
         Properties properties;
         try {
@@ -60,9 +66,12 @@ public class Warehouse {
         assigmentShelvesDao=new LotAssigmentShelvesDao(Database.getInstance(properties));
         storageHandler=new LottoStorageHandler("Inserisci Lotti",List.of(farmaciaDao,lottiDao,sellerOrderDao,s_details,lotDimensionDao,magazzinoDao,
                 shelfDao,shelvesDao,assigmentDao,assigmentShelvesDao));
+        storageTableView=new LottoStorageTableView("Ricerca Lotto",assigmentDao,assigmentShelvesDao);
+        storageView=new LotStorageView("Visualizza Risultati",assigmentShelvesDao);
+        spostaLottoHandler=new SpostaLottoHandler("Sposta Lotto",assigmentDao,assigmentShelvesDao,magazzinoDao,shelfDao);
     }
     @TestOnly
-    public Warehouse(MagazzinoDao magazzinoDao, ShelfDao shelfDao,ShelvesDao shelvesDao) {
+    public Warehouse(MagazzinoDao magazzinoDao, ShelfDao shelfDao,ShelvesDao shelvesDao,LotAssigmentDao assigmentDao,LotAssigmentShelvesDao ass_shelvesDao) {
         this.magazzinoDao = magazzinoDao;
         this.shelfDao = shelfDao;
         this.shelvesDao=shelvesDao;
@@ -74,22 +83,20 @@ public class Warehouse {
 
     public void warehouse_action(ActionEvent actionEvent) {
         magazinoTablebase.show();
-
     }
 
     public void shelf_action(ActionEvent actionEvent) {
         shelfTableBased.show();
-
     }
      public void lots_action(ActionEvent event){
         storageHandler.execute();
-
      }
 
     public void sposta_lotto_action(ActionEvent actionEvent) {
+        spostaLottoHandler.execute();
     }
 
     public void lot_view(ActionEvent event) {
-
+            storageView.show();
     }
 }

@@ -15,6 +15,15 @@ public class EndPoints {
     private static  final  String user_update="/v1/users/";
     private static  final  String reset_password_start="/v1/passwords/email/reset/start";
     private static final  String uri_reset="/reset-password";
+    private static final String uri_search_id="/v1/users/";
+
+
+    public static String getSearch_userById(String endpoint){
+
+        return endpoint+uri_search_id;
+    }
+
+
     public static String getCreate_user(String endpoint){
 
         return endpoint+create_user;

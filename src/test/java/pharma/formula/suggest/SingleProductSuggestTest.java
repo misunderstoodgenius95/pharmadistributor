@@ -141,7 +141,6 @@ class SingleProductSuggestTest {
         @BeforeEach
         void setUp() {
             SuggestConfig suggestConfig = new SuggestConfig(180, 500,200);
-
             singleProductSuggest = new SingleProductSuggest(List.of(), suggestConfig,List.of());
 
         }
@@ -150,8 +149,6 @@ class SingleProductSuggestTest {
         @Test
         void calculate_suggest() {
             Assertions.assertTrue(singleProductSuggest.calculate_suggest());
-
-
         }
     }
 }

@@ -29,31 +29,28 @@ class SuggestPriceTest {
     private DetailDao detailDao;
     @Mock
     private FarmacoDao farmacoDao;
- @Start
- public void start(Stage stage) throws IOException {
-     MockitoAnnotations.openMocks(this);
-     FXMLLoader loader = new  FXMLLoader(getClass().getResource("/subpanel/suggest_price.fxml"));
+    @Start
+    public void start(Stage stage) throws IOException {
+        MockitoAnnotations.openMocks(this);
+        FXMLLoader loader = new  FXMLLoader(getClass().getResource("/subpanel/suggest_price.fxml"));
         SuggestPrice suggestPrice=new SuggestPrice(farmacoDao,detailDao);
         loader.setController(suggestPrice);
-     Scene scene=new Scene(loader.load());
-     stage.setScene(scene);
-     stage.initStyle(StageStyle.DECORATED);
-     stage.show();
- }
- @Test
+        Scene scene=new Scene(loader.load());
+        stage.setScene(scene);
+        stage.initStyle(StageStyle.DECORATED);
+        stage.show();
+    }
+    @Test
     public void test(FxRobot robot){
-     when(detailDao.findAll()).thenReturn(List.of(FieldData.FieldDataBuilder.getbuilder().setNome("Antibiotico").build()));
-     when(farmacoDao.findByName(anyString())).thenReturn(List.of( FieldData.FieldDataBuilder.getbuilder().setNome("Tachipirina").setDescription("Farmaco per la febbre.").setCategoria(1).
-             setNome_tipologia("Supposte").setUnit_misure("100mg").setNome_categoria("AntiInfiammatorio").setQuantity(30).setNome_casa_farmaceutica("Angelini").setNome_principio_attivo("Paracetamolo").build()));
-     Platform.runLater(()->{
+        when(detailDao.findAll()).thenReturn(List.of(FieldData.FieldDataBuilder.getbuilder().setNome("Antibiotico").build()));
+        when(farmacoDao.findByName(anyString())).thenReturn(List.of( FieldData.FieldDataBuilder.getbuilder().setNome("Tachipirina").setDescription("Farmaco per la febbre.").setCategoria(1).
+                setNome_tipologia("Supposte").setUnit_misure("100mg").setNome_categoria("AntiInfiammatorio").setQuantity(30).setNome_casa_farmaceutica("Angelini").setNome_principio_attivo("Paracetamolo").build()));
+        Platform.runLater(()->{
 
+        });
 
-
-
-     });
-
-     robot.sleep(4000000);
- }
+        robot.sleep(4000000);
+    }
 
 
 

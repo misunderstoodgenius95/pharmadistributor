@@ -1,5 +1,6 @@
 package pharma.javafxlib.Controls.Notification;
 
+import javafx.stage.Window;
 import org.json.JSONObject;
 import pharma.Model.FieldData;
 import pharma.dao.LottiDao;

@@ -30,6 +30,14 @@ public class ShelfDao extends GenericJDBCDao<ShelfInfo,String> {
                 .build();
     }
 
+    public  List<ShelfInfo> findShelfByMagazzinoId(int magazzino_id){
+        return findByParameter("SELECT * FROM "+table+" WHERE warehouse_id= ? ",magazzino_id);
+
+
+
+
+    }
+
     @Override
     protected void setFindByIdParameters(PreparedStatement preparedStatement, String string) {
 
@@ -37,8 +45,8 @@ public class ShelfDao extends GenericJDBCDao<ShelfInfo,String> {
 
     @Override
     protected String getInsertQuery() throws Exception {
-        return " INSERT INTO "+table+" (code,warehouse_id,length,height,depth,shelf_thickness,num_level,capacity) " +
-                " VALUES( ?,?,?,?,?,?,?,?) ";
+        return "   INSERT INTO "+table+" (code,warehouse_id,length,height,depth,shelf_thickness,num_level,capacity) " +
+                "  VALUES( ?,?,?,?,?,?,?,?) ";
     }
 
     @Override

@@ -11,9 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import pharma.dao.MagazzinoDao;
-import pharma.dao.ShelfDao;
-import pharma.dao.ShelvesDao;
+import pharma.dao.*;
 
 import java.io.IOException;
 
@@ -25,12 +23,16 @@ class WarehouseControllerTest {
     private ShelfDao shelfDao;
     @Mock
     private ShelvesDao shelvesDao;
+    @Mock
+    private LotAssigmentDao assigmentDao;
+    @Mock
+    private LotAssigmentShelvesDao assigmentShelvesDao;
 
     @Start
     public void start(Stage stage) throws IOException {
         MockitoAnnotations.openMocks(this);
         FXMLLoader loader = new  FXMLLoader(getClass().getResource("/warehouse.fxml"));
-        Warehouse warehouse=new Warehouse(magazzinoDao,shelfDao,shelvesDao);
+        Warehouse warehouse=new Warehouse(magazzinoDao,shelfDao,shelvesDao,assigmentDao,assigmentShelvesDao);
         loader.setController(warehouse);
         Scene scene=new Scene(loader.load());
        stage.initStyle(StageStyle.DECORATED);

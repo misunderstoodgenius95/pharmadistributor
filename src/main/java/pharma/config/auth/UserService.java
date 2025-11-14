@@ -3,6 +3,7 @@ package pharma.config.auth;
 
 import com.auth0.jwt.interfaces.Payload;
 
+import com.auth0.net.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,9 +40,24 @@ public class UserService {
         }
 
         HttpResponse<String> response = stytchClient.login(email, password);
-        return new UserServiceResponse(response.body(), response.statusCode());
-
+        if(response.statusCode()==404){
+            return new UserServiceResponse(response.body(),401);
+        }
+      boolean value=validate_user(response.body());
+        if(value){
+            return new UserServiceResponse(response.body(), response.statusCode());
+        }else{
+            return new UserServiceResponse(response.body(),403);
+        }
     }
+    private boolean validate_user(String json){
+        JSONObject jsonObject=new JSONObject(json);
+        System.out.println(jsonObject.toString());
+        String user_json=jsonObject.getJSONObject("user").toString();
+        User user=UserService.deserialization_object(user_json,User.class).get();
+        return user.getTrustedMetadata().isIs_enable();
+    }
+
 
     public UserServiceResponse authenticate_jwt(String jwt) throws ExpireToken {
         if (jwt == null || jwt.isEmpty()) {
@@ -62,7 +78,6 @@ public class UserService {
             default -> {
                 throw new ExpireToken("Authentication failed: " + response.body());
             }
-
         }
 
     }
@@ -89,6 +104,29 @@ public class UserService {
         return new UserServiceResponse(response_create.body(), response_create.statusCode());
 
     }
+    public UserServiceResponse register_pharmacist(String email, String password, String role, String first_name, String surname,int pharmacy_id) {
+
+
+        HttpResponse<String> response_create = stytchClient.create_user_pharmacist(email, password, first_name, surname,pharmacy_id);
+        JSONObject jsonObject=new JSONObject(response_create.body());
+        if(jsonObject.has("error_type")) {
+            String error_type = new JSONObject(response_create.body()).get("error_type").toString();
+            if (error_type.equals("duplicate_email")) {
+                return new UserServiceResponse("Unprocessable Entity", 429);
+            }
+            return new UserServiceResponse(response_create.body(), response_create.statusCode());
+        }else if(response_create.statusCode()==200) {
+            String user_id=jsonObject.get("user_id").toString();
+            user_update_role(user_id,role);
+            HttpResponse<String> response_reset=stytchClient.reset_password_start(email,"http://localhost:3000");
+
+            return new UserServiceResponse(response_reset.body(), response_reset.statusCode());
+
+        }
+        return new UserServiceResponse(response_create.body(), response_create.statusCode());
+
+    }
+
 
     public UserServiceResponse searchUsers() {
         HttpResponse<String> response = stytchClient.get_users();
@@ -98,6 +136,7 @@ public class UserService {
 
     public User searchUserByEmail(String email) {
         HttpResponse<String> json_user_by_search = stytchClient.get_user_by_email(email);
+        System.out.println(json_user_by_search.statusCode());
         if (json_user_by_search.statusCode() == 200) {
             User user = deserialization_object(json_user_by_search.body(), User.class).get();
             return add_latest_access(user);
@@ -115,7 +154,6 @@ public class UserService {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
-
             return Optional.of(objectMapper.readValue(json, tclass));
         } catch (JsonProcessingException e) {
             logger.warning(e.getMessage());
@@ -165,11 +203,15 @@ public class UserService {
 
 
             HttpResponse<String> response = stytchClient.get_session(user.getResults().getFirst().getUser_id());
+            logger.info("logging status"+response.statusCode());
             if (response.statusCode() == 200) {
                 String json_session = response.body();
+                logger.info("session"+json_session);
                 Session session = deserialization_object(json_session, Session.class).get();
-                Instant instant = recent_last_access(session);
-                user.getResults().getFirst().setLast_access(instant);
+                 recent_last_access(session).ifPresent(instant->
+                        user.getResults().getFirst().setLast_access(instant));
+
+
             }
         }
         return  user;
@@ -199,9 +241,9 @@ public class UserService {
      * @param session_model
      * @return
      */
-   public static Instant recent_last_access(Session session_model){
+   public static Optional<Instant> recent_last_access(Session session_model){
         if(session_model.getSessions().isEmpty()){
-            throw new IllegalArgumentException("Cannot compare because the list is empty");
+           return   Optional.empty();
         }
 
        Instant recent_instant=null;
@@ -222,7 +264,7 @@ public class UserService {
             }
 
         }
-        return recent_instant;
+        return  Optional.of(recent_instant);
 
     }
 
@@ -236,6 +278,14 @@ public class UserService {
     public  static String extract_results(String body){
 
         return new JSONObject(body).getJSONArray("results").toString();
+    }
+    public UserServiceResponse GettingUserInfoByUserId(String user_id){
+        if(user_id==null || user_id.isEmpty()){
+            throw new IllegalArgumentException("User_id it is null or empty");
+
+        }
+       HttpResponse<String> response=stytchClient.get_user(user_id);
+       return  new UserServiceResponse( response.body(),response.statusCode());
     }
 
 

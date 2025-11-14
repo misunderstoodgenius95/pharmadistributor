@@ -1,0 +1,65 @@
+{
+  "request_id": "request-id-live-58bedb63-dd5d-41d5-afe4-8eb481c7e2c2",
+  "sessions": [
+    {
+      "attributes": {
+        "ip_address": "",
+        "user_agent": ""
+      },
+      "authentication_factors": [
+        {
+          "created_at": "2025-06-30T09:26:19Z",
+          "delivery_method": "knowledge",
+          "last_authenticated_at": "2025-06-30T09:26:19Z",
+          "type": "password",
+          "updated_at": "2025-06-30T09:26:19Z"
+        }
+      ],
+      "custom_claims": {},
+      "expires_at": "2025-06-30T13:26:19Z",
+      "session_id": "session-live-5e1b4464-4bbf-47d2-b4ce-2e612d3d579c",
+      "started_at": "2025-06-30T09:26:19Z",
+      "user_id": "user-live-3927dadb-5d0b-4e0e-9738-dda318f29270"
+    },
+    {
+      "attributes": {
+        "ip_address": "",
+        "user_agent": ""
+      },
+      "authentication_factors": [
+        {
+          "created_at": "2025-06-30T09:30:37Z",
+          "delivery_method": "knowledge",
+          "type": "password",
+          "updated_at": "2025-06-30T09:30:37Z"
+        }
+      ],
+      "custom_claims": {},
+      "expires_at": "2025-06-30T13:30:37Z",
+      "session_id": "session-live-9edbf28e-b7e2-4ccb-8566-d68b53774add",
+      "started_at": "2025-06-30T09:30:37Z",
+      "user_id": "user-live-3927dadb-5d0b-4e0e-9738-dda318f29270"
+    },
+    {
+      "attributes": {
+        "ip_address": "",
+        "user_agent": ""
+      },
+      "authentication_factors": [
+        {
+          "created_at": "2025-06-30T09:40:08Z",
+          "delivery_method": "knowledge",
+          "type": "password",
+          "updated_at": "2025-06-30T09:40:08Z"
+        }
+      ],
+      "custom_claims": {},
+      "expires_at": "2025-06-30T13:40:08Z",
+      "last_accessed_at": "",
+      "session_id": "session-live-dfd26724-71b0-43c2-9ac3-4f45a3942e42",
+      "started_at": "2025-06-30T09:40:08Z",
+      "user_id": "user-live-3927dadb-5d0b-4e0e-9738-dda318f29270"
+    }
+  ],
+  "status_code": 200
+}

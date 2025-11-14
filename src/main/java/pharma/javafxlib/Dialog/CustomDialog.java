@@ -306,6 +306,9 @@ getControlList().add(textField);
         return  tableView;
 
     }
+
+
+
     public ChoiceBox<T> add_choiceBox(T value){
         ChoiceBox<T> choiceBox=new ChoiceBox<>();
         vbox.getChildren().add(choiceBox);
@@ -441,6 +444,15 @@ getControlList().add(textField);
 
         
     }
+    public <K> TextFieldComboBox addComboWithTextNoValidation(ObservableList<K> value_control){
+        TextFieldComboBox<K> textFieldComboBox=new TextFieldComboBox<>(value_control);
+        vbox.getChildren().add(textFieldComboBox);
+        return  textFieldComboBox;
+
+
+
+    }
+
 
     public Button  addButton(String value){
         Button button=new Button(value);

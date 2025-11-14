@@ -21,7 +21,7 @@ import pharma.security.Stytch.StytchClient;
 import java.util.List;
 
 @ExtendWith(ApplicationExtension.class)
-class AdminCreateCredentialsHandlerTest {
+class AdminRoleCreateCredentialsHandlerTest {
 
     private UserService userService;
     @Start

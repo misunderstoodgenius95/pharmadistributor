@@ -53,7 +53,6 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
 
     @Override
     protected <K> void initialize(Optional<PopulateChoice<K>> PopulateChoice, Optional<List<GenericJDBCDao>> optionalgenericJDBCDao, Optional<FieldData> optionalfieldData) {
-
         this.magazzinoDao = (MagazzinoDao) optionalgenericJDBCDao.get().stream().
                 filter(dao -> dao instanceof MagazzinoDao).findFirst().orElseThrow(() -> new IllegalArgumentException("MagazzinoDao not found in the list"));
         List<WarehouseModel> list_warehouseModel =magazzinoDao.findAll();
@@ -97,7 +96,7 @@ public class ShelfHandler  extends DialogHandler<ShelfInfo> {
     @Override
     protected ShelfInfo get_return_data() {
         return ShelfInfo.ShelfInfoBuilder.get_builder().
-                setShelf_code(codice.getText()).
+                setShelf_code(codice.getText()).setNome_magazzino(s_choice_warehouse.getValue().getNome()).
                 setMagazzino_id(s_choice_warehouse.getValue().getId()).
                 setLenght(lunghezza.getValue()).setHeight(altezza.getValue()).
                 setDeep(profondita.getValue()).setShelf_thickness(spessore.getValue()).setNum_rip(num_rip.getValue()).setWeight(capacity.getValue()).build();

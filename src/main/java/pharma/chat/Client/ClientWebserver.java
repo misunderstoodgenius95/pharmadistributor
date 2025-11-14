@@ -50,10 +50,6 @@ public class ClientWebserver extends WebSocketClient {
     }
     public void sendMessage()  {
         if(isOpen()){
-
-
-
-
             System.out.println("send");
         }
 
@@ -69,30 +65,10 @@ public class ClientWebserver extends WebSocketClient {
              String pharmacist=jsonObject.getString("Pharmacist");
              pharmacists.add(pharmacist);
              System.out.println("Added Pharmacist");
-             //pharmacists.forEach(System.out::println)
 
          }
-
-
-
-
-
     }
 
-
-    public boolean isValidJSON(String jsonString) {
-        try {
-            new JSONObject(jsonString);
-            return true;
-        } catch (JSONException e) {
-            try {
-                new JSONArray(jsonString);
-                return true;
-            } catch (JSONException ex) {
-                return false;
-            }
-        }
-    }
 
     @Override
     public void onClose(int i, String s, boolean b) {

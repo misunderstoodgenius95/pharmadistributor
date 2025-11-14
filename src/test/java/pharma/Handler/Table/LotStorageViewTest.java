@@ -7,15 +7,24 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
+import pharma.dao.LotAssigmentDao;
+import pharma.dao.LotAssigmentShelvesDao;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class LotStorageViewTest {
-@Start
+    @Mock
+    private LotAssigmentDao assigmentDao;
+    @Mock
+    private LotAssigmentShelvesDao assigmentShelvesDao;
+    @Start
     public void start(Stage stage){
+    MockitoAnnotations.openMocks(this);
     VBox vbox=new VBox();
     stage.setScene(new Scene(vbox));
     stage.show();
@@ -27,7 +36,7 @@ class LotStorageViewTest {
 @Test
     public void test(FxRobot robot){
     Platform.runLater(()->{
-        LotStorageView storageView=new LotStorageView("Visualizza");
+        LotStorageView storageView=new LotStorageView("Visualizza",assigmentShelvesDao);
         storageView.show();
 
 

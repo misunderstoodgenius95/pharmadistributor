@@ -31,5 +31,25 @@ class SellerOrderDaoTest {
                 findByRangeBetweenAndRagioneSociale(Date.valueOf("2025-1-1"), Date.valueOf("2027-1-1"), "Farmacia Del Corso");
         Assertions.assertFalse(list.isEmpty());
     }
+
+    @Test
+    void findByOrders() {
+        Properties properties = null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            SellerOrderDao sellerOrderDao = new SellerOrderDao(Database.getInstance(properties));
+            List<FieldData> list=sellerOrderDao.findByOrders(347);
+            Assertions.assertEquals(2,list.size());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+
+    }
+
+
+
 }
 

@@ -231,7 +231,7 @@ class ShelfInfoTest {
         PlacementShelf placementShelf = new PlacementShelf(shelfInfoList);
          LotDimensionModel lotDimensionModel = new LotDimensionModel("axx", 1, 12.1, 4.1, 0, 4.0);
         LotAssigment lotAssigment = placementShelf.assignmentLots(lotDimensionModel, 30);
-        System.out.println(lotAssigment.getShelvesAssigmentList().size());
+        Assertions.assertEquals(0,lotAssigment.getShelvesAssigmentList().size());
 
     }
 

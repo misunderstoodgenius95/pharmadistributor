@@ -20,9 +20,8 @@ public class UserServiceStytchTest {
         String project_id="project-test-ead7077c-e25f-4fe1-ba63-3e5972ab34ec";
         String secret="secret-test-GJ9p83rxjv8pT7WNQnoqLBaPgikz4ZV1UB8=";
         String endpoint="https://delicious-nose-9298.customers.stytch.dev";
-       stytchClient= new StytchClient(project_id,secret,endpoint);
+        stytchClient= new StytchClient(project_id,secret,endpoint);
         userService=new UserService(stytchClient);
-
     }
     @Test
     public void CreateUser(){
@@ -37,6 +36,12 @@ public class UserServiceStytchTest {
 
 
 
+    }
+
+    @Test
+    public void searchUserbyEmail(){
+        User user_previous = userService.searchUserByEmail("elisa.scalzi@mailfence.com");
+        Assertions.assertEquals(200,user_previous.getStatus());
     }
     @Test
     public void ValidTestIntegration(){
@@ -79,9 +84,9 @@ public class UserServiceStytchTest {
 
     @Test
     public void Valid(){
-        userService.authenticate("luigi.neri@apime.online","");
+        UserServiceResponse ur=userService.authenticate("ivanbutera@proton.me","ywQ1d@waw41");
+Assertions.assertEquals(200,ur.getStatus());
     }
-
 
         //Assertions.assertEquals(200,ur.getStatus());
 
