@@ -6,10 +6,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchor_id" prefHeight="557.0" prefWidth="1497.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="pharma.Controller.Purchase">
+<AnchorPane fx:id="anchor_id" prefHeight="557.0" prefWidth="1497.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.Purchase">
    <children>
       <Text layoutX="-273.0" layoutY="-13.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="297.21630859375" />
-      <VBox fx:id="vbox_id" layoutX="7.0" layoutY="16.0"   prefHeight="543.0" prefWidth="252.0" spacing="20.0">
+      <VBox fx:id="vbox_id" layoutX="7.0" layoutY="16.0" prefHeight="543.0" prefWidth="252.0" spacing="20.0">
          <children>
             <Button mnemonicParsing="false" onAction="#pharma_action" prefHeight="50.0" prefWidth="258.0" text=" Casa Farmaceutica">
                <font>
@@ -40,6 +40,11 @@
                <font>
                   <Font size="16.0" />
                </font></Button>
+            <Button fx:id="report_id" mnemonicParsing="false" onAction="#report_action" prefHeight="43.0" prefWidth="249.0" text="Report">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
          </children>
       </VBox>
       <Text layoutX="632.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Area Acquisti" wrappingWidth="233.21630859375">

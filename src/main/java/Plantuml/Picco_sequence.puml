@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+actor Addetto as A
+boundary UI as UI
+control Controller as C
+entity Database as D
+A->UI:Accedo al report
+A->UI: Inserisco Nome del farmaco
+UI->C:Invia richiesta
+C->D:Richiedi  farmaco
+D-->C:Invia farmaco
+C->UI:Mostra farmaco
+A->UI:Seleziona farmaco
+UI->C:Invia richiesta
+C->D:Richiedi ordini d'acquisto inerente al farmaco
+D-->C:Ottieni ordini  d'acquisto
+create Picco as P
+
+C->P:calcola ordini di picco
+P->P:calcola derivazione standard
+P->P:calcola soglia di picco
+loop Ordine D'acquisto
+P->P:Contronta quantità con soglia
+alt se quantità > soglia
+P->P:Mantieni nella lista
+else
+P->P:Rimuovi dalla lista
+end if
+end loop
+P-->C:Ottieni lista picchi
+C-->UI:Mosta picchi
+@enduml

@@ -26,7 +26,6 @@ public class DoubleClick_Menu<T> {
         control.setRowFactory(tv -> {
             TableRow<T> row = new TableRow<>();
             row.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-                System.out.println("event");
                 if (!row.isEmpty()) {
                    row.setContextMenu(contextMenu);
 
@@ -50,9 +49,7 @@ public class DoubleClick_Menu<T> {
 
 
 
-    public ContextMenu getContextMenu() {
-        return contextMenu;
-    }
+
 
     public MenuItem create_menu_item(String voice) {
         MenuItem menuItem = new MenuItem(voice);
@@ -60,16 +57,7 @@ public class DoubleClick_Menu<T> {
         return menuItem;
     }
 
-    public void hidden_all_item(){
-        contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(true));
 
-
-    }
-    public void restore_all_item(){
-        contextMenu.getItems().forEach(menuItem -> menuItem.setDisable(false));
-
-
-    }
 
 
 }

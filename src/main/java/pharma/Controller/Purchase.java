@@ -23,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import pharma.config.auth.AutorizationService;
 import pharma.config.auth.UserService;
+import pharma.javafxlib.DropDownMenu;
 import pharma.security.Stytch.StytchClient;
 import pharma.security.TokenUtility;
 
@@ -35,8 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class Purchase {
+public class Purchase  implements  Initializable{
 
+    public Button report_id;
     private Stages stages;
     public VBox vbox_id;
     @FXML
@@ -142,6 +144,18 @@ public class Purchase {
 
         last_clicked = button;
         last_clicked.getStyleClass().add("clicked");
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        DropDownMenu dropDownMenu=new DropDownMenu(report_id);
+        dropDownMenu.createItem("Andamento Acquisti Per Mesi ");
+        dropDownMenu.createItem("Variazione Acquisti Tra Mesi");
+        dropDownMenu.createItem("Trend");
+        dropDownMenu.createItem("Picchi");
+    }
+
+    public void report_action(ActionEvent event) {
     }
 
 /*

@@ -1,0 +1,20 @@
+@startuml
+start
+:Accedo al report;
+:Inserisco nome farmaco;
+:Ottengo ordini d'acquisto inerente al farmaco;
+:Calcolo deviazione standard;
+:Calcolo soglia di picco;
+while (Ordine d'acquisto)
+if(quantità> soglia di picco) then(yes)
+:Rimani in lista;
+else(no)
+:Rimuovi dalla lista;
+
+endif
+endwhile
+:Mostra picco;
+stop
+
+
+@enduml
