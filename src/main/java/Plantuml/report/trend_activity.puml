@@ -1,0 +1,14 @@
+@startuml
+start
+:Accedo al report;
+:Seleziono range data;
+:Ottengo ordini d'acquisto inerente al farmaco;
+while (Ordine d'acquisto)
+:Filtra gli ordini in base al range di mesi;
+endwhile
+:calcola spesa totale del mese selezionato;
+:Calcolo il trend;
+stop
+
+
+@enduml

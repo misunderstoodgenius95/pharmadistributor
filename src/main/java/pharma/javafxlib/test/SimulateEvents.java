@@ -2,6 +2,7 @@ package pharma.javafxlib.test;
 
 
 
+import com.dlsc.gemsfx.YearMonthPicker;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -167,6 +168,10 @@ public class SimulateEvents {
     public static void openDatePicker(DatePicker datePicker) {
         datePicker.show();
     }
+    public static void openYearMonthPIcker(YearMonthPicker monthPicker) {
+       monthPicker.show();
+    }
+
 
     public static void writeOn(String query, String text, Scene scene) {
         TextField field = (TextField) scene.lookup(query);

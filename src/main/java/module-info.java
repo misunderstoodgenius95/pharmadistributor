@@ -13,16 +13,12 @@ module pharma {
     requires java.rmi;
     opens algoWarehouse to javafx.base;
     opens pharma.real to javafx.fxml;
-    requires  org.controlsfx.controls;
     requires org.kordamp.ikonli.fontawesome5;
-    requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.ikonli.core;
 
     requires commons.math3;
     requires json.path;
     requires org.apache.commons.text;
     requires net.sf.jsqlparser;
-    requires annotations;
     requires net.datafaker;
     requires java.management;
     requires kotlin.stdlib;
@@ -30,7 +26,6 @@ module pharma {
     requires net.postgis.jdbc.geometry;
     requires javafx.web;
     requires okhttp3;
-    requires java.net.http;
     requires net.postgis.jdbc;
     requires org.yaml.snakeyaml;
     requires com.auth0.jwt;
@@ -38,6 +33,12 @@ module pharma {
     requires java.sql;
     requires org.java_websocket;
     requires configcat.java.client;
+    requires com.dlsc.gemsfx;
+    requires org.controlsfx.controls;
+    requires org.jetbrains.annotations;
+    requires java.net.http;
+    requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.core;
 
     exports pharma.real to javafx.graphics, javafx.fxml;
     opens pharma to javafx.fxml;
@@ -79,5 +80,6 @@ exports pharma.Storage;
 
     opens pharma.Model to com.fasterxml.jackson.databind, javafx.base, javafx.fxml;
     exports pharma.Controller.subpanel to javafx.controls, javafx.fxml, javafx.graphics;
+    exports pharma.Handler.Report;
 
 }

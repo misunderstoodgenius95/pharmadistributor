@@ -1,4 +1,4 @@
-package pharma.formula.Picco;
+package pharma.formula.Report;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

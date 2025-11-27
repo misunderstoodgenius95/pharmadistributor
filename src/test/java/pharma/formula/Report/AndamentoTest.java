@@ -1,6 +1,5 @@
-package pharma.formula.Picco;
+package pharma.formula.Report;
 
-import net.bytebuddy.asm.Advice;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,7 +78,7 @@ class AndamentoTest {
         Andamento andamento=new Andamento(acquistoList);
         YearMonth spesa_first=YearMonth.from(LocalDate.of(2024,1,10));
         YearMonth spesa_last=YearMonth.from(LocalDate.of(2024,3,10));
-        double actual=andamento.calcolo_trend(spesa_last,spesa_first);
+        double actual=andamento.calcolo_trend(spesa_last,spesa_first).get();
         double expected=(17101.80-10854.00)/2;
         Assertions.assertThat(actual).isEqualTo(expected);
     }
@@ -90,11 +89,20 @@ class AndamentoTest {
         Andamento andamento=new Andamento(acquistoList);
         YearMonth spesa_first=YearMonth.from(LocalDate.of(2024,1,10));
         YearMonth spesa_last=YearMonth.from(LocalDate.of(2024,3,10));
-        double trend=andamento.calcolo_trend(spesa_last,spesa_first);
-        Trend legenda=andamento.calculate_legenda_trend(trend);
-        Assertions.assertThat(legenda).isEqualTo(Trend.CRESCENTE);
+        double trend=andamento.calcolo_trend(spesa_last,spesa_first).get();
+        TrendType legenda=andamento.calculate_legenda_trend(trend);
+        Assertions.assertThat(legenda).isEqualTo(TrendType.CRESCENTE);
     }
 
+    @Test
+    void calcolaSpesaMese() {
+        Andamento andamento=new Andamento(acquistoList);
+        YearMonth spesa_mese=YearMonth.from(LocalDate.of(2024,1,10));
+        double actual=andamento.calcolaSpesaMese(spesa_mese).get();
+        double expected=10854.0;
+        Assertions.assertThat(actual).isEqualTo(expected);
+
+    }
 }
 
 

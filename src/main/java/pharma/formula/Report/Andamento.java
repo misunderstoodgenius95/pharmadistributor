@@ -1,6 +1,5 @@
-package pharma.formula.Picco;
+package pharma.formula.Report;
 
-import com.auth0.net.TokenRequest;
 import pharma.Model.Acquisto;
 import pharma.Model.SpesaMensile;
 
@@ -8,6 +7,7 @@ import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 public class Andamento {
@@ -23,16 +23,24 @@ public class Andamento {
     public Map<YearMonth,SpesaMensile> raggruppaPerMese(){
         for (Acquisto acquisto : acquistoList) {
             YearMonth meseAnno = acquisto.getMeseAnno();
-
             SpesaMensile spesa = spesaMensileMap.computeIfAbsent(
                     meseAnno,
-                    k -> new SpesaMensile(meseAnno)
-            );
+                    k -> new SpesaMensile(meseAnno));
 
             spesa.aggiungiAcquisto(acquisto);
             spesaMensileMap.values().forEach(SpesaMensile::calcolaPrezzoMedio);
         }
         return  spesaMensileMap;
+    }
+    public Optional<Double> calcolaSpesaMese(YearMonth yearMonth){
+        if(yearMonth==null){
+            throw new IllegalArgumentException("YearMonth it is null");
+        }
+        Map<YearMonth, SpesaMensile> spesaMensileMap=raggruppaPerMese();
+        if(!raggruppaPerMese().containsKey(yearMonth)){
+            return Optional.empty();
+        }
+         return Optional.of(spesaMensileMap.get(yearMonth).getSpesaTotale());
     }
 
     public  double calcolaVariazioneMesi(YearMonth prev,YearMonth next){
@@ -44,29 +52,34 @@ public class Andamento {
         }
         return ((spesa_next.getSpesaTotale()-spesa_prev.getSpesaTotale())/spesa_prev.getSpesaTotale()*100);
     }
-    public  double calcolo_trend(YearMonth last,YearMonth first){
+    public  Optional<Double> calcolo_trend(YearMonth last,YearMonth first){
         raggruppaPerMese();
+        if(!spesaMensileMap.containsKey(last) || !spesaMensileMap.containsKey(first)){
+             return  Optional.empty();
+        }
         SpesaMensile spesa_last=spesaMensileMap.get(last);
         SpesaMensile spesa_first=spesaMensileMap.get(first);
-        if(spesa_last==null || spesa_first==null){
-            throw new IllegalArgumentException("No found month data");
-        }
+
 
         int numeroMesi = (int) ChronoUnit.MONTHS.between(first, last);
 
         if (numeroMesi == 0) {
-            return 0.0; // Stesso mese
+            return Optional.of(0.0); // Stesso mese
         }
      double variazione_periodi= spesa_last.getSpesaTotale()-spesa_first.getSpesaTotale();
-        return variazione_periodi/numeroMesi;
+        return Optional.of(variazione_periodi/numeroMesi);
     }
-    public Trend calculate_legenda_trend(double trend){
+
+
+
+
+    public TrendType calculate_legenda_trend(double trend){
         if(trend>10){
-            return Trend.CRESCENTE;
+            return TrendType.CRESCENTE;
         } else if (trend<-10) {
-            return Trend.DECRESCENTE;
+            return TrendType.DECRESCENTE;
         }else{
-            return Trend.STABILE;
+            return TrendType.STABILE;
         }
 
 

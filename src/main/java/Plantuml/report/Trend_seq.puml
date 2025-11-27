@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+actor Addetto as A
+boundary UI as UI
+control Controller as C
+entity Database as D
+A->UI:Accedo al report
+A->UI: Seleziona il mese/anno inizio
+A->UI: Seleziona il mese/anno fine
+UI->C:Invia richiesta
+A->UI:Seleziona farmaco
+UI->C:Invia richiesta
+C->D:Richiedi tutti gli ordini d'acquisto
+D-->C:Ottieni ordini  d'acquisto
+create Trend as P
+
+C->P:Invia Ordini d'acquisto
+loop Ordini Acquisto
+P->P:Filtra gli ordini in base al mese corrente
+end
+P->P:Calcola spesa totale del mese selezionato
+P->P:Calcolo il trend
+P-->C:Ottiengo il trend
+C-->UI:Mosta picchi
+@enduml

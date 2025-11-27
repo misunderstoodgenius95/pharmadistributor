@@ -1,6 +1,7 @@
 package algoWarehouse;
 
 import net.postgis.jdbc.geometry.Point;
+
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,7 @@ private final  double DISTANCE_KM=70;
     /**
      * Calculate warehouse choice an set of warehouse that are near a group of pharmacists.
      *
-     * @param dimension
-     * @param quantity
+     * @param
      * @return
      */
     public List<WarehouseDistances> calculate_warehouse(){

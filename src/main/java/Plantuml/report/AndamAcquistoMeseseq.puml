@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+actor Addetto as A
+boundary UI as UI
+control Controller as C
+entity Database as D
+A->UI:Accedo al report
+A->UI: Seleziona il mese/anno corrente
+UI->C:Invia richiesta
+C->D:Richiedi tutti gli ordini d'acquisto
+D-->C:Ottieni ordini  d'acquisto
+create Andamento as P
+
+C->P:Invia Ordini d'acquisto
+loop Ordine Acquisto
+P->P:Filtra gli ordini in base al mese corrente
+end loop
+P->P:calcola spesa totale del mese selezionato
+P-->C:Ottieni Andamento Acquisto
+C-->UI:Mosta Andamento Acquisto
+@enduml

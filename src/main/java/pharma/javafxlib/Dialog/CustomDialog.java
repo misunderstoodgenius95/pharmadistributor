@@ -1,5 +1,6 @@
 package pharma.javafxlib.Dialog;
 
+import com.dlsc.gemsfx.YearMonthPicker;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -83,6 +84,7 @@ public class CustomDialog<T> extends Dialog<T> {
     public BooleanProperty check_validateProperty() {
         return check_validate;
     }
+
 
     public Button getButtonOK() {
         return button_ok;
@@ -212,6 +214,15 @@ getControlList().add(textField);
 
 
         return new FileChoseOption(button_insert,button_upload,fileChooser);
+
+    }
+
+    public YearMonthPicker add_month_picker(){
+
+        YearMonthPicker yearMonthPicker = new YearMonthPicker();
+        vbox.getChildren().add(yearMonthPicker);
+        controlList.add(yearMonthPicker);
+        return yearMonthPicker;
 
     }
     public  WebView add_web_page(String url){

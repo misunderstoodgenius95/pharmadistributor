@@ -1,5 +1,6 @@
 package pharma.javafxlib.Dialog;
 
+import com.dlsc.gemsfx.YearMonthPicker;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -39,7 +40,6 @@ class CustomDialogTest {
     Platform.runLater(()->{
         FileChoseOption choseOption =fieldDataCustomDialog.add_file_to_target_path("src/logo/", List.of(new FileChooser.ExtensionFilter("Image","*.jpg,*.png")));
         fieldDataCustomDialog.show();
-
         SimulateEvents.clickOn(choseOption.getButton_insert());
 
 
@@ -53,8 +53,15 @@ class CustomDialogTest {
 }
 
 
+    @Test
+    void add_month_picker(FxRobot robot) {
+        Platform.runLater(()-> {
+            fieldDataCustomDialog.add_month_picker();
+            fieldDataCustomDialog.show();
+
+        });
+        robot.sleep(400000);
 
 
-
-
+    }
 }

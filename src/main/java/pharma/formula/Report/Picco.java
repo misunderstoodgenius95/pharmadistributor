@@ -1,4 +1,4 @@
-package pharma.formula.Picco;
+package pharma.formula.Report;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.jetbrains.annotations.TestOnly;
