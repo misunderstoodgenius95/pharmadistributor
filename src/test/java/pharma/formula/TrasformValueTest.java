@@ -1,32 +1,27 @@
 package pharma.formula;
 
-import org.assertj.core.api.AbstractSoftAssertions;
-import org.assertj.core.api.AssertJProxySetup;
-import org.assertj.core.util.Streams;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import pharma.Utility.TrasformValue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pharma.formula.TrasformValue.remaining_day;
+import static pharma.Utility.TrasformValue.remaining_day;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TrasformValueTest {
@@ -42,7 +37,7 @@ class TrasformValueTest {
     @ParameterizedTest
     @CsvSource({"0.45,10.0" ,"0.4,20.0", "0.55,-10"})
     void ValidNormalize_percentuages(double expected,double input) {
-        assertEquals(expected,TrasformValue.normalize_percentuages(input));
+        assertEquals(expected, TrasformValue.normalize_percentuages(input));
 
 
 

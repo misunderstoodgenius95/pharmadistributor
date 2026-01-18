@@ -4,9 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
-import pharma.Handler.Info_SocietyHandler;
+import pharma.DialogController.Info_SocietyControllerBase;
 import pharma.Stages;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
 import pharma.config.database.Database;
 import pharma.dao.InfoSocietyDao;
 
@@ -20,17 +21,17 @@ import java.util.ResourceBundle;
 
 public class Admin implements Initializable {
     public AnchorPane anchor_id;
-    private Info_SocietyHandler infoSocietyHandler;
+    private Info_SocietyControllerBase infoSocietyHandler;
     private InfoSocietyDao societyDao;
     public Admin() {
         Properties properties=null;
         try {
-           properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+           properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         societyDao=new InfoSocietyDao(Database.getInstance(properties));
-        infoSocietyHandler=new Info_SocietyHandler("Aggiungi o Modifica Info Società",societyDao);
+        infoSocietyHandler=new Info_SocietyControllerBase("Aggiungi o Modifica Info Società",societyDao);
 
 
     }

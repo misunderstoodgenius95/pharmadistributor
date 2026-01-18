@@ -1,0 +1,169 @@
+package pharma.DialogController;
+
+
+import com.sun.source.tree.ModuleTree;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.testfx.api.FxRobot;
+import org.testfx.framework.junit5.ApplicationExtension;
+import org.testfx.framework.junit5.Start;
+import pharma.Model.FieldData;
+import pharma.config.*;
+import pharma.dao.LottiDao;
+import pharma.dao.PurchaseOrderDao;
+import pharma.dao.PurchaseOrderDetailDao;
+
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+
+@ExtendWith(ApplicationExtension.class)
+class PurchaseOrdiniHandlerTest {
+    private PurchaseOrderHandler ordiniHandler;
+    private Database database;
+    private LottiDao lottiDao;
+    @Mock
+    private PurchaseOrderDao purchaseOrderDao;
+    @Mock
+    private PurchaseOrderDetailDao purchaseOrderDetailDao;
+
+    @Start
+    public void start(Stage stage) {
+        VBox vBox = new VBox();
+        Scene scene = new Scene(vBox);
+        stage.setScene(scene);
+        stage.show();
+
+
+    }
+
+    @BeforeEach
+    public void setUp() throws SQLException {
+        database = Mockito.mock(Database.class);
+        lottiDao = new LottiDao(database, "lotto");
+
+
+        ResultSet resultSet = Mockito.mock(ResultSet.class);
+        Mockito.when(resultSet.next()).thenReturn(true, true, true, true, true, true, false);
+        Mockito.when(resultSet.getString("id")).thenReturn("agk1", "agk2", "agk3", "agk4", "agk5", "agk7");
+        Mockito.when(resultSet.getDate("production_date")).thenReturn(
+                Date.valueOf(LocalDate.of(2026, 10, 01)),
+                Date.valueOf(LocalDate.of(2024, 10, 01)),
+                Date.valueOf(LocalDate.of(2025, 10, 01)),
+                Date.valueOf(LocalDate.of(2023, 10, 01)),
+                Date.valueOf(LocalDate.of(2023, 10, 01)),
+                Date.valueOf(LocalDate.of(2023, 10, 01))
+        );
+
+        Mockito.when(resultSet.getDate("elapsed_date")).thenReturn(
+                Date.valueOf(LocalDate.of(2027, 10, 01)),
+                Date.valueOf(LocalDate.of(2028, 10, 01)),
+                Date.valueOf(LocalDate.of(2029, 10, 01)),
+                Date.valueOf(LocalDate.of(2030, 10, 01)),
+                Date.valueOf(LocalDate.of(2030, 10, 01)),
+                Date.valueOf(LocalDate.of(2030, 10, 01))
+        );
+        Mockito.when(resultSet.getString("nome")).thenReturn("Tachipirina", "DebridAt", "Pantopan", "Tachipirina", "Lucen", "medagran");
+        Mockito.when(resultSet.getString("tipologia")).thenReturn("Supposte", "Compresse", "Compresse", "Compresse", "Compresse", "Supposte");
+        Mockito.when(resultSet.getString("misura")).thenReturn("100mg", "10gr", "30gr", "40gr", "10gfr", "10gr");
+        Mockito.when(resultSet.getString("casa_farmaceutica")).thenReturn("Angelini", "Afpt", "Akg", "Bayer", "na", "ba");
+        Mockito.when(resultSet.getInt("farmaco")).thenReturn(1, 2, 3, 4, 5, 6);
+        Mockito.when(database.executeQuery(Mockito.anyString())).thenReturn(resultSet);
+
+
+    }
+
+    @Test
+    public void test(FxRobot robot) {
+
+
+
+        /*
+        ObservableList<FieldData> fieldDataObservableList=FXCollections.observableArrayList();
+        Platform.runLater(()->{
+            //PurchaseOrderHandler purchaseOrderHandler=new PurchaseOrderHandler(lottiDao,purchaseOrderDao,fieldDataObservableList,purchaseOrderDetailDao);
+
+
+
+
+
+
+        /*   TableView<FieldData> tableView=Utility.extract_value_from_list(.getControlList(),TableView.class).getFirst();
+            ObservableList<FieldData> f_obslist= FXCollections.observableArrayList(ordiniHandler.getList_populate().stream().limit(2).toList());
+         f_obslist.forEach(fieldData -> {
+                fieldData.setPrice(2.5);
+                fieldData.setQuantity(2);
+                fieldData.setVat_percent(10);
+
+
+
+            });
+
+            tableView.setItems(f_obslist);
+
+
+
+
+
+
+
+
+
+
+
+            ordiniHandler.showAndWait().ifPresent(fieldData -> {
+
+         /*      Assertions.assertEquals(Date.valueOf(LocalDate.of(2025,10,1)), fieldData.getProduction_date());
+               Assertions.assertEquals(11.0,fieldData.getTotal());
+               Assertions.assertEquals(10.0,fieldData.getSubtotal());
+               Assertions.assertEquals(1.0,fieldData.getVat_amount());
+                System.out.println("fd: "+fieldData.getFieldDataList().size());
+               Assertions.assertEquals(2,fieldData.getFieldDataList().size());
+               fieldData.getFieldDataList().forEach(fd->{
+                   System.out.println("lotto_id: "+fd.getLotto_id());
+                   System.out.println("Price"+fd.getPrice());
+                   System.out.println("Qty: "+fd.getQuantity());
+                   System.out.println("Vat: "+fd.getVat_percent());
+                   System.out.println("Farmaco"+fd.getTipologia());
+
+
+
+               }
+
+
+               );
+
+
+
+
+
+            });
+
+
+
+
+
+        });
+        robot.sleep(40000);
+    }
+
+
+
+
+
+
+
+}

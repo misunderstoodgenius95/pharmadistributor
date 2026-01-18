@@ -1,7 +1,6 @@
 package algo.password;
 
-import algoWarehouse.password.SecurePasswordGenerator;
-import org.junit.jupiter.api.Assertions;
+import pharma.Utility.SecurePasswordGenerator;
 import org.junit.jupiter.api.Test;
 
 class SecurePasswordGeneratorTest {

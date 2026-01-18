@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.yaml.snakeyaml.tokens.Token;
+import pharma.Utility.TokenUtility;
 
 
 import static org.mockito.Mockito.*;
@@ -32,7 +32,7 @@ class TokenUtilityTest {
     Mockito.when(claim.asString()).thenReturn("ADMIN");
     try(MockedStatic<JWT> jwtMockedStatic=Mockito.mockStatic(JWT.class)){
       jwtMockedStatic.when(()->JWT.decode(token)).thenReturn(decodedJWT);
-        String role=TokenUtility.extractRole(token);
+        String role= TokenUtility.extractRole(token);
         System.out.println(role);
         Assertions.assertEquals("ADMIN",role);
         verify(decodedJWT).getClaim("role");

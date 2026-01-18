@@ -12,11 +12,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import pharma.Handler.DialogHandler;
-import pharma.Handler.FarmacoDialogHandler;
+import pharma.DialogController.DialogControllerBase;
+import pharma.DialogController.FarmacoDialogControllerBase;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.*;
+import pharma.config.TableUtility;
+import pharma.config.Utility;
 import pharma.javafxlib.Search.FilterSearch;
 import pharma.dao.DetailDao;
 import pharma.dao.FarmacoDao;
@@ -43,7 +45,7 @@ public class Farmaco implements Initializable {
     @FXML
     private Button edit_btn;
     private SimpleObjectProperty<FieldData> fieldDataSimpleObjectProperty;
-private  FarmacoDialogHandler farmacoDialogHandler;
+private FarmacoDialogControllerBase farmacoDialogHandler;
 
     private ObservableList<FieldData> obs_fieldData= FXCollections.observableArrayList();
     FarmacoDao farmacoDao;
@@ -51,7 +53,7 @@ private  FarmacoDialogHandler farmacoDialogHandler;
     PharmaDao pharmaDao;
     public Farmaco(){
         try {
-            Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
             farmacoDao=new FarmacoDao( Database.getInstance(properties));
             detailDao=new DetailDao(Database.getInstance(properties));
             pharmaDao=new PharmaDao(Database.getInstance(properties));
@@ -63,7 +65,7 @@ private  FarmacoDialogHandler farmacoDialogHandler;
     }
     @FXML
     void btn_action_add(ActionEvent event) throws AccessException {
-        farmacoDialogHandler.setOperation(DialogHandler.Mode.Insert,null);
+        farmacoDialogHandler.setOperation(DialogControllerBase.Mode.Insert,null);
         farmacoDialogHandler.execute();
         table_id.getItems().clear();
         table_id.getItems().setAll(obs_fieldData);
@@ -72,7 +74,7 @@ private  FarmacoDialogHandler farmacoDialogHandler;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Utility.create_btn(btn_id_add, "add.png");
-        farmacoDialogHandler=new FarmacoDialogHandler("Aggiungi Farmaco",obs_fieldData, farmacoDao,detailDao,pharmaDao);
+        farmacoDialogHandler=new FarmacoDialogControllerBase("Aggiungi Farmaco",obs_fieldData, farmacoDao,detailDao,pharmaDao);
         fieldDataSimpleObjectProperty=new SimpleObjectProperty<>();
         RadioButtonTableColumn<FieldData> actioncolumn=new RadioButtonTableColumn<>(){
             @Override
@@ -103,7 +105,7 @@ private  FarmacoDialogHandler farmacoDialogHandler;
 
     public void edit_btn_action(ActionEvent actionEvent) {
         try {
-            farmacoDialogHandler.setOperation(DialogHandler.Mode.Update,fieldDataSimpleObjectProperty.get());
+            farmacoDialogHandler.setOperation(DialogControllerBase.Mode.Update,fieldDataSimpleObjectProperty.get());
             farmacoDialogHandler.execute();
             table_id.refresh();
         /*   table_id.setItems(obs_fieldData);*/

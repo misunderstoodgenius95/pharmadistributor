@@ -1,27 +1,22 @@
 package pharma.Controller.subpanel;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.StringConverter;
-import kotlin.jvm.internal.PackageReference;
-import org.controlsfx.control.SearchableComboBox;
 import org.jetbrains.annotations.TestOnly;
-import pharma.Handler.Table.ProductTableCustom;
+import pharma.DialogController.Table.ProductTableCustom;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.CatConf.CatConf;
+import pharma.config.PathConfig;
 import pharma.config.database.Database;
 import pharma.dao.*;
-import pharma.formula.suggest.Model.Lots;
-import pharma.formula.suggest.Model.SellerOrders;
-import pharma.formula.suggest.Model.SuggestConfig;
-import pharma.formula.suggest.SingleProductSuggest;
-import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
+import pharma.Model.Lots;
+import pharma.Model.SellerOrders;
+import pharma.Model.SuggestConfig;
+import pharma.Service.suggest.SingleProductSuggest;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -59,7 +54,7 @@ public class SuggestPurchase implements Initializable {
     public SuggestPurchase() {
         Properties properties = null;
         try {
-            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
             farmacoDao=new FarmacoDao(Database.getInstance(properties));
             lotAssigmentDao=new LotAssigmentDao(Database.getInstance(properties));
             catConf=new CatConf("configcat-sdk-1/LxreCILqCUKPiPgevSQGoQ/w1WIJVMWoUOKocMj7FderA");

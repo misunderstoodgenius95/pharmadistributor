@@ -7,16 +7,12 @@ import javafx.scene.control.*;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import pharma.Model.User;
 import pharma.config.Utility;
-import pharma.config.auth.UserService;
+import pharma.config.auth.UserGateway;
 
-import java.lang.foreign.PaddingLayout;
-import java.nio.file.LinkOption;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -73,17 +69,17 @@ public class ButtonTableColumn<S> extends TableColumn<S, Boolean> {
 
 */
 public class ButtonTableColumn<S> extends TableColumn<S,Void> {
-    private  UserService userService;
+    private UserGateway userGateway;
     private BooleanProperty property;
     private Function<S,BooleanProperty> function_get;
     private  BiConsumer<S,BooleanProperty> biConsumer_get;
     private Logger logger= Logger.getLogger(ButtonTableColumn.class.getName());
-    public  ButtonTableColumn(String header, Function<S,BooleanProperty> function_get, BiConsumer<S,BooleanProperty> biConsumer_update,UserService userService){
+    public  ButtonTableColumn(String header, Function<S,BooleanProperty> function_get, BiConsumer<S,BooleanProperty> biConsumer_update, UserGateway userGateway){
         setText(header);
         setCellFactory(createButton());
         this.function_get=function_get;
         this.biConsumer_get=biConsumer_update;
-        this.userService=userService;
+        this.userGateway = userGateway;
 
     }
 
@@ -117,7 +113,7 @@ public class ButtonTableColumn<S> extends TableColumn<S,Void> {
                                         BooleanProperty new_value = new SimpleBooleanProperty(!current_value.get());
                                         biConsumer_get.accept(item, new_value);
                                         updateButton(new_value.get());
-                                        userService.user_revocate(result.getUser_id(), new_value.get());
+                                        userGateway.user_revocate(result.getUser_id(), new_value.get());
                                     } else {
                                         logger.warning("refuse");
                                     }

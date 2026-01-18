@@ -2,10 +2,7 @@ package pharma.javafxlib.CustomTableView;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.effect.SepiaTone;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
@@ -17,14 +14,10 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.Model.FieldData;
 import pharma.config.TableUtility;
-import pharma.config.Utility;
 import pharma.javafxlib.test.SimulateEvents;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class CheckBoxTableColumnTest {
     private HashSet<FieldData> hashSet;

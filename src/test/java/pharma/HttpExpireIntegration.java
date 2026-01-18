@@ -2,11 +2,11 @@ package pharma;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 
-import com.github.tomakehurst.wiremock.http.Body;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pharma.config.net.HttpExpireItem;
 import pharma.config.net.ClientHttp;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;

@@ -1,6 +1,6 @@
 package pharma.dao;
 
-import algoWarehouse.LotAssigment;
+import pharma.Model.LotAssigment;
 import pharma.Model.FieldData;
 import pharma.config.database.Database;
 
@@ -41,6 +41,9 @@ public class LotAssigmentDao extends GenericJDBCDao<LotAssigment,Integer>{
         return "INSERT INTO " + table + " (farmaco_id,lot_code,request_quantity) VALUES(?,?,?) " +
                 "  RETURNING id ; ";
     }
+
+
+
     @Override
     protected void setInsertParameter(PreparedStatement statement, LotAssigment entity) throws Exception {
         statement.setInt(1,entity.getFarmaco_id());
@@ -48,8 +51,15 @@ public class LotAssigmentDao extends GenericJDBCDao<LotAssigment,Integer>{
         statement.setInt(3,entity.getQuantity_request());
     }
 
+    @Override
+    public String getFindAllExecutionTime() {
+        return" explain analyze \n " +
+                " select * from lot_assignment\n " +
+                "                inner join  lotto on lot_assignment.lot_code=lotto.id\n " +
+                "                    inner join  farmaco_all on farmaco_all.id=lotto.farmaco; ";
+    }
 
-    public boolean findExistsAssigment( int  farmaco_id,String lot_code) {
+    public boolean findExistsAssigment(int  farmaco_id, String lot_code) {
         String query="select  exists(\n" +
                 "    select  1\n" +
                 "    from lot_assignment\n" +
@@ -105,7 +115,8 @@ public class LotAssigmentDao extends GenericJDBCDao<LotAssigment,Integer>{
                         setNome_principio_attivo(resultSet.getString("principio_attivo")).
                         setcode(resultSet.getString("lot_code")).
                         setNome_casa_farmaceutica(resultSet.getString("casa_farmaceutica")).
-                        setQuantity(resultSet.getInt("qty"))
+                        setQuantity(resultSet.getInt("qty")).
+                        setAvailability(resultSet.getInt("request_quantity"))
                         .build());
 
 

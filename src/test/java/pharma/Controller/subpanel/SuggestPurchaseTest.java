@@ -16,9 +16,9 @@ import pharma.Model.FieldData;
 import pharma.dao.FarmacoDao;
 import pharma.dao.LotAssigmentDao;
 import pharma.dao.SellerOrderDao;
-import pharma.formula.suggest.Model.Lots;
-import pharma.formula.suggest.Model.SellerOrders;
-import pharma.formula.suggest.Model.SuggestConfig;
+import pharma.Model.Lots;
+import pharma.Model.SellerOrders;
+import pharma.Model.SuggestConfig;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -56,18 +56,18 @@ class SuggestPurchaseTest {
 
     @Test
     public void test(FxRobot robot){
-        when(farmacoDao.findByName(anyString())).thenReturn(List.of( FieldData.FieldDataBuilder.getbuilder().setNome("Tachipirina").setDescription("Farmaco per la febbre.").setCategoria(1).
+        when(farmacoDao.findByLikeName(anyString())).thenReturn(List.of( FieldData.FieldDataBuilder.getbuilder().setNome("Tachipirina").setDescription("Farmaco per la febbre.").setCategoria(1).
                 setNome_tipologia("Supposte").setUnit_misure("100mg").setNome_categoria("AntiInfiammatorio").setQuantity(30).setNome_casa_farmaceutica("Angelini").setNome_principio_attivo("Paracetamolo").build()));
 
-        when(assigmentDao.findQuantitybyFarmacoId(anyInt())).thenReturn(
-
-                List.of(FieldData.FieldDataBuilder.getbuilder().setcode("ax21").setFarmaco_id(10).
-                setElapsed_date(Date.valueOf(LocalDate.of(2025, 10, 1))).setAvailability(40).build()),
-                List.of(FieldData.FieldDataBuilder.getbuilder().setcode("ax22").setFarmaco_id(1).
-                        setElapsed_date(Date.valueOf(LocalDate.of(2025, 10, 1))).setAvailability(40).build())
-
-
-        );
+//        when(assigmentDao.findQuantitybyFarmacoId(anyInt())).thenReturn(
+//
+//                List.of(FieldData.FieldDataBuilder.getbuilder().setcode("ax21").setFarmaco_id(10).
+//                setElapsed_date(Date.valueOf(LocalDate.of(2025, 10, 1))).setAvailability(40).build()),
+//                List.of(FieldData.FieldDataBuilder.getbuilder().setcode("ax22").setFarmaco_id(1).
+//                        setElapsed_date(Date.valueOf(LocalDate.of(2025, 10, 1))).setAvailability(40).build())
+//
+//
+//        );
 
         suggestConfig = new SuggestConfig(180, 500,200);
      /*   SellerOrders sellerOrders1=new SellerOrders(1,200, Date.valueOf(LocalDate.now()));

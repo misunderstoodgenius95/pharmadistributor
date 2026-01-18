@@ -62,10 +62,10 @@ public class OrderTest {
         obs_table_fd_details=FXCollections.observableArrayList();
         obs_table=FXCollections.observableArrayList();
         TableRowExpanderColumn<FieldData>expanderColumn=new TableRowExpanderColumn<>(this::createExpandendRow);
-        TableColumn<FieldData,Double> col_subtotal=TableUtility.generate_column_double("Subtotale","subtotal");
-        TableColumn<FieldData,Double> col_vat=TableUtility.generate_column_double("Iva","vat_amount");
+        TableColumn<FieldData,Double> col_subtotal= TableUtility.generate_column_double("Subtotale","subtotal");
+        TableColumn<FieldData,Double> col_vat= TableUtility.generate_column_double("Iva","vat_amount");
         TableUtility.formatting_double(col_vat);
-        TableColumn<FieldData,Double> col_total=TableUtility.generate_column_double("Totale","total");
+        TableColumn<FieldData,Double> col_total= TableUtility.generate_column_double("Totale","total");
         TableUtility.formatting_double(col_total);
 
         table_id.getColumns().addAll(expanderColumn,

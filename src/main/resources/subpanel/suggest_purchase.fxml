@@ -14,9 +14,15 @@
             <Font size="21.0" />
          </font>
       </Text>
-      <Label layoutX="153.0" layoutY="129.0" prefHeight="25.0" prefWidth="178.0">Inserisci Nome Prodotto</Label>
-      <TextField fx:id="text_single" layoutX="153.0" layoutY="175.0" promptText="Inserisci Nome Prodotto" />
-       <Button fx:id="send_btn_id" onAction="#send_action_btn" layoutX="500" layoutY="300" text="Mostra" />
+      <Label layoutX="153.0" layoutY="129.0" prefHeight="25.0" prefWidth="246.0" text="Inserisci Nome Prodotto">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <TextField fx:id="text_single" layoutX="153.0" layoutY="175.0" promptText="Inserisci Nome Prodotto">
+         <font>
+            <Font size="16.0" />
+         </font></TextField>
+       <Button fx:id="send_btn_id" layoutX="500" layoutY="300" onAction="#send_action_btn" text="Mostra" />
       <Label fx:id="label_response" layoutX="153.0" layoutY="235.0" prefHeight="31.0" prefWidth="215.0" text="" />
    </children>
 </AnchorPane>

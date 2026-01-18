@@ -12,7 +12,6 @@ public class InputValidation {
     private  static  final String p_iva_regex ="^IT[0-9]{11}$";
     private static final String audience_regex="^https:\\/\\/[a-z]+.[a-z]+[\\/]*[a-z]*$";
     private static final String password_regex="(?=.*[A-Z])*(?=.*[a-z])(?=.*\\d)(?=.*\\W).{11,}";
-   // private static  final  String email_regex="^[\\w\\.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static  final String double_digit_regex="^[\\d]*\\.[\\d]*$";
    private static  final  String input_regex="^[\\w]+$";
     private static  final String cap="^[\\d]{5}$";

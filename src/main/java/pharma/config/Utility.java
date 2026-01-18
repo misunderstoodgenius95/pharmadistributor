@@ -1,5 +1,7 @@
 package pharma.config;
 
+
+
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
@@ -22,18 +24,18 @@ import java.util.stream.IntStream;
 
 
 public class Utility {
-public  static  final String Principio_attivo="Principio_Attivo";
-public static  final  String Tipologia="Tipologia";
-public static final  String Categoria="Categoria";
-public static final String Misura="Misura";
-public static final  String Acquisti="Acquisti";
-public static  final String Vendita="Vendite";
-public static final String Magazzino="Magazzino";
-public static final String Farmacisti="Farmacisti";
+    public  static  final String Principio_attivo="Principio_Attivo";
+    public static  final  String Tipologia="Tipologia";
+    public static final  String Categoria="Categoria";
+    public static final String Misura="Misura";
+    public static final  String Acquisti="Acquisti";
+    public static  final String Vendita="Vendite";
+    public static final String Magazzino="Magazzino";
+    public static final String Farmacisti="Farmacisti";
     public static void  create_alert(Alert.AlertType alert_type, String title_header, String body) {
 
         Alert alert = new Alert(alert_type);
-        alert.setTitle(title_header);  
+        alert.setTitle(title_header);
         alert.setHeaderText(body);
         alert.getDialogPane().setId("alert");
         alert.initModality(Modality.APPLICATION_MODAL);
@@ -52,11 +54,11 @@ public static final String Farmacisti="Farmacisti";
 
     }
     public  static  ButtonType accept() {
-    return new ButtonType("Accept", ButtonBar.ButtonData.OK_DONE);
+        return new ButtonType("Accept", ButtonBar.ButtonData.OK_DONE);
     }
     public static  ButtonType refuse(){
 
-   return new ButtonType("Refuse", ButtonBar.ButtonData.CANCEL_CLOSE);
+        return new ButtonType("Refuse", ButtonBar.ButtonData.CANCEL_CLOSE);
     }
 
     public  static void network_status(int status){
@@ -130,7 +132,7 @@ The reason for returning true when the filter text is null or empty is that the 
     */
                 return fieldData.getNome().toLowerCase().contains(newValue.toLowerCase());
 
-               // return fieldData.getNome_casa_farmaceutica().toLowerCase().contains(newValue.toLowerCase());
+                // return fieldData.getNome_casa_farmaceutica().toLowerCase().contains(newValue.toLowerCase());
 
             });
         });
@@ -157,11 +159,11 @@ The reason for returning true when the filter text is null or empty is that the 
     }
     public static   <T,K>  List<T>  extract_value_from_list(List<K> list,  Class<T> class_type){
 
-         return list.stream().filter(class_type::isInstance).map(class_type::cast).toList();
+        return list.stream().filter(class_type::isInstance).map(class_type::cast).toList();
 
 
     }
-   public  static  void resetLabelText(Label... labels) {
+    public  static  void resetLabelText(Label... labels) {
         for (Label label : labels) {
             label.setText(label.getText().split(":")[0]);
         }
@@ -171,7 +173,7 @@ The reason for returning true when the filter text is null or empty is that the 
 
         JSONArray jsonArray=new JSONArray(json_string);
 
-       return  IntStream.range(0,jsonArray.length()).mapToObj(jsonArray::getJSONObject).
+        return  IntStream.range(0,jsonArray.length()).mapToObj(jsonArray::getJSONObject).
                 map(jsonObject -> FieldData.FieldDataBuilder.getbuilder().
                         setProvince(jsonObject.getString("nome")).setSigla(jsonObject.getString("sigla")).build()).toList();
 

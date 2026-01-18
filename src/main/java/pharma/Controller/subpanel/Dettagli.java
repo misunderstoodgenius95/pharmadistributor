@@ -5,10 +5,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
-import pharma.Handler.DetailHandler;
+import pharma.DialogController.DetailHandler;
 import pharma.Storage.FileStorage;
-import pharma.config.database.Database;
+import pharma.config.PathConfig;
 import pharma.config.Utility;
+import pharma.config.database.Database;
 import pharma.dao.DetailDao;
 
 
@@ -37,7 +38,7 @@ public class Dettagli implements Initializable {
     public Dettagli() {
 
         try {
-            Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
             detailDao=new DetailDao(Database.getInstance(properties));
 
 
@@ -95,7 +96,7 @@ public class Dettagli implements Initializable {
         detailHandler=new DetailHandler(detail_field_1,detail_field_2,detailDao,list_view,select_detail);
         select_detail.setStyle("-fx-font-size: 18px;");
         select_detail.setValue("Seleziona valore");
-        select_detail.getItems().addAll(Utility.Categoria,Utility.Principio_attivo,Utility.Tipologia,Utility.Misura);
+        select_detail.getItems().addAll(Utility.Categoria, Utility.Principio_attivo, Utility.Tipologia, Utility.Misura);
         list_view.setStyle("-fx-font-size: 18px;");
 
 

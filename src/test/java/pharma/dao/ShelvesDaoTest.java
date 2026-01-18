@@ -1,7 +1,6 @@
 package pharma.dao;
 
-import algoWarehouse.ShelfInfo;
-import algoWarehouse.ShelvesCapacity;
+import pharma.Model.ShelvesCapacity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

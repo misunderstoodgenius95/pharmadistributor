@@ -18,9 +18,9 @@ import org.testfx.framework.junit5.Start;
 
 import pharma.Model.FieldData;
 import pharma.Stages;
+import pharma.config.Utility;
 import pharma.config.database.Database;
 import pharma.javafxlib.test.SimulateEvents;
-import pharma.config.Utility;
 import pharma.dao.DetailDao;
 
 import java.io.IOException;

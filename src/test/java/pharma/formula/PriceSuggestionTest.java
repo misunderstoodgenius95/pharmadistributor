@@ -8,6 +8,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import pharma.Model.FieldData;
+import pharma.Service.ClusterPoint;
+import pharma.Service.KMeans;
+import pharma.Service.PriceSuggestion;
+import pharma.Service.TrendMarket;
 import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
 import pharma.config.net.ClientHttp;
@@ -25,11 +29,13 @@ import static org.mockito.Mockito.when;
 
 class PriceSuggestionTest {
     @Mock
-    private  TrendMarket trendMarket;
+    private TrendMarket trendMarket;
     @Mock
     private SuggestPriceConfigDao suggestPriceConfigDao;
     @Mock
-    private  KMeans kMeans;
+    private KMeans kMeans;
+    @Mock
+    private PurchaseOrderDetailDao pDao;
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
@@ -96,17 +102,18 @@ class PriceSuggestionTest {
     @Test
     void suggest_price() {
         HashMap<String, String> hashMap=new HashMap<>();
-        hashMap.put("gain","0.20");
+        hashMap.put("gain","20");
         hashMap.put("min_day_expire","180");
         hashMap.put("medium_stock_item","550");
-        when(suggestPriceConfigDao.findById(anyInt())).thenReturn(FieldData.FieldDataBuilder.getbuilder().setFarmaco_id(340).setMedium_lots(300).setMedium_day(200).build());
-        KMeans kMeans=new KMeans(List.of(new ClusterPoint(new double[]{ 6.60,5.50})),1);
-        when(trendMarket.extract_trend_market(Mockito.anyInt())).thenReturn(20.0);
-//        PriceSuggestion suggestion=new PriceSuggestion(hashMap,trendMarket,suggestPriceConfigDao);
-       // Assertions.assertEquals(6.39,suggestion.suggest_price(kMeans,340));
 
-      /*  PriceSuggestion suggestion=new PriceSuggestion(kMeans,hashMap,trendMarket,340);*/
-      //  System.out.println("suggestion"+suggestion.suggest_price(600,300));
+        when(suggestPriceConfigDao.findById(anyInt())).thenReturn(FieldData.FieldDataBuilder.getbuilder().setFarmaco_id(340).setMedium_lots(300).setMedium_day(200).build());
+        when(pDao.findByProductPrice(anyInt())).thenReturn(List.of(FieldData.FieldDataBuilder.getbuilder().setPrice(2.7).build()));
+        when(trendMarket.extract_trend_market(Mockito.anyInt())).thenReturn(20.0);
+      PriceSuggestion suggestion=new PriceSuggestion(hashMap,trendMarket,suggestPriceConfigDao,pDao);
+        Assertions.assertEquals(4.84,suggestion.suggest_price(340));
+
+
+
 
 
 
@@ -125,14 +132,8 @@ class PriceSuggestionTest {
         hashMap.put("medium_stock_item","550");
         URI uri=new URI("https://gist.githubusercontent.com/misunderstoodgenius95/4006133ef46f0a0459094df99d6baa18/raw/8f34fbaf0779b38505370a08282f4293f74e33c2/trendmarket.json");
         TrendMarket trendMarket=new TrendMarket(new ClientHttp(),uri);
-        SuggestPriceConfigDao configDao=new SuggestPriceConfigDao(Database.getInstance(properties));
         PurchaseOrderDetailDao po_detail=new PurchaseOrderDetailDao(Database.getInstance(properties));
-        PriceSuggestion suggestion=new PriceSuggestion(hashMap,trendMarket,configDao,po_detail);
-        System.out.println("suggestion"+suggestion.suggest_price(340));
 
-       // PriceSuggestion suggestion=new PriceSuggestion(hashMap,trendMarket,340);
-
-//      Assertions.assertEquals(8.59,suggestion.suggest_price(600,300));
 
 
 

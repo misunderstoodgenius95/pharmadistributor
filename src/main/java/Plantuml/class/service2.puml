@@ -1,0 +1,96 @@
+@startuml
+
+class ShelfInfo {
+  - ShelfInfo():
+  - ShelfInfo(ShelfInfoBuilder):
+  - deep: double
+  - magazzino_id: int
+  - lenght: double
+  - weight: int
+  - num_rip: int
+  - height: double
+  - shelf_thickness: double
+  - shelvesCapacities: List<ShelvesCapacity>
+  - shelf_code: String
+  - nome_magazzino: String
+  - order_by_increase(List<ShelvesRemain>): List<ShelvesRemain>
+  + canFitProduct(LotDimensionModel): boolean
+  + remaining_levels(LotDimensionModel): Optional<List<ShelvesRemain>>
+  + space_shelves_space_exist(LotDimensionModel): Optional<List<ShelvesCapacity>>
+   num_rip: int
+   nome_magazzino: String
+   lenght: double
+   shelf_thickness: double
+   shelf_code: String
+   height: double
+   deep: double
+   weight: int
+   shelvesCapacities: List<ShelvesCapacity>
+   magazzino_id: int
+}
+
+class PlacementShelf {
+  + PlacementShelf(List<ShelfInfo>):
+  + sorted_max_shelf_with(HashMap<ShelfInfo, Integer>): List<Entry<ShelfInfo, Integer>>
+  - random_info(List<ShelfInfo>, int): ShelfInfo?
+  + filter_value(List<Entry<ShelfInfo, Integer>>, int): List<Entry<ShelfInfo, Integer>>
+  + placingIntoShelf(LotDimensionModel, ShelfInfo, int, List<ShelvesRemain>, LotAssigment): int
+  + calculate_fit(LotDimensionModel, ShelvesRemain, int, ShelfInfo): boolean
+  + extract_max_shelf(HashMap<ShelfInfo, Integer>, int): Optional<ShelfInfo>
+  + calculatePlacement(LotDimensionModel): HashMap<ShelfInfo, List<ShelvesRemain>>
+  + assignmentLots(LotDimensionModel, int): LotAssigment
+  + assignmentLotsChoice(LotDimensionModel, int): List<LotAssigment>
+  + calculate_max_fit(HashMap<ShelfInfo, List<ShelvesRemain>>): HashMap<ShelfInfo, Integer>
+}
+PlacementShelf->ShelfInfo
+
+
+class SuggestPriceConfigDao {
+  + SuggestPriceConfigDao(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  + findById(Integer): FieldData
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class PriceSuggestion {
+  + PriceSuggestion(HashMap<String, String>, TrendMarket, SuggestPriceConfigDao, PurchaseOrderDetailDao):
+  + calculate_price_centroid(KMeans): double
+  + calculate_stock(double, double): double
+  + gain(double): double
+  + calculate_day(double, double): double
+  + calculate_trend_market(double, int): double
+  + suggest_price(int): double
+}
+class PurchaseOrderDetailDao {
+  + PurchaseOrderDetailDao(Database):
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  + findByProductPrice(int): List<FieldData>
+  # mapRow(ResultSet): FieldData
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  + findDetailbyPurchaseOrderId(int): List<FieldData>
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findAllReportData(): List<FieldData>
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class TrendMarket {
+  + TrendMarket(ClientHttp, URI):
+  + extract_trend_market(int): double
+}
+class node3 as "package  pharma.Service.Promotion" << package >>
+class node11 as "package  pharma.Service.Report" << package >>
+class node0 as "package  pharma.Service.suggest" << package >>
+
+KMeans           "1" *-[#595959,plain]-> "clusterPoints\n*" ClusterPoint
+PriceSuggestion   -[#595959,dashed]->  ClusterPoint     : "«create»"
+PriceSuggestion   -[#595959,dashed]->  KMeans           : "«create»"
+PriceSuggestion  "1" *-[#595959,plain]-> "trendMarket\n1" TrendMarket
+@enduml

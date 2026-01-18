@@ -16,7 +16,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.User;
-import pharma.config.auth.UserService;
+import pharma.config.auth.UserGateway;
 import pharma.javafxlib.test.SimulateEvents;
 
 import java.io.IOException;
@@ -30,14 +30,14 @@ import static org.mockito.Mockito.when;
 class AdminRoleTest {
     AdminRole adminRole;
     @Mock
-    UserService userService;
+    UserGateway userGateway;
 
 
     @Start
     public void start(Stage primaryStage) throws IOException {
 MockitoAnnotations.openMocks(this);
         FXMLLoader loader = new  FXMLLoader(getClass().getResource("/subpanel/admin_role.fxml"));
-       adminRole = new AdminRole(userService);
+       adminRole = new AdminRole(userGateway);
         loader.setController(adminRole);
         Scene scene = new Scene(loader.load());
 
@@ -53,7 +53,7 @@ MockitoAnnotations.openMocks(this);
         User.Results r=new User.Results("user_id11111111", List.of(new User.Emails("user@example.com")),t1);
         r.setLast_access(Instant.now());
         User  user=new User(List.of(r));
-        when(userService.get_user_byRole(eq("seller"))).thenReturn(user);
+        when(userGateway.get_user_byRole(eq("seller"))).thenReturn(user);
 
         Platform.runLater(()->{
             adminRole.getRadio_role().setSelected(true);
@@ -73,7 +73,7 @@ MockitoAnnotations.openMocks(this);
         User.Results r = new User.Results("user_id11111111", List.of(new User.Emails("user@example.com")), t1);
         r.setLast_access(Instant.now());
         User user = new User(List.of(r));
-        when(userService.searchUserByEmail(Mockito.anyString())).thenReturn(user);
+        when(userGateway.searchUserByEmail(Mockito.anyString())).thenReturn(user);
 
         Platform.runLater(() -> {
 
@@ -91,7 +91,7 @@ MockitoAnnotations.openMocks(this);
         public void NotFoundValidTestRadioRole(FxRobot robot){
 
         User  user=new User(List.of());
-        when(userService.get_user_byRole(eq("seller"))).thenReturn(user);
+        when(userGateway.get_user_byRole(eq("seller"))).thenReturn(user);
 
         Platform.runLater(()->{
 
@@ -109,7 +109,7 @@ MockitoAnnotations.openMocks(this);
     @Test
     public void NotFoundTestEmailRadio(FxRobot robot) {
         User user = new User(List.of());
-        when(userService.searchUserByEmail(Mockito.anyString())).thenReturn(user);
+        when(userGateway.searchUserByEmail(Mockito.anyString())).thenReturn(user);
 
         Platform.runLater(() -> {
 

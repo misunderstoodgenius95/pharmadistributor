@@ -5,7 +5,8 @@ boundary UI as UI
 control Controller as C
 entity Database as D
 A->UI:Accedo al report
-A->UI: Seleziona il mese/anno corrente
+A->UI: Seleziona  Range mese/anno Inizio
+A->UI:Seleziona Range mese/Anno Fine
 UI->C:Invia richiesta
 C->D:Richiedi tutti gli ordini d'acquisto
 D-->C:Ottieni ordini  d'acquisto

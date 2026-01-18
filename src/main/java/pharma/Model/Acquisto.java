@@ -17,6 +17,13 @@ public class Acquisto {
         this.data_acquisto = data_acquisto;
         this.price = price;
     }
+    public Acquisto(int farmaco_id, int quantity, Date data_acquisto, double price) {
+        this.farmaco_id = farmaco_id;
+        this.quantity = quantity;
+        this.data_acquisto = data_acquisto;
+        this.price = price;
+    }
+
 
     public int getFarmaco_id() {
         return farmaco_id;

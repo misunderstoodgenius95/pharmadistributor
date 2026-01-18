@@ -9,18 +9,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import pharma.Handler.SuggestPriceHandler;
+import pharma.DialogController.SuggestPriceControllerBase;
 import pharma.Model.FieldData;
+import pharma.Service.PriceSuggestion;
+import pharma.Service.TrendMarket;
 import pharma.Storage.FileStorage;
+
+import pharma.config.PathConfig;
 import pharma.config.TableUtility;
-import pharma.config.Utility;
 import pharma.config.database.Database;
 import pharma.config.net.ClientHttp;
 import pharma.dao.PurchaseOrderDetailDao;
 import pharma.dao.SuggestPriceConfigDao;
 import pharma.dao.SellerPriceDao;
-import pharma.formula.PriceSuggestion;
-import pharma.formula.TrendMarket;
+
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,6 +30,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+
+import static pharma.config.Utility.add_iconButton;
 
 public class Price implements Initializable {
     @FXML
@@ -37,7 +41,7 @@ public class Price implements Initializable {
 
     private SellerPriceDao sellerPriceDao;
     private ObservableList<FieldData> observable_table_id;
-    private SuggestPriceHandler suggestPriceHandler;
+    private SuggestPriceControllerBase suggestPriceControllerBase;
     private PriceSuggestion suggestion;
     private SimpleBooleanProperty s_boolean;
     public Price() {
@@ -48,9 +52,9 @@ public class Price implements Initializable {
         HashMap<String,String> properties_suggestion=null;
         URI uri=null;
         try {
-            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
             properties_suggestion=FileStorage.getProperties(List.of("gain","medium_stock_item","min_day_expire"),new FileReader("PriceSuggest.properties"));
-             uri=new URI("https://gist.githubusercontent.com/misunderstoodgenius95/4006133ef46f0a0459094df99d6baa18/raw/8f34fbaf0779b38505370a08282f4293f74e33c2/trendmarket.json");
+            uri=new URI("https://gist.githubusercontent.com/misunderstoodgenius95/4006133ef46f0a0459094df99d6baa18/raw/8f34fbaf0779b38505370a08282f4293f74e33c2/trendmarket.json");
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
@@ -59,12 +63,12 @@ public class Price implements Initializable {
         sellerPriceDao =new SellerPriceDao(Database.getInstance(properties));
         TrendMarket trendMarket=new TrendMarket(new ClientHttp(),uri);
         PurchaseOrderDetailDao p_dao=new PurchaseOrderDetailDao(Database.getInstance(properties));
-        suggestion=new PriceSuggestion(properties_suggestion,trendMarket,s_conf,p_dao);
-        suggestPriceHandler=new SuggestPriceHandler("Inserisci Prezzi", sellerPriceDao,suggestion,s_boolean);
+        suggestion=new  PriceSuggestion(properties_suggestion,trendMarket,s_conf,p_dao);
+        suggestPriceControllerBase=new SuggestPriceControllerBase("Inserisci Prezzi", sellerPriceDao,suggestion,s_boolean);
     }
     @FXML
     public void btn_action_add(ActionEvent event) {
-        suggestPriceHandler.execute();
+      suggestPriceControllerBase.execute();
         if(s_boolean.get()){
             observable_table_id.clear();
             observable_table_id.addAll(sellerPriceDao.findAll());
@@ -75,7 +79,7 @@ public class Price implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         observable_table_id=FXCollections.observableArrayList();
-        Utility.add_iconButton(btn_id_add, FontAwesomeSolid.PLUS_SQUARE);
+        add_iconButton(btn_id_add, FontAwesomeSolid.PLUS_SQUARE);
         table_id.getColumns().addAll(TableUtility.generate_column_string("Farmaco","nome"),
                 TableUtility.generate_column_string("Tipologia","nome_tipologia"),
                 TableUtility.generate_column_string("Misura","unit_misure"),

@@ -1,26 +1,20 @@
 package pharma.Controller.subpanel;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
-import pharma.Handler.SellerInvoiceHandlerController;
+import pharma.DialogController.CustomHandlerController;
 import pharma.Model.FieldData;
+
 import pharma.config.TableUtility;
 import pharma.config.Utility;
-import pharma.config.database.Database;
-import pharma.config.snippet.Table;
 import pharma.dao.SellerInvoiceDao;
 
-import java.io.File;
 import java.net.URL;
 import java.sql.Date;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class SellerInvoice implements Initializable {
@@ -36,7 +30,7 @@ public class SellerInvoice implements Initializable {
     @FXML
     private ToggleGroup searchToggleGroup;
     private SellerInvoiceDao sellerInvoiceDao;
-    private SellerInvoiceHandlerController s_controller;
+    private CustomHandlerController s_controller;
     private ObservableList<FieldData> observableList;
 
 
@@ -55,7 +49,7 @@ public class SellerInvoice implements Initializable {
          else if(radioButton.getId().equals("header_range")){
               observableList.setAll(sellerInvoiceDao.findByRangeBetweenAndRagioneSociale(Date.valueOf(range_start_id.getValue()), Date.valueOf(range_end_id.getValue()),tf_multi_id.getText()));
           }
-         else if(radioButton.getId().equals("only_invoice")) {
+         else if(radioButton.getId().equals("only_id")) {
               observableList.setAll(sellerInvoiceDao.findByOrderID(Integer.parseInt(tf_multi_id.getText())));
           }
       }
@@ -68,7 +62,7 @@ public class SellerInvoice implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         observableList= FXCollections.observableArrayList();
-        s_controller=new SellerInvoiceHandlerController(searchToggleGroup,tf_multi_id,range_start_id,range_end_id);
+        s_controller=new CustomHandlerController(searchToggleGroup,tf_multi_id,range_start_id,range_end_id);
         table_id.getColumns().addAll(
                 TableUtility.generate_column_int("Numero fattura","id"),
                 TableUtility.generate_column_string("Ragione Sociale","nome_casa_farmaceutica"),

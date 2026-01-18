@@ -3,6 +3,7 @@ package pharma.formula;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pharma.Service.ClusterPoint;
 
 class ClusterPointTest {
 

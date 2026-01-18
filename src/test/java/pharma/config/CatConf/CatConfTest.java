@@ -3,6 +3,7 @@ package pharma.config.CatConf;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pharma.config.PathConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +12,7 @@ class CatConfTest {
 
     @BeforeEach
     void setUp() {
-        catConf=new CatConf("configcat-sdk-1/LxreCILqCUKPiPgevSQGoQ/w1WIJVMWoUOKocMj7FderA");
+        catConf=new CatConf(PathConfig.CAT_SUGGEST.getValue());
     }
     @Test
     public void ValidFindMaximumexpreday(){

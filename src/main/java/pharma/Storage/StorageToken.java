@@ -5,7 +5,7 @@ import java.util.Properties;
 
 public class StorageToken {
 
-    private  static final String file="config.properties";
+    private  static final String file="jwt.properties";
 private  StorageToken() {
 
 }

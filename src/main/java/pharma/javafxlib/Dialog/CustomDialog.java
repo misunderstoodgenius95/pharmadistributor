@@ -19,18 +19,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pharma.Model.FieldData;
 import pharma.config.InputValidation;
-import pharma.javafxlib.Controls.TextFieldComboBox;
+
 import pharma.config.Utility;
+import pharma.javafxlib.Controls.TextFieldComboBox;
 import pharma.javafxlib.FileChoseOption;
 import pharma.javafxlib.RadioOptions;
+import pharma.javafxlib.graphs.Histogram;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static java.util.stream.Collectors.*;
 
 public class CustomDialog<T> extends Dialog<T> {
     private static final Logger log = LoggerFactory.getLogger(CustomDialog.class);
@@ -243,6 +243,13 @@ getControlList().add(textField);
         vbox.getChildren().add(treeTableView);
         controlList.add(treeTableView);
         return treeTableView;
+
+    }
+
+    public  Histogram addHistogram(String labelX,String labelY,String titleHistogram){
+        Histogram histogram=new Histogram(labelX,labelY,titleHistogram);
+        vbox.getChildren().add(histogram.getBarChart());
+        return histogram;
 
     }
 

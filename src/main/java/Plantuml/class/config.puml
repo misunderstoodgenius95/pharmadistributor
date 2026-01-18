@@ -1,0 +1,261 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class AutorizationGateway {
+    - StytchClient client
+  + authorization(String, String, String): boolean
+}
+class StytchClient {
+  + StytchClient(String, String, String, ClientHttp):
+  + StytchClient(String, String, String):
+  + login(String, String): HttpResponse<String>
+  + get_user_by_email(String): HttpResponse<String>
+  + get_session(String): HttpResponse<String>
+  + get_user(String): HttpResponse<String>
+  + authenticate_jwt_token(String): HttpResponse<String>
+  + update_user(String, JSONObject): HttpResponse<String>
+  + create_user(String, String, String, String): HttpResponse<String>
+  + create_user_pharmacist(String, String, String, String, int): HttpResponse<String>
+  + reset_password_start(String, String): HttpResponse<String>
+   _users: HttpResponse<String>
+}
+AutorizationGateway->StytchClient
+
+
+
+class BasicConvert_FD {
+  + BasicConvert_FD():
+  + toString(FieldData): String
+  + fromString(String): FieldData
+}
+
+class StringConvert{
+}
+class BasicConvert_WS {
+  + BasicConvert_WS():
+  + fromString(String): WarehouseModel
+  + toString(WarehouseModel): String
+}
+
+class ComboxLotsConvert {
+  + ComboxLotsConvert(String):
+  + fromString(String): FieldData
+  + toString(FieldData): String
+   _property: String
+}
+
+class FarmacoLotsConvert {
+  + FarmacoLotsConvert():
+  + fromString(String): FieldData
+  + toString(FieldData): String
+}
+
+class LottiConvert {
+  + LottiConvert():
+  + toString(FieldData): String
+  + fromString(String): FieldData
+}
+class InvoicexConvert {
+  + InvoicexConvert(Type):
+  + fromString(String): FieldData
+  + toString(FieldData): String
+}
+class FarmaciaLotConvert {
+  + fromString(String): FieldData
+  + toString(FieldData): String
+}
+
+BasicConvert_FD--|>StringConvert
+BasicConvert_WS--|>StringConvert
+ ComboxLotsConvert--|>StringConvert
+FarmacoLotsConvert--|>StringConvert
+FarmaciaLotsConvert--|>StringConvert
+LottiConvert--|>StringConvert
+InvoicexConvert--|>StringConvert
+
+class CatConf {
+  + CatConf(String):
+  + get_value_double(String): double
+  + get_value_integer(String): int
+}
+class ClientHttp {
+  + ClientHttp():
+  + sendAsync(HttpRequest): CompletableFuture<HttpResponse<String>>
+  + send(HttpRequest): HttpResponse<String>
+}
+
+class Database {
+  + Database(Properties):
+  + Database():
+  + execute(String): Boolean
+  + rollback(): void
+  + check_exist_table(String): boolean
+  + close(): void
+  + me(): void
+  + execute_prepared_query(String): PreparedStatement
+  + commit(): void
+  + getInstance(Properties): Database
+  + executeQuery(String): ResultSet
+   _MetaData: DatabaseMetaData
+   transaction: boolean
+   _connection: Connection
+}
+class ExpireToken {
+  + ExpireToken(String):
+}
+class ExtractJson {
+  + extract_first(String, String): JSONObject
+}
+
+class HttpExpireItem {
+   -ClientHttp client
+  + HttpExpireItem(ClientHttp):
+  + fieldata_to_json(FieldData, int): JSONObject
+  + fieldata_to_json_array(ObservableList<FieldData>, int): JSONArray
+  + post_expire(String, ObservableList<FieldData>, int): int
+}
+HttpExpireItem-->ClientHttp
+
+class InputValidation {
+- {static} latitude_regex: String
+  - {static} longitude_regex: String
+  - {static} p_iva_regex: String
+  - {static} audience_regex: String
+  - {static} password_regex: String
+  - {static} double_digit_regex: String
+  - {static} input_regex: String
+  - {static} cap: String
+  - {static} email_regex: String
+  - {static} lotto_code: String
+  - {static} digit: String
+  - {static} stytch_project_id: String
+  - {static} stytch_secret_key: String
+  - {static} stytch_user_id: String
+  + validate_lat(String): boolean
+  - generic_validation(String, String): boolean
+  + validate_email(String): boolean
+  + validate_digit(String): boolean
+  + validate_lotto_code(String): boolean
+  + validate_cap(String): boolean
+  + validate_stytch_project_id(String): boolean
+  + validate_lng(String): boolean
+  + validate_stytch_secret_key(String): boolean
+  + validate_p_iva(String): boolean
+  + filled_text(String): boolean
+  + validate_password(String): boolean
+  + validate_stytch_user_id(String): boolean
+  + validate_audience(String): boolean
+  + get_validation(String, String): boolean
+  + validate_double_digit(String): boolean
+}
+
+class ListCalculateService {
+  + total(double, double): double
+  + sumbySubtotals(ObservableList<FieldData>): double
+  + amount_vat(ObservableList<FieldData>): double
+  + amount_subtotal(ObservableList<FieldData>): double
+  + sumbyTotals(ObservableList<FieldData>): double
+  + sumbyVats(ObservableList<FieldData>): double
+}
+
+enum PathConfig << enumeration >> {
+  - PathConfig(String):
+  - value: String
+  + valueOf(String): PathConfig
+  + values(): PathConfig[]
+   value: String
+}
+class PollingClient {
+   -ClientHttp client
+  + send(String): ScheduledFuture<String>
+}
+PollingClient->ClientHttp
+class PopulateChoice<T> {
+    -DetailDao detailDao
+    -PharmaDao pharmaDao
+  + PopulateChoice(GenericJDBCDao<FieldData, T>):
+  + populate(String): List<FieldData>
+}
+class DetailDao{
+}
+class PharmaDao{
+}
+PopulateChoice-->DetailDao
+PopulateChoice-->PharmaDao
+
+class SpinnerGeneric {
+  + SpinnerGeneric():
+  - listener_spinner(): void
+}
+
+ class SpinnerTableCells{
+ }
+SpinnerGeneric--|>SpinnerTableCells
+
+
+class SpinnerTableCellOrder<K> {
+  + SpinnerTableCellOrder(Class<K>, SimpleIntegerProperty, String):
+  + SpinnerTableCellOrder(Class<K>, K, K, K, SimpleBooleanProperty, String):
+  - listener(): void
+}
+SpinnerTableCellOrder--|>SpinnerTableCells
+
+
+class TableUtilityService {
+  + TableUtilityService():
+  + generate_tree_column_int(String, String): TreeTableColumn<S, Integer>
+  + generate_tree_column_double(String, String): TreeTableColumn<S, Double>
+  + generate_column_date(String, String): TableColumn<S, Date>
+  + generate_tree_column_string(String, String): TreeTableColumn<S, String>
+  + generate_column_timestamp(String, String): TableColumn<S, Timestamp>
+  + generate_column_double(String, String): TableColumn<S, Double>
+  + formatting_double(TableColumn<T, Double>): void
+  + generate_column_int(String, String): TableColumn<S, Integer>
+  + formatting_timestamp(TableColumn<T, Timestamp>): void
+  + generate_column_string(String, String): TableColumn<S, String>
+}
+class UserGateway {
+  + UserGateway(StytchClient):
+  + add_latest_access(User): User
+  + get_user_byRole(String): User
+  + searchUsers(): UserGatewayResponse
+  + deserialization_object(String, Class<T>): Optional<T>
+  + authenticate_jwt(String): UserGatewayResponse
+  + extract_Session_role(User, String): User
+  + searchUserByEmail(String): User
+  + GettingUserInfoByUserId(String): UserGatewayResponse
+  + authenticate(String, String): UserGatewayResponse
+  + recent_last_access(Session): Optional<Instant>
+  + register_pharmacist(String, String, String, String, String, int): UserGatewayResponse
+  + register(String, String, String, String, String): UserGatewayResponse
+  - validate_user(String): boolean
+  + user_revocate(String, boolean): UserGatewayResponse
+  + user_update_role(String, String): UserGatewayResponse
+  + extract_results(String): String
+}
+class UserGatewayResponse {
+  + UserGatewayResponse(String, int):
+  - body: String
+  - status: int
+   body: String
+   status: int
+}
+class UtilityService {
+  + UtilityService():
+  + search_item(TableView<FieldData>, TextField): void
+  + create_btn(Button, String): void
+  + getRequiredDoubleFromMap(Map<String, String>, String): double
+  + set_fieldText(String, TextField, TextField, TextField): void
+  + resetLabelText(Label[]): void
+  + refuse(): ButtonType
+  + extract_value_from_list(List<K>, Class<T>): List<T>
+  + create_alert_confirm(AlertType, String, String): Alert
+  + extract_province(String): List<FieldData>
+  + create_alert(AlertType, String, String): void
+  + network_status(int): void
+  + add_iconButton(Button, Ikon): void
+  + accept(): ButtonType
+}
+
+@enduml

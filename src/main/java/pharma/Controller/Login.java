@@ -13,10 +13,10 @@ import pharma.RolesStage;
 import pharma.Storage.FileStorage;
 import pharma.config.*;
 
-import pharma.config.auth.UserService;
-import pharma.config.auth.UserServiceResponse;
+import pharma.config.auth.UserGateway;
+import pharma.config.auth.UserGatewayResponse;
 import pharma.security.Stytch.StytchClient;
-import pharma.security.TokenUtility;
+import pharma.Utility.TokenUtility;
 
 
 import java.io.FileNotFoundException;
@@ -38,12 +38,12 @@ public class Login implements Initializable {
     public void buttonOnAction(ActionEvent event) throws FileNotFoundException {
 
         HashMap<String,String> hashMap_json=
-                FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
-        UserService userService=new UserService(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
-        UserServiceResponse response=null;
+                FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader(PathConfig.STYTCH_CONF.getValue()));
+        UserGateway userGateway =new UserGateway(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
+        UserGatewayResponse response=null;
         try {
             System.out.println(password_field.getText());
-            response = userService.authenticate(user_field.getText(), password_field.getText());
+            response = userGateway.authenticate(user_field.getText(), password_field.getText());
             if(response.getStatus()==200){
                 Stage stage=(Stage)((Node) event.getSource()).getScene().getWindow();
                 String json=response.getBody();
@@ -51,7 +51,7 @@ public class Login implements Initializable {
                 if(token.isEmpty()){
                     throw new IllegalArgumentException("token is null");
                 }
-                FileStorage.setProperty("jwt",token,new FileWriter("config.properties"));
+                FileStorage.setProperty("jwt",token,new FileWriter("jwt.properties"));
                 RolesStage.change_stage(TokenUtility.extractRole(json),stage);
             }else{
                 Utility.network_status(response.getStatus());

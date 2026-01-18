@@ -1,0 +1,153 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class ChoiceWarehouse {
+  + ChoiceWarehouse(List<WarehouseModel>, List<PharmacyAssigned>):
+  + limit_entries(List<Entry<Farmacia, Integer>>): List<Farmacia>
+  + calculate_availability(List<PharmacyDistance>): List<WarehouseDistances>
+  + sorted_by_max(Map<Farmacia, Integer>): List<Entry<Farmacia, Integer>>
+  + average_point(List<Farmacia>): Point
+  + pharmacy_by_qty(): Map<Farmacia, Integer>
+  + calculate_warehouse(): List<WarehouseDistances>
+  + distance_pharmacist(List<Entry<Farmacia, Integer>>): List<PharmacyDistance>
+  + extract_max_threshold_lot(List<Entry<Farmacia, Integer>>): List<Entry<Farmacia, Integer>>
+  + average_entries(List<Farmacia>): PharmacyDistance
+  + in_range(Point, Point): boolean
+  + sorted_warehouse(List<WarehouseDistances>): List<WarehouseDistances>
+}
+class WarehouseModel {
+  + WarehouseModel(int, String, PGgeometry):
+  + WarehouseModel(String):
+  + WarehouseModel(int, String, PGgeometry, List<ShelfInfo>):
+  + WarehouseModel(int, String, PGgeometry, String, String, String, List<ShelfInfo>):
+  + WarehouseModel():
+  + WarehouseModel(int, String, String, String, String):
+  - province: String
+  - address: String
+  - id: int
+  - comune: String
+  - pGgeometry: PGgeometry
+  - shelfInfos: List<ShelfInfo>
+  - nome: String
+   id: int
+   shelfInfos: List<ShelfInfo>
+   nome: String
+   comune: String
+   province: String
+   address: String
+   pGgeometry: PGgeometry
+}
+
+
+class PharmacyAssigned {
+  + PharmacyAssigned(Farmacia, int):
+  - farmacia: Farmacia
+  - quantity: int
+   quantity: int
+   farmacia: Farmacia
+}
+
+ChoiceWarehouse->PharmacyAssigned
+ChoiceWarehouse->WarehouseModel
+
+
+class ClusterPoint {
+  + ClusterPoint(double[]):
+  - point: double[]
+   point: double[]
+}
+class HarvesinFormula {
+  - HarvesinFormula():
+  + calculate_harvesinDistance(double, double, double, double): double
+}
+class KMeans {
+  + KMeans(List<ClusterPoint>, int):
+   _max_centroid: double
+}
+
+class FarmaciaDao {
+  + FarmaciaDao(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + buildQueryasParameter(String): String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+
+class SellerOrderDao {
+  + SellerOrderDao(Database):
+  + findByOrders(int): List<FieldData>
+  + findAllOrderNotExistinSellerOrder(): List<FieldData>
+  + findByRangeBetweenAndRagioneSocialeWhereNotExistCreditNote(Date, Date, String): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findAllWithPharmaName(): List<FieldData>
+  + addRowSearch(ResultSet): FieldData
+  + findById(Integer): FieldData
+  + findByRangeBetweenAndRagioneSociale(Date, Date, String): List<FieldData>
+  + findByIdWhereNotExistintoSellerCreditNote(Integer): FieldData
+  + addOrderSearch(ResultSet): FieldData
+  # mapRow(ResultSet): FieldData
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SellerOrderDetails {
+  + SellerOrderDetails(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findbyProduct(int): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findbyOrderId(int): List<FieldData>
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  + findDetailbySellerOrderId(int): List<FieldData>
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class OrdersPharmacist {
+  + OrdersPharmacist(SellerOrderDetails, FarmaciaDao, SellerOrderDao):
+  + calculatePharmacyByOrder(int): List<PharmacyAssigned>
+}
+OrdersPharmacist->SellerOrderDao
+OrdersPharmacist->FarmaciaDao
+OrdersPharmacist->SellerOrderDetails
+
+
+
+class Acquisto {
+  + Acquisto(int, int, Date, double):
+  + Acquisto(int, String, int, Date, double):
+  - nome_farmaco: String
+  - quantity: int
+  - price: double
+  - data_acquisto: Date
+  - farmaco_id: int
+   meseAnno: YearMonth
+   spesaTotale: double
+   nome_farmaco: String
+   data_acquisto: Date
+   price: double
+   farmaco_id: int
+   quantity: int
+}
+class Picco {
+  + Picco():
+  + extract_farmaco_byId(int, List<Acquisto>): List<Acquisto>
+  + calculate_analisi_picco(List<Acquisto>, int): Optional<List<Acquisto>>
+  + get_average(List<Acquisto>): double
+  + generate_array_input(List<Acquisto>): double[]
+  + calculate_soglia_picco(double, double, double): double
+  + generate_standard_devation(List<Acquisto>): double
+}
+Picco->Acquisto
+
+

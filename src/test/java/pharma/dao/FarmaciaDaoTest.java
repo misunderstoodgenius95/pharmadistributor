@@ -1,9 +1,6 @@
 package pharma.dao;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pharma.Model.FieldData;
@@ -11,6 +8,7 @@ import pharma.Storage.FileStorage;
 import pharma.config.database.Database;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -130,6 +128,24 @@ class FarmaciaDaoTest {
     }
 
     @Test
-    void testBuildQueryasParameter() {
+    @DisplayName("Performance test query complete limit 300 ms")
+    void  PerformanceTestquery(){
+        Properties properties = null;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            farmaciaDao = new FarmaciaDao(Database.getInstance(properties));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        long startTime=System.nanoTime();
+        farmaciaDao.findAll();
+        long endTime=System.nanoTime();
+        long durationMs=(endTime-startTime)/3_000_000;
+        org.assertj.core.api.Assertions.assertThat(durationMs).isLessThanOrEqualTo(300);
+
+
+
+
     }
 }

@@ -1,7 +1,7 @@
 package pharma.dao;
 
 import pharma.config.database.Database;
-import pharma.formula.suggest.Model.SuggestConfig;
+import pharma.Model.SuggestConfig;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

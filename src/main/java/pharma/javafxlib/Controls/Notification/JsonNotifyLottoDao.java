@@ -27,7 +27,7 @@ public class JsonNotifyLottoDao extends JsonNotify {
         String body=super.create_body(input);
         if(fieldData.getNome()!=null && fieldData.getNome_tipologia()!=null && fieldData.getUnit_misure()!=null){
 
-            return body+" "+fieldData.getNome()+" "+fieldData.getNome_tipologia()+" "+fieldData.getUnit_misure();
+            return body+" "+fieldData.getNome()+" "+fieldData.getNome_tipologia()+" "+fieldData.getUnit_misure()+"Disponibilità "+fieldData.getAvailability();
         }
 
         return  body;

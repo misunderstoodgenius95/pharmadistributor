@@ -3,6 +3,8 @@ package pharma.config.CatConf;
 import com.configcat.ConfigCatClient;
 import com.configcat.LogLevel;
 
+import java.lang.classfile.constantpool.DoubleEntry;
+
 public class CatConf {
     private  ConfigCatClient client;
     public CatConf(String config) {
@@ -20,6 +22,15 @@ public class CatConf {
 
 
     }
+    public double get_value_double(String key){
+        if(key.isEmpty()){
+            throw  new IllegalArgumentException("Key it is null");
+        }
+        return client.getValue(Double.class,key,0.0);
+
+
+    }
+
 
 
 

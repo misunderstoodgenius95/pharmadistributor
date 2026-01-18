@@ -1,6 +1,5 @@
 package pharma.formula;
 
-import org.checkerframework.checker.units.qual.C;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import pharma.Service.TrendMarket;
 import pharma.config.net.ClientHttp;
 
 
@@ -16,8 +16,6 @@ import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.doubleThat;
 import static org.mockito.Mockito.when;
 
 class TrendMarketTest {

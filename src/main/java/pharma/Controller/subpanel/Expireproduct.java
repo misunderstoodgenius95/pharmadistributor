@@ -10,12 +10,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import pharma.Handler.Table.TableCustom;
-import pharma.HttpExpireItem;
+import pharma.DialogController.Table.TableCustom;
+import pharma.config.Utility;
+import pharma.config.net.HttpExpireItem;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
 import pharma.config.TableUtility;
-import pharma.config.Utility;
 import pharma.config.database.Database;
 import pharma.config.net.ClientHttp;
 import pharma.dao.LottiDao;
@@ -46,7 +47,8 @@ public class Expireproduct implements Initializable {
     private SimpleIntegerProperty simpleIntegerProperty;
     public Expireproduct() {
         try {
-            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
             database=Database.getInstance(properties);
             lottiDao=new LottiDao(database,"lotto");
             clientHttp=new ClientHttp();

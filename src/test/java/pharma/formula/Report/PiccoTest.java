@@ -1,22 +1,27 @@
 package pharma.formula.Report;
 
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
+import org.checkerframework.common.reflection.qual.ClassBound;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import pharma.Model.Acquisto;
+import pharma.Service.Picco;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 class PiccoTest {
     private Picco picco;
-
+    private List<Acquisto> acquistos;
     @BeforeEach
     void setUp() {
-         List<Acquisto> acquistoList=List.of(
+         acquistos=List.of(
                 new Acquisto(1, "Tachipirina", 120, Date.valueOf("2024-01-05"), 8.50),
                 new Acquisto(2, "Aspirina", 85, Date.valueOf("2024-01-06"), 6.30),
-                new Acquisto(8, "Fluimucil", 95, Date.valueOf("2024-01-08"), 10.20),
+                new Acquisto(2, "Aspirina", 80, Date.valueOf("2024-01-08"), 10.20),
                 new Acquisto(1, "Tachipirina", 150, Date.valueOf("2024-01-10"), 8.50),
                 new Acquisto(3, "Brufen", 78, Date.valueOf("2024-01-12"), 9.80),
                 new Acquisto(1, "Tachipirina", 250, Date.valueOf("2024-01-15"), 8.50),
@@ -30,8 +35,8 @@ class PiccoTest {
                 new Acquisto(12, "Gaviscon", 55, Date.valueOf("2024-02-10"), 9.70),
                 new Acquisto(2, "Aspirina", 70, Date.valueOf("2024-02-12"), 6.30),
                 new Acquisto(8, "Fluimucil", 88, Date.valueOf("2024-02-14"), 10.20),
-                new Acquisto(4, "Voltaren", 68, Date.valueOf("2024-02-18"), 12.50),
-                new Acquisto(11, "Lactoflorene", 38, Date.valueOf("2024-02-20"), 18.50),
+                new Acquisto(2, "Aspirina", 250, Date.valueOf("2024-02-18"), 12.50),
+                new Acquisto(2, "Asprina", 251, Date.valueOf("2024-02-20"), 18.50),
                 new Acquisto(3, "Brufen", 92, Date.valueOf("2024-02-25"), 9.80),
                 new Acquisto(13, "Maalox", 42, Date.valueOf("2024-02-28"), 8.90),
                 new Acquisto(5, "Aerius", 95, Date.valueOf("2024-03-02"), 15.20),
@@ -44,13 +49,13 @@ class PiccoTest {
                 new Acquisto(7, "Zirtec", 95, Date.valueOf("2024-03-20"), 14.50),
                 new Acquisto(5, "Aerius", 165, Date.valueOf("2024-03-25"), 15.20),
                 new Acquisto(6, "Reactine", 98, Date.valueOf("2024-03-28"), 13.80));
-picco=new Picco(acquistoList);
+picco=new Picco();
     }
 
 
-   /* @Test
+    /*@Test
     void generate_array_input() {
-    *//*    double[]actual=picco.generate_array_input();*//*
+        double[]actual=picco.generate_array_input();
         double[] expected = {
                 120.0,  // Tachipirina
                 85.0,  // Aspirina
@@ -147,34 +152,72 @@ picco=new Picco(acquistoList);
 
     @Test
     void calculate_soglia_picco() {
-        *//*double average=picco.get_average();
+        //*double average=picco.get_average();
         double dev_stnd=picco.generate_standard_devation();
         double actual=picco.calculate_soglia_picco(average,dev_stnd,1.5);
         double expected=average+1.5*dev_stnd;
-        Assertions.assertThat(actual).isEqualTo(expected);*//*
+        Assertions.assertThat(actual).isEqualTo(expected);
     }
 */
 
-    @Test
+/*    @Test
     void extract_farmaco_byId() {
         List<Acquisto> list=picco.extract_farmaco_byId(1);
         Assertions.assertThat(list).hasSize(6);
 
-    }
+    }*/
 
     @Test
-    void calculate_analisi_picco() {
-        /*
-          new Acquisto(1, "Tachipirina", 120, Date.valueOf("2024-01-05"), 8.50),
-         new Acquisto(1, "Tachipirina", 150, Date.valueOf("2024-01-10"), 8.50)
-          new Acquisto(1, "Tachipirina", 250, Date.valueOf("2024-01-15"), 8.50),
-            new Acquisto(1, "Tachipirina", 180, Date.valueOf("2024-01-25"), 8.50),
-           new Acquisto(1, "Tachipirina", 175, Date.valueOf("2024-02-03"), 8.50),
-          new Acquisto(1, "Tachipirina", 110, Date.valueOf("2024-03-18"), 8.50),
-         */
-        Assertions.assertThat(picco.calculate_analisi_picco(1)).hasSize(1);
+    void calculate_analisi_piccoWithOnePicco() {
+        Assertions.assertThat(picco.calculate_analisi_picco(acquistos,1).get().getFirst().getQuantity()).isEqualTo(250);
 
 
 
     }
+    @Test
+    void calculate_analisi_piccoWithTwoPicco() {
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(picco.calculate_analisi_picco(acquistos,2).get())
+                    .hasSize(1)
+                    .first()
+                    .satisfies(acquisto -> {
+                        softly.assertThat(acquisto.getQuantity()).isEqualTo(251);
+                        softly.assertThat(acquisto.getPrice()).isEqualTo(18.50);
+                        softly.assertThat(acquisto.getQuantity() * acquisto.getPrice())
+                                .isEqualTo(4643.50);
+                    });
+        });
+
+
+    }
+    @Test
+    void calculate_analisi_piccoWith() {
+        List<Acquisto> acquistoList=List.of(
+                new Acquisto(1, "Tachipirina", 120, Date.valueOf("2024-01-05"), 8.50),
+                new Acquisto(1, "Tachipirina", 100, Date.valueOf("2024-01-05"), 8.50),
+                new Acquisto(1, "Tachipirina", 80, Date.valueOf("2024-01-05"), 8.50),
+                new Acquisto(2, "Aspirina", 85, Date.valueOf("2024-01-06"), 6.30),
+                new Acquisto(2, "Aspirina", 80, Date.valueOf("2024-01-08"), 10.20),
+                new Acquisto(1, "Tachipirina", 150, Date.valueOf("2024-01-10"), 8.50),
+                new Acquisto(3, "Brufen", 78, Date.valueOf("2024-01-12"), 9.80),
+                new Acquisto(1, "Tachipirina", 650, Date.valueOf("2024-01-15"), 8.50),
+                new Acquisto(9, "Bisolvon", 110, Date.valueOf("2024-01-18"), 11.30));
+        Picco picco1=new Picco();
+        Optional<List<Acquisto>> listOptional=picco1.calculate_analisi_picco(acquistos,1);
+        System.out.println(listOptional.get().size());
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

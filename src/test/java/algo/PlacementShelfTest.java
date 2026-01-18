@@ -1,7 +1,6 @@
 package algo;
 
 
-import algoWarehouse.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,7 +12,8 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pharma.Model.LotDimensionModel;
+import pharma.Model.*;
+import pharma.Service.PlacementShelf;
 
 import java.util.HashMap;
 import java.util.List;

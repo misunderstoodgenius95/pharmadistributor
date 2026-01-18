@@ -11,7 +11,6 @@ module pharma {
     requires embedded.postgres;
     requires rgxgen;
     requires java.rmi;
-    opens algoWarehouse to javafx.base;
     opens pharma.real to javafx.fxml;
     requires org.kordamp.ikonli.fontawesome5;
 
@@ -51,10 +50,9 @@ exports pharma.Storage;
     opens pharma.config to javafx.fxml;
     exports pharma.dao;
     exports pharma.Model;
-    exports pharma.security;
     exports pharma.config.View;
     opens pharma.config.View to javafx.fxml;
-    exports pharma.Handler;
+    exports pharma.DialogController;
     exports pharma.config.spinner;
     opens pharma.config.spinner to javafx.fxml;
     exports pharma.config.auth;
@@ -74,12 +72,14 @@ exports pharma.Storage;
     exports pharma.javafxlib.test;
     opens pharma.javafxlib.test to javafx.fxml;
     exports pharma.javafxlib.Controls.Notification;
-    opens pharma.test2 to javafx.graphics;
     opens pharma.javafxlib.Controls.Notification to javafx.fxml;
-    exports algoWarehouse to javafx.fxml, javafx.graphics;
+
 
     opens pharma.Model to com.fasterxml.jackson.databind, javafx.base, javafx.fxml;
     exports pharma.Controller.subpanel to javafx.controls, javafx.fxml, javafx.graphics;
-    exports pharma.Handler.Report;
+    exports pharma.DialogController.Report;
+    opens pharma.Service to javafx.base;
+    opens pharma.Utility to javafx.base;
+    exports pharma.Utility;
 
 }

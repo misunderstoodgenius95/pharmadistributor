@@ -62,6 +62,27 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
         return  resultList;
     }
 
+    public String getFindAllExecutionTime(){
+        return  "";
+    }
+
+
+
+    public List<String>  findAllWithExecutionTime() {
+        String query=getFindAllExecutionTime();
+        List<String> list=new ArrayList<>();
+        ResultSet resultSet=database.executeQuery(query);
+
+        try {
+            while(resultSet.next()) {
+                list.add( resultSet.getString(1));
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  list;
+    }
 
 
     @Override
@@ -83,6 +104,9 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
 
 
     }
+
+
+
 
     @Override
     public boolean update(T entity) {
@@ -111,8 +135,6 @@ public abstract class GenericJDBCDao<T,ID>  implements GenericDaoAble<T,ID> {
         }
 
     }
-
-
 
    protected    String  getFindQueryAll(){
 

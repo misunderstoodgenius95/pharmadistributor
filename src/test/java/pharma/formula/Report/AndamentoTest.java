@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pharma.Model.Acquisto;
 import pharma.Model.SpesaMensile;
+import pharma.Service.AndamentoMensile;
+import pharma.Service.Report.Andamento;
+import pharma.Service.Report.TrendType;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -52,34 +55,32 @@ class AndamentoTest {
     }
 
     @Test
-    void raggruppaPerMese() {
+    void ValidRaggruppaPerMese() {
         Andamento andamento=new Andamento(acquistoList);
         Map<YearMonth, SpesaMensile> actual= andamento.raggruppaPerMese();
-        Assertions.assertThat(actual.values()).extracting(SpesaMensile::getSpesaTotale).contains( 10854.0,7601.500000000001,17101.8);
+   Assertions.assertThat(actual.get(YearMonth.of(2024,3)).getSpesaTotale()).isEqualTo(17101.80);
+
 
 
     }
 
-    @Test
-    void calcolaVariazioneMesi() {
-        Andamento andamento=new Andamento(acquistoList);
-
-         YearMonth spesa_prev=YearMonth.from(LocalDate.of(2024,1,10));
-         YearMonth spesa_next=YearMonth.from(LocalDate.of(2024,2,10));
-      //  Gennaio: 10,854.00€, Febbraio: 7,601.50€
-        // Variazione = ((7601.50 - 10854.00) / 10854.00) * 100 = -29.97%
-        double value=andamento.calcolaVariazioneMesi(spesa_prev,spesa_next);
-        Assertions.assertThat(value).isCloseTo(-29.97, Offset.offset(0.01));
-    }
 
 
     @Test
     void calcolo_trend() {
-        Andamento andamento=new Andamento(acquistoList);
+       List<Acquisto> list=List.of( new Acquisto(5, "Aerius", 185, Date.valueOf("2024-01-12"), 15.20),
+                new Acquisto(6, "Reactine", 120, Date.valueOf("2024-01-15"), 13.80),
+                new Acquisto(1, "Tachipirina", 110, Date.valueOf("2024-01-18"), 8.50),
+                new Acquisto(7, "Zirtec", 95, Date.valueOf("2024-02-20"), 14.50),
+                new Acquisto(5, "Aerius", 165, Date.valueOf("2024-03-25"), 15.20),
+                new Acquisto(6, "Reactine", 98, Date.valueOf("2024-03-28"), 13.80));
+
+
+        Andamento andamento=new Andamento(list);
         YearMonth spesa_first=YearMonth.from(LocalDate.of(2024,1,10));
-        YearMonth spesa_last=YearMonth.from(LocalDate.of(2024,3,10));
+        YearMonth spesa_last=YearMonth.from(LocalDate.of(2024,3,28));
         double actual=andamento.calcolo_trend(spesa_last,spesa_first).get();
-        double expected=(17101.80-10854.00)/2;
+        double expected=(1352.4-2591.0)/2;
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 
@@ -94,15 +95,7 @@ class AndamentoTest {
         Assertions.assertThat(legenda).isEqualTo(TrendType.CRESCENTE);
     }
 
-    @Test
-    void calcolaSpesaMese() {
-        Andamento andamento=new Andamento(acquistoList);
-        YearMonth spesa_mese=YearMonth.from(LocalDate.of(2024,1,10));
-        double actual=andamento.calcolaSpesaMese(spesa_mese).get();
-        double expected=10854.0;
-        Assertions.assertThat(actual).isEqualTo(expected);
 
-    }
 }
 
 

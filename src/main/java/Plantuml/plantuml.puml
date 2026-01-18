@@ -1,0 +1,2222 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Acquisto {
+  + Acquisto(int, int, Date, double):
+  + Acquisto(int, String, int, Date, double):
+  - nome_farmaco: String
+  - price: double
+  - quantity: int
+  - farmaco_id: int
+  - data_acquisto: Date
+   quantity: int
+   meseAnno: YearMonth
+   price: double
+   nome_farmaco: String
+   farmaco_id: int
+   data_acquisto: Date
+   spesaTotale: double
+}
+class Admin {
+  + Admin():
+  + initialize(URL, ResourceBundle): void
+  + users(ActionEvent): void
+  + info_society_action(ActionEvent): void
+}
+
+class AdminCreateCredentialsControllerBase {
+  + AdminCreateCredentialsControllerBase(String, UserGateway):
+  # condition_event_status(FieldData): Status
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event(FieldData): boolean
+  # initialize(): void
+   _return_data: FieldData
+}
+class AdminRole {
+  + AdminRole():
+  + AdminRole(UserGateway):
+  - btn_send_filter_id: Button
+  - btn_add_id: Button
+  - radio_role: RadioButton
+  - adminTable: AdminTable
+  + choice_role_id: ChoiceBox<String>
+  - property_esit: BooleanProperty
+  - radio_email: RadioButton
+  + btn_add_action(ActionEvent): void
+  + property_esitProperty(): BooleanProperty
+  + btn_send_filter_action(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+   radio_role: RadioButton
+   radio_email: RadioButton
+   adminTable: AdminTable
+   choice_role_id: ChoiceBox<String>
+   btn_add_id: Button
+   property_esit: boolean
+   btn_send_filter_id: Button
+}
+class AdminTable {
+  + AdminTable(String, UserGateway):
+  + AdminTable(String):
+  - user_property: ObjectProperty<User>
+  ~ column_role(): TableColumn<Results, String>
+  - listener_property(): void
+  + create_table(): void
+  ~ column_email(): TableColumn<Results, String>
+   user_property: User
+}
+class Andamento {
+  + Andamento(List<Acquisto>):
+  + calcolaVariazioneMesi(YearMonth, YearMonth): Optional<Double>
+  + calcolaSpesaMese(YearMonth): Optional<Double>
+  + raggruppaPerMese(): Map<YearMonth, SpesaMensile>
+  + calcolo_trend(YearMonth, YearMonth): Optional<Double>
+  + calculate_legenda_trend(double): TrendType
+}
+class App {
+  + App():
+  + start(Stage): void
+}
+class AutorizationGateway {
+  + AutorizationGateway(StytchClient):
+  + authorization(String, String, String): boolean
+}
+class BasicConvert_FD {
+  + BasicConvert_FD():
+  + fromString(String): FieldData
+  + toString(FieldData): String
+}
+class BasicConvert_WS {
+  + BasicConvert_WS():
+  + toString(WarehouseModel): String
+  + fromString(String): WarehouseModel
+}
+class ButtonTableColumn<S> {
+  + ButtonTableColumn(String, Function<S, BooleanProperty>, BiConsumer<S, BooleanProperty>, UserGateway):
+  - createButton(): Callback<TableColumn<S, Void>, TableCell<S, Void>>
+}
+class CatConf {
+  + CatConf(String):
+  + get_value_integer(String): int
+  + get_value_double(String): double
+}
+class Chacha20 {
+  + Chacha20():
+  + encrypt(byte[], byte[]): Optional<byte[]>
+  + generateNonce(): byte[]
+  + encryptString(String, byte[]): Optional<String>
+  + byteToHex(byte[]): String
+  + decrypt(byte[], byte[]): Optional<byte[]>
+  + hexToByte(String): byte[]
+  + decryptedString(byte[]): String
+}
+class Chat {
+  + Chat():
+  - startQueueProcessor(ConcurrentLinkedQueue<String>): void
+  + btn_disconnect_action(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+  + extracted_message(String): String
+  + btn_action(ActionEvent): void
+}
+class ChatHandler {
+  + ChatHandler(VBox, TextArea):
+  - current_chat: ObservableMap<String, ObservableList<String>>
+  - property_pharmacist_active: SimpleStringProperty
+  - add_btn_user(String): void
+  + property_pharmacist_activeProperty(): SimpleStringProperty
+  - body_handler(Button): void
+  + extract_sender(String): Optional<String>
+  + add_chat_msg(String, String): void
+   _role: String
+   property_pharmacist_active: String
+   current_chat: ObservableMap<String, ObservableList<String>>
+}
+class ChatPharmacist {
+  + ChatPharmacist(ChatHandler, String):
+  + btn_action(ActionEvent): void
+  + btn_disconnect_action(ActionEvent): void
+  + message_receiver(): ChangeListener<ChatMsg>
+  + initialize(URL, ResourceBundle): void
+}
+class ChatSeller {
+  + ChatSeller(String):
+  + btn_disconnect_action(ActionEvent): void
+  + btn_action(ActionEvent): void
+  + message_receiver(): ChangeListener<ChatMsg>
+  + initialize(URL, ResourceBundle): void
+}
+class CheckBoxTableColumn<S> {
+  + CheckBoxTableColumn(String):
+  - checkBoxMap: ObservableMap<S, CheckBox>
+  - createCheckBoxTableFactory(): Callback<TableColumn<S, Void>, TableCell<S, Void>>
+  # selectedRow(S): void
+   checkBoxMap: ObservableMap<S, CheckBox>
+}
+class CheckBoxTableColumnv2<S> {
+  + CheckBoxTableColumnv2(String):
+  - checkBoxMap: ObservableMap<S, CheckBox>
+  # selectedRow(FieldData): void
+  # selectedRow(S): void
+  - createCheckBoxTableFactory(): Callback<TableColumn<S, Void>, TableCell<S, Void>>
+   checkBoxMap: ObservableMap<S, CheckBox>
+}
+class CheckEvent {
+  + CheckEvent():
+  - last_type: MouseType
+  + check_mouse_event(Button): void
+   last_type: MouseType
+}
+class CheckLastItemAdded {
+  + CheckLastItemAdded():
+}
+class ChoiceWarehouse {
+  + ChoiceWarehouse(List<WarehouseModel>, List<PharmacyAssigned>):
+  + calculate_distance(Point, Point): boolean
+  + limit_entries(List<Entry<Farmacia, Integer>>): List<Farmacia>
+  + pharmacy_by_qty(): Map<Farmacia, Integer>
+  + calculate_availability(List<PharmacyDistance>): List<WarehouseDistances>
+  + in_range(Point, Point): boolean
+  + average_entries(List<Farmacia>): PharmacyDistance
+  + distance_pharmacist(List<Entry<Farmacia, Integer>>): List<PharmacyDistance>
+  + calculate_warehouse(): List<WarehouseDistances>
+  + sorted_warehouse(List<WarehouseDistances>): List<WarehouseDistances>
+  + sorted_by_max(Map<Farmacia, Integer>): List<Entry<Farmacia, Integer>>
+  + average_point(List<Farmacia>): Point
+  + max_qty_pharmacy_for_lot(): Map<Integer, Integer>
+  + extract_max_threshold_lot(List<Entry<Farmacia, Integer>>): List<Entry<Farmacia, Integer>>
+}
+class ClientHttp {
+  + ClientHttp():
+  + send(HttpRequest): HttpResponse<String>
+  + sendAsync(HttpRequest): CompletableFuture<HttpResponse<String>>
+}
+class ClientWebserver {
+  + ClientWebserver(URI, String, ConcurrentLinkedQueue<String>):
+  + onClose(int, String, boolean): void
+  + sendMessage(): void
+  + onError(Exception): void
+  + onOpen(ServerHandshake): void
+  + onMessage(String): void
+}
+class ClusterPoint {
+  + ClusterPoint(double[]):
+  - point: double[]
+   point: double[]
+}
+class ComboxLotsConvert {
+  + ComboxLotsConvert(String):
+  + toString(FieldData): String
+  + fromString(String): FieldData
+   _property: String
+}
+class CustomDialog<T> {
+  + CustomDialog(String):
+  - check_validate: BooleanProperty
+  - vbox: VBox
+  - controlList: ObservableList<Control>
+  + add_text_field(String): TextField
+  + createLabeledTextField(String, String, HBox, HBox): TextField
+  + add_SearchComboBoxs(K): SearchableComboBox
+  + check_validateProperty(): BooleanProperty
+  + add_radio_horizantal(String, HBox, ToggleGroup): RadioButton
+  + add_web_page(String): WebView
+  + add_text_field(HBox): TextField
+  + add_tree_table(): TreeTableView<K>
+  + add_month_picker(): YearMonthPicker
+  + add_SearchComboBox(String): SearchableComboBox
+  + add_spinner(): Spinner<Integer>
+  - get_event(): void
+  + add_table(): TableView<T>
+  + add_hbox(double): HBox
+  + add_choiceBox(T): ChoiceBox<T>
+  + add_label(String, HBox): Label
+  + add_radios(List<RadioOptions>, Mode): ToggleGroup
+  + add_SearchComboBox(K): SearchableComboBox
+  + add_buttons_horizontal(List<String>): List<Button>
+  + add_label(String): Label
+  + add_calendar(): DatePicker
+  + addButton(String): Button
+  + add_combox_search_with_textfield(ObservableList<K>): TextFieldComboBox
+  + createLabeledTextField(String, String, GridPane, int, int, int, int): TextField
+  + add_group(): ToggleGroup
+  + add_gridpane(int): GridPane
+  + add_file_to_target_path(String, List<ExtensionFilter>): FileChoseOption
+  + add_text_field_with_validation(String, Validation): TextField
+  + add_spinner_double(): Spinner<Double>
+  + addComboWithTextNoValidation(ObservableList<K>): TextFieldComboBox
+  + add_tableCustom(): TableView<K>
+  + add_choiceBox(String): ChoiceBox<String>
+   controlList: ObservableList<Control>
+   button_click: ButtonType
+   check_validate: boolean
+   buttonOK: Button
+   vbox: VBox
+}
+class CustomHandlerController {
+  + CustomHandlerController(ToggleGroup, TextField, DatePicker, DatePicker):
+  - renabled_all(): void
+  + btn_validate(): boolean
+  - listener_toggle(): void
+  - disabled_all(): void
+  - only_multi_enabled(): void
+}
+class CustomLotsDimension {
+  + CustomLotsDimension(String, List<GenericJDBCDao>, SimpleObjectProperty<FieldData>):
+  # condition_event(LotDimensionModel): boolean
+  # condition_event_status(LotDimensionModel): Status
+  # initialize(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+   _return_data: LotDimensionModel
+}
+class Database {
+  + Database():
+  + Database(Properties):
+  + commit(): void
+  + executeQuery(String): ResultSet
+  + execute(String): Boolean
+  + rollback(): void
+  + check_exist_table(String): boolean
+  + getInstance(Properties): Database
+  + me(): void
+  + close(): void
+  + execute_prepared_query(String): PreparedStatement
+   _MetaData: DatabaseMetaData
+   transaction: boolean
+   _connection: Connection
+}
+class DetailDao {
+  + DetailDao(Database):
+  - table_name: String
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findById(Integer): FieldData
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+   table_name: String
+}
+class DetailHandler {
+  + DetailHandler(TextField, TextField, DetailDao, ListView<String>, ChoiceBox<String>):
+  + setInsertHandler(): void
+  - change_choice(): void
+  - listMapping(List<FieldData>, String): List<String>
+  - operator_mapping(FieldData, String): String
+}
+class Dettagli {
+  + Dettagli():
+  + initialize(URL, ResourceBundle): void
+  + change_value(ActionEvent): void
+  + btn_send(ActionEvent): void
+}
+class DialogControllerBase<F> {
+  + DialogControllerBase():
+  + DialogControllerBase(String, UserGateway):
+  + DialogControllerBase(String, PopulateChoice):
+  + DialogControllerBase(String, List<GenericJDBCDao>):
+  + DialogControllerBase(String, List<GenericJDBCDao>, FieldData):
+  + DialogControllerBase(String, PopulateChoice, List<GenericJDBCDao>):
+  + DialogControllerBase(String):
+  + DialogControllerBase(String, FieldData):
+  - mode: Mode
+  + execute(): void
+  + showAlert(boolean, String): void
+  # initialize(): void
+  # condition_event(F): boolean
+  + create_alert(AlertType, String, String): void
+  # condition_event_status(F): Status
+  + executeStatus(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  + removeControls(Control): void
+  + addControls(Control): void
+  - setResult(): void
+   mode: Mode
+   _return_data: F
+   cond: boolean
+}
+class DoubleClick_Menu<T> {
+  + DoubleClick_Menu(TableView<T>):
+  + create_menu_item(String): MenuItem
+}
+class DropDownMenu {
+  + DropDownMenu(Button):
+  + createItem(String): MenuItem
+}
+class EXpireProductNotifyControllerBase {
+  + EXpireProductNotifyControllerBase(String, LotAssigmentDao):
+  ~ productTableCustom: ProductTableCustom
+  - btn_products: Button
+  ~ checkBoxTableColumn: CheckBoxTableColumn<FieldData>
+  # initialize(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event(FieldData): boolean
+  # condition_event_status(FieldData): Status
+  - choice_btn(LotAssigmentDao): void
+   btn_products: Button
+   _return_data: FieldData
+   checkBoxTableColumn: CheckBoxTableColumn<FieldData>
+   productTableCustom: ProductTableCustom
+}
+class EncodeStytch {
+  + EncodeStytch():
+  + decode(String): String
+  + authentication(String, String): String
+}
+class EndPoints {
+  + EndPoints():
+  + getUser_update(String, String): String
+  + get_auth(String): String
+  + getSearch_users(String): String
+  + getUser_session(String): String
+  + getCreate_user(String): String
+  + getAuth_token(String): String
+  + getUriReset(String): String
+  + getSearch_userById(String): String
+  + getReset_password_start(String): String
+}
+class ExpireToken {
+  + ExpireToken(String):
+}
+class Expireproduct {
+  + Expireproduct():
+  + btn_send_action(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+  + btn_product_add_action(ActionEvent): void
+  + listener_delete(MenuItem): void
+}
+class ExtractJson {
+  + ExtractJson():
+  + extract_first(String, String): JSONObject
+}
+class Farmacia {
+  + Farmacia(String, int, PGgeometry):
+  - nome: String
+  - coordianate: PGgeometry
+  - id: int
+   nome: String
+   coordianate: PGgeometry
+   id: int
+}
+class Farmacia {
+  + Farmacia():
+  + initialize(URL, ResourceBundle): void
+  + btn_action_add(ActionEvent): void
+  + search_action(ActionEvent): void
+}
+class FarmaciaControllerBase {
+  + FarmaciaControllerBase(String, List<GenericJDBCDao>):
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event(FieldData): boolean
+  # initialize(): void
+  # condition_event_status(FieldData): Status
+   _return_data: FieldData
+}
+class FarmaciaDao {
+  + FarmaciaDao(Database):
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + buildQueryasParameter(String): String
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class FarmaciaLotConvert {
+  + FarmaciaLotConvert():
+  + toString(FieldData): String
+  + fromString(String): FieldData
+}
+class FarmaciaView {
+  + FarmaciaView(String, FarmaciaDao, ObservableList<FieldData>):
+  - toggleGroup: ToggleGroup
+  + listener_btn(): void
+  + listener_radio(): void
+   toggleGroup: ToggleGroup
+}
+class Farmaco {
+  + Farmaco():
+  + initialize(URL, ResourceBundle): void
+  ~ btn_action_add(ActionEvent): void
+  + choicebox_search_action(ActionEvent): void
+  + edit_btn_action(ActionEvent): void
+}
+class FarmacoDao {
+  + FarmacoDao(Database):
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  + findByName(String): List<FieldData>
+  # mapRow(ResultSet): FieldData
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findByLikeName(String): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class FarmacoDialogControllerBase {
+  + FarmacoDialogControllerBase(String, ObservableList<FieldData>, FarmacoDao, DetailDao, PharmaDao):
+  + setOperation(Mode, FieldData): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event(FieldData): boolean
+  # condition_event_status(FieldData): Status
+  # initialize(): void
+   _return_data: FieldData
+   update: FieldData
+}
+class FarmacoLotsConvert {
+  + FarmacoLotsConvert():
+  + toString(FieldData): String
+  + fromString(String): FieldData
+}
+class FieldData {
+  - FieldData(FieldDataBuilder):
+  - id: int
+  - elapsed_date: Date
+  - invoice_number: String
+  - tipologia: int
+  - nome: String
+  - shelves_code: int
+  - misure: int
+  - code: String
+  - medium_day: double
+  - last_name: String
+  - min_day_expire: int
+  - is_enable: boolean
+  - original_order_id: String
+  - categoria: int
+  - location: PGgeometry
+  - motive: String
+  - subtotal: double
+  - num_rip: int
+  - latitude: double
+  - quantity: IntegerProperty
+  - anagrafica_cliente: String
+  - website: String
+  - comune: String
+  - role: String
+  - warehouse_name: String
+  - medium_lots: double
+  - discount_value: int
+  - order_id: int
+  - credit_note_number: String
+  - fieldDataList: List<FieldData>
+  - unit_misure: String
+  - nome_tipologia: String
+  - production_date: Date
+  - spessore: double
+  - price: SimpleDoubleProperty
+  - partita_iva: String
+  - cap: int
+  - uuid: UUID
+  - nome_farmaco: String
+  - nome_categoria: String
+  - sigla: String
+  - lunghezza: double
+  - vat_percent: SimpleIntegerProperty
+  - shelf_code: String
+  - casa_farmaceutica: int
+  - foreign_id: int
+  - medium_stock_item: int
+  - picture: String
+  - vat_amount: double
+  - nome_principio_attivo: String
+  - nome_casa_farmaceutica: String
+  - profondita: double
+  - capacity: int
+  - farmaco_id: int
+  - street: String
+  - total: double
+  - altezza: double
+  - invoice_id: int
+  - s_quantity: SimpleIntegerProperty
+  - province: String
+  - payment_mode: String
+  - longitude: double
+  - email: String
+  - principio_attivo: int
+  - created_at: Timestamp
+  - availability: int
+  - description: String
+  + s_quantityProperty(): SimpleIntegerProperty
+  + getElementFieldDataList(int): FieldData
+   description: String
+   street: String
+   invoice_number: String
+   elapsed_date: Date
+   medium_stock_item: int
+   sigla: String
+   code: String
+   warehouse_name: String
+   credit_note_number: String
+   shelves_code: int
+   farmaco_id: int
+   website: String
+   production_date: Date
+   id: int
+   cap: int
+   nome_farmaco: String
+   province: String
+   lunghezza: double
+   discount_value: int
+   is_enable: boolean
+   nome_casa_farmaceutica: String
+   misure: int
+   comune: String
+   partita_iva: String
+   original_order_id: String
+   uuid: UUID
+   principio_attivo: int
+   s_quantity: int
+   price: Double
+   capacity: int
+   spessore: double
+   medium_day: double
+   created_at: Timestamp
+   availability: int
+   tipologia: int
+   nome: String
+   unit_misure: String
+   shelf_code: String
+   picture: String
+   fieldDataList: List<FieldData>
+   location: PGgeometry
+   role: String
+   latitude: double
+   motive: String
+   email: String
+   foreign_id: int
+   min_day_expire: int
+   invoice_id: int
+   nome_tipologia: String
+   num_rip: int
+   total: double
+   quantity: int
+   vat_percent: int
+   vat_amount: double
+   profondita: double
+   payment_mode: String
+   last_name: String
+   casa_farmaceutica: int
+   order_id: int
+   altezza: double
+   nome_categoria: String
+   subtotal: double
+   anagrafica_cliente: String
+   nome_principio_attivo: String
+   medium_lots: double
+   longitude: double
+   categoria: int
+}
+class FileChoseOption {
+  + FileChoseOption(Button, Button, FileChooser):
+  - button_upload: Button
+  - button_insert: Button
+  - chooser: FileChooser
+   chooser: FileChooser
+   button_upload: Button
+   button_insert: Button
+}
+class FileStorage {
+  - FileStorage():
+  + setProperty(String, String, FileWriter): void
+  + setProperties(HashMap<String, String>, FileWriter): void
+  + getProperty(String, FileReader): String
+  + getProperties(List<String>, FileReader): HashMap<String, String>
+  + getProperties_real(List<String>, FileReader): Properties
+}
+class FilterSearch {
+  + FilterSearch(TableView<FieldData>, TextField):
+  # condition(String, FieldData): boolean
+  + choice_value(String, Entry<String, String>[]): String
+}
+interface GenericDaoAble<T, ID> << interface >> {
+  + update(T): boolean
+  + findAll(): List<T>
+  + findById(ID): T
+  + insert(T): boolean
+  + delete(T): boolean
+}
+class GenericJDBCDao<T, ID> {
+  + GenericJDBCDao(String, Database):
+  # setDeleteParameter(PreparedStatement, T): void
+  + insert(T): boolean
+  + findByParametersExists(String, Object[]): boolean
+  + findByParameter(String, int): List<T>
+  + findAll(): List<T>
+  + insertAndReturnID(T): int
+  # setUpdateParameter(PreparedStatement, T): void
+  + commit(): void
+  + delete(T): boolean
+  + findByParameter(String, String): List<T>
+  - switch_type(PreparedStatement, Object, int): void
+  # mapRow(ResultSet): T
+  + update(T): boolean
+  # setInsertParameter(PreparedStatement, T): void
+  + findByParameters(String, Object[]): List<T>
+  + findById(ID): T
+  # setFindByIdParameters(PreparedStatement, ID): void
+  + findAllWithExecutionTime(): List<String>
+  + rollback(): void
+   findQueryAll: String
+   findAllExecutionTime: String
+   insertQuery: String
+   transaction: boolean
+   deletequery: String
+   updatequery: String
+}
+class Handler {
+  + Handler():
+  - create_alert(AlertType, String, String): void
+  + showAlert(boolean, String): void
+}
+class HandlerController {
+  + HandlerController():
+  + validate_controls(Control): boolean
+  + btn_validate(): boolean
+}
+class HarvesinFormula {
+  - HarvesinFormula():
+  + calculate_harvesinDistance(double, double, double, double): double
+}
+class HttpExpireItem {
+  + HttpExpireItem(ClientHttp):
+  + post_expire(String, ObservableList<FieldData>, int): int
+  + fieldata_to_json(FieldData, int): JSONObject
+  + fieldata_to_json_array(ObservableList<FieldData>, int): JSONArray
+}
+class HttpJsonClient {
+  + HttpJsonClient():
+  + post(String, JSONObject): HttpResponse<String>
+  + get(String, String): void
+}
+class HttpStatusException {
+  + HttpStatusException(String):
+}
+class InfoSocietyDao {
+  + InfoSocietyDao(Database):
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class Info_SocietyControllerBase {
+  + Info_SocietyControllerBase(String, InfoSocietyDao):
+  # initialize(): void
+  # condition_event_status(FieldData): Status
+  - setting_province(): String
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event(FieldData): boolean
+   _return_data: FieldData
+}
+class InputValidation {
+  - InputValidation():
+  + validate_digit(String): boolean
+  + validate_lng(String): boolean
+  + validate_double_digit(String): boolean
+  + validate_p_iva(String): boolean
+  + validate_stytch_secret_key(String): boolean
+  + validate_stytch_user_id(String): boolean
+  + validate_stytch_project_id(String): boolean
+  + validate_cap(String): boolean
+  + validate_lat(String): boolean
+  + validate_email(String): boolean
+  + validate_password(String): boolean
+  + get_validation(String, String): boolean
+  - generic_validation(String, String): boolean
+  + validate_audience(String): boolean
+  + validate_lotto_code(String): boolean
+  + filled_text(String): boolean
+}
+class InvoiceViewDialog {
+  + InvoiceViewDialog(String, FieldData, PurchaseCreditNoteDao):
+  + InvoiceViewDialog(String, FieldData, PurchaseOrderDetailDao):
+  - add_header_credit_note(FieldData): void
+  - add_column(): void
+  - add_header_invoice(): void
+}
+class InvoicexConvert {
+  + InvoicexConvert(Type):
+  + fromString(String): FieldData
+  + toString(FieldData): String
+}
+class JsonNotify {
+  + JsonNotify(String, List<String>, String, String):
+  + execute(): void
+  - create_single_notify(): void
+  - create_multi_notify(): void
+  # create_body(JSONObject): String
+}
+class JsonNotifyLottoDao {
+  + JsonNotifyLottoDao(String, List<String>, String, String, LottiDao):
+  # create_body(JSONObject): String
+}
+class KMeans {
+  + KMeans(List<ClusterPoint>, int):
+   _max_centroid: double
+}
+class ListCalculateService {
+  + ListCalculateService():
+  + total(double, double): double
+  + sumbyVats(ObservableList<FieldData>): double
+  + amount_vat(ObservableList<FieldData>): double
+  + sumbyTotals(ObservableList<FieldData>): double
+  + amount_subtotal(ObservableList<FieldData>): double
+  + sumbySubtotals(ObservableList<FieldData>): double
+}
+class Login {
+  + Login():
+  + initialize(URL, ResourceBundle): void
+  + buttonOnAction(ActionEvent): void
+}
+class LotAssigment {
+  + LotAssigment(int, String, int):
+  + LotAssigment():
+  - lot_code: String
+  - quantity_request: int
+  - shelvesAssigmentList: List<ShelvesAssigment>
+  - quantity_occupied: int
+  - id: int
+  - farmaco_id: int
+  + add_assigment(String, int, int, int, int): void
+   farmaco_id: int
+   id: int
+   quantity_request: int
+   quantity_occupied: int
+   lot_code: String
+   shelvesAssigmentList: List<ShelvesAssigment>
+}
+class LotAssigmentDao {
+  + LotAssigmentDao(Database):
+  # setDeleteParameter(PreparedStatement, LotAssigment): void
+  + findByFarmacoAll(): List<FieldData>
+  + findExistsAssigment(int, String): boolean
+  # setUpdateParameter(PreparedStatement, LotAssigment): void
+  + findPharmaHousebyLotCode(String): List<FieldData>
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findQuantitybyFarmacoId(int): List<FieldData>
+  # setInsertParameter(PreparedStatement, LotAssigment): void
+  # mapRow(ResultSet): LotAssigment
+  + findFarmacoQuantity(int): List<FieldData>
+  + findExistAndReturnId(int, String): int
+   insertQuery: String
+   findAllExecutionTime: String
+   deletequery: String
+   updatequery: String
+}
+class LotAssigmentShelvesDao {
+  + LotAssigmentShelvesDao(Database):
+  + findByWarehouse(int): List<ShelvesAssigment>
+  + findByLots(String): List<ShelvesAssigment>
+  # setDeleteParameter(PreparedStatement, ShelvesAssigment): void
+  + findbyShelfCode(String): List<FieldData>
+  # mapRow(ResultSet): ShelvesAssigment
+  # setUpdateParameter(PreparedStatement, ShelvesAssigment): void
+  + findbyLotCode(String): List<FieldData>
+  # setInsertParameter(PreparedStatement, ShelvesAssigment): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  - mapRowFind(ResultSet): FieldData
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class LotDimensionDao {
+  + LotDimensionDao(Database):
+  + findByLots(String, int): Optional<LotDimensionModel>
+  # setFindByIdParameters(PreparedStatement, String): void
+  # setInsertParameter(PreparedStatement, LotDimensionModel): void
+  # mapRow(ResultSet): LotDimensionModel
+  # setUpdateParameter(PreparedStatement, LotDimensionModel): void
+  # setDeleteParameter(PreparedStatement, LotDimensionModel): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class LotDimensionModel {
+  + LotDimensionModel():
+  + LotDimensionModel(String, int, double, double, double, double):
+  - height: double
+  - length: double
+  - deep: double
+  - lot_id: String
+  - farmaco_id: int
+  - weight: double
+  + setWeight(double): void
+   farmaco_id: int
+   weight: double
+   lot_id: String
+   height: double
+   length: double
+   deep: double
+}
+class LotStorageView {
+  + LotStorageView(String, LotAssigmentShelvesDao):
+  # initialize(): void
+  # condition_event(FieldData): boolean
+  - empty_value(): void
+  - setting_value(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event_status(FieldData): Status
+  - listener_btn(): void
+   _return_data: FieldData
+}
+class Lots {
+  + Lots(String, int, Date, int):
+  - lotto: String
+  - farmaco_id: int
+  - elapsed_date: Date
+  - availability: int
+   elapsed_date: Date
+   farmaco_id: int
+   availability: int
+   lotto: String
+}
+class Lotti {
+  + Lotti():
+  + btn_action_add(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+   dialogHandler: DialogControllerBase<FieldData>
+}
+class LottiConvert {
+  + LottiConvert():
+  + toString(FieldData): String
+  + fromString(String): FieldData
+}
+class LottiDao {
+  + LottiDao(Database, String):
+  + findbyDate(int): List<FieldData>
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  + findLotsByFarmacoName(String): List<String>
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findLotsbyPharma(int): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findByLottoCode(String): List<FieldData>
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  + findByFarmaco(int): List<FieldData>
+  + FindByFarmacoNameHaveLot(): List<String>
+  + buildQueryasParameterSearch(String): String
+  # mapRow(ResultSet): FieldData
+  + findBySearch(String, String): List<FieldData>
+  + findByIds(int, String): Optional<FieldData>
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class LottiDialogControllerBase {
+  + LottiDialogControllerBase(String, LottiDao, FarmacoDao, ObservableList<FieldData>):
+  - change_date(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  - listener_button(List<FieldData>): void
+  # condition_event(FieldData): boolean
+  # initialize(): void
+  - setupListener(): void
+  # condition_event_status(FieldData): Status
+   _return_data: FieldData
+}
+class LottoStorageControllerBase {
+  + LottoStorageControllerBase(String, List<GenericJDBCDao>):
+  - visibile_label: Label
+  - bnt_lot_dimension: Button
+  - select_lot: Button
+  - textField_lot_code: TextField
+  ~ lotDimensionDialog: CustomLotsDimension
+  - listener_lot_dimension(): void
+  - calculate_warehouse(): void
+  - table_config(): void
+  - createRowExpander(TableRowDataFeatures<LotAssigment>): Node
+  # condition_event(FieldData): boolean
+  - listener_choice_lot_dialog(): void
+  - listener_button_table(): void
+  # initialize(): void
+  # condition_event_status(FieldData): Status
+  - change_visibility(boolean): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  - listener_text_table(): void
+   bnt_lot_dimension: Button
+   tableLot: TableBase
+   visibile_label: Label
+   textField_lot_code: TextField
+   _return_data: FieldData
+   lotDimensionDialog: CustomLotsDimension
+   select_lot: Button
+}
+class LottoStorageSearchControllerBase {
+  + LottoStorageSearchControllerBase(String, List<GenericJDBCDao>):
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event(FieldData): boolean
+  # initialize(): void
+  # condition_event_status(FieldData): Status
+  + listener_group(): void
+   _return_data: FieldData
+}
+class LottoStorageTableView {
+  + LottoStorageTableView(String, LotAssigmentDao, LotAssigmentShelvesDao):
+}
+class LottoTableBase<T> {
+  + LottoTableBase(String):
+  # setupBaseColumns(TableView<T>): void
+}
+class LottoViewTableView {
+  + LottoViewTableView(String):
+  # setupBaseColumns(TableView<FieldData>): void
+}
+class MagazinoTablebase {
+  + MagazinoTablebase(String, MagazzinoDao):
+  - button_add_warehouse: Button
+  - magazzinoHandler: MagazzinoControllerBase
+  - observableList: ObservableList<WarehouseModel>
+  # setupBaseColumns(TableView<WarehouseModel>): void
+  + add_warehouse_btn(): void
+   button_add_warehouse: Button
+   magazzinoHandler: MagazzinoControllerBase
+   observableList: ObservableList<WarehouseModel>
+}
+class MagazzinoControllerBase {
+  + MagazzinoControllerBase(String, List<GenericJDBCDao>, ObservableList<WarehouseModel>):
+  # condition_event_status(WarehouseModel): Status
+  # initialize(): void
+  # condition_event(WarehouseModel): boolean
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+   _return_data: WarehouseModel
+}
+class MagazzinoDao {
+  + MagazzinoDao(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setDeleteParameter(PreparedStatement, WarehouseModel): void
+  # setUpdateParameter(PreparedStatement, WarehouseModel): void
+  # mapRow(ResultSet): WarehouseModel
+  # setInsertParameter(PreparedStatement, WarehouseModel): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class MagazzinoModelDao {
+  + MagazzinoModelDao(ShelfDao, ShelvesDao, MagazzinoDao):
+   fullWarehouseModel: List<WarehouseModel>
+}
+enum MouseType << enumeration >> {
+  - MouseType(int):
+  - status: int
+  + valueOf(String): MouseType
+  + values(): MouseType[]
+   status: int
+}
+class NotificationPanelLib {
+  + NotificationPanelLib(Node):
+  + show(String): void
+  + hide(): void
+   autoHideDuration: Duration
+   pane: Region
+   graphic: Node
+}
+class Notify {
+  + Notify():
+  + createWithButtonClick(String, String, Window): void
+  + create(String, String): void
+}
+class NotifyPanel {
+  + NotifyPanel():
+}
+class OrderTableView {
+  + OrderTableView(String):
+  # setupBaseColumns(TableView): void
+}
+class OrdersPharmacist {
+  + OrdersPharmacist(SellerOrderDetails, FarmaciaDao, SellerOrderDao):
+  + calculatePharmacyByOrder(int): List<PharmacyAssigned>
+}
+enum PathConfig << enumeration >> {
+  - PathConfig(String):
+  - value: String
+  + values(): PathConfig[]
+  + valueOf(String): PathConfig
+   value: String
+}
+class PayLoadStytch {
+  + PayLoadStytch():
+  + buildSearch_All(): String
+  + buildSearchByEmail(String): String
+  + reset_password(String, String): JSONObject
+  + buildSession(String): String
+  + create_user_pharmacist(String, String, String, String, int): String
+  + buildAuthPayload_jwt_token(String): String
+  + get_user(String, String): String
+  + create_user(String, String, String, String): String
+  + buildUpadateRole(String): JSONObject
+  + buildAuthPayload_token(String): JSONObject
+  + create_user_pharmacist(String, String, String, String, String, int): String
+  + buildUpdateTustedMetadataIsEnable(boolean): JSONObject
+}
+class Pharma {
+  + Pharma():
+  + add_pharma_action(): void
+  ~ edit_pharma_event(): void
+  + initialize(URL, ResourceBundle): void
+}
+class PharmaDao {
+  + PharmaDao(Database):
+  # mapRow(ResultSet): FieldData
+  + findAllName(): List<FieldData>
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class PharmaDialogControllerBase {
+  + PharmaDialogControllerBase(String, PharmaDao, ObservableList<FieldData>):
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  + setOperation(Mode, FieldData): void
+  # condition_event_status(FieldData): Status
+  # condition_event(FieldData): boolean
+  # initialize(): void
+   _return_data: FieldData
+   update: FieldData
+}
+class PharmacistControllerBaseCreate {
+  + PharmacistControllerBaseCreate(FarmaciaDao, UserGateway):
+  # condition_event(FieldData): boolean
+  # initialize(): void
+  # condition_event_status(FieldData): Status
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  + settingCombo(): void
+   _return_data: FieldData
+}
+class PharmacyAssigned {
+  + PharmacyAssigned(Farmacia, int):
+  - quantity: int
+  - farmacia: Farmacia
+   quantity: int
+   farmacia: Farmacia
+}
+class PharmacyDistance {
+  + PharmacyDistance(List<Farmacia>):
+  + PharmacyDistance(List<Farmacia>, Point):
+  - farmaciaList: List<Farmacia>
+  - average: Point
+   farmaciaList: List<Farmacia>
+   average: Point
+}
+class Picco {
+  + Picco():
+  + calculate_analisi_picco(List<Acquisto>, int): Optional<List<Acquisto>>
+  + get_average(List<Acquisto>): double
+  + generate_standard_devation(List<Acquisto>): double
+  + generate_array_input(List<Acquisto>): double[]
+  + calculate_soglia_picco(double, double, double): double
+  + extract_farmaco_byId(int, List<Acquisto>): List<Acquisto>
+}
+class PiccoAcquisto {
+  + PiccoAcquisto():
+}
+class PiccoDialog {
+  + PiccoDialog(String, List<Acquisto>, FarmacoDao):
+  - listenerBtnChoice(): void
+  - setting_header_farmaco(): void
+  - listenerBtnSend(): void
+  - config_table(): void
+}
+class PlacementShelf {
+  + PlacementShelf(List<ShelfInfo>):
+  + extract_max_shelf(HashMap<ShelfInfo, Integer>, int): Optional<ShelfInfo>
+  - random_info(List<ShelfInfo>, int): ShelfInfo?
+  + assignmentLots(LotDimensionModel, int): LotAssigment
+  + filter_value(List<Entry<ShelfInfo, Integer>>, int): List<Entry<ShelfInfo, Integer>>
+  + assignmentLotsChoice(LotDimensionModel, int): List<LotAssigment>
+  + sorted_max_shelf_with(HashMap<ShelfInfo, Integer>): List<Entry<ShelfInfo, Integer>>
+  + calculate_fit(LotDimensionModel, ShelvesRemain, int, ShelfInfo): boolean
+  + calculate_max_fit(HashMap<ShelfInfo, List<ShelvesRemain>>): HashMap<ShelfInfo, Integer>
+  + calculatePlacement(LotDimensionModel): HashMap<ShelfInfo, List<ShelvesRemain>>
+  + placingIntoShelf(LotDimensionModel, ShelfInfo, int, List<ShelvesRemain>, LotAssigment): int
+}
+class PollingClient {
+  + PollingClient(ClientHttp):
+  + send(String): ScheduledFuture<String>
+}
+class PopulateChoice<T> {
+  + PopulateChoice(DetailDao, PharmaDao):
+  + PopulateChoice(GenericJDBCDao<FieldData, T>):
+  + populate(String): List<FieldData>
+}
+class Price {
+  + Price():
+  + initialize(URL, ResourceBundle): void
+  + btn_action_add(ActionEvent): void
+}
+class Price {
+  + Price():
+  + start(Stage): void
+  + main(String[]): void
+}
+class PriceSuggestConf {
+  + PriceSuggestConf(double, int, int):
+  ~ gain: double
+  ~ min_day_expire: int
+  ~ medium_stock_item: int
+   min_day_expire: int
+   gain: double
+   medium_stock_item: int
+}
+class PriceSuggestion {
+  + PriceSuggestion(PriceSuggestConf, TrendMarket, SuggestPriceConfigDao, PurchaseOrderDetailDao):
+  + calculate_day(double, double): double
+  + calculate_price_centroid(KMeans): double
+  + gain(double): double
+  + calculate_trend_market(double, int): double
+  + suggest_price(int): double
+  + calculate_stock(double, double): double
+}
+class ProductTableCustom {
+  + ProductTableCustom(String):
+  # setupBaseColumns(TableView<FieldData>): void
+}
+class Promotion {
+  + Promotion():
+  + btn_action_add(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+}
+class Promotion {
+  + Promotion():
+  + start(Stage): void
+  + main(String[]): void
+}
+class PromotionDao {
+  + PromotionDao(Database):
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # mapRow(ResultSet): FieldData
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+   productNoPromotionActive: List<FieldData>
+}
+class PromotionData {
+  + PromotionData(double[], double[], List<Date>, int[], double, int, int):
+  - current_price: double
+  - current_stock_quantity: int[]
+  - min_day_expire: int
+  - sellerPriceHistory: double[]
+  - current_date: List<Date>
+  - medium_stock_item: int
+  - currentPurchasePrices: double[]
+   current_date: List<Date>
+   medium_stock_item: int
+   current_price: double
+   min_day_expire: int
+   sellerPriceHistory: double[]
+   current_stock_quantity: int[]
+   currentPurchasePrices: double[]
+}
+class PromotionHandler {
+  + PromotionHandler(PurchaseOrderDetailDao, SellerOrderDetails, LottiDao, LotAssigmentDao, SellerPriceDao):
+  + calculate_discount(int): int
+}
+class PromotionsSuggestService {
+  + PromotionsSuggestService():
+  + current_date(List<FieldData>): List<Date>
+  + current_qty(List<FieldData>): int[]
+  + productPrice(List<FieldData>): double[]
+  + get_promotion_discount(PromotionData): int
+  - get_discount(double): int
+}
+class Purchase {
+  + Purchase():
+  - change_stages(Parent, double): void
+  + report_action(ActionEvent): void
+  ~ ordini_action(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+  + handleButton(Button): void
+  ~ dettagli_action(ActionEvent): void
+  ~ farmaci_action(ActionEvent): void
+  ~ pharma_action(ActionEvent): void
+  ~ raccomandazioni_action(ActionEvent): void
+  ~ lotti_action(ActionEvent): void
+  ~ fattura_acquisto_action(ActionEvent): void
+}
+class Purchase {
+  + Purchase():
+  + main(String[]): void
+  + start(Stage): void
+}
+class PurchaseCreditNote {
+  + PurchaseCreditNote():
+  + btn_action_add(ActionEvent): void
+  - createExpandendRowInner(TableRowDataFeatures<FieldData>): VBox
+  + initialize(URL, ResourceBundle): void
+}
+class PurchaseCreditNoteControllerBase {
+  + PurchaseCreditNoteControllerBase(String, FieldData, List<GenericJDBCDao>):
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # initialize(): void
+  - calculus_attribute(): void
+  - add_column(): void
+  # condition_event(FieldData): boolean
+  # condition_event_status(FieldData): Status
+  - add_header(FieldData): void
+   _return_data: FieldData
+}
+class PurchaseCreditNoteDao {
+  + PurchaseCreditNoteDao(Database):
+  + findbyInvoiceid(int): FieldData
+  + findDetailbyInvoiceId(int): List<FieldData>
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  + exist_credit_note(int): boolean
+  # mapRow(ResultSet): FieldData
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class PurchaseCreditNoteDetailDao {
+  + PurchaseCreditNoteDetailDao(Database):
+  # mapRow(ResultSet): FieldData
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findDetailbyCreditNoteId(int): List<FieldData>
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class PurchaseInvoice {
+  + PurchaseInvoice():
+  - createExpandendRow(TableRowDataFeatures<FieldData>): VBox
+  + double_click(): void
+  + initialize(URL, ResourceBundle): void
+  + btn_action_add(ActionEvent): void
+}
+class PurchaseInvoiceControllerBase {
+  + PurchaseInvoiceControllerBase(PurchaseInvoiceDao, PurchaseOrderDao):
+  + PurchaseInvoiceControllerBase(PharmaDao, PurchaseInvoiceDao, PurchaseOrderDao, SimpleBooleanProperty):
+  - resetLabelText(Label[]): void
+  + listen_toggle(): void
+  # initialize(): void
+  - calculus_attribute(): void
+  - listener_pharma(PurchaseOrderDao): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event(FieldData): boolean
+  - setting_id_radio(): void
+  # condition_event_status(FieldData): Status
+  - listen_menu_item_remove(MenuItem): void
+  - add_column(): void
+  - listen_order_add_row(): void
+   _return_data: FieldData
+}
+class PurchaseInvoiceDao {
+  + PurchaseInvoiceDao(Database):
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # mapRow(ResultSet): FieldData
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class PurchaseOrderControllerBase {
+  + PurchaseOrderControllerBase(LottiDao, PurchaseOrderDao, PurchaseOrderDetailDao, SimpleBooleanProperty, PharmaDao):
+  - add_column(): void
+  # condition_event_status(FieldData): Status
+  - listener_group(): void
+  # condition_event(FieldData): boolean
+  + calculus_attribute(): void
+  - listen_combo_pharma(LottiDao): void
+  - listen_combo(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  - listen_menu_item_remove(MenuItem): void
+  + listener_combo_farmaco(): void
+  - listener_boolean_change(): void
+  # initialize(): void
+   _return_data: FieldData
+}
+class PurchaseOrderDao {
+  + PurchaseOrderDao(Database):
+  + findAllWithInvoiceIdNullByPharmaId(int): List<FieldData>
+  + findByInvoiceid(int): List<FieldData>
+  + findbyPharmaHousebyInvoiceID(int): String
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, String): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class PurchaseOrderDetailDao {
+  + PurchaseOrderDetailDao(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findAllReportData(): List<FieldData>
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  + findDetailbyPurchaseOrderId(int): List<FieldData>
+  + findByProductPrice(int): List<FieldData>
+  # mapRow(ResultSet): FieldData
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class PurchaseOrdini {
+  + PurchaseOrdini():
+  + PurchaseOrdini(PurchaseOrderDao, LottiDao, PharmaDao):
+  + table_id: TableView<FieldData>
+  - createExpandendRow(TableRowDataFeatures<FieldData>): VBox
+  + initialize(URL, ResourceBundle): void
+  + btn_action_add(ActionEvent): void
+  - setvalue(): void
+   table_id: TableView<FieldData>
+}
+class Query {
+  - Query():
+  + equal(String, String): String
+  + filterUsersByRole(String, String): List<Map<String, Object>>
+  + Like(String, String): String
+}
+class RadioButtonTableColumn<S> {
+  + RadioButtonTableColumn():
+  - value_radio_property_choice: SimpleObjectProperty<S>
+  - radioMap: ObservableMap<S, RadioButton>
+  - createRadiobuttonCellFactory(): Callback<TableColumn<S, Void>, TableCell<S, Void>>
+  # onButtonClick(S): void
+  + value_radio_property_choiceProperty(): SimpleObjectProperty<S>
+   value_radio_property_choice: Object
+   radioMap: ObservableMap<S, RadioButton>
+}
+class RadioOptions {
+  + RadioOptions(String, String):
+  - label: String
+  - id: String
+   id: String
+   label: String
+}
+class ReportHandlerBaseYearMonth {
+  + ReportHandlerBaseYearMonth(String):
+  - button: Button
+  - label_result: Label
+  - yearMonthPicker2: YearMonthPicker
+  - labelHeader: Label
+  - yearMonthPicker: YearMonthPicker
+  - label_description: Label
+   yearMonthPicker2: YearMonthPicker
+   labelResult: String
+   button: Button
+   yearMonthPicker: YearMonthPicker
+   label_description: Label
+   hiddenYerMonthPicker2: boolean
+   label_result: Label
+   labelHeader: String
+}
+class RolesStage {
+  + RolesStage():
+  + change_stage(String, Stage): void
+}
+class SecureChatServer {
+  + SecureChatServer(int, String, char[]):
+  - createSSLServerSocket(String, char[]): SSLServerSocket
+  + main(String[]): void
+  + shutdown(): void
+  + start(): void
+}
+class SecurePasswordGenerator {
+  + SecurePasswordGenerator():
+  + getRandomCharacter(String): char
+  + generatePassword(int): String
+}
+class Seller {
+  + Seller():
+  + main(String[]): void
+  + start(Stage): void
+}
+class Seller {
+  + Seller():
+  + Seller(FarmaciaDao, UserGateway):
+  + pharmacist_action(ActionEvent): void
+  + expire_action(ActionEvent): void
+  + order_action(ActionEvent): void
+  - change_stages(Parent, double): void
+  + farmacia_action(ActionEvent): void
+  + btn_chat_action(ActionEvent): void
+  + btn_action_price(ActionEvent): void
+  + invoice_action(ActionEvent): void
+  + btnPromotion(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+   window: Window
+}
+class SellerCreditNoteDao {
+  + SellerCreditNoteDao(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SellerCreditNoteDetailDao {
+  + SellerCreditNoteDetailDao(Database):
+  - table_name: String
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setDeleteParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+   table_name: String
+}
+class SellerInvoice {
+  + SellerInvoice(SellerInvoiceDao):
+  + initialize(URL, ResourceBundle): void
+  + action_send_btn(ActionEvent): void
+}
+class SellerInvoiceDao {
+  + SellerInvoiceDao(Database):
+  + findByRangeBetweenAndRagioneSociale(Date, Date, String): List<FieldData>
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  + findByOrderID(int): FieldData
+  # setDeleteParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SellerOrder {
+  + SellerOrder(SellerOrderDao, SellerOrderDetails):
+  - createExpandendRow(TableRowDataFeatures<FieldData>): VBox
+  + initialize(URL, ResourceBundle): void
+  + editAction(ActionEvent): void
+  + action_send_btn(ActionEvent): void
+}
+class SellerOrderControllerBase {
+  + SellerOrderControllerBase(String, SellerOrderDao, SellerOrderDetails, SellerInvoiceDao, SellerCreditNoteDao, SellerCreditNoteDetailDao):
+  - search_btn: Button
+  - orderTableView: OrderTableView
+  - radioButtonTableColumn: RadioButtonTableColumn<FieldData>
+  - group_choice: ToggleGroup
+  # initialize(): void
+  # condition_event(FieldData): boolean
+  - isValidInteger(String): boolean
+  + listener_textfield(): void
+  - setting_column_tb_invoice(): void
+  # condition_event_status(FieldData): Status
+  + listener_range_end(): void
+  - setting_header_invoice(): void
+  + listener_spinner(): void
+  + execute_query(String, TableView<FieldData>): void
+  + send_order(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  + setting_listener_checkbox(): void
+  + listener_choice(): void
+   group_choice: ToggleGroup
+   radioButtonTableColumn: RadioButtonTableColumn<FieldData>
+   _return_data: FieldData
+   orderTableView: OrderTableView
+   search_btn: Button
+}
+class SellerOrderDao {
+  + SellerOrderDao(Database):
+  + findById(Integer): FieldData
+  + addRowSearch(ResultSet): FieldData
+  + findByIdWhereNotExistintoSellerCreditNote(Integer): FieldData
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  + findAllOrderNotExistinSellerOrder(): List<FieldData>
+  + findByRangeBetweenAndRagioneSocialeWhereNotExistCreditNote(Date, Date, String): List<FieldData>
+  # mapRow(ResultSet): FieldData
+  + findAllWithPharmaName(): List<FieldData>
+  + addOrderSearch(ResultSet): FieldData
+  + findByRangeBetweenAndRagioneSociale(Date, Date, String): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findByOrders(int): List<FieldData>
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SellerOrderDetails {
+  + SellerOrderDetails(Database):
+  + findbyProduct(int): List<FieldData>
+  # mapRow(ResultSet): FieldData
+  + findbyOrderId(int): List<FieldData>
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  + findDetailbySellerOrderId(int): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SellerOrders {
+  + SellerOrders(int, int, Date):
+  - quantity: int
+  - date_order: Date
+  - farmaco_id: int
+   farmaco_id: int
+   quantity: int
+   date_order: Date
+}
+class SellerPriceDao {
+  + SellerPriceDao(Database):
+  + findNotExistPrice(): List<FieldData>
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findCurrentPricebyFarmaco(int, String): double
+  + findCurrentPricebyFarmaco(int): double
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class Session {
+  + Session():
+  + Session(List<Sessions>):
+  - sessions: List<Sessions>
+   sessions: List<Sessions>
+}
+class ShelfControllerBase {
+  + ShelfControllerBase(String, List<GenericJDBCDao>, ObservableList<ShelfInfo>):
+  # initialize(): void
+  # condition_event_status(ShelfInfo): Status
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event(ShelfInfo): boolean
+   _return_data: ShelfInfo
+}
+class ShelfDao {
+  + ShelfDao(Database):
+  # setFindByIdParameters(PreparedStatement, String): void
+  # mapRow(ResultSet): ShelfInfo
+  # setDeleteParameter(PreparedStatement, ShelfInfo): void
+  # setUpdateParameter(PreparedStatement, ShelfInfo): void
+  # setInsertParameter(PreparedStatement, ShelfInfo): void
+  + findShelfByMagazzinoId(int): List<ShelfInfo>
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class ShelfInfo {
+  - ShelfInfo():
+  - ShelfInfo(ShelfInfoBuilder):
+  - weight: int
+  - shelf_thickness: double
+  - num_rip: int
+  - height: double
+  - lenght: double
+  - deep: double
+  - shelf_code: String
+  - shelvesCapacities: List<ShelvesCapacity>
+  - magazzino_id: int
+  - nome_magazzino: String
+  + space_shelves_space_exist(LotDimensionModel): Optional<List<ShelvesCapacity>>
+  + remaining_levels(LotDimensionModel): Optional<List<ShelvesRemain>>
+  + canFitProduct(LotDimensionModel): boolean
+  - order_by_increase(List<ShelvesRemain>): List<ShelvesRemain>
+   nome_magazzino: String
+   num_rip: int
+   magazzino_id: int
+   shelf_code: String
+   weight: int
+   lenght: double
+   height: double
+   shelvesCapacities: List<ShelvesCapacity>
+   shelf_thickness: double
+   deep: double
+}
+class ShelfTableBased {
+  + ShelfTableBased(String, MagazzinoDao, ShelfDao, ShelvesDao):
+  + actionBtn(): void
+  + table_config(): void
+  # setupBaseColumns(TableView<ShelfInfo>): void
+}
+class ShelvesAssigment {
+  + ShelvesAssigment(int, String, int, int, int):
+  + ShelvesAssigment(int, int):
+  + ShelvesAssigment(String, int, int, int, int):
+  - quantity: int
+  - id: int
+  - shelf_code: String
+  - magazzino_id: int
+  - lot_assigment: int
+   id: int
+   lot_assigment: int
+   quantity: int
+   shelf_level: int
+   magazzino_id: int
+   shelf_code: String
+}
+class ShelvesCapacity {
+  + ShelvesCapacity():
+  + ShelvesCapacity(String, int, double, double, double):
+  + ShelvesCapacity(int, String, int, double, double, double):
+  - num_shelf: int
+  - occupied_deep: double
+  - code: int
+  - current_weight: double
+  - occupied_length: double
+  - warehouse_shelf: String
+   code: int
+   num_shelf: int
+   warehouse_shelf: String
+   current_weight: double
+   occupied_deep: double
+   occupied_length: double
+}
+class ShelvesDao {
+  + ShelvesDao(Database):
+  # setDeleteParameter(PreparedStatement, ShelvesCapacity): void
+  # setInsertParameter(PreparedStatement, ShelvesCapacity): void
+  # setUpdateParameter(PreparedStatement, ShelvesCapacity): void
+  # mapRow(ResultSet): ShelvesCapacity
+  + findByShelvesByShelf(String): List<ShelvesCapacity>
+  # setFindByIdParameters(PreparedStatement, Integer): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class ShelvesRemain {
+  + ShelvesRemain(ShelvesCapacity, int):
+  - shelvesCapacity: ShelvesCapacity
+  - quantity: int
+   shelvesCapacity: ShelvesCapacity
+   quantity: int
+}
+class SimulateEvents {
+  - SimulateEvents():
+  + fireMouseClick(DatePicker): void
+  + setRadioBox(ObservableMap<S, RadioButton>, S): void
+  + CheckRemovedElemList(ObservableList<FieldData>): int
+  + fireItemMenu(TableView<FieldData>, int, int): void
+  + clickOn(Control): void
+  + openYearMonthPIcker(YearMonthPicker): void
+  + RightMouseClickMouse(Control): void
+  + WaitAddedItemsTable(TableView): void
+  + openContextMenu(TableView<FieldData>, int): void
+  + keyPress(Window, KeyCode): void
+  + setCheckBox(ObservableMap<S, CheckBox>, S): void
+  + writeOn(String, String, Scene): void
+  + setSpinnerDouble(Spinner<Double>, double): void
+  + clickOnButton(String, Scene): void
+  + setSpinner(Spinner<Integer>, int): void
+  + showControl(ComboBoxBase<T>): void
+  + PrimaryMouseClickMouse(Control): void
+  + writeOn(TextField, String): void
+  + showControl(ChoiceBox<T>): void
+  + isVisible(Control): boolean
+  + openDatePicker(DatePicker): void
+  + simulate_selected_items(ChoiceBox<T>, T): void
+  + keyPress(Control, KeyCode): void
+  + setNElementChoiceBox(ChoiceBox<T>, int): void
+   firstElementSearchableBox: SearchableComboBox<T>
+   lastRadioBox: ObservableMap<S, RadioButton>
+   firstElementChoiceBox: ChoiceBox<T>
+}
+class SingleProductSuggest {
+  + SingleProductSuggest(List<Lots>, SuggestConfig, List<SellerOrders>):
+  + calculate_suggest(): boolean
+  + calculateDateofSum(): long
+  + calculate_average_availability(): long
+  + calculate_average_seller_order_quantity(): int
+}
+class SpesaMensile {
+  + SpesaMensile(YearMonth):
+  - meseAnno: YearMonth
+  - quantitaTotale: int
+  - prezzoMedio: double
+  - spesaTotale: double
+  - numeroOrdini: int
+  - variazionePercentuale: double
+  + calcolaPrezzoMedio(): void
+  + aggiungiAcquisto(Acquisto): void
+  + toString(): String
+   variazionePercentuale: double
+   prezzoMedio: double
+   quantitaTotale: int
+   meseAnno: YearMonth
+   numeroOrdini: int
+   spesaTotale: double
+}
+class SpeseAcquisti {
+  + SpeseAcquisti(String, List<Acquisto>):
+  + listener_btn(): void
+}
+class SpinnerGeneric {
+  + SpinnerGeneric():
+  - listener_spinner(): void
+}
+class SpinnerTableCellOrder<K> {
+  + SpinnerTableCellOrder(Class<K>, SimpleIntegerProperty, String):
+  + SpinnerTableCellOrder(Class<K>, K, K, K, SimpleBooleanProperty, String):
+  - listener(): void
+}
+class SpinnerTableCells<T, K> {
+  + SpinnerTableCells(Class<K>, K, K, K):
+  + SpinnerTableCells(Class<K>):
+  - spinner: Spinner<K>
+  # updateItem(K, boolean): void
+   spinner: Spinner<K>
+}
+class SpostaLottoControllerBase {
+  + SpostaLottoControllerBase(String, LotAssigmentDao, LotAssigmentShelvesDao, MagazzinoDao, ShelfDao):
+  - listener_btnAdd(): void
+  # initialize(): void
+  - empty_value(): void
+  - listener_warehouse(ShelfDao): void
+  # condition_event(FieldData): boolean
+  # condition_event_status(FieldData): Status
+  - listener_btn_table_choice(): void
+  - setting_table_select(): void
+  - disabled_choice(boolean): void
+  - listener_choice(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  - listener_shelf(): void
+  - setting_convert_shelf(): void
+  - setting_convert_shelevs(): void
+  - listener_btn_send(): void
+   _return_data: FieldData
+}
+class Stages {
+  + Stages():
+  + load(String): FXMLLoader
+  + init(): void
+  + load_fxml(String): Parent
+  + change_stage(String, Stage): void
+}
+class Status {
+  + Status(String, boolean):
+  + Status():
+  - condition: boolean
+  - message: String
+   message: String
+   condition: boolean
+}
+class StorageToken {
+  - StorageToken():
+  + store_token(String): void
+   _token: String
+}
+class StytchClient {
+  + StytchClient(String, String, String):
+  + StytchClient(String, String, String, ClientHttp):
+  + create_user_pharmacist(String, String, String, String, int): HttpResponse<String>
+  + update_user(String, JSONObject): HttpResponse<String>
+  + authenticate_jwt_token(String): HttpResponse<String>
+  + get_user_by_email(String): HttpResponse<String>
+  + get_session(String): HttpResponse<String>
+  + get_user(String): HttpResponse<String>
+  + create_user(String, String, String, String): HttpResponse<String>
+  + login(String, String): HttpResponse<String>
+  + reset_password_start(String, String): HttpResponse<String>
+   _users: HttpResponse<String>
+}
+class StytchRequest {
+  + StytchRequest(String):
+  + search_by_user_id(String, String): HttpRequest
+  + auth_request(String, String): HttpRequest
+  + update_user(String, JSONObject): HttpRequest
+  + search_all(String, String): HttpRequest
+  - basic_request_post(String): Builder
+  + session_user(String, String): HttpRequest
+  + search_by_email(String, String): HttpRequest
+  + reset_password_start_body(String, JSONObject): HttpRequest
+}
+class SuggestConfig {
+  + SuggestConfig(long, int, int):
+  - maxium_availability: int
+  - maxium_expire_day: long
+  - minimum_seller_order: int
+   maxium_availability: int
+   maxium_expire_day: long
+   minimum_seller_order: int
+}
+class SuggestDaoConfig {
+  + SuggestDaoConfig(String, Database):
+  # setDeleteParameter(PreparedStatement, SuggestConfig): void
+  # setUpdateParameter(PreparedStatement, SuggestConfig): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # mapRow(ResultSet): SuggestConfig
+  # setInsertParameter(PreparedStatement, SuggestConfig): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SuggestPrice {
+  + SuggestPrice(FarmacoDao, DetailDao):
+  + on_action_send(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+}
+class SuggestPriceConfigDao {
+  + SuggestPriceConfigDao(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  + findById(Integer): FieldData
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SuggestPriceControllerBase {
+  + SuggestPriceControllerBase(String, SellerPriceDao, PriceSuggestion, SimpleBooleanProperty):
+  # condition_event_status(FieldData): Status
+  - listener_btn_choice(): void
+  # condition_event(FieldData): boolean
+  # initialize(): void
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+   _return_data: FieldData
+}
+class SuggestPriceHandlerController {
+  + SuggestPriceHandlerController(TextField, SearchableComboBox<FieldData>, FarmacoDao, DetailDao):
+  + btn_validate(): boolean
+  + execute_table(): void
+}
+class SuggestPromotionControllerBase {
+  + SuggestPromotionControllerBase(String, SellerPriceDao, PromotionHandler, PromotionDao, SimpleBooleanProperty):
+  # initialize(): void
+  # condition_event(FieldData): boolean
+  # initialize(Optional<PopulateChoice<K>>, Optional<List<GenericJDBCDao>>, Optional<FieldData>): void
+  # condition_event_status(FieldData): Status
+  - listener_btn_choice(): void
+  - listener_choice(): void
+   _return_data: FieldData
+}
+class SuggestPurchase {
+  + SuggestPurchase(FarmacoDao, LotAssigmentDao, SuggestConfig, SellerOrderDao):
+  + SuggestPurchase():
+  - view_suggest(boolean): String
+  + initialize(URL, ResourceBundle): void
+  + send_action_btn(ActionEvent): void
+  - config_table(): void
+  - convert_fs_orders(List<FieldData>): List<SellerOrders>
+  - convert_fd_lots(List<FieldData>): List<Lots>
+}
+enum SuggestionFormula << enumeration >> {
+  - SuggestionFormula(double):
+  ~ value: double
+  + valueOf(String): SuggestionFormula
+  + values(): SuggestionFormula[]
+   value: double
+}
+class TableBase<T> {
+  + TableBase(String):
+  - tableView: TableView<T>
+  - radio_value: SimpleObjectProperty<T>
+  + add_radio(): RadioButtonTableColumn<T>
+  + add_check_box_column(): CheckBoxTableColumn<T>
+  # setupBaseColumns(TableView<T>): void
+   _checkbox_instance: ObservableMap<T, CheckBox>
+   tableView: TableView<T>
+   radio_value: SimpleObjectProperty<T>
+   _radioButton: ObservableMap<T, RadioButton>
+   checkBoxValue: SimpleObjectProperty<T>
+}
+class TableCustom {
+  + TableCustom(String, LottiDao):
+  - textField_search: TextField
+  - choiceBox: ChoiceBox<String>
+  + listener_checkbox(): void
+  + listener_textfield(): void
+  + listener_choicebox(): void
+  - swap(ObservableList<Node>): void
+   selectedRows: ObservableSet<FieldData>
+   mapCheckBox: ObservableMap<FieldData, CheckBox>
+   choiceBox: ChoiceBox<String>
+   textField_search: TextField
+}
+class TableUtilityService {
+  + TableUtilityService():
+  + generate_column_string(String, String): TableColumn<S, String>
+  + generate_tree_column_string(String, String): TreeTableColumn<S, String>
+  + generate_tree_column_int(String, String): TreeTableColumn<S, Integer>
+  + generate_column_double(String, String): TableColumn<S, Double>
+  + generate_column_date(String, String): TableColumn<S, Date>
+  + generate_column_timestamp(String, String): TableColumn<S, Timestamp>
+  + formatting_double(TableColumn<T, Double>): void
+  + generate_column_int(String, String): TableColumn<S, Integer>
+  + formatting_timestamp(TableColumn<T, Timestamp>): void
+  + generate_tree_column_double(String, String): TreeTableColumn<S, Double>
+}
+class TextFieldComboBox<T> {
+  + TextFieldComboBox(ObservableList<T>):
+  - textField: TextField
+  - choiceBox: ChoiceBox<T>
+  - vBox: VBox
+  # createDefaultSkin(): Skin<?>
+  - setFont(): void
+  + setpromptValue(String): void
+  - initialize(): void
+   choiceBox: ChoiceBox
+   convert: StringConverter<T>
+   vBox: VBox
+   textField: TextField
+}
+class TextFieldComboBoxSkin {
+  # TextFieldComboBoxSkin(TextFieldComboBox):
+}
+class TokenUtility {
+  - TokenUtility():
+  + extract_sub(String): String
+  + extractPermissions(String): String
+  + extract_email(String): String
+  - extactObjectFromJsonArray(String): JSONObject
+  + extractEmailByUserId(String): String
+  + extractRole(String): String
+  + check_permission(String, String, String): boolean
+  + extract_token(String): String
+}
+class TrasformValue {
+  + TrasformValue():
+  + adjust_factor(double, double): double
+  + cost(double, double): double
+  + calculateAverageEpoch(List<Date>): long
+  + average(int[]): int
+  + round_percentuages(double): double
+  + adjust_factor(double): double
+  # percentageFromNormalized(double): int
+  # normalizeValue2(double, double): double
+  + calculate_percent_gain(double[], double[], double[], double): double
+  + calculateExpirationUrgency(long, double): double
+  + calculus_trend(double): double
+  + round_one(double): double
+  + trim_two(double): double
+  + remaining_day(long): long
+  + normalize_percentuages(double): double
+  + gain(double, double): double
+  + average(double[]): double
+  + adjust_factor_two(double, double): double
+  + normalizeValue(double, double): double
+}
+class Trend {
+  + Trend(String, List<Acquisto>):
+  + listener_btn(): void
+}
+class TrendMarket {
+  + TrendMarket(ClientHttp, URI):
+  + extract_trend_market(int): double
+}
+enum TrendType << enumeration >> {
+  + TrendType():
+  + values(): TrendType[]
+  + valueOf(String): TrendType
+}
+class User {
+  + User():
+  + User(List<Results>):
+  - trustedMetadata: TrustedMetadata
+  - results: List<Results>
+  - status: int
+   trustedMetadata: TrustedMetadata
+   results: List<Results>
+   status: int
+}
+class UserGateway {
+  + UserGateway(StytchClient):
+  - validate_user(String): boolean
+  + GettingUserInfoByUserId(String): UserGatewayResponse
+  + authenticate_jwt(String): UserGatewayResponse
+  + register(String, String, String, String, String): UserGatewayResponse
+  + searchUsers(): UserGatewayResponse
+  + deserialization_object(String, Class<T>): Optional<T>
+  + extract_Session_role(User, String): User
+  + recent_last_access(Session): Optional<Instant>
+  + add_latest_access(User): User
+  + searchUserByEmail(String): User
+  + user_update_role(String, String): UserGatewayResponse
+  + authenticate(String, String): UserGatewayResponse
+  + extract_results(String): String
+  + get_user_byRole(String): User
+  + user_revocate(String, boolean): UserGatewayResponse
+  + register_pharmacist(String, String, String, String, String, int): UserGatewayResponse
+}
+class UserGatewayResponse {
+  + UserGatewayResponse(String, int):
+  - status: int
+  - body: String
+   body: String
+   status: int
+}
+class UtilityService {
+  + UtilityService():
+  + extract_province(String): List<FieldData>
+  + refuse(): ButtonType
+  + extract_value_from_list(List<K>, Class<T>): List<T>
+  + accept(): ButtonType
+  + resetLabelText(Label[]): void
+  + create_alert_confirm(AlertType, String, String): Alert
+  + network_status(int): void
+  + getRequiredDoubleFromMap(Map<String, String>, String): double
+  + create_alert(AlertType, String, String): void
+  + set_fieldText(String, TextField, TextField, TextField): void
+  + create_btn(Button, String): void
+  + search_item(TableView<FieldData>, TextField): void
+  + add_iconButton(Button, Ikon): void
+}
+class Variazione {
+  + Variazione(String, List<Acquisto>):
+  + listener_btn(): void
+}
+class Warehouse {
+  + Warehouse():
+  + Warehouse(MagazzinoDao, ShelfDao, ShelvesDao, LotAssigmentDao, LotAssigmentShelvesDao):
+  + shelf_action(ActionEvent): void
+  + sposta_lotto_action(ActionEvent): void
+  + lots_action(ActionEvent): void
+  + warehouse_action(ActionEvent): void
+  + lot_view(ActionEvent): void
+}
+class Warehouse {
+  + Warehouse():
+  + main(String[]): void
+  + start(Stage): void
+}
+class WarehouseDistances {
+  + WarehouseDistances(WarehouseModel, List<Farmacia>, double):
+  - farmacia: List<Farmacia>
+  - warehouseModel: WarehouseModel
+  - distance: double
+   distance: double
+   farmacia: List<Farmacia>
+   warehouseModel: WarehouseModel
+}
+class WarehouseModel {
+  + WarehouseModel(int, String, String, String, String):
+  + WarehouseModel(String):
+  + WarehouseModel(int, String, PGgeometry):
+  + WarehouseModel():
+  + WarehouseModel(int, String, PGgeometry, List<ShelfInfo>):
+  + WarehouseModel(int, String, PGgeometry, String, String, String, List<ShelfInfo>):
+  - pGgeometry: PGgeometry
+  - province: String
+  - shelfInfos: List<ShelfInfo>
+  - nome: String
+  - id: int
+  - address: String
+  - comune: String
+   id: int
+   shelfInfos: List<ShelfInfo>
+   nome: String
+   comune: String
+   province: String
+   address: String
+   pGgeometry: PGgeometry
+}
+class Warehouse_shelf {
+  + Warehouse_shelf(String, Database):
+  # setFindByIdParameters(PreparedStatement, String): void
+  # setInsertParameter(PreparedStatement, ShelfInfo): void
+  # mapRow(ResultSet): ShelfInfo
+  # setUpdateParameter(PreparedStatement, ShelfInfo): void
+  # setDeleteParameter(PreparedStatement, ShelfInfo): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+
+AdminCreateCredentialsControllerBase  -[#000082,plain]-^  DialogControllerBase
+AdminTable                            -[#000082,plain]-^  CustomDialog
+CustomHandlerController               -[#000082,plain]-^  HandlerController
+CustomLotsDimension                   -[#000082,plain]-^  DialogControllerBase
+DetailDao                             -[#000082,plain]-^  GenericJDBCDao
+DialogControllerBase                  -[#000082,plain]-^  CustomDialog
+EXpireProductNotifyControllerBase     -[#000082,plain]-^  DialogControllerBase
+FarmaciaControllerBase                -[#000082,plain]-^  DialogControllerBase
+FarmaciaDao                           -[#000082,plain]-^  GenericJDBCDao
+FarmaciaView                          -[#000082,plain]-^  CustomDialog
+FarmacoDao                            -[#000082,plain]-^  GenericJDBCDao
+FarmacoDialogControllerBase           -[#000082,plain]-^  DialogControllerBase
+GenericJDBCDao                        -[#008200,dashed]-^  GenericDaoAble
+InfoSocietyDao                        -[#000082,plain]-^  GenericJDBCDao
+Info_SocietyControllerBase            -[#000082,plain]-^  DialogControllerBase
+InvoiceViewDialog                     -[#000082,plain]-^  CustomDialog
+JsonNotifyLottoDao                    -[#000082,plain]-^  JsonNotify
+LotAssigmentDao                       -[#000082,plain]-^  GenericJDBCDao
+LotAssigmentShelvesDao                -[#000082,plain]-^  GenericJDBCDao
+LotDimensionDao                       -[#000082,plain]-^  GenericJDBCDao
+LotStorageView                        -[#000082,plain]-^  DialogControllerBase
+LottiDao                              -[#000082,plain]-^  GenericJDBCDao
+LottiDialogControllerBase             -[#000082,plain]-^  DialogControllerBase
+LottoStorageControllerBase            -[#000082,plain]-^  DialogControllerBase
+LottoStorageSearchControllerBase      -[#000082,plain]-^  DialogControllerBase
+LottoStorageTableView                 -[#000082,plain]-^  LottoTableBase
+LottoTableBase                        -[#000082,plain]-^  TableBase
+LottoViewTableView                    -[#000082,plain]-^  TableBase
+MagazinoTablebase                     -[#000082,plain]-^  TableBase
+MagazzinoControllerBase               -[#000082,plain]-^  DialogControllerBase
+MagazzinoDao                          -[#000082,plain]-^  GenericJDBCDao
+OrderTableView                        -[#000082,plain]-^  TableBase
+PharmaDao                             -[#000082,plain]-^  GenericJDBCDao
+PharmaDialogControllerBase            -[#000082,plain]-^  DialogControllerBase
+PharmacistControllerBaseCreate        -[#000082,plain]-^  DialogControllerBase
+PiccoDialog                           -[#000082,plain]-^  CustomDialog
+ProductTableCustom                    -[#000082,plain]-^  TableBase
+PromotionDao                          -[#000082,plain]-^  GenericJDBCDao
+PurchaseCreditNoteControllerBase      -[#000082,plain]-^  DialogControllerBase
+PurchaseCreditNoteDao                 -[#000082,plain]-^  GenericJDBCDao
+PurchaseCreditNoteDetailDao           -[#000082,plain]-^  GenericJDBCDao
+PurchaseInvoiceControllerBase         -[#000082,plain]-^  DialogControllerBase
+PurchaseInvoiceDao                    -[#000082,plain]-^  GenericJDBCDao
+PurchaseOrderControllerBase           -[#000082,plain]-^  DialogControllerBase
+PurchaseOrderDao                      -[#000082,plain]-^  GenericJDBCDao
+PurchaseOrderDetailDao                -[#000082,plain]-^  GenericJDBCDao
+ReportHandlerBaseYearMonth            -[#000082,plain]-^  CustomDialog
+SellerCreditNoteDao                   -[#000082,plain]-^  GenericJDBCDao
+SellerCreditNoteDetailDao             -[#000082,plain]-^  GenericJDBCDao
+SellerInvoiceDao                      -[#000082,plain]-^  GenericJDBCDao
+SellerOrderControllerBase             -[#000082,plain]-^  DialogControllerBase
+SellerOrderDao                        -[#000082,plain]-^  GenericJDBCDao
+SellerOrderDetails                    -[#000082,plain]-^  GenericJDBCDao
+SellerPriceDao                        -[#000082,plain]-^  GenericJDBCDao
+ShelfControllerBase                   -[#000082,plain]-^  DialogControllerBase
+ShelfDao                              -[#000082,plain]-^  GenericJDBCDao
+ShelfTableBased                       -[#000082,plain]-^  TableBase
+ShelvesDao                            -[#000082,plain]-^  GenericJDBCDao
+SpeseAcquisti                         -[#000082,plain]-^  ReportHandlerBaseYearMonth
+SpinnerGeneric                        -[#000082,plain]-^  SpinnerTableCells
+SpinnerTableCellOrder                 -[#000082,plain]-^  SpinnerTableCells
+SpostaLottoControllerBase             -[#000082,plain]-^  DialogControllerBase
+SuggestDaoConfig                      -[#000082,plain]-^  GenericJDBCDao
+SuggestPriceConfigDao                 -[#000082,plain]-^  GenericJDBCDao
+SuggestPriceControllerBase            -[#000082,plain]-^  DialogControllerBase
+SuggestPriceHandlerController         -[#000082,plain]-^  HandlerController
+SuggestPromotionControllerBase        -[#000082,plain]-^  DialogControllerBase
+TableBase                             -[#000082,plain]-^  CustomDialog
+TableCustom                           -[#000082,plain]-^  LottoTableBase
+Trend                                 -[#000082,plain]-^  ReportHandlerBaseYearMonth
+Variazione                            -[#000082,plain]-^  ReportHandlerBaseYearMonth
+Warehouse_shelf                       -[#000082,plain]-^  GenericJDBCDao
+@enduml

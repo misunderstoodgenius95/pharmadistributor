@@ -8,6 +8,8 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientWebserver extends WebSocketClient {
+    private static final Logger log = LoggerFactory.getLogger(ClientWebserver.class);
     private String username;
     private BlockingQueue<JSONObject> outgoing;
     private ObservableSet<String> listener;
@@ -36,14 +39,15 @@ public class ClientWebserver extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        System.out.println("Connnected to chat server");
-        System.out.println(serverHandshake.getHttpStatusMessage());
+       log.info("connesso al server");
+       log.info("status "+serverHandshake.getHttpStatusMessage());
+        System.out.println("status"+serverHandshake.getHttpStatusMessage());
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("userName",username);
         jsonObject.put("userType","seller");
         jsonObject.put("messageType","Starting");
-
         this.send(jsonObject.toString());
+        log.info("Send Message"+jsonObject);
         sendMessage();
 
 
@@ -58,7 +62,7 @@ public class ClientWebserver extends WebSocketClient {
 
     @Override
     public void onMessage(String s) {
-         System.out.println(s);
+            log.info("On Message"+ s);
          JSONObject jsonObject=new JSONObject(s);
         concurrentLinkedQueue.offer(s);
          if(jsonObject.get("type").equals("Join")){

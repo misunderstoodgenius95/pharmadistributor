@@ -1,16 +1,10 @@
 package pharma.formula;
 
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
-import org.checkerframework.checker.units.qual.K;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import pharma.Service.ClusterPoint;
+import pharma.Service.KMeans;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.LongStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class KMeansTest {
 

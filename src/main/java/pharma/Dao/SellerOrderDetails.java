@@ -32,7 +32,40 @@ private Database database;
         preparedStatement.setInt(1,integer);
     }
 
+    public List<FieldData> findDetailbySellerOrderId(int id){
+        List<FieldData> list=new ArrayList<>();
+        try {
 
+            PreparedStatement preparedStatement=database.execute_prepared_query("select * from seller_order_detail\n" +
+                    "inner join farmaco_all on seller_order_detail.farmaco=farmaco_all.id\n" +
+                    " where  seller_order= ? ");
+            preparedStatement.setInt(1,id);
+
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                list.add(  FieldData.FieldDataBuilder.getbuilder().
+                        setId(resultSet.getInt(1)).
+                        setcode(resultSet.getString(2)).
+                        setPrice(resultSet.getDouble("price")).
+                        setFarmaco_id(resultSet.getInt("farmaco")).
+                        setNome_farmaco(resultSet.getString("nome")).
+                        setOrder_id(resultSet.getInt("seller_order")).
+                        setQuantity(resultSet.getInt("quantity")).
+                        setVat_percent(resultSet.getInt("vat_percent")).
+                        setNome_tipologia(resultSet.getString("tipologia")).
+                        setUnit_misure(resultSet.getString("misura")).
+                        build());
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  list;
+
+
+    }
     @Override
     protected String getInsertQuery() throws Exception {
         return "";

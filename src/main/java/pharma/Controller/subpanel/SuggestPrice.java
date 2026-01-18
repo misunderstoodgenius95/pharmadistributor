@@ -1,9 +1,6 @@
 
 package pharma.Controller.subpanel;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,12 +8,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.controlsfx.control.SearchableComboBox;
 import org.jetbrains.annotations.TestOnly;
-import pharma.Handler.SuggestPriceHandlerController;
+import pharma.DialogController.SuggestPriceHandlerController;
 import pharma.Model.FieldData;
 import pharma.config.Utility;
 import pharma.dao.DetailDao;
 import pharma.dao.FarmacoDao;
-import pharma.javafxlib.Controls.TextFieldComboBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;

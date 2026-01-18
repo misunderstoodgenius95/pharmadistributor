@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
     private String table="seller_order";
@@ -30,11 +29,6 @@ public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
                  setElapsed_date(resultSet.getDate(6)).build();
     }
 
-    @Override
-    protected String getFindQueryAll() {
-       return  "select seller_order.id,farmacia_id,subtotal,vat,total,ragione_sociale,order_date from seller_order\n" +
-               "inner join farmacia on farmacia.id=seller_order.farmacia_id; ";
-    }
 
     @Override
     protected void setFindByIdParameters(PreparedStatement preparedStatement, Integer integer) {
@@ -51,6 +45,29 @@ public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
     public FieldData findById(Integer integer) {
         try {
             PreparedStatement preparedStatement=database.execute_prepared_query(" SELECT * FROM " + table + " WHERE id =? ");
+            setFindByIdParameters(preparedStatement,integer);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return mapRow(resultSet);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+
+    public FieldData findByIdWhereNotExistintoSellerCreditNote(Integer integer) {
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query("SELECT *\n" +
+                    "FROM seller_order so\n" +
+                    "inner join farmacia f on f.id = so.farmacia_id\n" +
+                    "WHERE NOT EXISTS (\n" +
+                    "    SELECT 1\n" +
+                    "    FROM seller_invoice si\n" +
+                    "             INNER JOIN seller_credit_note scn ON scn.invoice_number = si.id\n" +
+                    "    WHERE si.order_id = so.id) and so.id= ? " +
+                    "  AND so.order_date >= CURRENT_TIMESTAMP - INTERVAL '24 hours'  ");
 
 
             setFindByIdParameters(preparedStatement,integer);
@@ -62,6 +79,58 @@ public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    public List<FieldData> findAllWithPharmaName() {
+
+        ResultSet resultSet=database.executeQuery("SELECT so.*, f.*" +
+                " FROM seller_order so\n " +
+                " INNER JOIN farmacia f ON f.id = so.farmacia_id\n ");
+
+        List<FieldData> resultList=new ArrayList<>();
+        try {
+            while(resultSet.next()){
+                resultList.add( FieldData.FieldDataBuilder.getbuilder().
+                        setId(resultSet.getInt(1)).
+                        setForeign_id(resultSet.getInt(2))
+                        .setSubtotal(resultSet.getDouble(3)).
+                        setVat_amount(resultSet.getDouble(4))
+                        .setTotal(resultSet.getDouble(5)).
+                        setElapsed_date(resultSet.getDate(6)).setNome_casa_farmaceutica(resultSet.getString("ragione_sociale")).build());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  resultList;
+    }
+    public List<FieldData> findAllOrderNotExistinSellerOrder() {
+
+        ResultSet resultSet=database.executeQuery("SELECT so.*, f.*\n" +
+                "FROM seller_order so\n" +
+                "         INNER JOIN farmacia f ON f.id = so.farmacia_id\n" +
+                "WHERE NOT EXISTS (\n" +
+                "    SELECT 1\n" +
+                "    FROM seller_invoice si\n" +
+                "             INNER JOIN seller_credit_note scn ON scn.invoice_number = si.id\n" +
+                "    WHERE si.order_id = so.id\n" +
+                ")\n" +
+                "  AND so.order_date >= CURRENT_TIMESTAMP - INTERVAL '24 hours'");
+
+        List<FieldData> resultList=new ArrayList<>();
+        try {
+            while(resultSet.next()){
+                resultList.add( FieldData.FieldDataBuilder.getbuilder().
+                        setId(resultSet.getInt(1)).
+                        setForeign_id(resultSet.getInt(2))
+                        .setSubtotal(resultSet.getDouble(3)).
+                        setVat_amount(resultSet.getDouble(4))
+                        .setTotal(resultSet.getDouble(5)).
+                        setElapsed_date(resultSet.getDate(6)).setNome_casa_farmaceutica(resultSet.getString("ragione_sociale")).build());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return  resultList;
     }
 
     @Override
@@ -106,13 +175,40 @@ public class SellerOrderDao  extends GenericJDBCDao<FieldData,Integer> {
         return list;
     }
 
-
     public List<FieldData> findByRangeBetweenAndRagioneSociale(Date  range_start, Date range_end, String ragione_sociale) {
         List<FieldData> list=new ArrayList<>();
-        String query="select * from seller_order " +
-                "inner join  farmacia on farmacia.id=farmacia_id " +
-                "where order_date between ?  and  ? " +
-                "and ragione_sociale like ?;\n";
+        String query="SELECT *\n" +
+                " FROM seller_order so\n " +
+                " inner join farmacia f on f.id = so.farmacia_id \n " +
+                " order_date between ?  and  ?  " +
+                " and ragione_sociale like ?;\n";
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query(query);
+            preparedStatement.setDate(1,range_start);
+            preparedStatement.setDate(2,range_end);
+            preparedStatement.setString(3,ragione_sociale);
+            ResultSet resultSet=preparedStatement.executeQuery();
+            while (resultSet.next()){
+                list.add(addRowSearch(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+    public List<FieldData> findByRangeBetweenAndRagioneSocialeWhereNotExistCreditNote(Date  range_start, Date range_end, String ragione_sociale) {
+        List<FieldData> list=new ArrayList<>();
+        String query="SELECT *\n" +
+                " FROM seller_order so\n " +
+                " inner join farmacia f on f.id = so.farmacia_id\n " +
+                " WHERE NOT EXISTS (\n " +
+                "    SELECT 1\n " +
+                "    FROM seller_invoice si\n " +
+                "             INNER JOIN seller_credit_note scn ON scn.invoice_number = si.id\n " +
+                "    WHERE si.order_id = so.id) and " +
+                "   AND so.order_date >= CURRENT_TIMESTAMP - INTERVAL '24 hours' " +
+                " order_date between ?  and  ?  " +
+                " and ragione_sociale like ?;\n";
         try {
             PreparedStatement preparedStatement=database.execute_prepared_query(query);
             preparedStatement.setDate(1,range_start);

@@ -10,9 +10,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.table.TableRowExpanderColumn;
-import pharma.Handler.PurchaseCreditNoteHandler;
+import pharma.DialogController.PurchaseCreditNoteControllerBase;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
 import pharma.config.database.Database;
 import pharma.javafxlib.DoubleClick_Menu;
 import pharma.config.TableUtility;
@@ -35,7 +36,7 @@ public class PurchaseCreditNote implements Initializable {
     private ObservableList<FieldData>  obs_table_fd_order;
     private  ObservableList<FieldData> obs_table_fd_details;
     private  ObservableList<FieldData> obs_table;
-    private PurchaseCreditNoteHandler creditNoteHandler;
+    private PurchaseCreditNoteControllerBase creditNoteHandler;
         private  PurchaseCreditNoteDao purchaseCreditNoteDao;
         private  PurchaseCreditNoteDetailDao purchaseCreditNoteDetailDao;
         private PurchaseInvoiceDao purchaseInvoiceDao;
@@ -45,7 +46,7 @@ public class PurchaseCreditNote implements Initializable {
 
         Properties properties = null;
         try {
-            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -92,8 +93,8 @@ public class PurchaseCreditNote implements Initializable {
             FieldData fieldData = (FieldData) table_id.getSelectionModel().getSelectedItem();
 
             if (fieldData != null) {
-                PurchaseCreditNoteHandler purchaseCreditNoteHandler =
-                        new PurchaseCreditNoteHandler("Inserisci Nota di Credito", fieldData, Arrays.asList(p_detail, purchaseCreditNoteDao, purchaseCreditNoteDetailDao));
+                PurchaseCreditNoteControllerBase purchaseCreditNoteHandler =
+                        new PurchaseCreditNoteControllerBase("Inserisci Nota di Credito", fieldData, Arrays.asList(p_detail, purchaseCreditNoteDao, purchaseCreditNoteDetailDao));
                 purchaseCreditNoteHandler.execute();
             }
 

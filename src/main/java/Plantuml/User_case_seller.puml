@@ -1,0 +1,96 @@
+/'
+
+Welcome and thank you for using Pladitor!
+=========================================
+
+First Steps Overview
+--------------------
+
+The Toolbar Menu provides these functionalities:
+    ------------
+
+ - Editor:       This page. Work on your diagrams here.
+ - Templates:    The template gallery for all kinds of
+                 diagram types
+ - Preferences:  Settings page to set language, theme etc.
+                 (only in desktop version)
+ - Feedback:     A page for giving feedback to the
+                 Pladitor team.
+ - About:        General information about Pladitor.
+
+The Top Toolbar provides these functionalities:
+    -----------
+
+  - Select or add new diagram tab
+  - Close current diagram tab
+  - Open diagram from text-, PNG-, or SVG-files (only in desktop version)
+  - Add diagram to custom templates gallery (only in desktop version)
+  - Open color dialog (PlantUML colorcodes only in desktop version)
+  - Open OpenIconic icons dialog
+  - Open Emoji icons dialog (all emojis only in desktop version)
+  - Show/Hide PlantUML Guides section
+  - Show keyboard shortcuts (only in desktop version)
+  - Open external help URL
+  - Save diagram source as text file
+  - Export diagram as SVG, flattened SVG, PNG, PDF, EPS, TXT image, or as URL
+
+The top right window previews the current diagram in the configured format.
+    ----------------
+
+The bottom right window provides PlantUML guides for all kinds of diagrams.
+    -------------------
+
+Double-click on any text within the diagram to navigate to its source code.
+------------                                   --------
+
+'/
+
+@startuml
+actor AdettoVendite as A
+A-(Login)
+A--down-(Crea Farmacia)
+A--down-(Modifica Ordine)
+
+
+A-up-(Ricerca ordine di vendita)
+A-down-(Chat)
+
+(Modifica Ordine).down->(Crea Nota di Credito):<<include>>
+(Modifica Ordine)-right.>(Ricerca ordine di vendita):<<include>>
+(Crea Prezzo Prodotti) as c
+A--down-c
+(Recupera i dati delle vendite ) as rv
+c--down.>(Analizza i trend di mercato):<<include>>
+c--down.>rv:<<include>>
+c--down.>(Recupera livello di scorta):<<include>>
+c--down.>(Recupera i prezzi dei singoli lotti):<<include>>
+c--down.>(Suggerisci il prezzo):<<include>>
+(Crea Promozioni) as p
+A--down-p
+p--down.>rv:<include>>
+p--down.>(Recupera le scadenze dei lotti):<<include>>
+p--down.>(Recupera i prezzi dei singoli lotti):<<include>>
+p--down.>(Suggerisci sconto):<<include>>
+A--(Ricerca Anagrafica farmacia)
+
+
+
+
+
+
+
+
+(Ricerca Anagrafica farmacia)-down.>(Visualizza Risultato ):<<include>>
+
+
+
+A--(Imposta avvisi di scadenza prodotti)
+(Imposta avvisi di scadenza prodotti).>( Ricevi notfiche di scadenza):<<include>>
+
+(Ricerca ordine di vendita)-down.>(Visualizza Risultato):<<include>>
+
+
+
+A-down-(Ricerca Fattura)
+(Ricerca Fattura)-down.>(Visualizza Risultato)
+@enduml

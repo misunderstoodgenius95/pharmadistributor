@@ -122,7 +122,7 @@ public class TableUtility {
             @Override
             public String toString(Double object) {
                 if(object!=null){
-                   return  String.format("%.2f", object);
+                    return  String.format("%.2f", object);
 
 
                 }

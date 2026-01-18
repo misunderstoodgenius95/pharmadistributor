@@ -7,11 +7,11 @@
 
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Button?>
-<AnchorPane fx:id="anchor_id" prefHeight="536.0" prefWidth="1007.0" xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"> <!--fx:controller="pharma.Controller.subpanel.SuggestPrice">-->
+<AnchorPane fx:id="anchor_id" prefHeight="536.0" prefWidth="1007.0"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="pharma.Controller.subpanel.SuggestPrice">
     <RadioButton  fx:id="single" layoutX="210.0" layoutY="67.0" mnemonicParsing="false" text="Singolo Prodotto">
         <toggleGroup>
-            <ToggleGroup  fx:id="choice"></ToggleGroup>
+            <ToggleGroup fx:id="choice"/>
         </toggleGroup>
     </RadioButton>
     <RadioButton  fx:id="category" layoutX="374.0" layoutY="67.0" mnemonicParsing="false" toggleGroup="$choice"

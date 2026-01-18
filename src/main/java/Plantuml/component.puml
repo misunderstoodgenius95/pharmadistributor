@@ -1,0 +1,293 @@
+@startuml Component_Diagram_Creation_Process
+
+title How to Create a Component Diagram\nStep-by-Step Visual Tutorial
+
+skinparam backgroundColor #FEFEFE
+
+' ==========================
+' STEP 1: IDENTIFY COMPONENTS
+' ==========================
+
+rectangle "STEP 1: Identify Components" as step1 #LightBlue {
+
+    frame "Look at your project structure" {
+        folder "src/" {
+            folder "ui/" as ui_folder
+            folder "services/" as svc_folder
+            folder "repositories/" as repo_folder
+            folder "domain/" as domain_folder
+        }
+    }
+
+    note right
+        **Question:** What are the major building blocks?
+
+        **How:**
+        • Examine folder structure
+        • Find logical groupings
+        • Identify responsibilities
+        • Look for JAR files/modules
+
+        **Result:**
+        List of components:
+        1. UI Components
+        2. Business Services
+        3. Data Access Layer
+        4. Domain Model
+    end note
+}
+
+' ==========================
+' STEP 2: DEFINE INTERFACES
+' ==========================
+
+rectangle "STEP 2: Define Interfaces" as step2 #LightGreen {
+
+    frame "Identify public contracts" {
+        interface "IBusinessService" as ibiz
+        interface "IRepository" as irepo
+        interface "IDatabaseConnection" as idb
+
+        note right of ibiz
+            **Operations:**
+            + createOrder()
+            + getOrder()
+            + updateOrder()
+        end note
+    }
+
+    note bottom
+        **Question:** What operations does each component offer?
+
+        **How:**
+        • Look at public methods
+        • Find interface definitions
+        • Identify API contracts
+        • Check abstract classes
+
+        **Result:**
+        List of interfaces with their operations
+    end note
+}
+
+' ==========================
+' STEP 3: MAP DEPENDENCIES
+' ==========================
+
+rectangle "STEP 3: Map Dependencies" as step3 #LightYellow {
+
+    frame "Who needs what?" {
+        component "UI" as ui3
+        component "Services" as svc3
+        component "Repositories" as repo3
+
+        ui3 -[#red]-> svc3 : needs
+        svc3 -[#red]-> repo3 : needs
+
+        note right of ui3
+            **Depends on:**
+            Services
+        end note
+
+        note right of svc3
+            **Depends on:**
+            Repositories
+        end note
+    }
+
+    note bottom
+        **Question:** Who needs what?
+
+        **How:**
+        • Check imports
+        • Look at constructor parameters
+        • Find field declarations
+        • Analyze method calls
+
+        **Result:**
+        Dependency matrix showing
+        what each component requires
+    end note
+}
+
+' ==========================
+' STEP 4: DRAW RELATIONSHIPS
+' ==========================
+
+rectangle "STEP 4: Draw Relationships" as step4 #Plum {
+
+    frame "Connect with proper notation" {
+        component "Server" as srv4
+        interface "IService" as isvc4
+        component "Client" as cli4
+
+        srv4 -(  isvc4
+        isvc4  )- cli4
+
+        note left of srv4
+            PROVIDES
+            (lollipop)
+        end note
+
+        note right of cli4
+            REQUIRES
+            (socket)
+        end note
+    }
+
+    note bottom
+        **Question:** How do components connect?
+
+        **Types:**
+        -(  = Provides interface
+        )-  = Requires interface
+        ..> = Dependency
+        --> = Usage
+        o-- = Aggregation
+        *-- = Composition
+
+        **Result:**
+        Properly connected components
+    end note
+}
+
+' ==========================
+' STEP 5: ORGANIZE LAYOUT
+' ==========================
+
+rectangle "STEP 5: Organize Layout" as step5 #LightCoral {
+
+    frame "Arrange logically" {
+        package "Layered Architecture" {
+            component "Presentation" as pres5 #LightBlue
+            component "Business" as biz5 #LightGreen
+            component "Data" as data5 #LightYellow
+            database "Database" as db5 #Wheat
+
+            pres5 -down-> biz5
+            biz5 -down-> data5
+            data5 -down-> db5
+        }
+    }
+
+    note right
+        **Question:** How to arrange components?
+
+        **Patterns:**
+        • Layered (top to bottom)
+        • Flow (left to right)
+        • Grouped (packages)
+
+        **Best Practice:**
+        Follow dependency direction
+        Higher layers at top
+        Lower layers at bottom
+    end note
+}
+
+' ==========================
+' STEP 6: ADD DETAILS
+' ==========================
+
+rectangle "STEP 6: Add Details" as step6 #LightGoldenRodYellow {
+
+    frame "Enhance with information" {
+        component "Business Services" <<javafx>> as svc6 {
+            [OrderService]
+            [InventoryService]
+            note right: Stateless services
+        }
+
+        component "Database" as db6
+
+        svc6 --> db6
+        note on link
+            JDBC
+            Port 5432
+            SSL required
+        end note
+    }
+
+    note bottom
+        **Question:** What additional info helps?
+
+        **Add:**
+        • Stereotypes (<<javafx>>)
+        • Internal structure
+        • Notes and explanations
+        • Connection details
+        • Technologies used
+
+        **Result:**
+        Rich, informative diagram
+    end note
+}
+
+' ==========================
+' STEP 7: VALIDATE & REVIEW
+' ==========================
+
+rectangle "STEP 7: Validate & Review" as step7 #PaleGreen {
+
+    frame "Quality check" {
+
+        card "Checklist" {
+            note
+                ✅ All components identified?
+                ✅ All interfaces defined?
+                ✅ Dependencies correct?
+                ✅ Arrows point right way?
+                ✅ No circular dependencies?
+                ✅ Using interfaces (loose coupling)?
+                ✅ Clear and readable?
+                ✅ Team understands it?
+            end note
+        }
+    }
+
+    note bottom
+        **Question:** Is the diagram correct?
+
+        **Review with:**
+        • Development team
+        • Architects
+        • Stakeholders
+
+        **Fix:**
+        • Incorrect arrows
+        • Missing components
+        • Unclear relationships
+
+        **Result:**
+        Validated, accurate diagram
+    end note
+}
+
+' ==========================
+' PROCESS FLOW
+' ==========================
+
+step1 -down-> step2 : Components listed
+step2 -down-> step3 : Interfaces defined
+step3 -down-> step4 : Dependencies mapped
+step4 -down-> step5 : Relationships drawn
+step5 -down-> step6 : Layout organized
+step6 -down-> step7 : Details added
+
+legend bottom
+    **COMPLETE PROCESS:**
+
+    1. Identify Components → List major modules
+    2. Define Interfaces → Specify contracts
+    3. Map Dependencies → Who needs what
+    4. Draw Relationships → Connect components
+    5. Organize Layout → Arrange logically
+    6. Add Details → Enrich information
+    7. Validate & Review → Quality check
+
+    **Time:** 30-60 minutes for medium system
+    **Tool:** PlantUML, Visual Paradigm, or Lucidchart
+    **Output:** Component diagram (.puml, .png, .svg)
+endlegend
+
+@enduml

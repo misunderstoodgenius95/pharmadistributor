@@ -8,7 +8,6 @@ public class Promotion extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader=new FXMLLoader(getClass().getResource("/subpanel/promo.fxml"));
-
         Scene scene=new Scene(loader.load(),700,600);
         primaryStage.setScene(scene);
         primaryStage.show();

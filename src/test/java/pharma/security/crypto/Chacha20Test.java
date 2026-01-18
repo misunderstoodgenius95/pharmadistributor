@@ -2,19 +2,18 @@ package pharma.security.crypto;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import pharma.Utility.Chacha20;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class Chacha20Test {
 
     @Test
     void hexToByte() {
         String hex="8ea690edf585aaeb422a67410aff3a46ab996418db3708ec526587d092ec7e69";
-        byte[] bytes=Chacha20.hexToByte(hex);
+        byte[] bytes= Chacha20.hexToByte(hex);
         String hex_actual=Chacha20.byteToHex(bytes);
         Assertions.assertEquals(hex,hex_actual);
     }

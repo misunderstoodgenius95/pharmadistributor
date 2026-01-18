@@ -7,10 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import pharma.config.HttpJsonClient;
+import pharma.config.net.HttpJsonClient;
 import pharma.config.InputValidation;
-import pharma.config.auth.UserService;
-import pharma.config.auth.UserServiceResponse;
+import pharma.config.auth.UserGateway;
+import pharma.config.auth.UserGatewayResponse;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,13 +22,13 @@ import static org.mockito.Mockito.*;
 
 
 class UserServiceTest {
-     private UserService userService;
+     private UserService userGateway;
      private HttpJsonClient mock_jsonClient;
      private HttpResponse<String> mock_response;
     @BeforeEach
     void setup() {
         mock_jsonClient=Mockito.mock(HttpJsonClient.class);
-        userService=new UserService(mock_jsonClient,new HashMap<>(),"http://example.com");
+        userGateway=new UserService(mock_jsonClient,new HashMap<>(),"http://example.com");
         mock_response=Mockito.mock(HttpResponse.class);
         when(mock_response.statusCode()).thenReturn(200);
         when(mock_jsonClient.post(anyString(),any(JSONObject.class))).thenReturn(mock_response);
@@ -45,8 +45,8 @@ class UserServiceTest {
 
         String email = "user@example.com";
         String password = "@5&17Vhm5QGp";
-        UserService userService = new UserService(mock_jsonClient, new HashMap<>(), "http://example.com/api/auth");
-        UserServiceResponse us = userService.authenticate(email, password);
+        UserService userGateway = new UserService(mock_jsonClient, new HashMap<>(), "http://example.com/api/auth");
+        UserServiceResponse us = userGateway.authenticate(email, password);
         Assertions.assertEquals(200, us.getStatus());
     }}
     // Invalid when username and password are null
@@ -91,7 +91,7 @@ when(mock_response.statusCode()).thenReturn(200);
 
         System.out.println(mock_response.statusCode());
         when(jsonClient.post(eq("http://example.com"),any(JSONObject.class))).thenReturn(mock_response);
-        int actual=userService.authenticate("pinco","pallino").getStatus();
+        int actual=userGateway.authenticate("pinco","pallino").getStatus();
         assertEquals(200, actual);
 
        verify(jsonClient, times(1)).post(eq("http://example.com"),any(JSONObject.class));

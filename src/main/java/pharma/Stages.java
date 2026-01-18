@@ -16,9 +16,9 @@ public class Stages  {
 
     public  Parent  load_fxml(String fxmlPath) throws IOException {
 
-FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource(fxmlPath));
+    FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource(fxmlPath));
 
-return fxmlLoader.load();
+    return fxmlLoader.load();
     }
     public  FXMLLoader  load(String fxmlPath) throws IOException {
 

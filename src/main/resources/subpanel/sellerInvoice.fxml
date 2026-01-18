@@ -13,7 +13,7 @@
       <TableView fx:id="table_id" layoutX="47.0" layoutY="323.0" prefHeight="380.0" prefWidth="939.0" />
 
 
-      <RadioButton fx:id="only_invoice" layoutX="129.0" layoutY="61.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="127.0" text="Id  Fattura">
+      <RadioButton fx:id="only_id" layoutX="129.0" layoutY="61.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="127.0" text="Id  Fattura">
           <toggleGroup>
               <ToggleGroup fx:id="searchToggleGroup" />
           </toggleGroup>

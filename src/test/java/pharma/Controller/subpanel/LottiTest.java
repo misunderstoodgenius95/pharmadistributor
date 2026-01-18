@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import pharma.Handler.DialogHandler;
+import pharma.DialogController.DialogControllerBase;
 import pharma.Model.FieldData;
 import pharma.Stages;
 import pharma.javafxlib.test.SimulateEvents;
@@ -44,17 +44,17 @@ class LottiTest {
             Button button= robot.lookup("#btn_id_add").queryButton();
             SimulateEvents.clickOn(button);
             Lotti lotti=loader.getController();
-            DialogHandler<FieldData> dialogHandler=lotti.getDialogHandler();
-            List<Control> list_combo=dialogHandler.getControlList().stream().filter(control-> control instanceof SearchableComboBox).toList();
+            DialogControllerBase<FieldData> dialogControllerBase =lotti.getDialogHandler();
+            List<Control> list_combo= dialogControllerBase.getControlList().stream().filter(control-> control instanceof SearchableComboBox).toList();
     /*        SearchableComboBox<FieldData> searchableComboBox = (SearchableComboBox<FieldData>) list_combo.getFirst();
             searchableComboBox.setValue(searchableComboBox.getItems().get(1));*/
-            List<Control> c=dialogHandler.getControlList().stream().filter(control-> control instanceof DatePicker).toList();
+            List<Control> c= dialogControllerBase.getControlList().stream().filter(control-> control instanceof DatePicker).toList();
            DatePicker  datePicker_1= (DatePicker) c.get(0);
              DatePicker datePicker_2=(DatePicker) c.get(1);
             datePicker_1.setValue(LocalDate.of(2023,1,10));
             datePicker_2.setValue(LocalDate.of(2025,1,10));
-            List<Control>textField=dialogHandler.getControlList().stream().filter(control-> control instanceof TextField).toList();
-            List<Control> list_spinner=dialogHandler.getControlList().stream().filter(control-> control instanceof Spinner).toList();
+            List<Control>textField= dialogControllerBase.getControlList().stream().filter(control-> control instanceof TextField).toList();
+            List<Control> list_spinner= dialogControllerBase.getControlList().stream().filter(control-> control instanceof Spinner).toList();
             System.out.println("size"+list_spinner.size());
             Spinner<Integer> spinner=(Spinner<Integer>) list_spinner.getFirst();
             SimulateEvents.setSpinner(spinner,20);
@@ -62,8 +62,8 @@ class LottiTest {
             SimulateEvents.setSpinner(spinner_qty,200);
             SimulateEvents.writeOn((TextField) textField.getFirst(),"b8188j");
             SimulateEvents.writeOn((TextField) textField.get(1),"10.50");
-            dialogHandler.execute();
-           // SimulateEvents.clickOn(dialogHandler.getButtonOK());
+            dialogControllerBase.execute();
+           // SimulateEvents.clickOn(dialogControllerBase.getButtonOK());
 
 
 

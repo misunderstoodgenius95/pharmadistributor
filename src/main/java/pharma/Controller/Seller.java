@@ -9,27 +9,23 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.controlsfx.control.NotificationPane;
 import org.jetbrains.annotations.TestOnly;
-import org.json.JSONObject;
 import pharma.Controller.subpanel.SellerInvoice;
-import pharma.Handler.EXpireProductNotifyHandler;
-import pharma.Handler.PharmacistHandlerCreate;
-import pharma.Handler.SellerOrderHandler;
+import pharma.Controller.subpanel.SellerOrder;
+import pharma.DialogController.EXpireProductNotifyControllerBase;
+import pharma.DialogController.PharmacistControllerBaseCreate;
+import pharma.DialogController.SellerOrderControllerBase;
 import pharma.Stages;
 import pharma.Storage.FileStorage;
-import pharma.config.auth.UserService;
+import pharma.config.PathConfig;
+import pharma.config.auth.UserGateway;
 import pharma.config.database.Database;
 import pharma.config.net.ClientHttp;
 import pharma.config.net.PollingClient;
 
 import pharma.dao.*;
-import pharma.formula.KMeans;
-import pharma.formula.PriceSuggestion;
 import pharma.javafxlib.Controls.Notification.JsonNotifyLottoDao;
-import pharma.javafxlib.Controls.NotificationPanelLib;
 import pharma.security.Stytch.StytchClient;
 
 import java.io.FileNotFoundException;
@@ -54,7 +50,7 @@ public class Seller implements Initializable {
     private FarmacoDao farmacoDao;
     private LottiDao lottiDao;
     private LotAssigmentDao assigmentDao;
-    private UserService userService;
+    private UserGateway userGateway;
     private SellerOrderDao s_dao;
     private SellerOrderDetails s_detail;
     private SellerInvoiceDao s_invoice;
@@ -63,28 +59,29 @@ public class Seller implements Initializable {
     private SellerInvoice sellerInvoice;
     private SellerInvoiceDao s_invoice_dao;
     Stages stages;
-    private PharmacistHandlerCreate pharmacistHandlerCreate;
-    private EXpireProductNotifyHandler notify;
-    private SellerOrderHandler sellerOrderHandler;
+    private PharmacistControllerBaseCreate pharmacistHandlerCreate;
+    private EXpireProductNotifyControllerBase notify;
+    private SellerOrderControllerBase sellerOrderHandler;
+    private SellerOrder sellerOrder;
     public Seller() {
         stages=new Stages();
        clientHttp=new ClientHttp();
        Properties properties;
         try {
-           properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+           properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         HashMap<String, String> hashMap_json =null;
         try {
-            hashMap_json = FileStorage.getProperties(List.of("project_id", "secret", "url"), new FileReader("stytch.properties"));
+            hashMap_json = FileStorage.getProperties(List.of("project_id", "secret", "url"), new FileReader(PathConfig.STYTCH_CONF.getValue()));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         pollingClient=new PollingClient(clientHttp);
        farmaciaDao=new FarmaciaDao(Database.getInstance(properties));
-        userService = new UserService(new StytchClient(hashMap_json.get("project_id"), hashMap_json.get("secret"), hashMap_json.get("url")));
-         pharmacistHandlerCreate=new PharmacistHandlerCreate(farmaciaDao,userService);
+        userGateway = new UserGateway(new StytchClient(hashMap_json.get("project_id"), hashMap_json.get("secret"), hashMap_json.get("url")));
+         pharmacistHandlerCreate=new PharmacistControllerBaseCreate(farmaciaDao, userGateway);
          farmacoDao=new FarmacoDao(Database.getInstance(properties));
          lottiDao=new LottiDao(Database.getInstance(properties),"lotto");
          assigmentDao=new LotAssigmentDao(Database.getInstance(properties));
@@ -92,10 +89,12 @@ public class Seller implements Initializable {
         s_detail = new SellerOrderDetails(Database.getInstance(properties));
         s_invoice = new SellerInvoiceDao(Database.getInstance(properties));
         s_credit_detail = new SellerCreditNoteDetailDao(Database.getInstance(properties));
-         notify=new EXpireProductNotifyHandler("Imposta Notifica",assigmentDao);
-        sellerOrderHandler=new SellerOrderHandler("Modifica Ordine", s_dao, s_detail, s_invoice, s_credit, s_credit_detail);
+        s_credit=new SellerCreditNoteDao(Database.getInstance(properties));
+         notify=new EXpireProductNotifyControllerBase("Imposta Notifica",assigmentDao);
+        sellerOrderHandler=new SellerOrderControllerBase("Modifica Ordine", s_dao, s_detail, s_invoice, s_credit, s_credit_detail);
         s_invoice_dao=new SellerInvoiceDao(Database.getInstance(properties));
         sellerInvoice=new SellerInvoice(s_invoice_dao);
+        sellerOrder=new SellerOrder(s_dao,s_detail);
 
 
 
@@ -109,10 +108,10 @@ public class Seller implements Initializable {
 
 
         @TestOnly
-    public Seller(FarmaciaDao farmaciaDao, UserService userService) {
+    public Seller(FarmaciaDao farmaciaDao, UserGateway userGateway) {
         this.farmaciaDao = farmaciaDao;
-        this.userService = userService;
-        pharmacistHandlerCreate=new PharmacistHandlerCreate(farmaciaDao,userService);
+        this.userGateway = userGateway;
+        pharmacistHandlerCreate=new PharmacistControllerBaseCreate(farmaciaDao, userGateway);
     }
 
     @Override
@@ -191,8 +190,10 @@ public class Seller implements Initializable {
         notify.execute();
     }
 
-    public void order_action(ActionEvent event) {
-    sellerOrderHandler.execute();
+    public void order_action(ActionEvent event) throws IOException {
+        FXMLLoader loader = new  FXMLLoader(getClass().getResource("/subpanel/sellerorder.fxml"));
+        loader.setController(sellerOrder);
+        change_stages(loader.load(),50.0);
 
     }
 

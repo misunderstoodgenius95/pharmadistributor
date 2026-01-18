@@ -1,9 +1,8 @@
 package algo;
 
-import algoWarehouse.ChoiceWarehouse;
-import algoWarehouse.ShelfInfo;
-import algoWarehouse.ShelvesCapacity;
-import com.github.curiousoddman.rgxgen.nodes.Choice;
+import pharma.Service.ChoiceWarehouse;
+import pharma.Model.ShelfInfo;
+import pharma.Model.ShelvesCapacity;
 import net.postgis.jdbc.PGgeometry;
 import net.postgis.jdbc.geometry.Point;
 import org.assertj.core.data.Offset;
@@ -13,17 +12,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
-import pharma.Controller.Warehouse;
 import pharma.Model.*;
-import pharma.Storage.FileStorage;
-import pharma.config.database.Database;
-import pharma.dao.MagazzinoDao;
-import pharma.dao.MagazzinoModelDao;
-import pharma.dao.ShelfDao;
-import pharma.dao.ShelvesDao;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 

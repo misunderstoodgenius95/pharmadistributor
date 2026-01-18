@@ -1,9 +1,0 @@
-@startuml
-class pharma.Stages {
-+ Parent load_fxml(String)
-+ FXMLLoader load(String)
-+ void init()
-+ void change_stage(String,Stage)
-}
-
-@enduml

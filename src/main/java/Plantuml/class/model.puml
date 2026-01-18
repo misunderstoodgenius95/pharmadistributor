@@ -1,0 +1,425 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class Acquisto {
+  + Acquisto(int, int, Date, double):
+  + Acquisto(int, String, int, Date, double):
+  - nome_farmaco: String
+  - quantity: int
+  - price: double
+  - data_acquisto: Date
+  - farmaco_id: int
+   meseAnno: YearMonth
+   spesaTotale: double
+   nome_farmaco: String
+   data_acquisto: Date
+   price: double
+   farmaco_id: int
+   quantity: int
+}
+class Farmacia {
+  + Farmacia(String, int, PGgeometry):
+  - id: int
+  - nome: String
+  - coordianate: PGgeometry
+   nome: String
+   coordianate: PGgeometry
+   id: int
+}
+class FieldData {
+  - FieldData(FieldDataBuilder):
+  - price: SimpleDoubleProperty
+  - province: String
+  - misure: int
+  - categoria: int
+  - sigla: String
+  - nome_farmaco: String
+  - profondita: double
+  - quantity: IntegerProperty
+  - vat_amount: double
+  - subtotal: double
+  - discount_value: int
+  - nome_tipologia: String
+  - medium_lots: double
+  - shelves_code: int
+  - vat_percent: SimpleIntegerProperty
+  - email: String
+  - tipologia: int
+  - fieldDataList: List<FieldData>
+  - is_enable: boolean
+  - medium_stock_item: int
+  - total: double
+  - nome_principio_attivo: String
+  - location: PGgeometry
+  - shelf_code: String
+  - payment_mode: String
+  - anagrafica_cliente: String
+  - lunghezza: double
+  - nome_categoria: String
+  - availability: int
+  - num_rip: int
+  - order_id: int
+  - warehouse_name: String
+  - nome_casa_farmaceutica: String
+  - code: String
+  - picture: String
+  - casa_farmaceutica: int
+  - credit_note_number: String
+  - original_order_id: String
+  - street: String
+  - capacity: int
+  - min_day_expire: int
+  - s_quantity: SimpleIntegerProperty
+  - created_at: Timestamp
+  - motive: String
+  - farmaco_id: int
+  - role: String
+  - production_date: Date
+  - medium_day: double
+  - partita_iva: String
+  - description: String
+  - spessore: double
+  - elapsed_date: Date
+  - invoice_number: String
+  - latitude: double
+  - cap: int
+  - uuid: UUID
+  - last_name: String
+  - nome: String
+  - longitude: double
+  - website: String
+  - comune: String
+  - unit_misure: String
+  - altezza: double
+  - invoice_id: int
+  - principio_attivo: int
+  - id: int
+  - foreign_id: int
+  + getElementFieldDataList(int): FieldData
+  + s_quantityProperty(): SimpleIntegerProperty
+   description: String
+   street: String
+   invoice_number: String
+   elapsed_date: Date
+   sigla: String
+   code: String
+   warehouse_name: String
+   credit_note_number: String
+   website: String
+   production_date: Date
+   altezza: double
+   latitude: double
+   casa_farmaceutica: int
+   categoria: int
+   nome_farmaco: String
+   province: String
+   s_quantity: int
+   vat_percent: int
+   medium_day: double
+   lunghezza: double
+   nome_casa_farmaceutica: String
+   longitude: double
+   medium_stock_item: int
+   comune: String
+   capacity: int
+   partita_iva: String
+   medium_lots: double
+   invoice_id: int
+   min_day_expire: int
+   farmaco_id: int
+   original_order_id: String
+   uuid: UUID
+   id: int
+   vat_amount: double
+   price: Double
+   profondita: double
+   num_rip: int
+   created_at: Timestamp
+   nome: String
+   unit_misure: String
+   shelf_code: String
+   picture: String
+   fieldDataList: List<FieldData>
+   total: double
+   quantity: int
+   subtotal: double
+   cap: int
+   location: PGgeometry
+   role: String
+   principio_attivo: int
+   motive: String
+   email: String
+   is_enable: boolean
+   shelves_code: int
+   misure: int
+   discount_value: int
+   nome_tipologia: String
+   availability: int
+   tipologia: int
+   payment_mode: String
+   last_name: String
+   spessore: double
+   order_id: int
+   foreign_id: int
+   nome_categoria: String
+   anagrafica_cliente: String
+   nome_principio_attivo: String
+}
+class LotAssigment {
+  + LotAssigment(int, String, int):
+  + LotAssigment():
+  - quantity_occupied: int
+  - lot_code: String
+  - farmaco_id: int
+  - id: int
+  - quantity_request: int
+  - shelvesAssigmentList: List<ShelvesAssigment>
+  + add_assigment(String, int, int, int, int): void
+   farmaco_id: int
+   id: int
+   quantity_occupied: int
+   quantity_request: int
+   lot_code: String
+   shelvesAssigmentList: List<ShelvesAssigment>
+}
+class LotDimensionModel {
+  + LotDimensionModel():
+  + LotDimensionModel(String, int, double, double, double, double):
+  - height: double
+  - weight: double
+  - length: double
+  - deep: double
+  - lot_id: String
+  - farmaco_id: int
+  + setWeight(double): void
+   weight: double
+   farmaco_id: int
+   length: double
+   deep: double
+   lot_id: String
+   height: double
+}
+class Lots {
+  + Lots(String, int, Date, int):
+  - elapsed_date: Date
+  - farmaco_id: int
+  - availability: int
+  - lotto: String
+   elapsed_date: Date
+   farmaco_id: int
+   availability: int
+   lotto: String
+}
+class PharmacyAssigned {
+  + PharmacyAssigned(Farmacia, int):
+  - farmacia: Farmacia
+  - quantity: int
+   quantity: int
+   farmacia: Farmacia
+}
+class PharmacyDistance {
+  + PharmacyDistance(List<Farmacia>):
+  + PharmacyDistance(List<Farmacia>, Point):
+  - farmaciaList: List<Farmacia>
+  - average: Point
+   farmaciaList: List<Farmacia>
+   average: Point
+}
+class PiccoAcquisto {
+  + PiccoAcquisto():
+}
+class PriceSuggestConf {
+  + PriceSuggestConf(double, int, int):
+  ~ gain: double
+  ~ min_day_expire: int
+  ~ medium_stock_item: int
+   medium_stock_item: int
+   gain: double
+   min_day_expire: int
+}
+class PromotionData {
+  + PromotionData(double[], double[], List<Date>, int[], double, int, int):
+  - medium_stock_item: int
+  - min_day_expire: int
+  - currentPurchasePrices: double[]
+  - current_date: List<Date>
+  - current_stock_quantity: int[]
+  - sellerPriceHistory: double[]
+  - current_price: double
+   current_date: List<Date>
+   sellerPriceHistory: double[]
+   medium_stock_item: int
+   current_price: double
+   current_stock_quantity: int[]
+   min_day_expire: int
+   currentPurchasePrices: double[]
+}
+class SellerOrders {
+  + SellerOrders(int, int, Date):
+  - date_order: Date
+  - farmaco_id: int
+  - quantity: int
+   quantity: int
+   farmaco_id: int
+   date_order: Date
+}
+class Session {
+  + Session(List<Sessions>):
+  + Session():
+  - sessions: List<Sessions>
+   sessions: List<Sessions>
+}
+class ShelfInfo {
+  - ShelfInfo():
+  - ShelfInfo(ShelfInfoBuilder):
+  - deep: double
+  - magazzino_id: int
+  - lenght: double
+  - weight: int
+  - num_rip: int
+  - height: double
+  - shelf_thickness: double
+  - shelvesCapacities: List<ShelvesCapacity>
+  - shelf_code: String
+  - nome_magazzino: String
+  - order_by_increase(List<ShelvesRemain>): List<ShelvesRemain>
+  + canFitProduct(LotDimensionModel): boolean
+  + remaining_levels(LotDimensionModel): Optional<List<ShelvesRemain>>
+  + space_shelves_space_exist(LotDimensionModel): Optional<List<ShelvesCapacity>>
+   num_rip: int
+   nome_magazzino: String
+   lenght: double
+   shelf_thickness: double
+   shelf_code: String
+   height: double
+   deep: double
+   weight: int
+   shelvesCapacities: List<ShelvesCapacity>
+   magazzino_id: int
+}
+class ShelvesAssigment {
+  + ShelvesAssigment(int, int):
+  + ShelvesAssigment(String, int, int, int, int):
+  + ShelvesAssigment(int, String, int, int, int):
+  - shelf_code: String
+  - magazzino_id: int
+  - lot_assigment: int
+  - id: int
+  - quantity: int
+   id: int
+   lot_assigment: int
+   quantity: int
+   shelf_level: int
+   shelf_code: String
+   magazzino_id: int
+}
+class ShelvesCapacity {
+  + ShelvesCapacity(int, String, int, double, double, double):
+  + ShelvesCapacity():
+  + ShelvesCapacity(String, int, double, double, double):
+  - warehouse_shelf: String
+  - num_shelf: int
+  - current_weight: double
+  - occupied_length: double
+  - code: int
+  - occupied_deep: double
+   code: int
+   warehouse_shelf: String
+   occupied_length: double
+   occupied_deep: double
+   current_weight: double
+   num_shelf: int
+}
+class ShelvesRemain {
+  + ShelvesRemain(ShelvesCapacity, int):
+  - quantity: int
+  - shelvesCapacity: ShelvesCapacity
+   quantity: int
+   shelvesCapacity: ShelvesCapacity
+}
+class SpesaMensile {
+  + SpesaMensile(YearMonth):
+  - variazionePercentuale: double
+  - meseAnno: YearMonth
+  - quantitaTotale: int
+  - prezzoMedio: double
+  - spesaTotale: double
+  - numeroOrdini: int
+  + toString(): String
+  + aggiungiAcquisto(Acquisto): void
+  + calcolaPrezzoMedio(): void
+   quantitaTotale: int
+   meseAnno: YearMonth
+   spesaTotale: double
+   prezzoMedio: double
+   numeroOrdini: int
+   variazionePercentuale: double
+}
+class SuggestConfig {
+  + SuggestConfig(long, int, int):
+  - maxium_availability: int
+  - maxium_expire_day: long
+  - minimum_seller_order: int
+   minimum_seller_order: int
+   maxium_expire_day: long
+   maxium_availability: int
+}
+class User {
+  + User(List<Results>):
+  + User():
+  - status: int
+  - trustedMetadata: TrustedMetadata
+  - results: List<Results>
+   trustedMetadata: TrustedMetadata
+   results: List<Results>
+   status: int
+}
+class WarehouseDistances {
+  + WarehouseDistances(WarehouseModel, List<Farmacia>, double):
+  - farmacia: List<Farmacia>
+  - warehouseModel: WarehouseModel
+  - distance: double
+   farmacia: List<Farmacia>
+   warehouseModel: WarehouseModel
+   distance: double
+}
+class WarehouseModel {
+  + WarehouseModel(int, String, PGgeometry):
+  + WarehouseModel(String):
+  + WarehouseModel(int, String, PGgeometry, List<ShelfInfo>):
+  + WarehouseModel(int, String, PGgeometry, String, String, String, List<ShelfInfo>):
+  + WarehouseModel():
+  + WarehouseModel(int, String, String, String, String):
+  - province: String
+  - address: String
+  - id: int
+  - comune: String
+  - pGgeometry: PGgeometry
+  - shelfInfos: List<ShelfInfo>
+  - nome: String
+   id: int
+   shelfInfos: List<ShelfInfo>
+   nome: String
+   comune: String
+   province: String
+   address: String
+   pGgeometry: PGgeometry
+}
+class SellerPriceDao {
+  + SellerPriceDao(Database):
+  + findCurrentPricebyFarmaco(int): double
+  + findCurrentPricebyFarmaco(int, String): double
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findNotExistPrice(): List<FieldData>
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+
+@enduml

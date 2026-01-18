@@ -1,9 +1,6 @@
 package pharma.config.Json;
 
-import JPath.Query;
-import com.github.jknack.handlebars.helper.StringHelpers;
-import com.github.tomakehurst.wiremock.common.Json;
-import net.bytebuddy.asm.Advice;
+import pharma.JPath.Query;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -12,16 +9,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ExtractJsonTest {
     private static String json_string;

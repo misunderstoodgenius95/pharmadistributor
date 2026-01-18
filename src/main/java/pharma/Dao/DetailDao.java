@@ -1,8 +1,9 @@
 package pharma.dao;
 
 import pharma.Model.FieldData;
-import pharma.config.database.Database;
 import pharma.config.Utility;
+
+import pharma.config.database.Database;
 
 import java.rmi.AccessException;
 import java.sql.PreparedStatement;

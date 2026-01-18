@@ -4,8 +4,8 @@ import java.time.YearMonth;
 
 public class SpesaMensile {
     private YearMonth meseAnno;
-    private double spesaTotale;
-    private int quantitaTotale;
+    private  double spesaTotale;
+    private  int quantitaTotale;
     private int numeroOrdini;
     private double prezzoMedio;
     private double variazionePercentuale;
@@ -39,10 +39,11 @@ public class SpesaMensile {
     public void setVariazionePercentuale(double variazione) {
         this.variazionePercentuale = variazione;
     }
-
-    @Override
+/*    @Override
     public String toString() {
-        return String.format("%s: €%.2f (Qty: %d, Ordini: %d, Medio: €%.2f)%s",
+        return String.format("%s: €%.2f (Qty: %d, PurchaseOrdini: %d, Medio: €%.2f)%s",
                 meseAnno, spesaTotale, quantitaTotale, numeroOrdini, prezzoMedio);
-    }
+    }*/
+
+
 }

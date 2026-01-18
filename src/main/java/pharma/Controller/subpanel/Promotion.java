@@ -9,24 +9,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import pharma.Handler.SuggestPriceHandler;
-import pharma.Handler.SuggestPromotionHandler;
+import pharma.DialogController.SuggestPromotionControllerBase;
+import pharma.Handler.PromotionHandler;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
 import pharma.config.TableUtility;
 import pharma.config.Utility;
 import pharma.config.database.Database;
-import pharma.config.net.ClientHttp;
 import pharma.dao.*;
-import pharma.dao.SuggestPriceConfigDao;
-import pharma.formula.PriceSuggestion;
-import pharma.formula.TrendMarket;
-import pharma.formula.promotion.PromotionsSuggest;
+import pharma.Service.Promotion.PromotionsSuggestService;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
@@ -38,15 +34,15 @@ public class Promotion implements Initializable {
 
     SellerOrderDetails s_detail;
     PurchaseOrderDetailDao p_detail;
-    PromotionConfigDao p_conf;
     LottiDao lottiDao;
     LotAssigmentDao assigmentDao;
     SellerPriceDao s_dao;
     private ObservableList<FieldData> observable_table_id;
-    private PromotionsSuggest suggestion;
+    private PromotionsSuggestService suggestion;
     private PromotionDao promotionDao;
     private SimpleBooleanProperty s_boolean;
-    private SuggestPromotionHandler suggestPromotionHandler;
+    private SuggestPromotionControllerBase suggestPromotionDialog;
+    private PromotionHandler promotionHandler;
     public Promotion() {
 
         s_boolean=new SimpleBooleanProperty(false);
@@ -54,16 +50,16 @@ public class Promotion implements Initializable {
         HashMap<String,String> properties_suggestion=null;
         URI uri=null;
         try {
-            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
             s_detail=new SellerOrderDetails(Database.getInstance(properties));
-            p_conf=new PromotionConfigDao(Database.getInstance(properties));
             p_detail=new PurchaseOrderDetailDao(Database.getInstance(properties));
             lottiDao=new LottiDao(Database.getInstance(properties),"lotto");
             assigmentDao=new LotAssigmentDao(Database.getInstance(properties));
             s_dao=new SellerPriceDao(Database.getInstance(properties));
             promotionDao=new PromotionDao(Database.getInstance(properties));
-            suggestion=new PromotionsSuggest(s_detail,p_detail,p_conf,lottiDao,assigmentDao,s_dao);
-             suggestPromotionHandler=new SuggestPromotionHandler("Promozione",s_dao,suggestion,promotionDao,s_boolean);
+            promotionHandler=new PromotionHandler(p_detail,s_detail,lottiDao,assigmentDao,s_dao);
+             suggestPromotionDialog=new SuggestPromotionControllerBase("Promozione",s_dao,promotionHandler,promotionDao,s_boolean);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,8 +68,7 @@ public class Promotion implements Initializable {
     }
     @FXML
     public void btn_action_add(ActionEvent event) {
-        suggestPromotionHandler.execute();
-
+        suggestPromotionDialog.execute();
         if(s_boolean.get()){
             observable_table_id.clear();
             observable_table_id.addAll(promotionDao.findAll());

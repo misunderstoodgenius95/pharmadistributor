@@ -1,12 +1,11 @@
 package pharma.dao;
 
-import algoWarehouse.ShelfInfo;
+import pharma.Model.ShelfInfo;
 
 import pharma.config.database.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public class ShelfDao extends GenericJDBCDao<ShelfInfo,String> {

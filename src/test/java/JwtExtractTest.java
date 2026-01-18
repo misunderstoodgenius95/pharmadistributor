@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pharma.Model.FieldData;
 import pharma.Storage.StorageToken;
-import pharma.security.TokenUtility;
+import pharma.Utility.TokenUtility;
 
 import java.sql.Date;
 import java.time.LocalDate;

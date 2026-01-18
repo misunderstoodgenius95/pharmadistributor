@@ -1,8 +1,7 @@
 package pharma.dao;
 
-import algoWarehouse.ShelfInfo;
-import algoWarehouse.ShelvesCapacity;
-import net.postgis.jdbc.PGgeometry;
+import pharma.Model.ShelfInfo;
+import pharma.Model.ShelvesCapacity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package pharma.dao;
 
-import algoWarehouse.ShelfInfo;
-import algoWarehouse.ShelvesCapacity;
+import pharma.Model.ShelfInfo;
+import pharma.Model.ShelvesCapacity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pharma.Model.WarehouseModel;

@@ -1,0 +1,59 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class Chacha20 {
+  + Chacha20():
+  + decryptedString(byte[]): String
+  + encrypt(byte[], byte[]): Optional<byte[]>
+  + encryptString(String, byte[]): Optional<String>
+  + hexToByte(String): byte[]
+  + generateNonce(): byte[]
+  + byteToHex(byte[]): String
+  + decrypt(byte[], byte[]): Optional<byte[]>
+}
+class SHA256Signature {
+  + SHA256Signature():
+  - pemToDer(String): byte[]
+  + verifySignature(String, String, String): boolean
+}
+class SecurePasswordGenerator {
+  + SecurePasswordGenerator():
+  + generatePassword(int): String
+  + getRandomCharacter(String): char
+}
+class TokenUtility {
+  - TokenUtility():
+  + extract_token(String): String
+  + extractEmailByUserId(String): String
+  + extract_sub(String): String
+  + check_permission(String, String, String): boolean
+  - extactObjectFromJsonArray(String): JSONObject
+  + extractPermissions(String): String
+  + extractRole(String): String
+  + extract_email(String): String
+}
+class TrasformValue {
+  - TrasformValue():
+  # percentageFromNormalized(double): int
+  + average(double[]): double
+  # normalizeValue2(double, double): double
+  + calculate_percent_gain(double[], double[], double[], double): double
+  + adjust_factor(double, double): double
+  + calculus_trend(double): double
+  + trim_two(double): double
+  + round_percentuages(double): double
+  + calculateAverageEpoch(List<Date>): long
+  + cost(double, double): double
+  + round_one(double): double
+  + remaining_day(long): long
+  + adjust_factor(double): double
+  + normalizeValue(double, double): double
+  + gain(double, double): double
+  + normalize_percentuages(double): double
+  + calculateExpirationUrgency(long, double): double
+  + average(int[]): int
+  + adjust_factor_two(double, double): double
+}
+
+@enduml

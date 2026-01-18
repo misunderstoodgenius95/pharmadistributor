@@ -2,8 +2,6 @@ package pharma;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import net.bytebuddy.implementation.auxiliary.MethodCallProxy;
-import net.jodah.failsafe.internal.util.Assert;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
@@ -12,20 +10,15 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import pharma.Model.FieldData;
+import pharma.config.net.HttpExpireItem;
 import pharma.config.net.ClientHttp;
-import pharma.javafxlib.test.SimulateEvents;
 
-import java.io.File;
-import java.lang.reflect.Field;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 

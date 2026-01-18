@@ -1,9 +1,10 @@
 package pharma.formula.suggest;
 
 import org.junit.jupiter.api.*;
-import pharma.formula.suggest.Model.Lots;
-import pharma.formula.suggest.Model.SellerOrders;
-import pharma.formula.suggest.Model.SuggestConfig;
+import pharma.Model.Lots;
+import pharma.Model.SellerOrders;
+import pharma.Model.SuggestConfig;
+import pharma.Service.suggest.SingleProductSuggest;
 
 import java.sql.Date;
 import java.time.LocalDate;

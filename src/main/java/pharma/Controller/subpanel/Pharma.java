@@ -11,12 +11,14 @@ import javafx.scene.layout.AnchorPane;
 
 
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import pharma.Handler.DialogHandler;
-import pharma.Handler.PharmaDialogHandler;
+import pharma.DialogController.DialogControllerBase;
+import pharma.DialogController.PharmaDialogControllerBase;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
 import pharma.config.*;
-import pharma.config.auth.AutorizationService;
+import pharma.config.TableUtility;
+import pharma.config.Utility;
+import pharma.config.auth.AutorizationGateway;
 import pharma.dao.PharmaDao;
 import pharma.config.database.Database;
 import pharma.javafxlib.CustomTableView.RadioButtonTableColumn;
@@ -40,41 +42,27 @@ public class Pharma implements Initializable {
     public TableView<FieldData> table_id;
     @FXML
     public Button button_add_click;
-    private PharmaDialogHandler pharmaDialogHandler;
+    private PharmaDialogControllerBase pharmaDialogHandler;
     private  ObservableList<FieldData> obs_fieldData;
     private PharmaDao pharmaDao;
-    private AutorizationService authorizationService;
-    private String jwt;
     public Pharma() throws FileNotFoundException {
-        HashMap<String,String> hashMap_json=null;
-        hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
-        authorizationService=
-                new AutorizationService( new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
-         jwt=FileStorage.getProperty("jwt",new FileReader("config.properties"));
+
+
     }
     @FXML
     public void add_pharma_action() throws AccessException, FileNotFoundException {
 
-        if(authorizationService.authorization(jwt,"create","pharma")) {
-            pharmaDialogHandler.setOperation(DialogHandler.Mode.Insert, null);
+            pharmaDialogHandler.setOperation(DialogControllerBase.Mode.Insert, null);
             pharmaDialogHandler.execute();
             table_id.setItems(obs_fieldData);
-        }else{
-            Utility.create_alert(Alert.AlertType.ERROR,"Operation Formitten!","Operazione negata! ");
-        }
-
-
-
-
     }
     @FXML
     void edit_pharma_event() throws AccessException {
 
-        if(authorizationService.authorization(jwt,"update","pharma")) {
-            pharmaDialogHandler.setOperation(DialogHandler.Mode.Update, fieldData_property.get());
+
+            pharmaDialogHandler.setOperation(DialogControllerBase.Mode.Update, fieldData_property.get());
             pharmaDialogHandler.execute();
             table_id.refresh();
-        }
 
     }
 
@@ -83,16 +71,17 @@ public class Pharma implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Properties properties;
         try {
-             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
         } catch (IOException e ) {
             throw new RuntimeException(e);
         }
 
         pharmaDao = new PharmaDao(Database.getInstance(properties));
         obs_fieldData= FXCollections.observableArrayList();
-        pharmaDialogHandler=new PharmaDialogHandler("Aggiungi Casa farmaceutica",pharmaDao,obs_fieldData);
+        pharmaDialogHandler=new PharmaDialogControllerBase("Aggiungi Casa farmaceutica",pharmaDao,obs_fieldData);
         Utility.add_iconButton(button_add_click, FontAwesomeSolid.PLUS);
         fieldData_property=new SimpleObjectProperty<>();
+
         //For edit row
         RadioButtonTableColumn<FieldData> actionColumn = new RadioButtonTableColumn<>() {
             @Override

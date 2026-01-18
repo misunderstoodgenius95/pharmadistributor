@@ -1,0 +1,183 @@
+@startuml
+class SellerCreditNoteDetailDao {
+  + SellerCreditNoteDetailDao(Database):
+  - table_name: String
+  # mapRow(ResultSet): FieldData
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+   table_name: String
+}
+class SellerInvoiceDao {
+  + SellerInvoiceDao(Database):
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findByRangeBetweenAndRagioneSociale(Date, Date, String): List<FieldData>
+  + findByOrderID(int): FieldData
+  # mapRow(ResultSet): FieldData
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SellerOrderDao {
+  + SellerOrderDao(Database):
+  + findByOrders(int): List<FieldData>
+  + findAllOrderNotExistinSellerOrder(): List<FieldData>
+  + findByRangeBetweenAndRagioneSocialeWhereNotExistCreditNote(Date, Date, String): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findAllWithPharmaName(): List<FieldData>
+  + addRowSearch(ResultSet): FieldData
+  + findById(Integer): FieldData
+  + findByRangeBetweenAndRagioneSociale(Date, Date, String): List<FieldData>
+  + findByIdWhereNotExistintoSellerCreditNote(Integer): FieldData
+  + addOrderSearch(ResultSet): FieldData
+  # mapRow(ResultSet): FieldData
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SellerOrderDetails {
+  + SellerOrderDetails(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findbyProduct(int): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findbyOrderId(int): List<FieldData>
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  + findDetailbySellerOrderId(int): List<FieldData>
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SellerPriceDao {
+  + SellerPriceDao(Database):
+  + findCurrentPricebyFarmaco(int): double
+  + findCurrentPricebyFarmaco(int, String): double
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findNotExistPrice(): List<FieldData>
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class ShelfDao {
+  + ShelfDao(Database):
+  # setUpdateParameter(PreparedStatement, ShelfInfo): void
+  + findShelfByMagazzinoId(int): List<ShelfInfo>
+  # mapRow(ResultSet): ShelfInfo
+  # setFindByIdParameters(PreparedStatement, String): void
+  # setInsertParameter(PreparedStatement, ShelfInfo): void
+  # setDeleteParameter(PreparedStatement, ShelfInfo): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class ShelvesDao {
+  + ShelvesDao(Database):
+  # mapRow(ResultSet): ShelvesCapacity
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findByShelvesByShelf(String): List<ShelvesCapacity>
+  # setUpdateParameter(PreparedStatement, ShelvesCapacity): void
+  # setDeleteParameter(PreparedStatement, ShelvesCapacity): void
+  # setInsertParameter(PreparedStatement, ShelvesCapacity): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SuggestDaoConfig {
+  + SuggestDaoConfig(String, Database):
+  # mapRow(ResultSet): SuggestConfig
+  # setDeleteParameter(PreparedStatement, SuggestConfig): void
+  # setInsertParameter(PreparedStatement, SuggestConfig): void
+  # setUpdateParameter(PreparedStatement, SuggestConfig): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class SuggestPriceConfigDao {
+  + SuggestPriceConfigDao(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  + findById(Integer): FieldData
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class Warehouse_shelf {
+  + Warehouse_shelf(String, Database):
+  # setFindByIdParameters(PreparedStatement, String): void
+  # mapRow(ResultSet): ShelfInfo
+  # setUpdateParameter(PreparedStatement, ShelfInfo): void
+  # setInsertParameter(PreparedStatement, ShelfInfo): void
+  # setDeleteParameter(PreparedStatement, ShelfInfo): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+interface GenericDaoAble<T, ID> << interface >> {
+  + insert(T): boolean
+  + findById(ID): T
+  + findAll(): List<T>
+  + update(T): boolean
+  + delete(T): boolean
+}
+class GenericJDBCDao<T, ID> {
+  + GenericJDBCDao(String, Database):
+  + findByParameter(String, int): List<T>
+  + update(T): boolean
+  # setUpdateParameter(PreparedStatement, T): void
+  + findByParameters(String, Object[]): List<T>
+  + commit(): void
+  + insert(T): boolean
+  # mapRow(ResultSet): T
+  # setFindByIdParameters(PreparedStatement, ID): void
+  + rollback(): void
+  + insertAndReturnID(T): int
+  # setDeleteParameter(PreparedStatement, T): void
+  + delete(T): boolean
+  + findAll(): List<T>
+  - switch_type(PreparedStatement, Object, int): void
+  + findById(ID): T
+  + findAllWithExecutionTime(): List<String>
+  # setInsertParameter(PreparedStatement, T): void
+  + findByParameter(String, String): List<T>
+  + findByParametersExists(String, Object[]): boolean
+   findQueryAll: String
+   findAllExecutionTime: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+   transaction: boolean
+
+}
+
+SellerCreditNoteDetailDao    -[#000082,plain]-^  GenericJDBCDao
+SellerInvoiceDao             -[#000082,plain]-^  GenericJDBCDao
+SellerOrderDao               -[#000082,plain]-^  GenericJDBCDao
+SellerOrderDetails           -[#000082,plain]-^  GenericJDBCDao
+SellerPriceDao               -[#000082,plain]-^  GenericJDBCDao
+ShelfDao                     -[#000082,plain]-^  GenericJDBCDao
+ShelvesDao                   -[#000082,plain]-^  GenericJDBCDao
+SuggestDaoConfig             -[#000082,plain]-^  GenericJDBCDao
+SuggestPriceConfigDao        -[#000082,plain]-^  GenericJDBCDao
+Warehouse_shelf              -[#000082,plain]-^  GenericJDBCDao
+@enduml

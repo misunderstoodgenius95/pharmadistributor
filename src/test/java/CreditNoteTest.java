@@ -18,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import pharma.Handler.PurchaseCreditNoteHandler;
+import pharma.DialogController.PurchaseCreditNoteControllerBase;
 import pharma.Model.FieldData;
 import pharma.config.database.Database;
 import pharma.javafxlib.DoubleClick_Menu;
@@ -83,9 +83,9 @@ public class CreditNoteTest {
         obs_table_fd_details=FXCollections.observableArrayList();
 
         TableRowExpanderColumn<FieldData>expanderColumn=new TableRowExpanderColumn<>(this::createExpandendRow);
-        TableColumn<FieldData,Double> col_subtotal=TableUtility.generate_column_double("Subtotale","subtotal");
-        TableColumn<FieldData,Double> col_vat=TableUtility.generate_column_double("Iva","vat_amount");
-        TableColumn<FieldData,Double> col_total=TableUtility.generate_column_double("Totale","total");
+        TableColumn<FieldData,Double> col_subtotal= TableUtility.generate_column_double("Subtotale","subtotal");
+        TableColumn<FieldData,Double> col_vat= TableUtility.generate_column_double("Iva","vat_amount");
+        TableColumn<FieldData,Double> col_total= TableUtility.generate_column_double("Totale","total");
         TableUtility.formatting_double(col_subtotal);
         TableUtility.formatting_double(col_vat);
         TableUtility.formatting_double(col_total);
@@ -106,8 +106,8 @@ public class CreditNoteTest {
             FieldData fieldData=table_id.getSelectionModel().getSelectedItem();
 
             if(fieldData!=null) {
-                PurchaseCreditNoteHandler purchaseCreditNoteHandler =
-                        new PurchaseCreditNoteHandler("Inserisci Nota di Credito", fieldData,Arrays.asList(purchaseOrderDao,p_detail,purchaseCreditNoteDao));
+                PurchaseCreditNoteControllerBase purchaseCreditNoteHandler =
+                        new PurchaseCreditNoteControllerBase("Inserisci Nota di Credito", fieldData,Arrays.asList(purchaseOrderDao,p_detail,purchaseCreditNoteDao));
                 purchaseCreditNoteHandler.execute();
             }
 
@@ -262,10 +262,10 @@ public class CreditNoteTest {
         FieldData fd_invoice=param.getValue();
       // fd_invoice.setNome_casa_farmaceutica();
         TableRowExpanderColumn<FieldData>expanderColumn=new TableRowExpanderColumn<>(this::createExpandendRowInner);
-        TableColumn<FieldData,Double> col_subtotal=TableUtility.generate_column_double("Subtotale","subtotal");
-        TableColumn<FieldData,Double> col_vat=TableUtility.generate_column_double("Iva","vat_amount");
+        TableColumn<FieldData,Double> col_subtotal= TableUtility.generate_column_double("Subtotale","subtotal");
+        TableColumn<FieldData,Double> col_vat= TableUtility.generate_column_double("Iva","vat_amount");
         TableUtility.formatting_double(col_vat);
-        TableColumn<FieldData,Double> col_total=TableUtility.generate_column_double("Totale","total");
+        TableColumn<FieldData,Double> col_total= TableUtility.generate_column_double("Totale","total");
         TableUtility.formatting_double(col_total);
         t_expanded.getColumns().addAll(expanderColumn,
                 TableUtility.generate_column_string("Data Ordine","production_date"),

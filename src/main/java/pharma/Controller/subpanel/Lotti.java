@@ -6,10 +6,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
-import pharma.Handler.DialogHandler;
-import pharma.Handler.LottiDialogHandler;
+import pharma.DialogController.DialogControllerBase;
+import pharma.DialogController.LottiDialogControllerBase;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
 import pharma.config.database.Database;
 import pharma.config.TableUtility;
 import pharma.dao.FarmacoDao;
@@ -29,14 +30,14 @@ public class Lotti implements Initializable {
     private LottiDao lottiDao;
     private FarmacoDao farmacoDao;
     private ObservableList<FieldData> obs;
-    private DialogHandler<FieldData> dialogHandler;
+    private DialogControllerBase<FieldData> dialogControllerBase;
 
     public Lotti() {
         Database database;
         Properties properties;
         obs=FXCollections.observableArrayList();
         try {
-             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
            database=Database.getInstance(properties);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -48,15 +49,15 @@ public class Lotti implements Initializable {
     }
     @FXML
     public void btn_action_add(ActionEvent event) {
-       dialogHandler = new LottiDialogHandler("Aggiungi Lotti", lottiDao, farmacoDao,obs);
+       dialogControllerBase = new LottiDialogControllerBase("Aggiungi Lotti", lottiDao, farmacoDao,obs);
 
-        dialogHandler.execute();
+        dialogControllerBase.execute();
         table_id.getItems().clear();
         table_id.getItems().setAll(obs);
     }
 
-    public DialogHandler<FieldData> getDialogHandler() {
-        return dialogHandler;
+    public DialogControllerBase<FieldData> getDialogHandler() {
+        return dialogControllerBase;
     }
 
     @Override

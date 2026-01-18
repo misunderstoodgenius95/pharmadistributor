@@ -3,11 +3,9 @@ package pharma.javafxlib.test;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import org.testfx.util.WaitForAsyncUtils;
 import pharma.Model.FieldData;
 import pharma.config.TableUtility;
 import pharma.javafxlib.DoubleClick_Menu;
@@ -26,7 +23,6 @@ import static pharma.javafxlib.test.SimulateEvents.*;
 import java.sql.Date;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class SimulateEventsTest {
     VBox vBox;

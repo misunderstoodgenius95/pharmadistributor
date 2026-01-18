@@ -1,40 +1,36 @@
 package pharma.Controller;
 
 
-import com.github.curiousoddman.rgxgen.iterators.IncrementalLengthIterator;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import pharma.RolesStage;
+import pharma.DialogController.Report.PiccoDialog;
+import pharma.DialogController.Report.SpeseAcquisti;
+import pharma.DialogController.Report.Trend;
+import pharma.DialogController.Report.Variazione;
+import pharma.Model.Acquisto;
+import pharma.Model.Ordini;
 import pharma.Stages;
 import pharma.Storage.FileStorage;
-import pharma.Storage.StorageToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import pharma.config.auth.AutorizationService;
-import pharma.config.auth.UserService;
+import pharma.config.PathConfig;
+import pharma.config.database.Database;
+import pharma.dao.FarmacoDao;
+import pharma.dao.PurchaseOrderDao;
+import pharma.dao.PurchaseOrderDetailDao;
 import pharma.javafxlib.DropDownMenu;
-import pharma.security.Stytch.StytchClient;
-import pharma.security.TokenUtility;
 
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class Purchase  implements  Initializable{
 
@@ -45,21 +41,25 @@ public class Purchase  implements  Initializable{
     private AnchorPane anchor_id;
     private SimpleObjectProperty<Pane> simpleObjectProperty;
     private Button last_clicked;
-
-
+    private PurchaseOrderDetailDao p_detail_dao;
+    private FarmacoDao farmacoDao;
+    private PurchaseOrderDao purchaseOrderDao;
     public Purchase() {
         stages = new Stages();
         simpleObjectProperty = new SimpleObjectProperty<>();
         last_clicked = null;
-        HashMap<String,String> hashMap_json=null;
+        Properties properties=null;
         try {
-            hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
 
+            p_detail_dao=new PurchaseOrderDetailDao(Database.getInstance(properties));
+            farmacoDao=new FarmacoDao(Database.getInstance(properties));
+            purchaseOrderDao=new PurchaseOrderDao(Database.getInstance(properties));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-
 
 
     }
@@ -68,7 +68,6 @@ public class Purchase  implements  Initializable{
         anchor_id.getChildren().removeIf(node -> node.getStyleClass().contains("subpanel"));
         AnchorPane.setRightAnchor(parent, value);
         anchor_id.getChildren().add(parent);
-
     }
 
     @FXML
@@ -149,10 +148,23 @@ public class Purchase  implements  Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         DropDownMenu dropDownMenu=new DropDownMenu(report_id);
-        dropDownMenu.createItem("Andamento Acquisti Per Mesi ");
-        dropDownMenu.createItem("Variazione Acquisti Tra Mesi");
-        dropDownMenu.createItem("Trend");
-        dropDownMenu.createItem("Picchi");
+
+       List<Acquisto> acquistos=p_detail_dao.findAllReportData().stream().map(item->new Acquisto(item.getId(),item.getQuantity(),item.getElapsed_date(),item.getPrice())).toList();
+        List<Ordini> ordiniList=purchaseOrderDao.findAll().stream().map(item->new Ordini(item.getOrder_id(),item.getTotal(),item.getProduction_date())).toList();
+        SpeseAcquisti acquisti=new SpeseAcquisti(ordiniList);
+        Variazione variazione=new Variazione("Visualizza variazione",ordiniList);
+        PiccoDialog piccoDialog =new PiccoDialog("Visualizza Picco",acquistos,farmacoDao);
+        Trend trend=new Trend("Visualizza Trend",acquistos);
+        dropDownMenu.createItem("Andamento Acquisti Per Mesi ").setOnAction(event -> {
+        acquisti.show();
+        });
+dropDownMenu.createItem("Variazione Acquisti Tra Mesi").setOnAction(event -> {
+    variazione.show();
+});
+       dropDownMenu.createItem("Trend").setOnAction(event -> {
+            trend.show();
+        });
+      dropDownMenu.createItem("Picchi").setOnAction(event -> piccoDialog.show());
     }
 
     public void report_action(ActionEvent event) {

@@ -1,17 +1,16 @@
 package JPath;
 
-import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import pharma.JPath.Query;
+
 import  java.util.List;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class QueryTest {
 
@@ -27,7 +26,7 @@ class QueryTest {
     void ValidEqual() {
 
 
-        String actual=Query.equal("name","Alice");
+        String actual= Query.equal("name","Alice");
         Assertions.assertEquals("$[?(@.name == 'Alice')]",actual);
     }
 

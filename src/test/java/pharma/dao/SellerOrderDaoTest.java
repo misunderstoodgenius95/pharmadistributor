@@ -14,12 +14,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class SellerOrderDaoTest {
 
     @Test
-    void findByRangeBetweenAndRagioneSociale() {
+    void findByRangeBetweenAndRagioneSocialeWhereNotExistCreditNote() {
         Properties properties = null;
         try {
             properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
@@ -28,7 +28,7 @@ class SellerOrderDaoTest {
         }
         SellerOrderDao sellerOrderDao = new SellerOrderDao(Database.getInstance(properties));
         List<FieldData> list=sellerOrderDao.
-                findByRangeBetweenAndRagioneSociale(Date.valueOf("2025-1-1"), Date.valueOf("2027-1-1"), "Farmacia Del Corso");
+                findByRangeBetweenAndRagioneSocialeWhereNotExistCreditNote(Date.valueOf("2025-1-1"), Date.valueOf("2027-1-1"), "Farmacia Del Corso");
         Assertions.assertFalse(list.isEmpty());
     }
 

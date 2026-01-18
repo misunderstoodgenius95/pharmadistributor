@@ -81,6 +81,7 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
     }
 
 
+
     public List<FieldData> findByProductPrice( int farmaco_id) {
         String query="SELECT price FROM purchase_order_detail where farmaco = ?";
         List<FieldData> resultList=new ArrayList<>();
@@ -102,7 +103,27 @@ public class PurchaseOrderDetailDao extends GenericJDBCDao<FieldData,Integer> {
 
         return resultList;
     }
+    public List<FieldData> findAllReportData(){
+        List<FieldData> list=new ArrayList<>();
+        try {
 
+            ResultSet resultSet=database.executeQuery("select * from purchase_order_detail inner join purchase_order on purchase_order.id=purchase_order_detail.purchase_order;" );
+            while (resultSet.next()) {
+                list.add(FieldData.FieldDataBuilder.getbuilder().
+                       setId(resultSet.getInt("farmaco")).
+                                setQuantity(resultSet.getInt("quantity")).setElapsed_date(resultSet.getDate("data")).setPrice(resultSet.getDouble("price")).
+                        build());
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  list;
+
+
+    }
     public List<FieldData> findDetailbyPurchaseOrderId(int id){
         List<FieldData> list=new ArrayList<>();
         try {

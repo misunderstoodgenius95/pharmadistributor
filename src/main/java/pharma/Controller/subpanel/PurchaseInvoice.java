@@ -9,11 +9,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.table.TableRowExpanderColumn;
-import pharma.Handler.InvoiceViewDialog;
-import pharma.Handler.PurchaseCreditNoteHandler;
-import pharma.Handler.PurchaseInvoiceHandler;
+import pharma.DialogController.InvoiceViewDialog;
+import pharma.DialogController.PurchaseCreditNoteControllerBase;
+import pharma.DialogController.PurchaseInvoiceControllerBase;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
 import pharma.config.database.Database;
 import pharma.config.TableUtility;
 import pharma.dao.*;
@@ -42,7 +43,7 @@ public class PurchaseInvoice implements Initializable {
     public PurchaseInvoice() {
 
         try {
-            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
             purchaseInvoiceDao = new PurchaseInvoiceDao(Database.getInstance(properties));
             purchaseOrderDao = new PurchaseOrderDao(Database.getInstance(properties));
             pharmaDao = new PharmaDao(Database.getInstance(properties));
@@ -57,7 +58,7 @@ public class PurchaseInvoice implements Initializable {
     }
 
     public void btn_action_add(ActionEvent actionEvent) {
-        PurchaseInvoiceHandler purchaseInvoiceHandler = new PurchaseInvoiceHandler(pharmaDao, purchaseInvoiceDao, purchaseOrderDao, simpleBooleanProperty);
+        PurchaseInvoiceControllerBase purchaseInvoiceHandler = new PurchaseInvoiceControllerBase(pharmaDao, purchaseInvoiceDao, purchaseOrderDao, simpleBooleanProperty);
         purchaseInvoiceHandler.execute();
     }
     private VBox createExpandendRow(TableRowExpanderColumn.TableRowDataFeatures<FieldData> fieldDataTableRowDataFeatures) {
@@ -99,8 +100,8 @@ public void double_click(){
             FieldData fieldData = tableRow.getItem();
             if (fieldData != null) {
                 assert purchaseCreditNoteDao != null : "Null";
-                PurchaseCreditNoteHandler purchaseCreditNoteHandler =
-                        new PurchaseCreditNoteHandler("Aggiungi Nota di Credito", fieldData, Arrays.asList(p_detail, purchaseCreditNoteDetail, purchaseCreditNoteDao));
+                PurchaseCreditNoteControllerBase purchaseCreditNoteHandler =
+                        new PurchaseCreditNoteControllerBase("Aggiungi Nota di Credito", fieldData, Arrays.asList(p_detail, purchaseCreditNoteDetail, purchaseCreditNoteDao));
                 purchaseCreditNoteHandler.execute();
 
             } else {
@@ -225,8 +226,8 @@ public void double_click(){
 
 
   /*          FieldData fieldData=(FieldData) table_id.getSelectionModel().getSelectedItem();
-            PurchaseCreditNoteHandler purchaseCreditNoteHandler =
-                    new PurchaseCreditNoteHandler("Aggiungi Nota di Credito", fieldData, Arrays.asList(p_detail, purchaseCreditNoteDao, purchaseCreditNoteDetail));
+            PurchaseCreditNoteControllerBase purchaseCreditNoteHandler =
+                    new PurchaseCreditNoteControllerBase("Aggiungi Nota di Credito", fieldData, Arrays.asList(p_detail, purchaseCreditNoteDao, purchaseCreditNoteDetail));
             purchaseCreditNoteHandler.execute();
 */
 

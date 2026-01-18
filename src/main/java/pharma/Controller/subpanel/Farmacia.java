@@ -7,13 +7,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import pharma.Handler.FarmaciaHandler;
-import pharma.Handler.FarmaciaView;
+import pharma.DialogController.FarmaciaControllerBase;
+import pharma.DialogController.FarmaciaView;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
+import pharma.config.Utility;
 import pharma.config.database.Database;
 import pharma.config.TableUtility;
-import pharma.config.Utility;
 import pharma.dao.FarmaciaDao;
 
 import java.io.FileReader;
@@ -30,7 +31,8 @@ public class Farmacia implements Initializable {
     public Farmacia() {
         Properties properties = null;
         try {
-            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +41,7 @@ public class Farmacia implements Initializable {
 
     public void btn_action_add(ActionEvent actionEvent) {
 
-     FarmaciaHandler farmaciaHandler=new FarmaciaHandler("Inserisci Farmacia", Collections.singletonList(farmaciaDao));
+     FarmaciaControllerBase farmaciaHandler=new FarmaciaControllerBase("Inserisci Farmacia", Collections.singletonList(farmaciaDao));
      farmaciaHandler.execute();
 
     }

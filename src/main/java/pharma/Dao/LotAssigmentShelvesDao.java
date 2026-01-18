@@ -1,6 +1,6 @@
 package pharma.dao;
 
-import algoWarehouse.ShelvesAssigment;
+import pharma.Model.ShelvesAssigment;
 import pharma.Model.FieldData;
 import pharma.config.database.Database;
 
@@ -44,14 +44,7 @@ public class LotAssigmentShelvesDao extends GenericJDBCDao<ShelvesAssigment, Int
 
 
     }
-    public List<ShelvesAssigment> findByShelf(String shelf_code){
-        String query=" select * from lot_assigment_shelves\n " +
-                " inner join lot_assignment on lot_assignment.id=lot_assigment_shelves.id\n" +
-                " where shelf_code = ? ";
-        return  super.findByParameter(query,shelf_code);
 
-
-    }
 
     public List<FieldData> findbyLotCode(String lot_code){
         List<FieldData> list=new ArrayList<>();
@@ -83,7 +76,7 @@ public class LotAssigmentShelvesDao extends GenericJDBCDao<ShelvesAssigment, Int
                     setQuantity(resultSet.getInt("quantity")).
                      setForeign_id(resultSet.getInt("warehouse_id")).
                      setCapacity(resultSet.getInt("lot_assigment_id")).
-                     setId(resultSet.getInt("shelves_id"))
+                     setId(resultSet.getInt("shelves_level"))
                     .build();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -95,7 +88,7 @@ public class LotAssigmentShelvesDao extends GenericJDBCDao<ShelvesAssigment, Int
     public List<FieldData> findbyShelfCode(String shelf_code){
         List<FieldData> list=new ArrayList<>();
         try {
-            PreparedStatement statement=database.execute_prepared_query("select lot_code,w.nome,shelf_code,shelves_level,quantity  from lot_assigment_shelves\n" +
+            PreparedStatement statement=database.execute_prepared_query("select *  from lot_assigment_shelves\n" +
                     "inner join lot_assignment la on la.id = lot_assigment_shelves.lot_assigment_id\n" +
                     "inner join warehouse w on w.id = lot_assigment_shelves.warehouse_id\n" +
                     "where shelf_code= ? ");

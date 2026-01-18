@@ -1,13 +1,12 @@
 package algo;
 
-import algoWarehouse.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import pharma.Model.FieldData;
-import pharma.Model.LotDimensionModel;
+import pharma.Model.*;
+import pharma.Service.PlacementShelf;
 
 import java.util.ArrayList;
 import java.util.Arrays;

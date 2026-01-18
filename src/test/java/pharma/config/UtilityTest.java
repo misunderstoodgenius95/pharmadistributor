@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import pharma.Model.FieldData;
+import pharma.config.Utility;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,13 +40,13 @@ class UtilityTest extends ApplicationTest {
     @Test
     void Validextract_value_from_list() {
         List<Control> controls=new ArrayList<>(Arrays.asList(new Button(),new TextField("hi")));
-        List<TextField> textFields=Utility.extract_value_from_list(controls,TextField.class);
+        List<TextField> textFields= Utility.extract_value_from_list(controls,TextField.class);
         Assertions.assertEquals("hi",textFields.getFirst().getText());
     }
     @Test
     void InvValidextract_value_from_list() {
         List<Control> controls=new ArrayList<>(Arrays.asList(new Button(),new TextField("hi")));
-        List<TextField> textFields=Utility.extract_value_from_list(controls,TextField.class);
+        List<TextField> textFields= Utility.extract_value_from_list(controls,TextField.class);
         Assertions.assertNotEquals("Ciao",textFields.getFirst().getText());
     }
 
@@ -53,7 +54,7 @@ class UtilityTest extends ApplicationTest {
     void ValidIntegrationExtract_province() {
         try {
             String json_string=new String(Files.readAllBytes(Path.of("src/main/resources/json_file/province.json")));
-            List<FieldData> list=Utility.extract_province(json_string);
+            List<FieldData> list= Utility.extract_province(json_string);
             Assertions.assertFalse(list.isEmpty());
             Assertions.assertEquals("Agrigento",list.getFirst().getProvince());
             Assertions.assertEquals("AG",list.getFirst().getSigla());

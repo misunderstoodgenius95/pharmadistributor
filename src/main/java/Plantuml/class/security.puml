@@ -1,0 +1,90 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+class Chacha20 {
+  + Chacha20():
+  + decryptedString(byte[]): String
+  + encrypt(byte[], byte[]): Optional<byte[]>
+  + encryptString(String, byte[]): Optional<String>
+  + hexToByte(String): byte[]
+  + generateNonce(): byte[]
+  + byteToHex(byte[]): String
+  + decrypt(byte[], byte[]): Optional<byte[]>
+}
+class EncodeStytch {
+  + EncodeStytch():
+  + authentication(String, String): String
+  + decode(String): String
+}
+class EndPoints {
+  + EndPoints():
+  + getAuth_token(String): String
+  + getCreate_user(String): String
+  + getUser_update(String, String): String
+  + get_auth(String): String
+  + getReset_password_start(String): String
+  + getUriReset(String): String
+  + getUser_session(String): String
+  + getSearch_users(String): String
+  + getSearch_userById(String): String
+}
+class PayLoadStytch {
+  + PayLoadStytch():
+  + create_user(String, String, String, String): String
+  + buildSearchByEmail(String): String
+  + buildAuthPayload_token(String): JSONObject
+  + buildAuthPayload_jwt_token(String): String
+  + create_user_pharmacist(String, String, String, String, int): String
+  + buildSession(String): String
+  + get_user(String, String): String
+  + buildUpadateRole(String): JSONObject
+  + reset_password(String, String): JSONObject
+  + create_user_pharmacist(String, String, String, String, String, int): String
+  + buildSearch_All(): String
+  + buildUpdateTustedMetadataIsEnable(boolean): JSONObject
+}
+class SHA256Signature {
+  + SHA256Signature():
+  - pemToDer(String): byte[]
+  + verifySignature(String, String, String): boolean
+}
+class StytchClient {
+  + StytchClient(String, String, String):
+  + StytchClient(String, String, String, ClientHttp):
+  + create_user_pharmacist(String, String, String, String, int): HttpResponse<String>
+  + update_user(String, JSONObject): HttpResponse<String>
+  + create_user(String, String, String, String): HttpResponse<String>
+  + reset_password_start(String, String): HttpResponse<String>
+  + login(String, String): HttpResponse<String>
+  + get_user_by_email(String): HttpResponse<String>
+  + authenticate_jwt_token(String): HttpResponse<String>
+  + get_session(String): HttpResponse<String>
+  + get_user(String): HttpResponse<String>
+   _users: HttpResponse<String>
+}
+class StytchRequest {
+  + StytchRequest(String):
+  + search_by_email(String, String): HttpRequest
+  + search_by_user_id(String, String): HttpRequest
+  - basic_request_post(String): Builder
+  + session_user(String, String): HttpRequest
+  + reset_password_start_body(String, JSONObject): HttpRequest
+  + search_all(String, String): HttpRequest
+  + auth_request(String, String): HttpRequest
+  + update_user(String, JSONObject): HttpRequest
+}
+class TokenUtility {
+  - TokenUtility():
+  + extract_token(String): String
+  + extractEmailByUserId(String): String
+  + extract_sub(String): String
+  + check_permission(String, String, String): boolean
+  - extactObjectFromJsonArray(String): JSONObject
+  + extractPermissions(String): String
+  + extractRole(String): String
+  + extract_email(String): String
+}
+
+StytchClient     -[#595959,dashed]->  StytchRequest   : "«create»"
+StytchClient    "1" *-[#595959,plain]-> "stytchRequest\n1" StytchRequest
+@enduml

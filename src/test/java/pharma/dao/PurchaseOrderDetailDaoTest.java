@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
 import pharma.config.database.Database;
 
 import java.io.FileReader;
@@ -171,6 +172,22 @@ class PurchaseOrderDetailDaoTest {
             List<FieldData>list=purchaseOrderDetailDao.findByProductPrice(340);
             System.out.println(list.getFirst().getPrice());
        Assertions.assertEquals(2.7,list.getFirst().getPrice());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+    @Test
+    void IntegrationfindReportData() {
+        Properties properties;
+
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
+            purchaseOrderDetailDao=new PurchaseOrderDetailDao(Database.getInstance(properties));
+            List<FieldData>list=purchaseOrderDetailDao.findAllReportData();
+        list.forEach(value-> System.out.println(value.getElapsed_date()));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

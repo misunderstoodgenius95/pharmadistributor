@@ -1,0 +1,66 @@
+@startuml
+actor Venditore as V
+entity UI
+control Controller as C
+participant ClientWebSocket as  CWS
+participant ServerWebSocket as W
+entity LocalStorage as WL
+
+participant ChaCha20 as CC
+
+V->UI:Accedi Chat
+UI->C:Invia la richiesta
+create CWS
+C->CWS:<<new>>
+C->CWS:Crea Connessione
+CWS->W:Stabilisci la connessione
+W->W:Genera Coppia Pu/Pr
+W->W:Firma messaggio
+W-->C:Invia Pu,messaggio,firma
+C-->C:Verifica la firma
+alt Firma
+CWS->W:Invia messaggio di Starting
+
+par
+loop Connection are active
+opt Messagio in arrivo
+
+W->C:Ricevi Messagio
+C->CC:Decifra il messaggio
+CC-->C:Restituisce messaggio decrifrato
+C->WL:Archivia il messaggio
+end opt
+end loop
+end par
+
+par
+loop Connection are active
+opt Venditore vuole scrivere un messaggio
+V->UI:Scrivi Messagio
+UI->C:Send request
+C->CC:Cifra il messaggio
+CC-->C:Restituisce messaggio cifrato
+C->W:Invia Messagio Cifrato
+C->WL:Inserisco messaggio in coda
+end opt
+end loop
+end par
+par
+alt Addetto interrompe Chat
+V->UI:Chiudi Chat
+UI->C:Invia Messagio di Chiusura
+C->W:Chiudi la connessione
+W-->C:Connessione Terminata
+else
+W->C:Notifica Conessione chiusa
+C->UI:Mostra connessione chiusa
+end if
+end par
+
+
+
+else Firma falsa
+CWS->W:Chiudi Connessione
+end if
+
+@enduml

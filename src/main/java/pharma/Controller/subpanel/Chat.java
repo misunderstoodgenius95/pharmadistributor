@@ -1,9 +1,6 @@
 package pharma.Controller.subpanel;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,17 +8,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pharma.Storage.FileStorage;
 import pharma.chat.Client.ClientWebserver;
-import pharma.config.auth.UserService;
-import pharma.javafxlib.Controls.Notification.JsonNotify;
+import pharma.config.PathConfig;
+import pharma.config.auth.UserGateway;
 import pharma.security.Stytch.StytchClient;
-import pharma.security.TokenUtility;
-import pharma.security.crypto.Chacha20;
+import pharma.Utility.TokenUtility;
+import pharma.Utility.Chacha20;
+import pharma.Utility.SHA256Signature;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -30,7 +27,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class Chat implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(Chat.class);
@@ -42,7 +38,7 @@ public class Chat implements Initializable {
     public Button btn_disconnect_id;
     public VBox aside_user;
     private ClientWebserver clientWebserver;
-    private UserService userService;
+    private UserGateway userGateway;
     private List<String> pharmacists;
     private String email;
     public Chat() {
@@ -56,15 +52,15 @@ public class Chat implements Initializable {
         HashMap<String,String> hashMap_json= null;
         String user_id="";
         try {
-            hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader("stytch.properties"));
-            String jwt= FileStorage.getProperty("jwt",new FileReader("config.properties"));
+            hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader(PathConfig.STYTCH_CONF.getValue()));
+            String jwt= FileStorage.getProperty("jwt",new FileReader(PathConfig.JWT.getValue()));
             user_id=TokenUtility.extract_sub(jwt);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        userService=new UserService(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
+        userGateway =new UserGateway(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
 
-        String body=userService.GettingUserInfoByUserId(user_id).getBody();
+        String body= userGateway.GettingUserInfoByUserId(user_id).getBody();
          email=TokenUtility.extractEmailByUserId(body);
 
         ConcurrentLinkedQueue<String> concurrentLinkedQueue=new ConcurrentLinkedQueue<>();
@@ -77,36 +73,54 @@ public class Chat implements Initializable {
 
 
 
-    public  String extracted_message(String message){
-        System.out.println("Extracted: "+message);
+    public  String extracted_message(String message) throws Exception {
+
         JSONObject jsonObject=new JSONObject(message);
+        log.info("Extracted_msg: "+jsonObject);
         String type=jsonObject.getString("type");
-          if(type.equals("Chat")){
-                String from=jsonObject.getString("from");
-                JSONObject message_cipher=new JSONObject(jsonObject.getString("messages"));
-                String nonce=message_cipher.getString("nonce");
-                String cipherText=message_cipher.getString("cipherText");
-                String decryptedMessage =Chacha20.decryptedString(Chacha20.decrypt(Chacha20.hexToByte(cipherText),Chacha20.hexToByte(nonce)).get());
-            return from+" "+decryptedMessage;
-        }else if(type.equals("Join")){
-              btn_send_id.setDisable(false);
-              btn_disconnect_id.setDisable(false);
-              String from=jsonObject.getString("from");
-              if(!pharmacists.contains(from)) {
-                  pharmacists.add(from);
-                  aside_user.getChildren().add(new Button(from));
-              }
+        switch (type) {
+            case "Chat" -> {
+                String from = jsonObject.getString("from");
+                JSONObject message_cipher = new JSONObject(jsonObject.getString("message"));
+                String nonce = message_cipher.getString("nonce");
+                String cipherText = message_cipher.getString("cipherText");
+                String decryptedMessage = Chacha20.decryptedString(Chacha20.decrypt(Chacha20.hexToByte(cipherText), Chacha20.hexToByte(nonce)).get());
+                return from + " " + decryptedMessage;
+            }
+            case "Join" -> {
+                btn_send_id.setDisable(false);
+                btn_disconnect_id.setDisable(false);
+                String from = jsonObject.getString("from");
+                if (!pharmacists.contains(from)) {
+                    pharmacists.add(from);
+                    aside_user.getChildren().add(new Button(from));
+                }
+                return jsonObject.getString("message");
+            }
+            case "serverAuth" -> {
+                log.info("Server Auth" + message);
+                String publicKey = jsonObject.getString("publicKey");
+                String messagesSigned = jsonObject.getString("message");
+                String signature = jsonObject.getString("signature");
+                boolean value = SHA256Signature.verifySignature(messagesSigned, signature, publicKey);
+                if (!value) {
+                    clientWebserver.close();
+
+                } else {
+                    return "Info:Connected to  The server!";
+                }
+            }case "UserDisconnected"->{
+                log.info("user disconnected");
+
+               String email=jsonObject.getString("userName");
+               Button button_removed=(Button) aside_user.getChildren().stream().filter(button->((Button) button).getText().equals(email)).toList().getFirst();
+               aside_user.getChildren().remove(button_removed);
+               return "Farmacista ha abbandonato la chat";
 
 
 
-
-
-              return  jsonObject.getString("message");
-
-
-
-
-          }
+            }
+        }
           return "";
     }
 
@@ -118,12 +132,17 @@ public class Chat implements Initializable {
                     String message = queue.poll();
 
                     if (message != null) {
-                        System.out.println("Received: " + message);
+                        log.info("Received: " + message);
 
                         // Update UI on JavaFX thread
                         Platform.runLater(() -> {
-                            String extracted=extracted_message(message);
-                            System.out.println(extracted);
+                            String extracted= null;
+                            try {
+                                extracted = extracted_message(message);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                            log.info("extracted: "+extracted);
                             textarea_id.appendText(extracted+" \n ");
 
 

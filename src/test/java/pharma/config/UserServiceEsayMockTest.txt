@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserServiceEsayMockTest {
     private WireMockServer wireMockServer;
-    private UserService userService;
+    private UserService userGateway;
     @BeforeEach
     public void setup(){
         wireMockServer=new WireMockServer(8080);
         wireMockServer.start();
 
-        userService=new UserService(new HttpJsonClient(),new HashMap<>(),"http://localhost:8080/login");
+        userGateway=new UserService(new HttpJsonClient(),new HashMap<>(),"http://localhost:8080/login");
         JSONObject response_json=new JSONObject();
         response_json.put("Status","Sucess").put("token","ed2ghghghjgjggy");
 
@@ -46,7 +46,7 @@ public class UserServiceEsayMockTest {
     public void autenticateWithCorrectValuesandPrecodid(){
 
 
-        UserServiceResponse us_res=userService.authenticate("user@example.com","pallino");
+        UserServiceResponse us_res=userGateway.authenticate("user@example.com","pallino");
 
         assertEquals(200, us_res.getStatus());
         assertEquals("ed2ghghghjgggy",new JSONObject(us_res.getBody()).get("token").toString());
@@ -55,7 +55,7 @@ public class UserServiceEsayMockTest {
     @Test
     public  void authenticateWithUncorrectedValues(){
 
-        UserServiceResponse us_res=userService.authenticate("user@example.com","@5&1-7Vh5QGp");
+        UserServiceResponse us_res=userGateway.authenticate("user@example.com","@5&1-7Vh5QGp");
         assertEquals(401, us_res.getStatus());
     }
 

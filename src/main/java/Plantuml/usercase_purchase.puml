@@ -1,0 +1,43 @@
+@startuml
+actor AdettoVendite as A
+A-(Login)
+A--down-(Crea Farmacia)
+A--down-(Modifica Fattura di Vendita)
+A-down-(Visualizza Ordini)
+A-down-(Visualizza Fattura)
+A--down-(Anulla Ordine)
+(Visualizza Ordini)-.>(Anulla Ordine):<<include>>
+(Visualizza Fattura)-.>(Anulla Fattura):<<include>>
+(Crea Prodotto) as c
+A--down-c
+(Recupera i dati delle vendite ) as rv
+c--down.>(Analizzare i trend di mercato):<<include>>
+c--down.>rv:<<include>>
+c--down.>(Recupera livello di scorta):<<include>>
+c--down.>(Recupera i prezzi dei singoli lotti):<<include>>
+c--down.>(Suggerisci il prezzo):<<include>>
+c--down.>(Chat)
+(Crea Promozioni) as p
+A--down-p
+p--down.>rv:<include>>
+p--down.>(Recupera le scadenze dei lotti):<<include>>
+p--down.>(Suggerisci sconto)::<<include>>
+A-left-(Ricerca Anagrafica Farmacetica)
+(Ricerca Anagrafica Farmacetica)-up.>(Ricerca per nome):<<include>>
+A--up(Ricerca ordine di vendita)
+
+(Ricerca range di data)-.>(Ricerca ordine di vendita)::<extend>>
+A--left(Ricerca ordine di vendita)
+(Ricerca per nome)-.>(Ricerca ordine di vendita)::<extend>>
+(Ricerca fattura di vendita) as rf
+A--left(rf)
+(Ricerca range di data)-.>rf::<extend>>
+(Ricerca per nome)-.>rf::<extend>>
+A--(Imposta avvisi di scadenza prodotti)
+(Imposta avvisi di scadenza prodotti).>( Ricevi notfiche di scadenza):<<include>>
+(Visualizza Risultato di ricerca) as vc
+(Ricerca ordine di vendita)-down.>vc:<<include>>
+rf.>vc:<<include>>
+
+(Modifica Fattura di Vendita).>(Visualizza Fattura):<<include>>
+@enduml

@@ -1,0 +1,187 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class Admin {
+  + Admin():
+  + info_society_action(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+  + users(ActionEvent): void
+}
+class AdminRole {
+  + AdminRole(UserGateway):
+  + AdminRole():
+  - adminTable: AdminTable
+  - btn_add_id: Button
+  + choice_role_id: ChoiceBox<String>
+  - btn_send_filter_id: Button
+  - radio_role: RadioButton
+  - radio_email: RadioButton
+  - property_esit: BooleanProperty
+  + btn_add_action(ActionEvent): void
+  + btn_send_filter_action(ActionEvent): void
+  + property_esitProperty(): BooleanProperty
+  + initialize(URL, ResourceBundle): void
+   radio_role: RadioButton
+   radio_email: RadioButton
+   adminTable: AdminTable
+   choice_role_id: ChoiceBox<String>
+   btn_add_id: Button
+   btn_send_filter_id: Button
+   property_esit: boolean
+}
+class Chat {
+  + Chat():
+  + btn_action(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+  - startQueueProcessor(ConcurrentLinkedQueue<String>): void
+  + btn_disconnect_action(ActionEvent): void
+  + extracted_message(String): String
+}
+class Dettagli {
+  + Dettagli():
+  + btn_send(ActionEvent): void
+  + change_value(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+}
+class Expireproduct {
+  + Expireproduct():
+  + btn_product_add_action(ActionEvent): void
+  + listener_delete(MenuItem): void
+  + btn_send_action(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+}
+class Farmacia {
+  + Farmacia():
+  + initialize(URL, ResourceBundle): void
+  + search_action(ActionEvent): void
+  + btn_action_add(ActionEvent): void
+}
+class Farmaco {
+  + Farmaco():
+  ~ btn_action_add(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+  + edit_btn_action(ActionEvent): void
+  + choicebox_search_action(ActionEvent): void
+}
+class Login {
+  + Login():
+  + initialize(URL, ResourceBundle): void
+  + buttonOnAction(ActionEvent): void
+}
+class Lotti {
+  + Lotti():
+  + initialize(URL, ResourceBundle): void
+  + btn_action_add(ActionEvent): void
+   dialogHandler: DialogControllerBase<FieldData>
+}
+class Pharma {
+  + Pharma():
+  ~ edit_pharma_event(): void
+  + initialize(URL, ResourceBundle): void
+  + add_pharma_action(): void
+}
+class Price {
+  + Price():
+  + initialize(URL, ResourceBundle): void
+  + btn_action_add(ActionEvent): void
+}
+class Promotion {
+  + Promotion():
+  + btn_action_add(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+}
+class Purchase {
+  + Purchase():
+  - change_stages(Parent, double): void
+  ~ farmaci_action(ActionEvent): void
+  ~ lotti_action(ActionEvent): void
+  ~ dettagli_action(ActionEvent): void
+  ~ ordini_action(ActionEvent): void
+  ~ fattura_acquisto_action(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+  + handleButton(Button): void
+  + report_action(ActionEvent): void
+  ~ pharma_action(ActionEvent): void
+  ~ raccomandazioni_action(ActionEvent): void
+}
+class PurchaseCreditNote {
+  + PurchaseCreditNote():
+  - createExpandendRowInner(TableRowDataFeatures<FieldData>): VBox
+  + btn_action_add(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+}
+class PurchaseInvoice {
+  + PurchaseInvoice():
+  + double_click(): void
+  + initialize(URL, ResourceBundle): void
+  + btn_action_add(ActionEvent): void
+  - createExpandendRow(TableRowDataFeatures<FieldData>): VBox
+}
+class PurchaseOrdini {
+  + PurchaseOrdini(PurchaseOrderDao, LottiDao, PharmaDao):
+  + PurchaseOrdini():
+  + table_id: TableView<FieldData>
+  + initialize(URL, ResourceBundle): void
+  - createExpandendRow(TableRowDataFeatures<FieldData>): VBox
+  - setvalue(): void
+  + btn_action_add(ActionEvent): void
+   table_id: TableView<FieldData>
+}
+class Seller {
+  + Seller():
+  + Seller(FarmaciaDao, UserGateway):
+  + initialize(URL, ResourceBundle): void
+  + btnPromotion(ActionEvent): void
+  + farmacia_action(ActionEvent): void
+  - change_stages(Parent, double): void
+  + btn_chat_action(ActionEvent): void
+  + invoice_action(ActionEvent): void
+  + expire_action(ActionEvent): void
+  + order_action(ActionEvent): void
+  + pharmacist_action(ActionEvent): void
+  + btn_action_price(ActionEvent): void
+   window: Window
+}
+class SellerInvoice {
+  + SellerInvoice(SellerInvoiceDao):
+  + initialize(URL, ResourceBundle): void
+  + action_send_btn(ActionEvent): void
+}
+class SellerOrder {
+  + SellerOrder(SellerOrderDao, SellerOrderDetails):
+  + action_send_btn(ActionEvent): void
+  + editAction(ActionEvent): void
+  + initialize(URL, ResourceBundle): void
+  - createExpandendRow(TableRowDataFeatures<FieldData>): VBox
+}
+class SuggestPrice {
+  + SuggestPrice(FarmacoDao, DetailDao):
+  + initialize(URL, ResourceBundle): void
+  + on_action_send(ActionEvent): void
+}
+class SuggestPurchase {
+  + SuggestPurchase():
+  + SuggestPurchase(FarmacoDao, LotAssigmentDao, SuggestConfig, SellerOrderDao):
+  + send_action_btn(ActionEvent): void
+  - convert_fs_orders(List<FieldData>): List<SellerOrders>
+  - config_table(): void
+  - convert_fd_lots(List<FieldData>): List<Lots>
+  + initialize(URL, ResourceBundle): void
+  - view_suggest(boolean): String
+}
+class Warehouse {
+  + Warehouse():
+  + Warehouse(MagazzinoDao, ShelfDao, ShelvesDao, LotAssigmentDao, LotAssigmentShelvesDao):
+  + lot_view(ActionEvent): void
+  + shelf_action(ActionEvent): void
+  + lots_action(ActionEvent): void
+  + sposta_lotto_action(ActionEvent): void
+  + warehouse_action(ActionEvent): void
+}
+
+Seller             "1" *-[#595959,plain]-> "sellerInvoice\n1" SellerInvoice
+Seller              -[#595959,dashed]->  SellerInvoice      : "«create»"
+Seller             "1" *-[#595959,plain]-> "sellerOrder\n1" SellerOrder
+Seller              -[#595959,dashed]->  SellerOrder        : "«create»"
+@enduml

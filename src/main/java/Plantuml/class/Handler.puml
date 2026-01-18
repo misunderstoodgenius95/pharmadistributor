@@ -1,0 +1,100 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+class PromotionHandler {
+  + PromotionHandler(PurchaseOrderDetailDao, SellerOrderDetails, LottiDao, LotAssigmentDao, SellerPriceDao):
+  + calculate_discount(int): int
+}
+class PurchaseOrderDetailDao {
+  + PurchaseOrderDetailDao(Database):
+  # setInsertParameter(PreparedStatement, FieldData): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  + findByProductPrice(int): List<FieldData>
+  # mapRow(ResultSet): FieldData
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  + findDetailbyPurchaseOrderId(int): List<FieldData>
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findAllReportData(): List<FieldData>
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+
+class SellerOrderDetails {
+  + SellerOrderDetails(Database):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findbyProduct(int): List<FieldData>
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findbyOrderId(int): List<FieldData>
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  + findDetailbySellerOrderId(int): List<FieldData>
+  # setUpdateParameter(PreparedStatement, FieldData): void
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+
+
+class LottiDao {
+  + LottiDao(Database, String):
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # mapRow(ResultSet): FieldData
+  + buildQueryasParameterSearch(String): String
+  + findBySearch(String, String): List<FieldData>
+  + FindByFarmacoNameHaveLot(): List<String>
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findLotsbyPharma(int): List<FieldData>
+  + findbyDate(int): List<FieldData>
+  + findByIds(int, String): Optional<FieldData>
+  + findByFarmaco(int): List<FieldData>
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  + findByLottoCode(String): List<FieldData>
+  + findLotsByFarmacoName(String): List<String>
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+class LotAssigmentDao {
+  + LotAssigmentDao(Database):
+  + findQuantitybyFarmacoId(int): List<FieldData>
+  + findByFarmacoAll(): List<FieldData>
+  + findFarmacoQuantity(int): List<FieldData>
+  # setInsertParameter(PreparedStatement, LotAssigment): void
+  + findExistsAssigment(int, String): boolean
+  # setDeleteParameter(PreparedStatement, LotAssigment): void
+  # setUpdateParameter(PreparedStatement, LotAssigment): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  + findExistAndReturnId(int, String): int
+  + findPharmaHousebyLotCode(String): List<FieldData>
+  # mapRow(ResultSet): LotAssigment
+   insertQuery: String
+   findAllExecutionTime: String
+   deletequery: String
+   updatequery: String
+}
+class SellerPriceDao {
+  + SellerPriceDao(Database):
+  + findCurrentPricebyFarmaco(int): double
+  + findCurrentPricebyFarmaco(int, String): double
+  # setUpdateParameter(PreparedStatement, FieldData): void
+  # setFindByIdParameters(PreparedStatement, Integer): void
+  # setDeleteParameter(PreparedStatement, FieldData): void
+  # mapRow(ResultSet): FieldData
+  # setInsertParameter(PreparedStatement, FieldData): void
+  + findNotExistPrice(): List<FieldData>
+   findQueryAll: String
+   insertQuery: String
+   deletequery: String
+   updatequery: String
+}
+PromotionHandler->PurchaseOrderDetailDao
+PromotionHandler->SellerOrderDetails
+PromotionHandler->LottiDao
+PromotionHandler->LotAssigmentDao
+PromotionHandler->SellerPriceDao
+@enduml

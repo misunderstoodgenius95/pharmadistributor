@@ -158,7 +158,7 @@ create table purchase_credit_note
                         setOrder_id(resultSet.getInt("purchase_order")).
                         setQuantity(resultSet.getInt("quantity")).
                         setVat_percent(resultSet.getInt("vat_percent")).
-                        setNome_farmaco(resultSet.getString("nome_farmaco")).
+                        setNome_farmaco(resultSet.getString("nome")).
                         setNome_tipologia(resultSet.getString("tipologia")).
                         setUnit_misure(resultSet.getString("misura")).
                         build());

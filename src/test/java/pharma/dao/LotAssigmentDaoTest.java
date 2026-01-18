@@ -1,6 +1,6 @@
 package pharma.dao;
 
-import algoWarehouse.LotAssigment;
+import pharma.Model.LotAssigment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pharma.Model.FieldData;
@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LotAssigmentDaoTest {
 
@@ -181,4 +179,17 @@ class LotAssigmentDaoTest {
             }
         }
     }
+
+    @Test
+    void queryExecutionTimeUnder200ms() throws IOException {
+         Properties properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader("database.properties"));
+         LotAssigmentDao lotAssigmentDao = new LotAssigmentDao(Database.getInstance(properties));
+            List<String> result=lotAssigmentDao.findAllWithExecutionTime();
+
+        String  actual=result.getLast().replaceAll(".*?(\\d+\\.\\d+).*", "$1");
+        org.assertj.core.api.Assertions.assertThat(Double.parseDouble(actual)).isLessThan(200);
+
+    }
+
+
 }

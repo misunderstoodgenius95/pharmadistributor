@@ -1,17 +1,11 @@
 package pharma.config.Json;
 
-import JPath.Query;
-import com.fasterxml.jackson.core.io.JsonEOFException;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
-import com.jayway.jsonpath.InvalidPathException;
 import com.jayway.jsonpath.JsonPath;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
 import java.util.List;
-import java.util.Objects;
 
 public class ExtractJson {
 
