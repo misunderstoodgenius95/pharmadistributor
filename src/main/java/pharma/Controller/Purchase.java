@@ -8,10 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import pharma.DialogController.Report.PiccoDialog;
-import pharma.DialogController.Report.SpeseAcquisti;
-import pharma.DialogController.Report.Trend;
-import pharma.DialogController.Report.Variazione;
+import pharma.DialogController.Report.*;
 import pharma.Model.Acquisto;
 import pharma.Model.Ordini;
 import pharma.Stages;
@@ -154,6 +151,8 @@ public class Purchase  implements  Initializable{
         SpeseAcquisti acquisti=new SpeseAcquisti(ordiniList);
         Variazione variazione=new Variazione("Visualizza variazione",ordiniList);
         PiccoDialog piccoDialog =new PiccoDialog("Visualizza Picco",acquistos,farmacoDao);
+        DistribuzionePharma distribuzionePharma=new DistribuzionePharma("Visualizza Distribuzione",purchaseOrderDao);
+
         Trend trend=new Trend("Visualizza Trend",acquistos);
         dropDownMenu.createItem("Andamento Acquisti Per Mesi ").setOnAction(event -> {
         acquisti.show();
@@ -165,6 +164,10 @@ dropDownMenu.createItem("Variazione Acquisti Tra Mesi").setOnAction(event -> {
             trend.show();
         });
       dropDownMenu.createItem("Picchi").setOnAction(event -> piccoDialog.show());
+
+
+
+      dropDownMenu.createItem("Distribuzione").setOnAction(event -> distribuzionePharma.show());
     }
 
     public void report_action(ActionEvent event) {

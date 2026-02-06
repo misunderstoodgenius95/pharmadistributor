@@ -10,11 +10,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
+import org.apache.commons.math3.distribution.FDistribution;
+import org.controlsfx.control.SearchableComboBox;
 import pharma.Model.FieldData;
 import pharma.config.*;
 import pharma.config.ListCalculate;
 import pharma.config.TableUtility;
 import pharma.config.Utility;
+import pharma.config.View.BasicConvert_FD;
 import pharma.config.View.InvoicexConvert;
 import pharma.dao.GenericJDBCDao;
 import pharma.dao.PharmaDao;
@@ -36,7 +39,7 @@ public class PurchaseInvoiceControllerBase extends DialogControllerBase<FieldDat
     private DatePicker date_invoice;
     private ObservableList<FieldData> list_populate;
     private TextField textField_number_invoice;
-    private TextFieldComboBox<String> choice_payment;
+    private SearchableComboBox<FieldData> choice_payment;
     private ToggleGroup toggleGroup_order_choice;
     private TextFieldComboBox<FieldData> comboBox_order;
     private  TextFieldComboBox<FieldData> combo_pharma;
@@ -67,46 +70,45 @@ public class PurchaseInvoiceControllerBase extends DialogControllerBase<FieldDat
     }
     @Override
     protected  <K>void  initialize(Optional<PopulateChoice<K>> optionalpopulateChoice, Optional<List<GenericJDBCDao>> optionalgenericJDBCDao, Optional<FieldData> optionalfieldData) {
-       if(optionalgenericJDBCDao.isPresent()) {
-           List<GenericJDBCDao> genericJDBCDao=optionalgenericJDBCDao.get();
-           obs_table = FXCollections.observableArrayList();
-           PharmaDao pharmaDao = (PharmaDao) genericJDBCDao.stream().
-                   filter(dao -> dao instanceof PharmaDao).findFirst().orElseThrow(() -> new IllegalArgumentException("PharmaDao not found in the list"));
-           PurchaseOrderDao purchaseOrderDao = (PurchaseOrderDao) genericJDBCDao.stream().
-                   filter(dao -> dao instanceof PurchaseOrderDao).findFirst().orElseThrow(() -> new IllegalArgumentException("PurchaseOrderDao not found in the list"));
-           list_populate = FXCollections.observableArrayList();
-           textField_number_invoice = add_text_field("Inserisci Numero Fattura");
-           date_invoice = add_calendar();
-           choice_payment = add_combox_search_with_textfield(FXCollections.observableArrayList("Bonifico_Bancario", "RD", "RB"));
-           choice_payment.getChoiceBox().setValue("Scegli il metodo di pagamento");
-           //add_label("Seleziona Ordine mediante:");
-          // toggleGroup_order_choice = add_radios(Arrays.asList( new RadioOptions("Numero Ordine","order_id"),new RadioOptions( "combo_id",")), CustomDialog.Mode.Horizontal);
+        if(optionalgenericJDBCDao.isPresent()) {
+            List<GenericJDBCDao> genericJDBCDao=optionalgenericJDBCDao.get();
+            obs_table = FXCollections.observableArrayList();
+            PharmaDao pharmaDao = (PharmaDao) genericJDBCDao.stream().
+                    filter(dao -> dao instanceof PharmaDao).findFirst().orElseThrow(() -> new IllegalArgumentException("PharmaDao not found in the list"));
+            PurchaseOrderDao purchaseOrderDao = (PurchaseOrderDao) genericJDBCDao.stream().
+                    filter(dao -> dao instanceof PurchaseOrderDao).findFirst().orElseThrow(() -> new IllegalArgumentException("PurchaseOrderDao not found in the list"));
+            list_populate = FXCollections.observableArrayList();
+            textField_number_invoice = add_text_field("Inserisci Numero Fattura");
+            date_invoice = add_calendar();
+            choice_payment = add_SearchComboBox(FieldData.FieldDataBuilder.getbuilder().setNome("Scegli il metodo di pagamento").build());
+            choice_payment.setItems(FXCollections.observableArrayList(FieldData.FieldDataBuilder.getbuilder().setNome("Bonifico").build(),
+                    FieldData.FieldDataBuilder.getbuilder().setNome("RD").build(),
+                    FieldData.FieldDataBuilder.getbuilder().setNome("RB").build()));
+            choice_payment.setConverter(new BasicConvert_FD());
+            combo_pharma = add_combox_search_with_textfield(FXCollections.observableArrayList(pharmaDao.findAllName()));
+            combo_pharma.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setNome_casa_farmaceutica("Seleziona Casa Farmaceutica").build());
+            combo_pharma.setPrefWidth(300);
+            combo_pharma.setConvert(new InvoicexConvert(InvoicexConvert.Type.combo_id));
+            comboBox_order = add_combox_search_with_textfield(FXCollections.observableArrayList());
+            comboBox_order.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setcode("Seleziona Ordine Id").build());
+            comboBox_order.setConvert(new InvoicexConvert(InvoicexConvert.Type.order_id));
 
+            listener_pharma(purchaseOrderDao);
+            table_id = add_table();
+            table_id.setItems(obs_table);
+            add_column();
+            listen_order_add_row();
 
-           combo_pharma = add_combox_search_with_textfield(FXCollections.observableArrayList(pharmaDao.findAllName()));
-           combo_pharma.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setNome_casa_farmaceutica("Seleziona Casa Farmaceutica").build());
-           combo_pharma.setPrefWidth(300);
-           combo_pharma.setConvert(new InvoicexConvert(InvoicexConvert.Type.combo_id));
-           comboBox_order = add_combox_search_with_textfield(FXCollections.observableArrayList());
-           comboBox_order.getChoiceBox().setValue(FieldData.FieldDataBuilder.getbuilder().setcode("Seleziona Ordine Id").build());
-           comboBox_order.setConvert(new InvoicexConvert(InvoicexConvert.Type.order_id));
+            DoubleClick_Menu<FieldData> doubleClickMenu = new DoubleClick_Menu<>(table_id);
 
-           listener_pharma(purchaseOrderDao);
-           table_id = add_table();
-           table_id.setItems(obs_table);
-           add_column();
-           listen_order_add_row();
-
-           DoubleClick_Menu<FieldData> doubleClickMenu = new DoubleClick_Menu<>(table_id);
-
-           menuItem = doubleClickMenu.create_menu_item("Elimina Riga");
-           listen_menu_item_remove(menuItem);
-           label_subtotale = add_label("SubTotale");
-           label_iva = add_label("IVA");
-           label_totale = add_label("Totale");
-           getButtonOK().setText("Crea Fattura");
-           getControlList().removeAll(combo_pharma);
-       }
+            menuItem = doubleClickMenu.create_menu_item("Elimina Riga");
+            listen_menu_item_remove(menuItem);
+            label_subtotale = add_label("SubTotale");
+            label_iva = add_label("IVA");
+            label_totale = add_label("Totale");
+            getButtonOK().setText("Crea Fattura");
+            getControlList().removeAll(combo_pharma);
+        }
     }
 
     private  void calculus_attribute() {
@@ -162,8 +164,10 @@ public class PurchaseInvoiceControllerBase extends DialogControllerBase<FieldDat
 
                     obs_table.add(fieldData);
                     table_id.setItems(obs_table);
-                    list_populate.remove(fieldData);
-                    comboBox_order.getChoiceBox().setItems(list_populate);
+                    if(comboBox_order.getChoiceBox().getItems().size()!=1){
+                        list_populate.remove(fieldData);
+                        comboBox_order.getChoiceBox().setItems(list_populate);
+                    }
                     if (menuItem.isDisable()) {
                         menuItem.setDisable(false);
                     }
@@ -207,18 +211,18 @@ public class PurchaseInvoiceControllerBase extends DialogControllerBase<FieldDat
     }
     private  void listener_pharma(PurchaseOrderDao p_dao){
 
-      combo_pharma.getChoiceBox().valueProperty().addListener((observable, oldValue, newValue) -> {
-          if(newValue instanceof FieldData fieldData){
-              if(table_id.getItems().isEmpty()) {
-                  list_populate.setAll(p_dao.findAllWithInvoiceIdNullByPharmaId(fieldData.getId()));
-                  comboBox_order.getChoiceBox().setItems(list_populate);
-              }
+        combo_pharma.getChoiceBox().valueProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue instanceof FieldData fieldData){
+                if(table_id.getItems().isEmpty()) {
+                    list_populate.setAll(p_dao.findAllWithInvoiceIdNullByPharmaId(fieldData.getId()));
+                    comboBox_order.getChoiceBox().setItems(list_populate);
+                }
 
 
 
 
-          }
-      });
+            }
+        });
 
     }
 
@@ -227,23 +231,23 @@ public class PurchaseInvoiceControllerBase extends DialogControllerBase<FieldDat
 
     public void listen_toggle(){
         toggleGroup_order_choice.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-           if(newValue instanceof RadioButton radioButton){
-               if(radioButton.getId().equals("order_id")){
-                   comboBox_order.setVisible(true);
-                   combo_pharma.setVisible(true);
-                   comboBox_order.getChoiceBox().setItems(list_populate);
+            if(newValue instanceof RadioButton radioButton){
+                if(radioButton.getId().equals("order_id")){
+                    comboBox_order.setVisible(true);
+                    combo_pharma.setVisible(true);
+                    comboBox_order.getChoiceBox().setItems(list_populate);
 
-               }else{
-                   System.out.println("combo id");
-                   comboBox_order.setVisible(false);
-                   combo_pharma.setVisible(true);
-
-
-
-               }
+                }else{
+                    System.out.println("combo id");
+                    comboBox_order.setVisible(false);
+                    combo_pharma.setVisible(true);
 
 
-           }
+
+                }
+
+
+            }
         });
 
     }
@@ -255,7 +259,7 @@ public class PurchaseInvoiceControllerBase extends DialogControllerBase<FieldDat
         return FieldData.FieldDataBuilder.getbuilder().
                 setInvoice_number(textField_number_invoice.getText()).
                 setProduction_date(Date.valueOf(date_invoice.getValue())).
-                setPayment_mode((String) choice_payment.getChoiceBox().getValue()).
+                setPayment_mode(choice_payment.getValue().getNome()).
                 setSubtotal((Double) label_subtotale.getUserData()).
                 setVat_amount((Double)label_iva.getUserData()).
                 setTotal((Double)label_totale.getUserData()).
@@ -279,11 +283,11 @@ public class PurchaseInvoiceControllerBase extends DialogControllerBase<FieldDat
                 System.out.println(index);
                 System.out.println(fd_inner.getOrder_id());
                 FieldData fieldData_update = FieldData.FieldDataBuilder.getbuilder().setInvoice_id(index).setOrder_id(fd_inner.getId()).build();
-               return p_dao.update(fieldData_update);
+                return p_dao.update(fieldData_update);
             });
             if(update_cond){
                 p_dao.commit();
-               simpleBooleanProperty.set(true);
+                simpleBooleanProperty.set(true);
                 return  true;
 
             }else{
@@ -291,9 +295,9 @@ public class PurchaseInvoiceControllerBase extends DialogControllerBase<FieldDat
                 return  false;
             }
         }else{
-        p_invoice_dao.rollback();
+            p_invoice_dao.rollback();
         }
-      return false;
+        return false;
     }
 
     @Override

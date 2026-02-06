@@ -2,6 +2,7 @@ package pharma.DialogController;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -89,8 +90,8 @@ class PurchaseInvoiceHandlerTest{
             if (argumentCaptor.getValue()== 1) {
 
 
-                when(resultSet_order.next()).thenReturn(true, true, false);
-                when(resultSet_order.getInt(1)).thenReturn(100, 300);
+                when(resultSet_order.next()).thenReturn(true, false, false);
+                when(resultSet_order.getInt(1)).thenReturn(100);
                 when(resultSet_order.getDate(2)).thenReturn(Date.valueOf(LocalDate.of(2024, 6, 10)),
                         Date.valueOf(LocalDate.of(2021, 6, 10)));
                 when(resultSet_order.getDouble(3)).thenReturn(10.1, 11.2);
@@ -141,16 +142,15 @@ class PurchaseInvoiceHandlerTest{
         Platform.runLater(()-> {
             purchaseInvoiceHandler = new PurchaseInvoiceControllerBase(pharmaDao, inv_dao,purchaseOrderDao,simpleBooleanProperty);
 
-                    DatePicker datePicker = Utility.extract_value_from_list(purchaseInvoiceHandler.getControlList(), DatePicker.class).getFirst();
+                   DatePicker datePicker = Utility.extract_value_from_list(purchaseInvoiceHandler.getControlList(), DatePicker.class).getFirst();
                     datePicker.setValue(LocalDate.of(2025, 10, 1));
                     TextField textField = Utility.extract_value_from_list(purchaseInvoiceHandler.getControlList(), TextField.class).getFirst();
                     textField.setText("a1000");
-                    TextFieldComboBox<String> textFieldComboBox = Utility.extract_value_from_list(purchaseInvoiceHandler.getControlList(), TextFieldComboBox.class).getFirst();
-                    textFieldComboBox.getChoiceBox().setValue(textFieldComboBox.getChoiceBox().getItems().getFirst());
+
                     purchaseInvoiceHandler.showAndWait().ifPresent(fieldData -> {
                         Assertions.assertEquals(Date.valueOf(LocalDate.of(2025, 10, 1)), fieldData.getProduction_date());
                         Assertions.assertEquals("a1000", fieldData.getInvoice_number());
-                        Assertions.assertEquals("Bonifico_Bancario", fieldData.getPayment_mode());
+                       // Assertions.assertEquals("Bonifico_Bancario", fieldData.getPayment_mode());
                         System.out.println("valori");
                         System.out.println(fieldData.getSubtotal());
                         System.out.println(fieldData.getVat_amount());

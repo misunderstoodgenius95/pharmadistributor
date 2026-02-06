@@ -28,7 +28,6 @@ public class PromotionsSuggestService {
 
        int stock = TrasformValue.average(promotionData.getCurrent_stock_quantity());
             double remaing_stock = TrasformValue.normalizeValue(stock,promotionData.getMedium_stock_item());
-            System.out.println(remaing_stock);
             double average = TrasformValue.average(new double[]{remaing_stock, remaining_date});
              return get_discount(average);
 

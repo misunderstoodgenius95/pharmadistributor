@@ -6,8 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import pharma.Model.DistribuzioneModel;
 import pharma.Model.FieldData;
 import pharma.Storage.FileStorage;
+import pharma.config.PathConfig;
 import pharma.config.database.Database;
 
 import java.io.FileNotFoundException;
@@ -92,9 +94,9 @@ class PurchaseOrderDaoTest {
     @Test
     void ValidAllFindWithInvoiceIdNull() throws SQLException {
 
-ArgumentCaptor<Integer> argumentCaptor=ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
         when(preparedStatement.executeQuery()).thenAnswer(invocation -> {
-            if (argumentCaptor.getValue()== 1) {
+            if (argumentCaptor.getValue() == 1) {
 
 
                 Mockito.when(resultSet.next()).thenReturn(true, false, false);
@@ -109,14 +111,14 @@ ArgumentCaptor<Integer> argumentCaptor=ArgumentCaptor.forClass(Integer.class);
                 Mockito.when(resultSet.getString(8)).thenReturn("Angelini", "Bayer");
 
             }
-            return  resultSet;
+            return resultSet;
         });
         Mockito.when(database.execute_prepared_query(Mockito.anyString())).thenReturn(preparedStatement);
 
-      doNothing().when(preparedStatement).setInt(anyInt(),argumentCaptor.capture());
+        doNothing().when(preparedStatement).setInt(anyInt(), argumentCaptor.capture());
         List<FieldData> list = purchaseOrderDao.findAllWithInvoiceIdNullByPharmaId(1);
         System.out.println(list.size());
-        Assertions.assertEquals(100,list.getFirst().getId());
+        Assertions.assertEquals(100, list.getFirst().getId());
 
 
     }
@@ -170,14 +172,14 @@ ArgumentCaptor<Integer> argumentCaptor=ArgumentCaptor.forClass(Integer.class);
 
     @Test
     void findbyPharmaHousebyInvoiceID() throws SQLException {
-        ResultSet resultset_pharma=Mockito.mock(ResultSet.class);
+        ResultSet resultset_pharma = Mockito.mock(ResultSet.class);
         PreparedStatement preparedStatement_pharma = Mockito.mock(PreparedStatement.class);
         when(resultset_pharma.getString(1)).thenReturn("Angelini");
         when(resultset_pharma.next()).thenReturn(true);
         when(preparedStatement_pharma.executeQuery()).thenReturn(resultset_pharma);
         when(database.execute_prepared_query(anyString())).thenReturn(preparedStatement_pharma);
-        String value=purchaseOrderDao.findbyPharmaHousebyInvoiceID(11);
-        Assertions.assertEquals("Angelini",value);
+        String value = purchaseOrderDao.findbyPharmaHousebyInvoiceID(11);
+        Assertions.assertEquals("Angelini", value);
     }
 
 
@@ -269,5 +271,35 @@ ArgumentCaptor<Integer> argumentCaptor=ArgumentCaptor.forClass(Integer.class);
     }
 
 
+    @Test
+    void testFindbyPharmaHousebyInvoiceID() {
+        Properties properties;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
+            purchaseOrderDao = new PurchaseOrderDao(Database.getInstance(properties));
+            List<DistribuzioneModel> models = purchaseOrderDao.findPharmaOrderNumber(Date.valueOf("2025-01-01"), Date.valueOf("2026-01-01"));
+            Assertions.assertFalse(models.isEmpty());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void findBySumAggregate() {
+        Properties properties;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
+            purchaseOrderDao = new PurchaseOrderDao(Database.getInstance(properties));
+            double actual = purchaseOrderDao.findBySumAggregate("totale");
+            Assertions.assertEquals(16019.793999999998, actual);
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

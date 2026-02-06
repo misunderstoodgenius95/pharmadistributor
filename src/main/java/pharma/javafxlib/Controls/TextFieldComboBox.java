@@ -20,7 +20,7 @@ public class TextFieldComboBox<T> extends  Control {
 
         vBox=new VBox();
         observable=observableList;
-     choiceBox=new ChoiceBox(observableList);
+     choiceBox=new ChoiceBox<>(observableList);
 
 
 

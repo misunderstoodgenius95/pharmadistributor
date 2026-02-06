@@ -37,116 +37,249 @@ public class Chat implements Initializable {
     @FXML
     public Button btn_disconnect_id;
     public VBox aside_user;
+
     private ClientWebserver clientWebserver;
     private UserGateway userGateway;
     private List<String> pharmacists;
     private String email;
+    private String selectedPharmacist; // Farmacista attualmente selezionato
+    private ConcurrentLinkedQueue<String> messageQueue;
+    private Thread queueProcessorThread;
+    private final URI serverUri = URI.create("ws://localhost:8081");
+
     public Chat() {
-        pharmacists=new ArrayList<>();
-
-
+        pharmacists = new ArrayList<>();
+        messageQueue = new ConcurrentLinkedQueue<>();
+        selectedPharmacist = null;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        HashMap<String,String> hashMap_json= null;
-        String user_id="";
+        HashMap<String, String> hashMap_json = null;
+        String user_id = "";
+
         try {
-            hashMap_json = FileStorage.getProperties(List.of("project_id","secret","url"),new FileReader(PathConfig.STYTCH_CONF.getValue()));
-            String jwt= FileStorage.getProperty("jwt",new FileReader(PathConfig.JWT.getValue()));
-            user_id=TokenUtility.extract_sub(jwt);
+            hashMap_json = FileStorage.getProperties(
+                    List.of("project_id", "secret", "url"),
+                    new FileReader(PathConfig.STYTCH_CONF.getValue())
+            );
+            String jwt = FileStorage.getProperty("jwt", new FileReader(PathConfig.JWT.getValue()));
+            user_id = TokenUtility.extract_sub(jwt);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        userGateway =new UserGateway(new StytchClient(hashMap_json.get("project_id"),hashMap_json.get("secret"),hashMap_json.get("url")));
 
-        String body= userGateway.GettingUserInfoByUserId(user_id).getBody();
-         email=TokenUtility.extractEmailByUserId(body);
+        userGateway = new UserGateway(
+                new StytchClient(
+                        hashMap_json.get("project_id"),
+                        hashMap_json.get("secret"),
+                        hashMap_json.get("url")
+                )
+        );
 
-        ConcurrentLinkedQueue<String> concurrentLinkedQueue=new ConcurrentLinkedQueue<>();
-        clientWebserver=new ClientWebserver(URI.create("ws://localhost:8081"),email,concurrentLinkedQueue);
-        clientWebserver.connect();
+        String body = userGateway.GettingUserInfoByUserId(user_id).getBody();
+        email = TokenUtility.extractEmailByUserId(body);
 
-        startQueueProcessor(concurrentLinkedQueue);
+        // Inizializza la connessione
+        connectToServer();
 
+        btn_aside();
+
+        // Disabilita i pulsanti finché non c'è una connessione attiva
+        btn_send_id.setDisable(true);
+        btn_disconnect_id.setText("Disconnect");
     }
 
+    private void connectToServer() {
+        // Crea una nuova istanza del client WebSocket
+        clientWebserver = new ClientWebserver(serverUri, email, messageQueue);
+        clientWebserver.connect();
 
+        // Avvia il processore della coda messaggi
+        startQueueProcessor();
 
-    public  String extracted_message(String message) throws Exception {
+        log.info("Connecting to server...");
+    }
 
-        JSONObject jsonObject=new JSONObject(message);
-        log.info("Extracted_msg: "+jsonObject);
-        String type=jsonObject.getString("type");
+    private void disconnectFromServer() {
+        if (clientWebserver != null && clientWebserver.isOpen()) {
+            clientWebserver.close();
+            log.info("Disconnected from server");
+        }
+
+        // Ferma il thread di processamento della coda
+        if (queueProcessorThread != null && queueProcessorThread.isAlive()) {
+            queueProcessorThread.interrupt();
+        }
+
+        // Pulisci la lista dei farmacisti
+        pharmacists.clear();
+        selectedPharmacist = null;
+        aside_user.getChildren().clear();
+
+        // Disabilita i pulsanti
+        btn_send_id.setDisable(true);
+    }
+
+    public void btn_aside() {
+        aside_user.setOnMouseClicked(event -> {
+            // Change to other pharmacist
+        });
+    }
+
+    public String extracted_message(String message) throws Exception {
+        JSONObject jsonObject = new JSONObject(message);
+        log.info("Extracted_msg: " + jsonObject);
+        String type = jsonObject.getString("type");
+
         switch (type) {
             case "Chat" -> {
                 String from = jsonObject.getString("from");
-                JSONObject message_cipher = new JSONObject(jsonObject.getString("message"));
+                JSONObject message_cipher = new JSONObject(jsonObject.getString("messages"));
                 String nonce = message_cipher.getString("nonce");
                 String cipherText = message_cipher.getString("cipherText");
-                String decryptedMessage = Chacha20.decryptedString(Chacha20.decrypt(Chacha20.hexToByte(cipherText), Chacha20.hexToByte(nonce)).get());
-                return from + " " + decryptedMessage;
+                String decryptedMessage = Chacha20.decryptedString(
+                        Chacha20.decrypt(
+                                Chacha20.hexToByte(cipherText),
+                                Chacha20.hexToByte(nonce)
+                        ).get()
+                );
+                return from + ": " + decryptedMessage;
             }
             case "Join" -> {
                 btn_send_id.setDisable(false);
                 btn_disconnect_id.setDisable(false);
                 String from = jsonObject.getString("from");
+
                 if (!pharmacists.contains(from)) {
                     pharmacists.add(from);
-                    aside_user.getChildren().add(new Button(from));
+
+                    // Se non c'è un farmacista selezionato, seleziona il primo
+                    if (selectedPharmacist == null) {
+                        selectedPharmacist = from;
+                    }
+
+                    // Aggiungi il pulsante sulla UI thread
+                    Platform.runLater(() -> {
+                        Button pharmacistButton = new Button(from);
+                        pharmacistButton.setOnAction(e -> {
+                            selectedPharmacist = from;
+                            log.info("Selected pharmacist: " + from);
+                            textarea_id.appendText("--- Now chatting with: " + from + " ---\n");
+
+                            // Opzionale: evidenzia visivamente il pulsante selezionato
+                            aside_user.getChildren().forEach(node -> {
+                                if (node instanceof Button) {
+                                    node.setStyle("");
+                                }
+                            });
+                            pharmacistButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                        });
+
+                        // Se è il primo farmacista, evidenzialo
+                        if (from.equals(selectedPharmacist)) {
+                            pharmacistButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                        }
+
+                        aside_user.getChildren().add(pharmacistButton);
+                    });
                 }
                 return jsonObject.getString("message");
             }
             case "serverAuth" -> {
-                log.info("Server Auth" + message);
+                log.info("Server Auth: " + message);
                 String publicKey = jsonObject.getString("publicKey");
                 String messagesSigned = jsonObject.getString("message");
                 String signature = jsonObject.getString("signature");
                 boolean value = SHA256Signature.verifySignature(messagesSigned, signature, publicKey);
+
                 if (!value) {
                     clientWebserver.close();
-
+                    return "ERROR: Server authentication failed!";
                 } else {
-                    return "Info:Connected to  The server!";
+                    return "Info: Connected to the server!";
                 }
-            }case "UserDisconnected"->{
-                log.info("user disconnected");
+            }
+            case "UserDisconnected" -> {
+                log.info("User disconnected");
+                String disconnectedEmail = jsonObject.getString("username");
+                String disconnectionMessage = jsonObject.getString("message");
 
-               String email=jsonObject.getString("userName");
-               Button button_removed=(Button) aside_user.getChildren().stream().filter(button->((Button) button).getText().equals(email)).toList().getFirst();
-               aside_user.getChildren().remove(button_removed);
-               return "Farmacista ha abbandonato la chat";
+                // Rimuovi dalla lista
+                pharmacists.remove(disconnectedEmail);
 
+                // Se il farmacista disconnesso era quello selezionato
+                if (disconnectedEmail.equals(selectedPharmacist)) {
+                    selectedPharmacist = pharmacists.isEmpty() ? null : pharmacists.getFirst();
 
+                    // Se non ci sono più farmacisti, disabilita l'invio
+                    if (selectedPharmacist == null) {
+                        Platform.runLater(() -> {
+                            btn_send_id.setDisable(true);
+                        });
+                    }
+                }
 
+                // Rimuovi il pulsante dalla UI
+                Platform.runLater(() -> {
+                    aside_user.getChildren().removeIf(node ->
+                            node instanceof Button &&
+                                    ((Button) node).getText().equals(disconnectedEmail)
+                    );
+
+                    // Se c'è ancora un farmacista selezionato, evidenzialo
+                    if (selectedPharmacist != null) {
+                        aside_user.getChildren().forEach(node -> {
+                            if (node instanceof Button) {
+                                Button btn = (Button) node;
+                                if (btn.getText().equals(selectedPharmacist)) {
+                                    btn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                                } else {
+                                    btn.setStyle("");
+                                }
+                            }
+                        });
+                    }
+                });
+
+                return  disconnectionMessage;
+            }
+            case "Error" -> {
+                log.error("Server error: " + jsonObject.getString("message"));
+                return "ERROR: " + jsonObject.getString("message");
             }
         }
-          return "";
+
+        return "";
     }
 
+    private void startQueueProcessor() {
+        // Ferma il vecchio thread se esiste
+        if (queueProcessorThread != null && queueProcessorThread.isAlive()) {
+            queueProcessorThread.interrupt();
+        }
 
-    private void startQueueProcessor(ConcurrentLinkedQueue<String> queue) {
-        Thread processorThread = new Thread(() -> {
+        queueProcessorThread = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    String message = queue.poll();
+                    String message = messageQueue.poll();
 
                     if (message != null) {
                         log.info("Received: " + message);
 
                         // Update UI on JavaFX thread
                         Platform.runLater(() -> {
-                            String extracted= null;
                             try {
-                                extracted = extracted_message(message);
+                                String extracted = extracted_message(message);
+                                log.info("Extracted: " + extracted);
+
+                                if (!extracted.isEmpty()) {
+                                    textarea_id.appendText(extracted + "\n");
+                                }
                             } catch (Exception e) {
-                                throw new RuntimeException(e);
+                                log.error("Error processing message", e);
+                                textarea_id.appendText("ERROR: Failed to process message\n");
                             }
-                            log.info("extracted: "+extracted);
-                            textarea_id.appendText(extracted+" \n ");
-
-
-                            //textarea_id.appendText(message + "\n");
                         });
                     }
 
@@ -157,16 +290,15 @@ public class Chat implements Initializable {
                     Thread.currentThread().interrupt();
                     break;
                 } catch (Exception e) {
-                    System.err.println("Error processing queue: " + e.getMessage());
+                    log.error("Error processing queue", e);
                 }
             }
         });
 
-        processorThread.setDaemon(true);
-        processorThread.setName("QueueProcessor");
-        processorThread.start();
+        queueProcessorThread.setDaemon(true);
+        queueProcessorThread.setName("QueueProcessor");
+        queueProcessorThread.start();
     }
-
 
     public void btn_action(ActionEvent event) {
         String messageText = text_field_id.getText();
@@ -174,7 +306,12 @@ public class Chat implements Initializable {
             return;
         }
 
-        textarea_id.appendText("Me: " + messageText + "\n");
+        if (pharmacists.isEmpty() || selectedPharmacist == null) {
+            textarea_id.appendText("ERROR: No pharmacists available\n");
+            return;
+        }
+
+        textarea_id.appendText("Me → " + selectedPharmacist + ": " + messageText + "\n");
 
         // Encrypt message
         byte[] nonce = Chacha20.generateNonce();
@@ -189,26 +326,35 @@ public class Chat implements Initializable {
 
         // Create main message object
         JSONObject message = new JSONObject();
-        message.put("from",email);  // Should use actual email from session
-        message.put("to", pharmacists.getFirst());  // Should be dynamic based on selected user
+        message.put("from", email);
+        message.put("to", selectedPharmacist);  // Usa il farmacista selezionato
         message.put("type", "Chat");
-        message.put("message", encryptedMessage);  // Match what JavaScript expects
+        message.put("messages", encryptedMessage.toString());
 
         // Send message
-        if (clientWebserver.isOpen()) {
+        if (clientWebserver != null && clientWebserver.isOpen()) {
             clientWebserver.send(message.toString());
-            System.out.println("Message sent: " + message.toString());
+            log.info("Message sent: " + message.toString());
             text_field_id.clear();
         } else {
-            System.err.println("WebSocket is not open!");
+            log.error("WebSocket is not open!");
             textarea_id.appendText("ERROR: Not connected to server\n");
         }
-
     }
 
     public void btn_disconnect_action(ActionEvent event) {
-
-        clientWebserver.close();
-
+        if (clientWebserver != null && clientWebserver.isOpen()) {
+            // Disconnetti
+            disconnectFromServer();
+            textarea_id.appendText("Disconnected from server\n");
+            btn_disconnect_id.setText("Connect");
+            btn_send_id.setDisable(true);
+        } else {
+            // Riconnetti creando una nuova istanza
+            textarea_id.clear();
+            textarea_id.appendText("Reconnecting to server...\n");
+            connectToServer();
+            btn_disconnect_id.setText("Disconnect");
+        }
     }
 }

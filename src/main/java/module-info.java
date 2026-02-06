@@ -38,6 +38,7 @@ module pharma {
     requires java.net.http;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.core;
+    requires commons.beanutils;
 
     exports pharma.real to javafx.graphics, javafx.fxml;
     opens pharma to javafx.fxml;
@@ -54,6 +55,7 @@ exports pharma.Storage;
     opens pharma.config.View to javafx.fxml;
     exports pharma.DialogController;
     exports pharma.config.spinner;
+    opens pharma.Service.Report to javafx.base;
     opens pharma.config.spinner to javafx.fxml;
     exports pharma.config.auth;
     opens pharma.config.auth to javafx.fxml;

@@ -1,11 +1,15 @@
 package pharma.dao;
 
+import pharma.Model.DistribuzioneModel;
 import pharma.Model.FieldData;
 import pharma.config.database.Database;
 
+import java.lang.classfile.constantpool.DoubleEntry;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,8 +88,61 @@ private  final Database database;
 
     }
 
+
+
+
+
+
+
+
     @Override
     protected void setDeleteParameter(PreparedStatement statement, FieldData entity) {
+
+    }
+
+
+
+    public double findBySumAggregate( String parameter) {
+        String query="SELECT SUM("+parameter+")"+"FROM "+table;
+     ResultSet resultSet=database.executeQuery(query);
+        try {
+            if(resultSet.next()){
+                return resultSet.getDouble(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return -1.1;
+
+    }
+
+    public List<DistribuzioneModel> findPharmaOrderNumber(Date date_start, Date data_end){
+        List<DistribuzioneModel> list=new ArrayList<>();
+
+        try {
+            PreparedStatement preparedStatement=database.execute_prepared_query("SELECT\n" +
+                    "    pharma.anagrafica_cliente AS casa_farmaceutica,\n" +
+                    "    COUNT(purchase_order.id) AS numero_ordini\n" +
+                    "FROM purchase_order\n" +
+                    "         INNER JOIN pharma ON purchase_order.pharma_id = pharma.id\n" +
+                    " WHERE purchase_order.data BETWEEN ? AND ? " +
+                    "GROUP BY  pharma.anagrafica_cliente");
+            preparedStatement.setDate(1,date_start);
+            preparedStatement.setDate(2,data_end);
+             ResultSet resultSet=preparedStatement.executeQuery();
+             while(resultSet.next()){
+                 String casa_farmaceutica=resultSet.getString("casa_farmaceutica");
+                 int num_ordini=resultSet.getInt("numero_ordini");
+                 list.add(new DistribuzioneModel(casa_farmaceutica,num_ordini));
+             }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+
+
 
     }
 

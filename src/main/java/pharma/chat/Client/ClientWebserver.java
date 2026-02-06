@@ -66,9 +66,13 @@ public class ClientWebserver extends WebSocketClient {
          JSONObject jsonObject=new JSONObject(s);
         concurrentLinkedQueue.offer(s);
          if(jsonObject.get("type").equals("Join")){
-             String pharmacist=jsonObject.getString("Pharmacist");
-             pharmacists.add(pharmacist);
-             System.out.println("Added Pharmacist");
+
+             System.out.println(jsonObject.toString());
+             if(jsonObject.has("pharmacist")) {
+                 String pharmacist = jsonObject.getString("pharmacist");
+                 pharmacists.add(pharmacist);
+                 System.out.println("Added Pharmacist");
+             }
 
          }
     }

@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -139,10 +140,10 @@ public class CustomDialog<T> extends Dialog<T> {
                 else if(couple instanceof SearchableComboBox){
 
                     SearchableComboBox<T> searchableComboBox=(SearchableComboBox<T>) couple;
-                    return searchableComboBox.getSelectionModel().isEmpty();
+                    return searchableComboBox.getValue() == null;
                 }else if( couple instanceof TextFieldComboBox){
                         TextFieldComboBox<T> textFieldComboBox=(TextFieldComboBox<T>) couple;
-                        return  textFieldComboBox.getChoiceBox().getSelectionModel().isEmpty();
+                        return  textFieldComboBox.getChoiceBox().getValue()==null;
 
                 }
                else if(couple instanceof TableView<?>){
@@ -167,8 +168,18 @@ public class CustomDialog<T> extends Dialog<T> {
 
 
     }
+    public TextArea addTextArea(){
+        TextArea textArea=new TextArea();
+        vbox.getChildren().add(textArea);
+        return textArea;
+    }
 
+    public PieChart addPieChart(){
+        PieChart chart=new PieChart();
+        vbox.getChildren().add(chart);
 
+        return  chart;
+    }
     public FileChoseOption add_file_to_target_path(String target_path, List<FileChooser.ExtensionFilter> supported_extensions){
         Button button_insert=addButton("Inserisci File");
         Button button_upload=addButton("Carica File");

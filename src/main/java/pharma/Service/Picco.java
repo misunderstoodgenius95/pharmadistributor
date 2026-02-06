@@ -15,6 +15,7 @@ public class Picco {
     public static double generate_standard_devation(List<Acquisto> list){
         double[] input=generate_array_input(list);
         DescriptiveStatistics statistics=new DescriptiveStatistics(input);
+
          return statistics.getStandardDeviation();
     }
 
