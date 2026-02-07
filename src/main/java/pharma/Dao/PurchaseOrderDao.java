@@ -115,6 +115,21 @@ private  final Database database;
         return -1.1;
 
     }
+    public List<Double> findByValue( String parameter) {
+        String query="SELECT "+parameter+" FROM "+table;
+        List<Double> list=new ArrayList<>();
+        ResultSet resultSet=database.executeQuery(query);
+        try {
+            while(resultSet.next()){
+                list.add( resultSet.getDouble(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return list;
+    }
+
 
     public List<DistribuzioneModel> findPharmaOrderNumber(Date date_start, Date data_end){
         List<DistribuzioneModel> list=new ArrayList<>();

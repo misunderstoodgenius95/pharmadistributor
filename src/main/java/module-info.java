@@ -39,6 +39,7 @@ module pharma {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.core;
     requires commons.beanutils;
+    requires org.apache.commons.lang3;
 
     exports pharma.real to javafx.graphics, javafx.fxml;
     opens pharma to javafx.fxml;

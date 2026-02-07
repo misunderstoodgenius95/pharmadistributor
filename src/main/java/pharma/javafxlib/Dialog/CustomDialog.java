@@ -168,6 +168,12 @@ public class CustomDialog<T> extends Dialog<T> {
 
 
     }
+    public  <K> ListView<K> addListView(){
+        ListView<K> listView=new ListView<>();
+        vbox.getChildren().add(listView);
+        return listView;
+
+    }
     public TextArea addTextArea(){
         TextArea textArea=new TextArea();
         vbox.getChildren().add(textArea);

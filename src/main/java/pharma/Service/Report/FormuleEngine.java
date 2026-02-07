@@ -10,11 +10,11 @@ public class FormuleEngine {
             "somma",
             "max",
             "min",
-            "deviazione_standard",
+            "deviazione",
             "varianza",
-            "percentili",
             "moltiplicazione",
-            "divisione"
+            "divisione",
+            "sottrazione"
             );
     public static final Map<String, DatiModel> dati_map =Map.of(
             "iva_ordini", new DatiModel("purchase_order","iva"),

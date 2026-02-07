@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import pharma.config.InvalidFormulaException;
 import pharma.dao.PurchaseOrderDao;
 
 import java.util.HashMap;
@@ -17,83 +18,94 @@ import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BuildFormulaTest {
-    private List<UserFormula> list;
-    private BuildFormula buildFormula;
+
+
     @Mock
     private PurchaseOrderDao orderDao;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        buildFormula = new BuildFormula(new UserFormula("formula1", "moltiplicazione(somma(iva_ordini,totale_ordini),2)"),orderDao);
+
     }
 
     @Test
-    void ValidBuildQuery() {
+    void ValidBuildQueryWithMoltiplicazioneandSum() throws InvalidFormulaException {
+         BuildFormula buildFormula = new BuildFormula(new UserFormula("formula1", "moltiplicazione(somma(iva_ordini,totale_ordini),2)"),orderDao);
         when(orderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22,22.1);
 
         System.out.println(buildFormula.buildFormula());
     }
-
     @Test
-    public void testme() {
-
-        String value = "moltiplicazione(somma(iva_ordini,totale_ordini),2)";
-        int index = value.lastIndexOf("somma");
-
-        String substring = value.substring(index);
-        int last_parentesis = substring.indexOf(")");
-        System.out.println(value.substring(index, index + last_parentesis + 1));
+    void ValidBuildQueryWithMax() throws InvalidFormulaException {
+        BuildFormula buildFormula = new BuildFormula(new UserFormula("formula1", "somma(max(totale_ordini),iva_ordini)"),orderDao);
+       when(orderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22);
+when(orderDao.findByValue(Mockito.anyString())).thenReturn(List.of(19.11,22.11));
+        System.out.println(buildFormula.buildFormula());
+    }
+    @Test
+    void ValidBuildQueryWithDeviazioneStandard() throws InvalidFormulaException {
+        BuildFormula buildFormula = new BuildFormula(new UserFormula("formula1", "deviazione(totale_ordini)"),orderDao);
+        when(orderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22);
+        when(orderDao.findByValue(Mockito.anyString())).thenReturn(List.of(19.11,22.11));
+        System.out.println(buildFormula.buildFormula());
+    }
+    @Test
+    void InvalidBuildQUeryWithParentesisNotOpen() throws InvalidFormulaException {
+         BuildFormula buildFormula = new BuildFormula(new UserFormula("formula1", "somma(max(totale_ordini),iva_ordini"),orderDao);
+        when(orderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22);
+        when(orderDao.findByValue(Mockito.anyString())).thenReturn(List.of(19.11,22.11));
+        Assertions.assertThrows(InvalidFormulaException.class, buildFormula::buildFormula);
 
     }
-
- /*   @ParameterizedTest
-    @MethodSource("provideFormulaTestCases")
-    @DisplayName("Test extractOperation con MethodSource")
-    void testExtractOperation(String formula, String expected) {
-        List<String> operations = BuildFormula.extractOperation(formula);
-        Assertions.assertEquals(expected, operations.toString());
+    @Test
+    void InvalidBuildQUeryWithAttributeNotPresent() throws InvalidFormulaException {
+         BuildFormula buildFormula = new BuildFormula(new UserFormula("formula1", "somma(max(11),22)"),orderDao);
+        when(orderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22);
+        when(orderDao.findByValue(Mockito.anyString())).thenReturn(List.of(19.11,22.11));
+        Assertions.assertThrows(InvalidFormulaException.class, buildFormula::buildFormula);
     }
-
-
-    static Stream<Arguments> provideFormulaTestCases() {
-        return Stream.of(
-                arguments("somma(valori1,valori2)", "[somma]"),
-                arguments("moltiplicazione(somma(valori1,valori2,2))", "[somma, moltiplicazione]")
+    @Test
+    void InvalidBuildQUeryWithAttributeWrong() throws InvalidFormulaException {
+       BuildFormula  buildFormula = new BuildFormula(new UserFormula("formula1", "somma(max(totale_ordine),22)"),orderDao);
+        when(orderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22);
+        when(orderDao.findByValue(Mockito.anyString())).thenReturn(List.of(19.11,22.11));
+        Assertions.assertThrows(InvalidFormulaException.class, buildFormula::buildFormula);
+    }
+    @Test
+    void InvalidBuildQUeryWithOperatoreWrong() throws InvalidFormulaException {
+      BuildFormula  buildFormula = new BuildFormula(new UserFormula("formula1", "soma(max(totale_ordini),22)"),orderDao);
+        when(orderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22);
+        when(orderDao.findByValue(Mockito.anyString())).thenReturn(List.of(19.11,22.11));
+        InvalidFormulaException exception = Assertions.assertThrows(
+                InvalidFormulaException.class,
+                buildFormula::buildFormula
         );
-    }*/
 
-
-    @Test
-    public void me() {
-
-        String value = "HellMeHello";
-        System.out.println(value.indexOf("Hello"));
-
+        Assertions.assertEquals("Operatori non corretti", exception.getMessage());
     }
+
+
+
+
+
+
 
     @Test
     void estraiContenutoOperazioneSomma() {
+      BuildFormula  buildFormula = new BuildFormula(new UserFormula("formula1", "somma(moltiplicazione(totale_ordini),iva_ordini)"),orderDao);
         String somma = buildFormula.estraiContenutoOperazione("somma");
-        System.out.println(somma);
-        Assertions.assertEquals("iva_ordini,totale_ordini", somma);
+
+        Assertions.assertEquals("moltiplicazione(totale_ordini),iva_ordini", somma);
     }
 
     @Test
     void estraiContenutoOperazioneMoltiplicazione() {
-        String moltiplicazione = buildFormula.estraiContenutoOperazione("moltiplicazione");
-        System.out.println(moltiplicazione);
-        //Assertions.assertEquals("iva_ordini,totale_ordini",somma);
+       BuildFormula buildFormula = new BuildFormula(new UserFormula("formula1", "somma(moltiplicazione(iva_ordini,totale_ordini),iva_ordini)"),orderDao);
+        String actual = buildFormula.estraiContenutoOperazione("moltiplicazione");
+        Assertions.assertEquals("iva_ordini,totale_ordini",actual);
     }
 
-    @Test
-    void extractIntoParentesis() {
-     /*   List<String> attribute=buildFormula.extractAttribute();
-        SoftAssertions.assertSoftly(value->{
-         value.assertThat(attribute.getFirst()).isEqualTo("iva_ordini");
-         value.assertThat(attribute.get(1)).isEqualTo("totale_ordini");
-        });*/
-    }
 
     @DisplayName("Valid Value")
     @ParameterizedTest
@@ -179,12 +191,6 @@ class BuildFormulaTest {
 
     }
 
-/*    @Test
-    void buildQuery() {
-        BuildFormula.buildQuery(List.of("moltiplicazione","somma"),"moltiplicazione(somma(22,11),2)");
-
-
-    }*/
 
 
     @Test

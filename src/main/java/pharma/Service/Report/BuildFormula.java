@@ -1,11 +1,18 @@
 package pharma.Service.Report;
 
+import org.apache.commons.lang3.stream.Streams;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pharma.Service.Picco;
 import pharma.config.InputValidation;
+import pharma.config.InvalidFormulaException;
 import pharma.dao.PurchaseOrderDao;
 
 import java.util.*;
 
 public class BuildFormula {
+    private static final Logger log = LoggerFactory.getLogger(BuildFormula.class);
     private UserFormula userFormula;
     private PurchaseOrderDao purchaseOrderDao;
     private List<FormuleBuildModel> formuleBuildModels;
@@ -162,29 +169,28 @@ public class BuildFormula {
     }
 
 
-    public double buildFormula() {
+    public double buildFormula() throws InvalidFormulaException {
 
         if (!checkParentesi(userFormula.getFormula())) {
-            return -1.1;
+           throw  new InvalidFormulaException("Parentesi non chiuse!");
         }
         // Ottengo la stringa degli operatori
         List<String> ops = extractOperation(userFormula.getFormula());
         if (ops.isEmpty()) {
-            return -1.1;
+           throw  new InvalidFormulaException("Nessun Operatore presente");
         }
         // Controllare se gli operatori sono corretti
         if (!checkOperazioni(ops)) {
-            return -1.1;
+           throw  new InvalidFormulaException("Operatori non corretti");
         }
 
         List<String> attributesAndOperators = extractIntoParentesis(userFormula.getFormula());
         if (!checkAttribute(attributesAndOperators)) {
-            return -1.1;
+        throw new InvalidFormulaException("Attributi non presenti");
         }
         // Step 5: Verifica che tutti gli attributi e operatori siano validi
         if (!checkAttributeandOperator(attributesAndOperators)) {
-            System.err.println("Errore: Uno o più attributi non sono validi");
-            return -1.1;
+            throw new InvalidFormulaException("Errore: Uno o più attributi non sono validi");
         }
 
          return buildQuery(ops, userFormula.getFormula());
@@ -207,34 +213,54 @@ public class BuildFormula {
                 }
             }
                List<String> onlyAttributeandNumeric = removeOperator(extractes);
-                    //conversione di attributi
-                   onlyAttributeandNumeric.forEach(v->{
-                     if(FormuleEngine.dati_map.containsKey(v)){
-                         DatiModel datiModel=FormuleEngine.dati_map.get(v);
-                         numericAttribute.add(getValueFromAttribute(datiModel));
-                     }else if(isNumeric(v)){
-                         double numeric=Double.parseDouble(v);
-                         numericAttribute.add(numeric);
-                     }
-                   });
-                   double result=executeOperationWithAttribute(op,numericAttribute);
-                System.out.println(result);
-                   linkedList.add(result);
 
+                    // se abbiamo un singolo valore
+            if(numericAttribute.isEmpty() && onlyAttributeandNumeric.size()==1){
+                log.info("formula un solo argomento");
+                if(FormuleEngine.dati_map.containsKey(onlyAttributeandNumeric.getFirst())){
+                    DatiModel datiModel=FormuleEngine.dati_map.get(onlyAttributeandNumeric.getFirst());
+                    numericAttribute.addAll(getValueFromAttribute(datiModel));
+                }else{
+                    numericAttribute.add(Double.valueOf(onlyAttributeandNumeric.getFirst()));
+                }
 
+            }else {
+                //conversione di attributi
+                onlyAttributeandNumeric.forEach(v -> {
+                    if (FormuleEngine.dati_map.containsKey(v)) {
+                        DatiModel datiModel = FormuleEngine.dati_map.get(v);
+                        numericAttribute.add(getValueAggregate(datiModel));
+                    } else if (isNumeric(v)) {
+                        double numeric = Double.parseDouble(v);
+                        numericAttribute.add(numeric);
+                    }
+                });
 
-
+            }
+            double result = executeOperationWithAttribute(op, numericAttribute);
+            linkedList.add(result);
         });
-        System.out.println(linkedList);
         // operation
         return linkedList.getLast();
     }
 
+    public  List<Double> getValueFromAttribute(DatiModel datiModel){
 
-    public  double getValueFromAttribute(DatiModel datiModel){
+
+        if(datiModel.getNome_tabella().equals("purchase_order")) {
+
+            return purchaseOrderDao.findByValue(datiModel.getNome_attributo());
+
+        }
+        return List.of();
+
+
+    }
+    public  double getValueAggregate(DatiModel datiModel){
         System.out.println("execute");
-        if(datiModel.getNome_tabella().equals("purchase_order")){
-             return  purchaseOrderDao.findBySumAggregate(datiModel.getNome_attributo());
+        if(datiModel.getNome_tabella().equals("purchase_order")) {
+            System.out.println("ex");
+            return purchaseOrderDao.findBySumAggregate(datiModel.getNome_attributo());
 
         }
          return -1.1;
@@ -255,13 +281,40 @@ public class BuildFormula {
         System.out.println(operation);
         switch (operation) {
             case "somma" -> {
-
                 return doubleList.stream().mapToDouble(Double::doubleValue).sum();
 
             }
             case "moltiplicazione"->{
                 return doubleList.stream().reduce(1.0, (a, b) -> a * b);
             }
+            case "sottrazione"->{
+                return doubleList.stream().reduce((a,b)->a-b).orElse(0.0);
+            }
+            case "divisione"->{
+                return doubleList.stream().reduce((a,b)->a/b).orElse(0.0);
+            }
+            case "max"->{
+                return doubleList.stream().reduce(Double::max).orElse(0.0);
+            }
+            case "min"->{
+                return doubleList.stream().reduce(Double::min).orElse(0.0);
+            }
+            case "deviazione"->{
+                double[] array=doubleList.stream().mapToDouble(Double::doubleValue).toArray();
+              DescriptiveStatistics descriptiveStatistics=new DescriptiveStatistics(array);
+               return descriptiveStatistics.getStandardDeviation();
+            }
+            case "varianza"->{
+                double[] array=doubleList.stream().mapToDouble(Double::doubleValue).toArray();
+                DescriptiveStatistics descriptiveStatistics=new DescriptiveStatistics(array);
+                 return descriptiveStatistics.getVariance();
+            }
+            case "media"->{
+                double[] array=doubleList.stream().mapToDouble(Double::doubleValue).toArray();
+                DescriptiveStatistics descriptiveStatistics=new DescriptiveStatistics(array);
+                return descriptiveStatistics.getMean();
+            }
+
 
 
             default -> {

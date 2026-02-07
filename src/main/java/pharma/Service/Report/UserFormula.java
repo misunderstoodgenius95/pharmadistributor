@@ -17,4 +17,9 @@ public class UserFormula {
     public String getFormula() {
         return formula;
     }
+
+    @Override
+    public String toString() {
+        return  formula;
+    }
 }

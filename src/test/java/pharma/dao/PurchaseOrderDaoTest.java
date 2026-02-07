@@ -301,5 +301,27 @@ class PurchaseOrderDaoTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    void findByValue() {
+
+
+        Properties properties;
+        try {
+            properties = FileStorage.getProperties_real(new ArrayList<>(Arrays.asList("host", "username", "password")), new FileReader(PathConfig.DATABASE_CONF.getValue()));
+            purchaseOrderDao = new PurchaseOrderDao(Database.getInstance(properties));
+            List<Double> list= purchaseOrderDao.findByValue("totale");
+            System.out.println(list);
+            Assertions.assertFalse(list.isEmpty());
+
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 }
 
