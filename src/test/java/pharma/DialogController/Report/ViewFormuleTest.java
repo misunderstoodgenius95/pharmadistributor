@@ -19,11 +19,10 @@ import pharma.dao.PurchaseOrderDao;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
-class ViewFormuleModelTest {
+class ViewFormuleTest {
     @Mock
     private CustomFormulaDao customFormulaDao;
     @Mock
@@ -51,8 +50,8 @@ class ViewFormuleModelTest {
         when(orderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22);
         when(orderDao.findByValue(Mockito.anyString())).thenReturn(List.of(19.11,22.11));
         Platform.runLater(()->{
-        ViewFormuleModel viewFormuleModel=new ViewFormuleModel("",customFormulaDao,orderDao);
-        viewFormuleModel.show();
+        ViewFormule viewFormule =new ViewFormule("",customFormulaDao,orderDao);
+        viewFormule.show();
 
 
 

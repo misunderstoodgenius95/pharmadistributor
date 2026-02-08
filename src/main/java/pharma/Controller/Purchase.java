@@ -9,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import pharma.DialogController.Report.*;
+import pharma.Handler.ReportHandler;
 import pharma.Model.Acquisto;
 import pharma.Model.Ordini;
 import pharma.Stages;
@@ -17,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import pharma.config.PathConfig;
 import pharma.config.database.Database;
+import pharma.dao.CustomFormulaDao;
 import pharma.dao.FarmacoDao;
 import pharma.dao.PurchaseOrderDao;
 import pharma.dao.PurchaseOrderDetailDao;
@@ -41,6 +43,7 @@ public class Purchase  implements  Initializable{
     private PurchaseOrderDetailDao p_detail_dao;
     private FarmacoDao farmacoDao;
     private PurchaseOrderDao purchaseOrderDao;
+    private CustomFormulaDao customFormulaDao;
     public Purchase() {
         stages = new Stages();
         simpleObjectProperty = new SimpleObjectProperty<>();
@@ -52,6 +55,7 @@ public class Purchase  implements  Initializable{
             p_detail_dao=new PurchaseOrderDetailDao(Database.getInstance(properties));
             farmacoDao=new FarmacoDao(Database.getInstance(properties));
             purchaseOrderDao=new PurchaseOrderDao(Database.getInstance(properties));
+            customFormulaDao=new CustomFormulaDao(Database.getInstance(properties));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -144,7 +148,10 @@ public class Purchase  implements  Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        DropDownMenu dropDownMenu=new DropDownMenu(report_id);
+        ReportHandler reportHandler=new ReportHandler(purchaseOrderDao,p_detail_dao,farmacoDao,report_id,customFormulaDao);
+        reportHandler.createMenu();
+    }
+    /*    DropDownMenu dropDownMenu=new DropDownMenu(report_id);
 
        List<Acquisto> acquistos=p_detail_dao.findAllReportData().stream().map(item->new Acquisto(item.getId(),item.getQuantity(),item.getElapsed_date(),item.getPrice())).toList();
         List<Ordini> ordiniList=purchaseOrderDao.findAll().stream().map(item->new Ordini(item.getOrder_id(),item.getTotal(),item.getProduction_date())).toList();
@@ -169,7 +176,7 @@ dropDownMenu.createItem("Variazione Acquisti Tra Mesi").setOnAction(event -> {
 
       dropDownMenu.createItem("Distribuzione").setOnAction(event -> distribuzionePharma.show());
     }
-
+*/
     public void report_action(ActionEvent event) {
     }
 

@@ -2,21 +2,18 @@ package pharma.DialogController.Report;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import pharma.Service.Report.BuildFormula;
 import pharma.Service.Report.UserFormula;
+import pharma.config.CustomFormuleCell;
 import pharma.config.InvalidFormulaException;
 import pharma.dao.CustomFormulaDao;
 import pharma.dao.PurchaseOrderDao;
 import pharma.javafxlib.Dialog.CustomDialog;
 
-public class ViewFormuleModel extends CustomDialog<UserFormula> {
+public class ViewFormule extends CustomDialog<UserFormula> {
    private ListView<UserFormula> listView;
    private CustomFormulaDao customFormulaDao;
    private TextField formulashowTextField;
@@ -25,9 +22,12 @@ public class ViewFormuleModel extends CustomDialog<UserFormula> {
     private Button btnTest;
     private BuildFormula buildFormula;
     private PurchaseOrderDao purchaseOrderDao;
-    public ViewFormuleModel(String content, CustomFormulaDao customFormuleDao, PurchaseOrderDao purchaseOrderDao) {
+    public ViewFormule(String content, CustomFormulaDao customFormuleDao, PurchaseOrderDao purchaseOrderDao) {
         super(content);
+        setTitle("Formule Personalizzate");
+        setHeaderText("Esegui la tua formula personalizzata");
         listView=addListView();
+        listView.setCellFactory(value->new CustomFormuleCell());
         getDialogPane().setPrefHeight(800);
         getDialogPane().setPrefWidth(900);
         formulashowTextField=add_text_field("");
@@ -36,6 +36,9 @@ public class ViewFormuleModel extends CustomDialog<UserFormula> {
         textFieldExecuteFormula=add_text_field("");
         textFieldExecuteFormula.setEditable(false);
         listView.getItems().addAll(customFormuleDao.findAll());
+        if(listView.getItems().isEmpty()){
+            listView.getItems().addAll(new UserFormula("Nessuna formula ancora creata",""));
+        }
        this.customFormulaDao=customFormuleDao;
        listener_listView();
        listenerBtn();
@@ -46,6 +49,7 @@ public class ViewFormuleModel extends CustomDialog<UserFormula> {
     listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserFormula>() {
         @Override
         public void changed(ObservableValue<? extends UserFormula> observable, UserFormula oldValue, UserFormula newValue) {
+            System.out.println("change");
             formulashowTextField.setText(newValue.getFormula());
         }
     });

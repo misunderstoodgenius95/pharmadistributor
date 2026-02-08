@@ -14,11 +14,9 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import pharma.dao.CustomFormulaDao;
 import pharma.dao.PurchaseOrderDao;
-import pharma.real.Purchase;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
@@ -41,8 +39,8 @@ class CustomFormuleTest {
         when(purchaseOrderDao.findBySumAggregate(Mockito.anyString())).thenReturn(10.22);
         when(purchaseOrderDao.findByValue(Mockito.anyString())).thenReturn(List.of(19.11,22.11));
         Platform.runLater(()->{
-ViewFormuleModel viewFormuleModel=new ViewFormuleModel("",customFormulaDao,purchaseOrderDao);
-         viewFormuleModel.show();
+ViewFormule viewFormule =new ViewFormule("",customFormulaDao,purchaseOrderDao);
+         viewFormule.show();
 
 
 

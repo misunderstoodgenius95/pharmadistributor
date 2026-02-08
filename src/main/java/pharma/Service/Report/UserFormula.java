@@ -20,6 +20,6 @@ public class UserFormula {
 
     @Override
     public String toString() {
-        return  formula;
+        return  nome+"\n"+formula;
     }
 }
